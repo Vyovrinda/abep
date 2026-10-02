@@ -1,0 +1,51 @@
+# HallThruster.jl is the authoritative Hall-discharge solver (offline). Every generated map must carry this block.
+[hallthruster]
+package = "HallThruster.jl"
+repository = "https://github.com/UM-PEPL/HallThruster.jl"
+version = "0.23.1"
+commit = "bfb3019fc74ceaa2c70c9d3b19236a83a44ee3b5"   # recovered from the release tarball (git get-tar-commit-id)
+licence = "MIT"
+molecular_support = "propellant_config TOML; electron-impact dissociation / ionization / dissociative ionization (docs/src/howto/new_propellant.md)"
+defaults_used = "anom_model TwoZoneBohm(1/160, 1/16); wall_loss_model WallSheath(BNSiO2, 1.0)"
+
+upgrade_policy = "An upstream release (including a fix for the background_pressure_Torr units issue, upstream/ingestion_units_issue.md) never moves this pin automatically. Treat any upgrade as a physics-model change: bump the pin on a branch, rerun the P5 validation cases (both comparison modes), compare with the logged v0.23.1 results, record the differences in docs/HISTORY.md, and only then accept. Drop the 133.322 factor in run_cases.jl only if the new version converts Torr itself."
+
+[julia]
+minimum = "1.10"
+install = "https://julialang.org/downloads  (tested with 1.11.7 from julialang-s3.julialang.org, 2026-09-25)"
+
+[reaction_set]
+# Any change to which rate files n2_n.toml uses, or to their contents, is a reaction-set model change: bump the version
+# and add a history line. A version label never refers to two different chemistry definitions.
+version = "abep-n2n-0.11"
+status = "COMPLETE_FOR_P5_N2_VALIDATION"
+status_scope = "Complete under the pre-registered omitted-process audit (prereg/n2_completeness_audit_v1.json + addendum 1 ambiguity rule + addendum 2 cross-check rule) for P5-N2 validation only; not a general N2/N chemistry completeness claim. Every tier-1/2/3 process has a final verdict: audit/n2_completeness_final_v1.json (DI, vibrational, rotational) and audit/n2_closure_verdicts_v1.json (multiply-charged, from the 180-case blind state envelope). No further N2 chemistry changes unless the P5-N2 evidence itself forces one."
+domain = "T_e 2-30 eV (mean energy 3-45 eV); vibrational and rotational excitation audited over T_e 0.2-30 eV. States beyond a table's validity limit are not chemistry_trustworthy (driver guard); they are outside this status, not covered by it."
+verdicts = [
+  "tier 1: N2 electronic excitation 8 states INCLUDED (0.9); N momentum transfer INCLUDED (0.8)",
+  "tier 2: N2 vibrational excitation PROMOTED, included v=0 -> 1..10 (0.7, closure-limited); dissociative ionization PROMOTED (0.4)",
+  "tier 3: rotational j 0->2, 0->4 PROMOTED marginally (0.10, gross F_P 1.13 %); N2 -> N^2+ + N PROMOTED (0.6); N+ -> N^2+ INCLUDED (0.5, energy link)",
+  "tier 3 closure: direct N -> N^2+ PROMOTED (0.11; F_S(N^2+ production) 63-85 % in all 180 runs); N^2+ -> N^3+ EXCLUDED (F_ion <= 1.5e-6, F_S <= 5.4e-4 at Bell +10 %); N2 -> N2^2+ UNCERTAINTY VARIANT (nominal F_ion < 1 % < upper); N2+ -> N2^2+ EXCLUDED from nominal (F_ion <= 0.27 %, F_S(N2+ destruction) <= 0.6 % at fit/data 1.11), carried inside the N2^2+ variant (N2^2+ production share and energy link)",
+]
+uncertainty_variants = [
+  "n2_n_di_lower.toml: dissociative ionization LOWER (primary chemistry dimension)",
+  "n2_n_nel_wang.toml: atomic-N momentum transfer Wang BSR (primary chemistry dimension)",
+  "n2_n_di_lower_nel_wang.toml: both (primary chemistry dimension)",
+  "n2_n_exc_johnsonlow.toml: electronic excitation Johnson 2005 at all energies (sensitivity branch)",
+  "n2_n_rot_off.toml: rotational excitation removed (lower-bound sensitivity branch)",
+  "n2_n_ndd_hmslow.toml / n2_n_ndd_hmshigh.toml: direct N -> N^2+ HMS x0.5 / x1.3 (sensitivity branches)",
+  "n2_n_n2dication.toml: molecular N2^2+ (N2 max_charge 2; upper direct envelope + Tabata sequential; on DI LOWER) (uncertainty variant)",
+]
+history = [
+  "abep-n2n-0.1: N2 ionization + N2 elastic shipped with HallThruster.jl (Itikawa 2006); N ionization (Kim & Desclaux via NIST, 2026-09-25); N2 dissociation (Song 2023 Table 9, 2026-09-26)",
+  "abep-n2n-0.2 (2026-09-26): N2 ionization -> ionization_N2_song2023.dat (Song et al. JPCRD 2023 Table 10 sigma(N2+)); rest as 0.1",
+  "abep-n2n-0.3 (2026-09-26): N2 elastic -> elastic_N2_song2023.dat (Song et al. JPCRD 2023 Table 5 momentum transfer); rest as 0.2",
+  "abep-n2n-0.4 (2026-09-26): + dissociative ionization N2 -> N+ + N (Song 2023 Table 10 sigma(N+ + N2++), ramp from 24.284 eV, header 24.284 eV); chemistry variants upper (n2_n.toml) / lower (n2_n_di_lower.toml); rest as 0.3",
+  "abep-n2n-0.5 (2026-09-26): N max_charge 1 -> 2 (atomic N^2+ = N_Z2plus promoted by audit 1) + sequential ionization N_Z1plus -> N_Z2plus (Bell et al. JPCRD 1983 Eq. 1, N II; header 29.60125 eV, NIST ASD); rest as 0.4",
+  "abep-n2n-0.6 (2026-09-26): + direct N2 -> N_Z2plus + N (Song 2023 Table 10 sigma(N++), ramp from 53.885 eV, header 53.885 eV); rest as 0.5",
+  "abep-n2n-0.7 (2026-09-26): + vibrational excitation N2(v=0) -> N2(v_f), v_f = 1..10 (Laporta et al. 2014 Eq. (10) rate fits; headers eps_vf; omitted v_f > 10 <= 0.145 % of vib power); v = 0 only, no superelastic return; rest as 0.6",
+  "abep-n2n-0.8 (2026-09-26): + atomic-N elastic momentum transfer elastic_N_ragimkhanov2026.dat (Ragimkhanov et al. EPJD 2026 Fig. 1b OPM, vector-extracted); variant n2_n_nel_wang.toml uses Wang et al. 2014 BSR via the same figure (OPM above 128 eV); rest as 0.7",
+  "abep-n2n-0.9 (2026-09-26): lumped excitation_N2.dat placeholder replaced by 8 state-resolved electronic excitations (Su et al. 2021 < 20 eV, Johnson et al. 2005 >= 20 eV, power-law continuation; headers = experimental vertical energies); rest as 0.8",
+  "abep-n2n-0.10 (2026-09-26): + rotational excitation j 0->2, 0->4 (JPCRD 2023 Table 6; NIST B_0 headers), promoted marginally by the final audit (gross 1.13 %); rest as 0.9",
+  "abep-n2n-0.11 (2026-09-26): + direct N -> N^2+ (Hahn, Muller & Savin 2017 Eqs. (2)+(3); header 44.1354 eV) promoted by the tier-3 closure; status COMPLETE_FOR_P5_N2_VALIDATION; variants n2_n_ndd_hmslow/high.toml and n2_n_n2dication.toml added; rest as 0.10",
+]

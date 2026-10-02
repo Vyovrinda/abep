@@ -1,0 +1,385 @@
+{
+ "source": "Brabston et al., JPP 2025, doi:10.2514/1.B39623, Table 4 (anode Xe 5 mg/s, cathode Xe 0.44 mg/s, peak radial B 162.5 G at channel centre / exit plane, all constant across Xe1-Xe3; chamber pressure varies); Eq. (13)-(14) ingestion model (A_en = 488 cm2, T0 = 300 K, zeta_A = 1.0). Channel radii: OD 173 mm, width 25 mm (Hofer 2004 Sec. 5.3.1; J. Electr. Propuls. 2026, doi:10.1007/s44205-026-00179-9). Channel depth: 32 mm (Brabston) vs 38 mm (Peterson 2001, Hofer 2004) - UNRESOLVED, both carried. B(z) shape: Peterson, Gallimore & Haas, AIAA 2001-3890, Figs. 11/12 centreline vacuum field (hallthruster_bridge/bfield/)",
+ "assumptions": "Brabston coil currents not published; coil shape from Peterson 2001 (1.6 kW or 3.0 kW setting). Measured Id_A = Pd/Vd (Table 4). Cathode flow not modelled (1-D domain). Ingested flow enters at the anode boundary in HallThruster.jl; Eq. (13) is a plume-entrainment estimate. Transport: HallThruster.jl defaults (TwoZoneBohm(1/160, 1/16), transition length 0.1 L), deliberately not tuned.",
+ "role": "sensitivity: 3.0 kW coil shape",
+ "cases": [
+  {
+   "id": "Xe1-L38-hist",
+   "point": "Xe1",
+   "registration": "L38-hist",
+   "geometry_hypothesis": "historical 38 mm P5 (Peterson 2001 / Hofer 2004); field in original coordinates",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 230.8,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.038,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 4.49e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 1750.0,
+    "Id_A": 7.582322357019064,
+    "T_corr_mN": 72.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe2-L38-hist",
+   "point": "Xe2",
+   "registration": "L38-hist",
+   "geometry_hypothesis": "historical 38 mm P5 (Peterson 2001 / Hofer 2004); field in original coordinates",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 250.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.038,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.94e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2150.0,
+    "Id_A": 8.589692369157012,
+    "T_corr_mN": 83.4,
+    "T_corr_source": "Fig. 5, digitized",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe3-L38-hist",
+   "point": "Xe3",
+   "registration": "L38-hist",
+   "geometry_hypothesis": "historical 38 mm P5 (Peterson 2001 / Hofer 2004); field in original coordinates",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 274.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.038,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.28e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2030.0,
+    "Id_A": 7.400656215822092,
+    "T_corr_mN": 86.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe1-L32-anode",
+   "point": "Xe1",
+   "registration": "L32-anode",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode and magnetic circuit unchanged",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 230.8,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 4.49e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 1750.0,
+    "Id_A": 7.582322357019064,
+    "T_corr_mN": 72.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe2-L32-anode",
+   "point": "Xe2",
+   "registration": "L32-anode",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode and magnetic circuit unchanged",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 250.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.94e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2150.0,
+    "Id_A": 8.589692369157012,
+    "T_corr_mN": 83.4,
+    "T_corr_source": "Fig. 5, digitized",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe3-L32-anode",
+   "point": "Xe3",
+   "registration": "L32-anode",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode and magnetic circuit unchanged",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 274.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "anode",
+    "z_ref_in_file_mm": 0.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.28e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2030.0,
+    "Id_A": 7.400656215822092,
+    "T_corr_mN": 86.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe1-L32-exit",
+   "point": "Xe1",
+   "registration": "L32-exit",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode 6 mm downstream, exit planes aligned",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 230.8,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "exit",
+    "z_ref_in_file_mm": 38.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 4.49e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 1750.0,
+    "Id_A": 7.582322357019064,
+    "T_corr_mN": 72.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe2-L32-exit",
+   "point": "Xe2",
+   "registration": "L32-exit",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode 6 mm downstream, exit planes aligned",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 250.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "exit",
+    "z_ref_in_file_mm": 38.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.94e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2150.0,
+    "Id_A": 8.589692369157012,
+    "T_corr_mN": 83.4,
+    "T_corr_source": "Fig. 5, digitized",
+    "T_sigma_mN": 4.9
+   }
+  },
+  {
+   "id": "Xe3-L32-exit",
+   "point": "Xe3",
+   "registration": "L32-exit",
+   "geometry_hypothesis": "32 mm channel (Brabston 2025), anode 6 mm downstream, exit planes aligned",
+   "role": "sensitivity: 3.0 kW coil shape",
+   "thruster": "P5",
+   "gas": "Xe",
+   "Vd": 274.3,
+   "mdot_kgps": 5e-06,
+   "r_in_m": 0.0615,
+   "r_out_m": 0.0865,
+   "L_m": 0.032,
+   "domain_m": 0.1,
+   "B_ref_T": 0.01625,
+   "B_profile": {
+    "file": "bfield/p5_vacuum_Br_centerline_3p0kW.csv",
+    "align": "exit",
+    "z_ref_in_file_mm": 38.0,
+    "scale_to": "exit"
+   },
+   "comparison_modes": [
+    "facility",
+    "vacuum"
+   ],
+   "background_pressure_Torr": 3.28e-05,
+   "background_temperature_K": 300.0,
+   "entrainment_area_m2": 0.0488,
+   "zeta_A": 1.0,
+   "cells": 200,
+   "dt_s": 5e-09,
+   "duration_s": 0.002,
+   "average_start_s": 0.001,
+   "zeta_en": 0.8,
+   "measured": {
+    "Pd_W": 2030.0,
+    "Id_A": 7.400656215822092,
+    "T_corr_mN": 86.8,
+    "T_corr_source": "abstract",
+    "T_sigma_mN": 4.9
+   }
+  }
+ ]
+}

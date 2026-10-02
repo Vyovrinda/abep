@@ -1,0 +1,1816 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "docs/experiments/hall_icp/p1_icp_bench/p1_bench_record_schema_v1.json",
+ "title": "P1 ICP bench raw record (p1_bench_record_v1)",
+ "description": "Raw P1 bench records reduced by docs/experiments/hall_icp/p1_icp_bench/p1_reducer.py. Generated from the reducer constants by build_p1_icp_bench.py; the reducer enforces these rules and raises on violations (no silent defaults). Every record is ENGINEERING_ONLY_NON_SCORING; synthetic records must say synthetic = true.",
+ "oneOf": [
+  {
+   "$ref": "#/$defs/p1_g0_readiness"
+  },
+  {
+   "$ref": "#/$defs/rf_cold_checkout"
+  },
+  {
+   "$ref": "#/$defs/ignition_attempt"
+  },
+  {
+   "$ref": "#/$defs/icp_operating_point"
+  },
+  {
+   "$ref": "#/$defs/stability_dwell"
+  },
+  {
+   "$ref": "#/$defs/topology_control_sequence"
+  }
+ ],
+ "$defs": {
+  "p1_g0_readiness": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "timestamp_utc",
+    "synthetic",
+    "labels",
+    "interlocks",
+    "isolation_class",
+    "dwv_tests",
+    "gas_lines",
+    "ar_mfcs",
+    "ar_sweep_bounds_mg_s",
+    "second_mfc_necessity",
+    "generator_class",
+    "registrations",
+    "thermal_limits"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_id": {
+     "type": "string"
+    },
+    "run_id": {
+     "type": "string"
+    },
+    "timestamp_utc": {
+     "type": "string"
+    },
+    "synthetic": {
+     "type": "boolean"
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "record_kind": {
+     "const": "p1_g0_readiness"
+    },
+    "stage_id": {
+     "const": "P1-S0"
+    },
+    "interlocks": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "interlock_id",
+       "functional_test_done",
+       "functional",
+       "log_id"
+      ]
+     }
+    },
+    "isolation_class": {
+     "type": "object",
+     "required": [
+      "V_operating_max_V",
+      "V_design_withstand_V"
+     ]
+    },
+    "dwv_tests": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "path_id",
+       "applicable",
+       "path_class"
+      ],
+      "properties": {
+       "path_class": {
+        "enum": [
+         "ICP_BODY_COLLECTOR_350V_CLASS",
+         "H1_ANODE_DISCHARGE_SUPPLY_350V_CLASS",
+         "OTHER_REGISTERED_PATH"
+        ]
+       },
+       "test_configuration": {
+        "const": "ASSEMBLED_SYSTEM_IN_HOUSE"
+       },
+       "leakage_acceptance": {
+        "anyOf": [
+         {
+          "type": "null"
+         },
+         {
+          "type": "object",
+          "required": [
+           "criterion_id",
+           "max_leakage_A",
+           "basis_document_id",
+           "u_measurement_A",
+           "uncertainty_treatment",
+           "registered_utc"
+          ]
+         }
+        ]
+       }
+      },
+      "x-required-when-applicable": [
+       "V_test_V",
+       "duration_s",
+       "current_limited",
+       "leakage_A",
+       "breakdown_or_flashover",
+       "tracking_or_disruptive_discharge",
+       "protective_trip",
+       "test_configuration",
+       "configuration_id",
+       "supplier_certificate",
+       "test_utc"
+      ]
+     }
+    },
+    "thermal_limits": {
+     "anyOf": [
+      {
+       "type": "null"
+      },
+      {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "temperature_field",
+         "component",
+         "validated_continuous_limit_C",
+         "basis"
+        ],
+        "properties": {
+         "temperature_field": {
+          "enum": [
+           "T_icp_dielectric_C",
+           "T_antenna_C",
+           "T_collector_C",
+           "T_match_C",
+           "T_rf_source_C",
+           "T_h1_pole_inner_C",
+           "T_h1_pole_outer_C"
+          ]
+         }
+        }
+       }
+      }
+     ]
+    },
+    "gas_lines": {
+     "type": "array",
+     "minItems": 1,
+     "items": {
+      "type": "object",
+      "required": [
+       "line_id",
+       "bridges_isolated_potentials",
+       "isolator_installed",
+       "qualification"
+      ],
+      "properties": {
+       "service_gas": {
+        "type": [
+         "string",
+         "null"
+        ],
+        "description": "representative service gas; required (null = not registered) on a line that bridges isolated potentials"
+       },
+       "qualification": {
+        "anyOf": [
+         {
+          "type": "null"
+         },
+         {
+          "type": "object",
+          "required": [
+           "qualification_id",
+           "level_id",
+           "level_V",
+           "V_test_V",
+           "gas",
+           "p_Pa",
+           "breakdown_or_flashover"
+          ],
+          "properties": {
+           "level_V": {
+            "type": [
+             "number",
+             "null"
+            ]
+           },
+           "V_test_V": {
+            "type": "number"
+           },
+           "p_Pa": {
+            "type": "number"
+           },
+           "gas": {
+            "type": "string",
+            "minLength": 1
+           }
+          }
+         }
+        ]
+       }
+      }
+     }
+    },
+    "ar_mfcs": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "mfc_id",
+       "range_min_mg_s",
+       "range_max_mg_s"
+      ]
+     }
+    },
+    "ar_sweep_bounds_mg_s": {
+     "anyOf": [
+      {
+       "type": "null"
+      },
+      {
+       "type": "array",
+       "minItems": 2,
+       "maxItems": 2
+      }
+     ]
+    },
+    "second_mfc_necessity": {
+     "type": [
+      "string",
+      "null"
+     ]
+    },
+    "generator_class": {
+     "enum": [
+      "GROUND_FACILITY_ONLY_MAINS"
+     ]
+    },
+    "registrations": {
+     "type": "object",
+     "properties": {
+      "extraction_topology_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "h1_electrical_config_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "facility_match_rule_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "closure_rule_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ignition_procedure_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "time_base_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "electron_collector_target_geometry_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      },
+      "ip_neu_interim_harness_drawing_id": {
+       "type": [
+        "string",
+        "null"
+       ]
+      }
+     }
+    }
+   },
+   "x-owner-values": {
+    "V_operating_max_V_max": 350.0,
+    "V_design_withstand_V_min": 525.0,
+    "dwv_V_test_V_min": 1050.0,
+    "dwv_duration_s_min": 60.0,
+    "required_interlocks": [
+     "P1-SI-01",
+     "P1-SI-02",
+     "P1-SI-03",
+     "P1-SI-04",
+     "P1-SI-05",
+     "P1-SI-06",
+     "P1-SI-07",
+     "P1-SI-08",
+     "P1-SI-09",
+     "P1-SI-10",
+     "P1-SI-11"
+    ],
+    "source": "docs/decisions/OD_2026_09_30_A9_4_p1_p2_owner_decisions.json decisions.P1Q-14",
+    "icpq06_class_V": 1000.0,
+    "dwv_required_path_classes": [
+     "ICP_BODY_COLLECTOR_350V_CLASS",
+     "H1_ANODE_DISCHARGE_SUPPLY_350V_CLASS"
+    ],
+    "thermal_abort_margin_K": 50.0,
+    "a9_16_source": "docs/decisions/OD_2026_10_01_A9_8_s1_p1_start_owner_decisions.json decisions.P1-IT-55 / OQ-RFQV2-06 / OQ-RFQV2-08; docs/decisions/OD_2026_10_01_A9_8_s1_p1_start_owner_decisions.json decisions.P1Q-04"
+   }
+  },
+  "rf_cold_checkout": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "timestamp_utc",
+    "synthetic",
+    "labels",
+    "checkout_kind",
+    "rf",
+    "generator",
+    "loss_characterization",
+    "rf_pickup_check"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_id": {
+     "type": "string"
+    },
+    "run_id": {
+     "type": "string"
+    },
+    "timestamp_utc": {
+     "type": "string"
+    },
+    "synthetic": {
+     "type": "boolean"
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "record_kind": {
+     "const": "rf_cold_checkout"
+    },
+    "stage_id": {
+     "enum": [
+      "P1-S1",
+      "P1-S2"
+     ]
+    },
+    "checkout_kind": {
+     "enum": [
+      "DUMMY_LOAD",
+      "INSTALLED_UNLIT_ANTENNA_VIA_LOCAL_MATCH"
+     ]
+    },
+    "rf": {
+     "type": "object",
+     "required": [
+      "reference_plane",
+      "P_fwd_W",
+      "P_refl_W",
+      "match_setting_id"
+     ],
+     "properties": {
+      "reference_plane": {
+       "const": "GENERATOR_50OHM_SIDE_OF_LOCAL_MATCH"
+      },
+      "P_fwd_W": {
+       "type": "number"
+      },
+      "P_refl_W": {
+       "type": "number"
+      },
+      "match_setting_id": {
+       "type": "string"
+      }
+     }
+    },
+    "calorimetric_cross_check": {
+     "type": "object",
+     "required": [
+      "method_id",
+      "P_cal_W",
+      "u_P_cal_W",
+      "u_P_coupler_W"
+     ],
+     "properties": {
+      "P_cal_W": {
+       "type": "number"
+      },
+      "u_P_cal_W": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "u_P_coupler_W": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "method_id": {
+       "type": "string"
+      }
+     }
+    },
+    "loss_characterization": {
+     "anyOf": [
+      {
+       "type": "null"
+      },
+      {
+       "type": "object",
+       "required": [
+        "characterization_id",
+        "method",
+        "match_setting_id",
+        "value_W",
+        "u_value_W",
+        "valid_max_gamma_abs"
+       ],
+       "properties": {
+        "method": {
+         "enum": [
+          "TWO_PORT_S_PARAMETER"
+         ]
+        },
+        "u_value_W": {
+         "type": "number",
+         "exclusiveMinimum": 0
+        },
+        "at_power_verification": {
+         "anyOf": [
+          {
+           "type": "null"
+          },
+          {
+           "type": "object",
+           "required": [
+            "verification_id",
+            "method",
+            "eta_pred",
+            "u_eta_pred",
+            "P_net_W",
+            "u_P_net_W",
+            "P_ref_load_W",
+            "u_P_ref_load_W",
+            "k",
+            "k_registration_id",
+            "evidence_record_ids",
+            "tuning_states"
+           ],
+           "properties": {
+            "method": {
+             "enum": [
+              "CAL-P2-09_calorimetric_at_power",
+              "CAL-P2-10_antenna_simulator_at_power"
+             ]
+            },
+            "k": {
+             "type": [
+              "number",
+              "null"
+             ]
+            }
+           }
+          }
+         ]
+        }
+       }
+      }
+     ]
+    },
+    "optical": {
+     "type": "object",
+     "required": [
+      "photodiode_channel_id",
+      "optical_signal_V",
+      "photodiode_line_of_sight_ok",
+      "photodiode_saturated",
+      "electrical_ignition_or_mode_transition",
+      "unlit_threshold"
+     ],
+     "description": "photodiode channel (P1-M-28; A9.4 P2Q-05): classified by p1_reducer.classify_plasma_state into UNLIT / E_MODE / H_MODE / UNCERTAIN; unlit_threshold null until registered (P1-IT-54) -> UNCERTAIN",
+     "properties": {
+      "photodiode_channel_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "optical_signal_V": {
+       "type": "number"
+      },
+      "photodiode_line_of_sight_ok": {
+       "type": "boolean"
+      },
+      "photodiode_saturated": {
+       "type": "boolean"
+      },
+      "electrical_ignition_or_mode_transition": {
+       "type": "boolean"
+      },
+      "electrical_indicator_basis": {
+       "type": "string"
+      },
+      "unlit_threshold": {
+       "anyOf": [
+        {
+         "type": "null"
+        },
+        {
+         "type": "object",
+         "required": [
+          "threshold_id",
+          "threshold_V",
+          "basis"
+         ],
+         "properties": {
+          "threshold_id": {
+           "type": "string"
+          },
+          "threshold_V": {
+           "type": "number"
+          },
+          "basis": {
+           "type": "object",
+           "required": [
+            "dark_background_record_id",
+            "rf_powered_known_unlit_record_id",
+            "known_lit_p1_record_id",
+            "frozen_before_p2_map"
+           ],
+           "properties": {
+            "frozen_before_p2_map": {
+             "const": true
+            }
+           },
+           "description": "A9.4 P2Q-05 basis, identical to the P2 reducer (consolidated verification MET-05)"
+          }
+         }
+        }
+       ]
+      },
+      "lit_mode_assignment": {
+       "enum": [
+        "E_MODE",
+        "H_MODE",
+        null
+       ]
+      },
+      "mode_indicator_basis": {
+       "type": "string"
+      }
+     }
+    },
+    "gas_flow_state": {
+     "enum": [
+      "OFF",
+      "FLOWING"
+     ]
+    },
+    "unlit_procedure_id": {
+     "type": "string"
+    },
+    "rf_pickup_check": {
+     "enum": [
+      "DONE",
+      "NOT_DONE"
+     ]
+    }
+   },
+   "x-required-by-kind": {
+    "DUMMY_LOAD": [
+     "calorimetric_cross_check"
+    ],
+    "INSTALLED_UNLIT_ANTENNA_VIA_LOCAL_MATCH": [
+     "optical",
+     "gas_flow_state",
+     "unlit_procedure_id"
+    ]
+   },
+   "x-stage-by-kind": {
+    "DUMMY_LOAD": "P1-S1",
+    "INSTALLED_UNLIT_ANTENNA_VIA_LOCAL_MATCH": "P1-S2"
+   },
+   "x-k_x": 2.0
+  },
+  "ignition_attempt": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "timestamp_utc",
+    "synthetic",
+    "labels",
+    "gas",
+    "gas_mode",
+    "hall_discharge_state",
+    "ignition_procedure_id",
+    "point_id",
+    "rf",
+    "flows",
+    "pressures",
+    "ignited",
+    "ignition_delay_s",
+    "extinguished",
+    "optical",
+    "h1_magnet_state",
+    "start_state",
+    "restart_condition_met"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_id": {
+     "type": "string"
+    },
+    "run_id": {
+     "type": "string"
+    },
+    "timestamp_utc": {
+     "type": "string"
+    },
+    "synthetic": {
+     "type": "boolean"
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "record_kind": {
+     "const": "ignition_attempt"
+    },
+    "stage_id": {
+     "const": "P1-S3"
+    },
+    "gas": {
+     "enum": [
+      "Ar"
+     ]
+    },
+    "gas_mode": {
+     "enum": [
+      "G-REUSE",
+      "DIAGNOSTIC_DEDICATED_FEED"
+     ]
+    },
+    "hall_discharge_state": {
+     "const": "OFF"
+    },
+    "rf": {
+     "type": "object",
+     "required": [
+      "reference_plane",
+      "P_fwd_W",
+      "P_refl_W",
+      "match_setting_id"
+     ],
+     "properties": {
+      "reference_plane": {
+       "const": "GENERATOR_50OHM_SIDE_OF_LOCAL_MATCH"
+      },
+      "P_fwd_W": {
+       "type": "number"
+      },
+      "P_refl_W": {
+       "type": "number"
+      },
+      "match_setting_id": {
+       "type": "string"
+      }
+     }
+    },
+    "supply_mode": {
+     "enum": [
+      "AIR_PRIMARY",
+      "XE_CONTINGENCY",
+      "BENCH_AR_ENGINEERING_GROUND_ONLY"
+     ],
+     "description": "A9.19 supply mode (optional; must agree with gas, p1_reducer.icp_supply_mode); P1 reduces the Ar bench mode only"
+    },
+    "ignited": {
+     "type": "boolean"
+    },
+    "ignition_delay_s": {
+     "type": [
+      "number",
+      "null"
+     ]
+    },
+    "extinguished": {
+     "type": "boolean"
+    },
+    "optical": {
+     "type": "object",
+     "required": [
+      "photodiode_channel_id",
+      "optical_signal_V",
+      "photodiode_line_of_sight_ok",
+      "photodiode_saturated",
+      "electrical_ignition_or_mode_transition",
+      "unlit_threshold"
+     ],
+     "description": "photodiode channel (P1-M-28; A9.4 P2Q-05): classified by p1_reducer.classify_plasma_state into UNLIT / E_MODE / H_MODE / UNCERTAIN; unlit_threshold null until registered (P1-IT-54) -> UNCERTAIN",
+     "properties": {
+      "photodiode_channel_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "optical_signal_V": {
+       "type": "number"
+      },
+      "photodiode_line_of_sight_ok": {
+       "type": "boolean"
+      },
+      "photodiode_saturated": {
+       "type": "boolean"
+      },
+      "electrical_ignition_or_mode_transition": {
+       "type": "boolean"
+      },
+      "electrical_indicator_basis": {
+       "type": "string"
+      },
+      "unlit_threshold": {
+       "anyOf": [
+        {
+         "type": "null"
+        },
+        {
+         "type": "object",
+         "required": [
+          "threshold_id",
+          "threshold_V",
+          "basis"
+         ],
+         "properties": {
+          "threshold_id": {
+           "type": "string"
+          },
+          "threshold_V": {
+           "type": "number"
+          },
+          "basis": {
+           "type": "object",
+           "required": [
+            "dark_background_record_id",
+            "rf_powered_known_unlit_record_id",
+            "known_lit_p1_record_id",
+            "frozen_before_p2_map"
+           ],
+           "properties": {
+            "frozen_before_p2_map": {
+             "const": true
+            }
+           },
+           "description": "A9.4 P2Q-05 basis, identical to the P2 reducer (consolidated verification MET-05)"
+          }
+         }
+        }
+       ]
+      },
+      "lit_mode_assignment": {
+       "enum": [
+        "E_MODE",
+        "H_MODE",
+        null
+       ]
+      },
+      "mode_indicator_basis": {
+       "type": "string"
+      }
+     }
+    },
+    "point_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "ignition_procedure_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "h1_magnet_state": {
+     "enum": [
+      "OFF",
+      "REGISTERED_SETTING"
+     ]
+    },
+    "h1_magnet_field_setting_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "h1_coil_currents_A": {
+     "type": "object",
+     "minProperties": 1,
+     "additionalProperties": {
+      "type": "number"
+     }
+    },
+    "start_state": {
+     "enum": [
+      "EXTINGUISHED_RF_OFF",
+      "NOT_FROM_EXTINGUISHED_STATE"
+     ]
+    },
+    "restart_condition_met": {
+     "type": "boolean"
+    }
+   }
+  },
+  "stability_dwell": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "timestamp_utc",
+    "synthetic",
+    "labels",
+    "operating_point_record_id",
+    "ignition_point_id",
+    "dwell"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_id": {
+     "type": "string"
+    },
+    "run_id": {
+     "type": "string"
+    },
+    "timestamp_utc": {
+     "type": "string"
+    },
+    "synthetic": {
+     "type": "boolean"
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "record_kind": {
+     "const": "stability_dwell"
+    },
+    "stage_id": {
+     "const": "P1-S5"
+    },
+    "operating_point_record_id": {
+     "type": "string"
+    },
+    "ignition_point_id": {
+     "type": "string"
+    },
+    "dwell": {
+     "type": "object",
+     "required": [
+      "t_s",
+      "I_e_A",
+      "P_refl_W"
+     ]
+    }
+   }
+  },
+  "icp_operating_point": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "timestamp_utc",
+    "synthetic",
+    "labels",
+    "gas",
+    "gas_mode",
+    "record_class",
+    "hall_discharge_state",
+    "hall_discharge_sustained",
+    "h1_electrical",
+    "rf",
+    "generator",
+    "collector",
+    "extraction",
+    "pressures",
+    "flows",
+    "impedance",
+    "terminals",
+    "temperatures",
+    "rf_pickup_check",
+    "h1_magnet_state"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_kind": {
+     "const": "icp_operating_point"
+    },
+    "record_id": {
+     "type": "string"
+    },
+    "run_id": {
+     "type": "string"
+    },
+    "stage_id": {
+     "type": "string"
+    },
+    "timestamp_utc": {
+     "type": "string"
+    },
+    "synthetic": {
+     "type": "boolean"
+    },
+    "labels": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     },
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "gas": {
+     "enum": [
+      "Ar"
+     ]
+    },
+    "gas_mode": {
+     "enum": [
+      "G-REUSE",
+      "DIAGNOSTIC_DEDICATED_FEED"
+     ]
+    },
+    "supply_mode": {
+     "enum": [
+      "AIR_PRIMARY",
+      "XE_CONTINGENCY",
+      "BENCH_AR_ENGINEERING_GROUND_ONLY"
+     ],
+     "description": "A9.19 supply mode (optional; must agree with gas, p1_reducer.icp_supply_mode); P1 reduces the Ar bench mode only"
+    },
+    "record_class": {
+     "enum": [
+      "ICP45_CAPACITY",
+      "NEUTRALIZATION_CONSISTENCY",
+      "DIAGNOSTIC_VARIANT",
+      "ENGINEERING_SURFACE"
+     ],
+     "description": "A9.4 P1Q-10 / P1Q-13: only ICP45_CAPACITY records feed I_e,cap; Hall-ON records are NEUTRALIZATION_CONSISTENCY; METERED_RETURN anode only in a DIAGNOSTIC_VARIANT",
+     "x-allowed-by-hall-state": {
+      "OFF": [
+       "ICP45_CAPACITY",
+       "DIAGNOSTIC_VARIANT",
+       "ENGINEERING_SURFACE"
+      ],
+      "ON": [
+       "NEUTRALIZATION_CONSISTENCY",
+       "DIAGNOSTIC_VARIANT"
+      ]
+     }
+    },
+    "diagnostic_registration_id": {
+     "type": "string",
+     "minLength": 1,
+     "description": "required when record_class is DIAGNOSTIC_VARIANT"
+    },
+    "capacity_monitoring": {
+     "type": "object",
+     "required": [
+      "h1_body_ground_config",
+      "I_body_to_ground_continuous",
+      "V_anode_channel",
+      "V_icp_body_V",
+      "V_electron_collector_V",
+      "sign_convention_id",
+      "unintended_ground_path_found",
+      "ground_path_check_id"
+     ],
+     "description": "required on every ICP45_CAPACITY record (A9.4 P1Q-13); the terminals must then include h1_body and electron_collector (MEASURED)",
+     "properties": {
+      "h1_body_ground_config": {
+       "const": "SINGLE_POINT_METERED_FACILITY_GROUND"
+      },
+      "I_body_to_ground_continuous": {
+       "const": true
+      },
+      "V_anode_channel": {
+       "const": "HIGH_IMPEDANCE_ISOLATED"
+      },
+      "V_icp_body_V": {
+       "type": "number"
+      },
+      "V_electron_collector_V": {
+       "type": "number"
+      },
+      "sign_convention_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "unintended_ground_path_found": {
+       "type": "boolean"
+      },
+      "ground_path_check_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "langmuir_probe_present": {
+       "type": "boolean",
+       "description": "A9.8 P3Q-01: Langmuir probe present during this capacity record; undeclared -> the point is excluded"
+      },
+      "probe_perturbation_negligible_evidence_id": {
+       "type": "string",
+       "minLength": 1,
+       "description": "registered evidence that the probe perturbation is negligible; required when the probe is present"
+      }
+     }
+    },
+    "hall_discharge_state": {
+     "enum": [
+      "OFF",
+      "ON"
+     ],
+     "description": "discharge-supply OUTPUT state (P1-IT-40): ON = V_d applied; OFF = output disabled and anode disconnected"
+    },
+    "hall_discharge_sustained": {
+     "type": "boolean",
+     "description": "sustained discharge per the registered definition (P1-IT-32); must be false when the supply is OFF"
+    },
+    "h1_electrical": {
+     "type": "object",
+     "required": [
+      "config_id",
+      "anode_state",
+      "V_anode_V",
+      "h1_body_state",
+      "discharge_supply_connection"
+     ],
+     "description": "registered H-1 electrical configuration (P1-IT-39)",
+     "properties": {
+      "config_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "anode_state": {
+       "enum": [
+        "DISCONNECTED_FLOATING",
+        "METERED_RETURN",
+        "CONNECTED_TO_DISCHARGE_SUPPLY"
+       ]
+      },
+      "V_anode_V": {
+       "type": "number"
+      },
+      "h1_body_state": {
+       "type": "string",
+       "minLength": 1
+      },
+      "discharge_supply_connection": {
+       "enum": [
+        "PHYSICALLY_DISCONNECTED",
+        "CONNECTED"
+       ]
+      }
+     },
+     "x-supply-connection-by-hall-state": {
+      "OFF": "PHYSICALLY_DISCONNECTED",
+      "ON": "CONNECTED"
+     },
+     "x-anode-states-by-hall-state": {
+      "OFF": [
+       "DISCONNECTED_FLOATING",
+       "METERED_RETURN"
+      ],
+      "ON": [
+       "CONNECTED_TO_DISCHARGE_SUPPLY"
+      ]
+     },
+     "x-hall-anode-terminal-basis-by-anode-state": {
+      "DISCONNECTED_FLOATING": "OPEN_CIRCUIT_BY_CONSTRUCTION",
+      "METERED_RETURN": "MEASURED",
+      "CONNECTED_TO_DISCHARGE_SUPPLY": "MEASURED"
+     }
+    },
+    "rf": {
+     "type": "object",
+     "required": [
+      "reference_plane",
+      "P_fwd_W",
+      "P_refl_W",
+      "line_match_loss",
+      "match_setting_id"
+     ],
+     "properties": {
+      "reference_plane": {
+       "const": "GENERATOR_50OHM_SIDE_OF_LOCAL_MATCH"
+      },
+      "P_fwd_W": {
+       "type": "number"
+      },
+      "P_refl_W": {
+       "type": "number"
+      },
+      "match_setting_id": {
+       "type": "string"
+      },
+      "line_match_loss": {
+       "type": "object",
+       "required": [
+        "status"
+       ],
+       "properties": {
+        "status": {
+         "enum": [
+          "MEASURED",
+          "FLAGGED_NOT_MEASURED"
+         ]
+        },
+        "value_W": {
+         "type": "number"
+        },
+        "source": {
+         "type": "string"
+        },
+        "match_setting_id": {
+         "type": "string"
+        },
+        "valid_max_gamma_abs": {
+         "type": "number"
+        }
+       },
+       "x-required-when-measured": [
+        "value_W",
+        "source",
+        "match_setting_id",
+        "valid_max_gamma_abs"
+       ]
+      }
+     }
+    },
+    "generator": {
+     "type": "object",
+     "required": [
+      "generator_class",
+      "P_generator_input_W",
+      "input_boundary",
+      "instrument"
+     ],
+     "propertyNames": {
+      "not": {
+       "pattern": "[Bb][^A-Za-z0-9]*[Uu][^A-Za-z0-9]*[Ss]"
+      }
+     },
+     "properties": {
+      "generator_class": {
+       "enum": [
+        "GROUND_FACILITY_ONLY_MAINS"
+       ]
+      },
+      "P_generator_input_W": {
+       "type": "number"
+      },
+      "input_boundary": {
+       "type": "string",
+       "not": {
+        "pattern": "[Bb][^A-Za-z0-9]*[Uu][^A-Za-z0-9]*[Ss]"
+       }
+      },
+      "instrument": {
+       "type": "string"
+      }
+     }
+    },
+    "collector": {
+     "type": "object",
+     "required": [
+      "I_e_A",
+      "I_e_sign_convention",
+      "I_e_resolution_A",
+      "V_collector_V",
+      "reference_potential"
+     ],
+     "description": "the ICP ion-collecting electrode (TK-13; ICD ICP-21); I_e is its supply-lead current (I_e > 0 = electrons extracted from the ICP; equals terminals.collector_supply.I_A within I_e_resolution_A); V_collector is its potential w.r.t. reference_potential",
+     "properties": {
+      "I_e_A": {
+       "type": "number"
+      },
+      "I_e_sign_convention": {
+       "const": "POSITIVE_ELECTRONS_EXTRACTED_FROM_ICP_EQUALS_COLLECTOR_SUPPLY_TERMINAL_INTO_NETWORK"
+      },
+      "I_e_resolution_A": {
+       "type": "number",
+       "exclusiveMinimum": 0
+      },
+      "V_collector_V": {
+       "type": "number"
+      },
+      "reference_potential": {
+       "enum": [
+        "FACILITY_GROUND",
+        "ICP_BODY",
+        "ELECTRON_COLLECTOR_ELECTRODE"
+       ]
+      }
+     }
+    },
+    "extraction": {
+     "type": "object",
+     "required": [
+      "topology_id",
+      "electron_collecting_electrode"
+     ],
+     "description": "electron-extraction topology registered at P1-G0 (P1-IT-36): the electrode that sinks the extracted electrons",
+     "properties": {
+      "topology_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "electron_collecting_electrode": {
+       "enum": [
+        "DEDICATED_ELECTRON_COLLECTOR_TARGET",
+        "H1_ANODE"
+       ]
+      },
+      "target_geometry_id": {
+       "type": "string",
+       "minLength": 1
+      }
+     },
+     "x-refused-electrodes": [
+      "CHAMBER_WALL_FACILITY_GROUND"
+     ],
+     "x-dedicated-target-rules": "owner A9.8 P1Q-09: target_geometry_id registered at P1-G0; collector.reference_potential = ELECTRON_COLLECTOR_ELECTRODE and V_collector_V < 0",
+     "x-allowed-by-hall-state": {
+      "OFF": [
+       "DEDICATED_ELECTRON_COLLECTOR_TARGET"
+      ],
+      "ON": [
+       "H1_ANODE"
+      ]
+     }
+    },
+    "h1_point_id": {
+     "type": "string",
+     "minLength": 1,
+     "description": "registered H-1 point id (gas/magnet conditions; required for ICP-45A capacity candidacy, P1-IT-38)"
+    },
+    "pressures": {
+     "type": "object",
+     "required": [
+      "p_chamber_Pa"
+     ],
+     "properties": {
+      "p_chamber_Pa": {
+       "type": "number"
+      },
+      "p_icp_Pa": {
+       "type": "number"
+      }
+     }
+    },
+    "flows": {
+     "type": "object",
+     "required": [
+      "mdot_Ar_H1_mg_s",
+      "mdot_icp_dedicated_mg_s"
+     ],
+     "properties": {
+      "mdot_Ar_H1_mg_s": {
+       "type": "number"
+      },
+      "mdot_icp_dedicated_mg_s": {
+       "type": "number"
+      },
+      "ledger_booking_id": {
+       "type": "string"
+      }
+     }
+    },
+    "impedance": {
+     "type": "object",
+     "required": [
+      "status"
+     ],
+     "properties": {
+      "status": {
+       "enum": [
+        "MEASURED",
+        "NOT_MEASURED_PENDING_P2_CHAIN"
+       ]
+      },
+      "R_ohm": {
+       "type": "number"
+      },
+      "X_ohm": {
+       "type": "number"
+      }
+     }
+    },
+    "terminals": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "object",
+      "required": [
+       "basis"
+      ],
+      "description": "signed terminal current, conventional current INTO the isolated network positive (A9.5 P1Q-15); NOT_MEASURED = unavailable, carries no I_A (never a silent zero)",
+      "properties": {
+       "I_A": {
+        "type": [
+         "number",
+         "null"
+        ]
+       },
+       "basis": {
+        "enum": [
+         "MEASURED",
+         "OPEN_CIRCUIT_BY_CONSTRUCTION",
+         "NOT_MEASURED"
+        ]
+       },
+       "sign_convention_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "uncertainty": {
+        "type": "object",
+        "required": [
+         "u_calibration_A",
+         "u_zero_offset_A",
+         "u_resolution_A",
+         "u_repeatability_A",
+         "u_rf_pickup_A"
+        ],
+        "description": "u(I_k) components of a MEASURED channel (A9.5 P1Q-15); required on every MEASURED terminal of an ICP45_CAPACITY record, else the point cannot be evaluated",
+        "properties": {
+         "u_calibration_A": {
+          "type": "number",
+          "minimum": 0
+         },
+         "u_zero_offset_A": {
+          "type": "number",
+          "minimum": 0
+         },
+         "u_resolution_A": {
+          "type": "number",
+          "exclusiveMinimum": 0
+         },
+         "u_repeatability_A": {
+          "anyOf": [
+           {
+            "type": "number",
+            "minimum": 0
+           },
+           {
+            "const": "NOT_APPLICABLE"
+           }
+          ]
+         },
+         "u_rf_pickup_A": {
+          "anyOf": [
+           {
+            "type": "number",
+            "minimum": 0
+           },
+           {
+            "const": "NONE_REGISTERED"
+           }
+          ]
+         }
+        }
+       },
+       "physical_verification_id": {
+        "type": "string",
+        "minLength": 1
+       },
+       "leakage": {
+        "type": "object",
+        "required": [
+         "dwv_path_id",
+         "leakage_upper_bound_A",
+         "u_leakage_A"
+        ],
+        "description": "owner A9.8 P1Q-20: measured DWV insulation-leakage term of an OPEN_CIRCUIT_BY_CONSTRUCTION terminal"
+       }
+      },
+      "x-required-when-open-circuit": [
+       "physical_verification_id",
+       "leakage (capacity closure; else NOT_EVALUATED_UNCERTAINTY)"
+      ],
+      "x-I_A-required-unless-basis": "NOT_MEASURED"
+     },
+     "x-required-by-hall-state-and-electrode": {
+      "OFF/DEDICATED_ELECTRON_COLLECTOR_TARGET": [
+       "collector_supply",
+       "icp_body",
+       "facility_ground",
+       "electron_collector",
+       "h1_body",
+       "hall_anode"
+      ],
+      "ON/H1_ANODE": [
+       "collector_supply",
+       "icp_body",
+       "facility_ground",
+       "hall_anode"
+      ]
+     }
+    },
+    "temperatures": {
+     "type": "object",
+     "required": [
+      "T_icp_dielectric_C",
+      "T_antenna_C",
+      "T_collector_C",
+      "T_match_C",
+      "T_rf_source_C",
+      "T_h1_pole_inner_C",
+      "T_h1_pole_outer_C",
+      "T_sink_C"
+     ],
+     "additionalProperties": {
+      "type": "number"
+     }
+    },
+    "rf_pickup_check": {
+     "enum": [
+      "DONE",
+      "NOT_DONE"
+     ]
+    },
+    "optical": {
+     "type": "object",
+     "required": [
+      "photodiode_channel_id",
+      "optical_signal_V",
+      "photodiode_line_of_sight_ok",
+      "photodiode_saturated",
+      "electrical_ignition_or_mode_transition",
+      "unlit_threshold"
+     ],
+     "description": "photodiode channel (P1-M-28; A9.4 P2Q-05): classified by p1_reducer.classify_plasma_state into UNLIT / E_MODE / H_MODE / UNCERTAIN; unlit_threshold null until registered (P1-IT-54) -> UNCERTAIN",
+     "properties": {
+      "photodiode_channel_id": {
+       "type": "string",
+       "minLength": 1
+      },
+      "optical_signal_V": {
+       "type": "number"
+      },
+      "photodiode_line_of_sight_ok": {
+       "type": "boolean"
+      },
+      "photodiode_saturated": {
+       "type": "boolean"
+      },
+      "electrical_ignition_or_mode_transition": {
+       "type": "boolean"
+      },
+      "electrical_indicator_basis": {
+       "type": "string"
+      },
+      "unlit_threshold": {
+       "anyOf": [
+        {
+         "type": "null"
+        },
+        {
+         "type": "object",
+         "required": [
+          "threshold_id",
+          "threshold_V",
+          "basis"
+         ],
+         "properties": {
+          "threshold_id": {
+           "type": "string"
+          },
+          "threshold_V": {
+           "type": "number"
+          },
+          "basis": {
+           "type": "object",
+           "required": [
+            "dark_background_record_id",
+            "rf_powered_known_unlit_record_id",
+            "known_lit_p1_record_id",
+            "frozen_before_p2_map"
+           ],
+           "properties": {
+            "frozen_before_p2_map": {
+             "const": true
+            }
+           },
+           "description": "A9.4 P2Q-05 basis, identical to the P2 reducer (consolidated verification MET-05)"
+          }
+         }
+        }
+       ]
+      },
+      "lit_mode_assignment": {
+       "enum": [
+        "E_MODE",
+        "H_MODE",
+        null
+       ]
+      },
+      "mode_indicator_basis": {
+       "type": "string"
+      }
+     }
+    },
+    "h1_magnet_state": {
+     "enum": [
+      "OFF",
+      "REGISTERED_SETTING"
+     ],
+     "description": "factor F6 (owner A9.10 P1Q-06): OFF first, then registered settings"
+    },
+    "h1_magnet_field_setting_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "h1_coil_currents_A": {
+     "type": "object",
+     "minProperties": 1,
+     "additionalProperties": {
+      "type": "number"
+     }
+    },
+    "icp_geometry_id": {
+     "type": "string",
+     "minLength": 1,
+     "description": "registered ICP geometry variant (owner A9.14 F6-OQ-03)"
+    }
+   },
+   "x-required-when-magnet-on": [
+    "h1_magnet_field_setting_id",
+    "h1_coil_currents_A"
+   ],
+   "propertyNames": {
+    "not": {
+     "pattern": "[Bb][^A-Za-z0-9]*[Uu][^A-Za-z0-9]*[Ss]"
+    }
+   },
+   "x-p-bus-screen": "the reducer refuses, at any nesting depth, every field name that normalises (lower-case, alphanumerics only) to contain 'bus', and a generator.input_boundary text naming a bus (A9.3 OQ-RFQ-06)"
+  },
+  "topology_control_sequence": {
+   "type": "object",
+   "required": [
+    "schema",
+    "record_kind",
+    "record_id",
+    "run_id",
+    "stage_id",
+    "synthetic",
+    "labels",
+    "gas",
+    "classification",
+    "c1_disconnected",
+    "hall_start_registration_id",
+    "steps",
+    "c1_configuration",
+    "hi_holdout_a_id"
+   ],
+   "properties": {
+    "schema": {
+     "const": "p1_bench_record_v1"
+    },
+    "record_kind": {
+     "const": "topology_control_sequence"
+    },
+    "gas": {
+     "enum": [
+      "Ar"
+     ]
+    },
+    "classification": {
+     "const": "REQUIRED_ENGINEERING_CONTROL_NON_SCORING"
+    },
+    "c1_disconnected": {
+     "const": true
+    },
+    "hall_start_registration_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "c1_configuration": {
+     "enum": [
+      "C1_NOT_INSTALLED",
+      "C1_INSTALLED_DISCONNECTED"
+     ]
+    },
+    "c1_absence_record_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "hi_holdout_a_id": {
+     "type": "string",
+     "minLength": 1
+    },
+    "labels": {
+     "type": "array",
+     "contains": {
+      "const": "ENGINEERING_ONLY_NON_SCORING"
+     }
+    },
+    "steps": {
+     "type": "array",
+     "minItems": 7,
+     "maxItems": 7,
+     "items": {
+      "type": "object",
+      "required": [
+       "step",
+       "text",
+       "signals"
+      ],
+      "properties": {
+       "step": {
+        "type": "integer"
+       },
+       "text": {
+        "type": "string"
+       },
+       "sustained_discharge_observed": {
+        "type": "boolean"
+       },
+       "sustainment_definition_id": {
+        "type": "string"
+       },
+       "supply_enabled_connected": {
+        "type": "boolean"
+       },
+       "artifact_or_transient_only": {
+        "type": "boolean"
+       },
+       "interlock_invalidates": {
+        "type": "boolean"
+       },
+       "signals": {
+        "type": "object",
+        "required": [
+         "t_s",
+         "V_d_V",
+         "I_d_A",
+         "I_e_icp_A",
+         "P_rf_fwd_W",
+         "P_rf_refl_W",
+         "V_collector_V",
+         "V_reference_V"
+        ]
+       }
+      }
+     }
+    }
+   },
+   "x-step-texts-verbatim": [
+    {
+     "step": 1,
+     "text": "H-1 gas/magnet conditions established."
+    },
+    {
+     "step": 2,
+     "text": "C1 disconnected/not supplying electrons."
+    },
+    {
+     "step": 3,
+     "text": "ICP RF OFF."
+    },
+    {
+     "step": 4,
+     "text": "Apply the preregistered Hall start attempt inside registered limits."
+    },
+    {
+     "step": 5,
+     "text": "Record whether a sustained Hall discharge exists."
+    },
+    {
+     "step": 6,
+     "text": "Turn ICP ON using the registered procedure."
+    },
+    {
+     "step": 7,
+     "text": "Observe whether Hall discharge becomes sustainable."
+    }
+   ]
+  }
+ },
+ "x-closure-rule-input": {
+  "required": [
+   "rule_id",
+   "sign_convention",
+   "sign_convention_id",
+   "I_scale_min_A",
+   "I_scale_min_basis"
+  ],
+  "allowed": [
+   "rule_id",
+   "sign_convention",
+   "sign_convention_id",
+   "I_scale_min_A",
+   "I_scale_min_basis",
+   "covariance",
+   "open_by_construction_terminals",
+   "leakage_negligibility_ratio_max",
+   "dwv_leakage_by_path"
+  ],
+  "sign_convention": "CONVENTIONAL_CURRENT_INTO_THE_DEFINED_ISOLATED_ELECTRICAL_NETWORK_IS_POSITIVE",
+  "owner_constants": {
+   "k_sigma": 3.0,
+   "fraction_max": 0.02
+  },
+  "open_by_construction_terminals": {
+   "items_required": [
+    "terminal",
+    "basis"
+   ],
+   "implicit": [
+    "hall_anode"
+   ],
+   "never_registrable": [
+    "collector_supply",
+    "electron_collector",
+    "h1_body",
+    "facility_ground"
+   ],
+   "description": "terminals other than the floating H-1 anode that are open by construction, each with its basis (P1-G0); any other OPEN_CIRCUIT_BY_CONSTRUCTION declaration excludes the capacity point (consolidated verification E2)"
+  },
+  "covariance": {
+   "required": [
+    "covariance_id",
+    "terminals",
+    "correlation"
+   ],
+   "description": "registered correlation r_ij of the listed terminals (symmetric, unit diagonal, positive semi-definite)"
+  },
+  "source": "docs/decisions/OD_2026_09_30_A9_5_p1_closure_owner_decisions.json decisions.P1Q-15"
+ }
+}

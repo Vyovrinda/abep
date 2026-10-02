@@ -1,0 +1,114 @@
+# Evidence policy for simulator inputs
+
+Published data are **evidence, not ground truth**. A peer-reviewed paper can report an experiment accurately and still
+leave uncertainty in geometry, instrumentation, calibration, facility effects, data reduction or interpretation. A model
+that is correct in one regime may not transfer to another thruster, magnetic topology, gas, pressure or power. When the
+published record can't fix a quantity, say that **the published information is insufficient to reconstruct the experiment
+uniquely**. That's different from saying the paper is wrong.
+
+## Evidence hierarchy (highest confidence first)
+The evidence level describes only the strength and proximity of the **source**, never what was done to a number.
+1. In-house measurement on the actual Vyovrinda hardware and operating condition.
+2. Independent measurement on the same or essentially identical hardware.
+3. Primary experimental literature on the same or closely similar hardware. Missing geometry, diagnostics, facility
+   details, etc. are recorded as limitations; they don't automatically change the level.
+4. Validated physics or evaluated-data literature: experimentally benchmarked models, evaluated cross sections, validated
+   correlations or simulations applicable to the relevant regime.
+5. Indirect published evidence: secondary literature, reviews, compilations, inherited datasets, or results whose
+   original primary measurement or model can't be completely inspected or reconstructed.
+6. Engineering correlation, or extrapolation outside its directly validated domain.
+7. Assumption or hypothesis without direct validating evidence for the present application. Never silently promoted to
+   measured data.
+
+**Digitization, unit conversion, interpolation, reconstruction or application of a published correction never changes
+the evidence level by itself.** These belong to quantity type, transformation chain and uncertainty.
+
+| question | answered by |
+|---|---|
+| How strong and proximate is the source? | evidence level |
+| What is this number? | quantity type |
+| What happened to it before it entered the model? | transformation chain |
+| How uncertain is the resulting value? | uncertainty |
+
+So two numbers from the same paper can legitimately be "level 3 / digitized + reconstructed / high uncertainty" and
+"level 3 / directly measured / low uncertainty".
+
+## Four attributes of every input
+Each simulator input should carry **source + uncertainty + applicability domain + validation status**, together with its
+**quantity type**: *measured*, *digitized*, *inferred*, *reconstructed*, *model-derived* or *assumed*, and its
+**transformation chain**: instrument reading → the source's own corrections → our extraction/digitization → simulator
+input.
+
+**Evidence level and quantity type are orthogonal.** The level characterizes the evidence source and its applicability.
+The type characterizes what happened to this particular number. One level-3 paper can contain a measured quantity, a
+reconstructed one and an inferred one, so "level 3" never means "measured".
+
+Example: the P5 beam efficiency isn't "beam_efficiency = 0.61". It's:
+
+| attribute | value |
+|---|---|
+| source | Brabston et al., JPP 2025, Fig. 9 |
+| evidence level | 3 (primary experimental literature, closely matching hardware) |
+| quantity type | paper-reconstructed (from Faraday/probe data) + digitized (raster) |
+| value | Xe1–Xe3: 0.614 / 0.601 / 0.621 |
+| uncertainty | ±0.071 / ±0.075 / ±0.073 (published bars) plus digitization (axis residual ≤ 0.0002). **Reading ambiguity:** Fig. 9 is inconsistent with the paper's Fig. 8, so reading A (f ≈ 0.78) and reading B (f ≈ 0.89–0.91) are both carried |
+| applicability | P5, xenon, 5 mg/s, 230–274 V, facility pressure 3.3–4.5×10⁻⁵ Torr (includes CEX broadening) |
+| validation status | not independently validated; transfer to flight conditions uncertain |
+
+Models are held to the same standard. "ScaledGaussianBohm with a near-exit transport trough is consistent with important
+features of the P5 data within the investigated uncertainty space" is a **model hypothesis**. It isn't "the true transport
+model".
+
+## Rules
+- Preserve reported values and their provenance exactly. Record any transformation (digitizing, inverting a correction,
+  unit conversion) and its uncertainty.
+- **Don't tune the simulator merely to force agreement with literature.** When a model and a paper disagree, first check
+  geometry, facility, boundary conditions, diagnostics, chemistry and operating regime.
+- **Hardware validation supersedes literature-derived assumptions within the hardware's validated operating domain.**
+  The experiment being reproduced takes precedence over the reputation of the source.
+- Closure path for Vyovrinda hardware: literature → simulation → component experiment → thruster experiment → integrated
+  ABEP test → repeated validation. Only the later stages establish that *our* system behaves as predicted.
+
+## Register: current key inputs (living register)
+| input | level | type | transformation chain / notes |
+|---|---|---|---|
+| P5 Xe setpoints: flows, V_d, P_d, peak B, chamber pressure (Brabston Table 4) | 3 | measured | tabulated as reported. Limitation carried in the attributes: 2025 channel depth conflicts across sources (32 vs 38 mm) and coil currents are unpublished |
+| P5 raw I_d = P_d/V_d | 3 | inferred (from measured P_d and V_d) | instrument reading → Table 4 → our division |
+| P5 vacuum-corrected I_d (Brabston Eq. 14) | 3 | reconstructed | measured I_d → our application of the paper's Eq. 13/14 ingestion correction (A_en = 488 cm², ζ_A = 1) → simulator target |
+| P5 corrected thrust Xe1/Xe3 (Brabston abstract) | 3 | reconstructed | stand measurement → paper's Eq. 16 facility correction (ζ_en = 0.8, empirical) → value stated in the abstract |
+| P5 corrected thrust Xe2 (Brabston Fig. 5) | 3 | digitized + reconstructed | stand measurement → paper's Eq. 16 correction → plotted in raster Fig. 5 → our digitization (< 0.35 mN; axis residuals < 0.25 mN) → simulator target (±4.9 mN measurement) |
+| P5 raw thrust targets | 3 | reconstructed | corrected thrust above → our inversion of Eq. 16 with the paper's ζ_en |
+| P5 B(z) shape (Peterson 2001, Figs. 11/12) | 3 | measured → graphically published → vector-extracted | Hall-probe measurement → vector graphic → our path extraction. Extraction is effectively lossless relative to the graphic; converting to physical (z, B) still inherits axis calibration (checked: 25.41/37.99 mm reference lines). Registration to the 2025 thruster is a hypothesis (L38-hist / L32-anode / L32-exit). Historical coil settings only (1.6/3.0 kW) |
+| P5 channel depth | 3 | measured, conflicting | 38 mm (Peterson 2001, Hofer 2004) vs 32 mm (Brabston 2025); carried as hypotheses |
+| Ψ_b, η_E, Φ_P, component η_T (Brabston Figs. 8/9) | 3 | paper-reconstructed + digitized | internally inconsistent (Fig. 9 vs Fig. 8, 27–38 %); readings A/B carried; facility-condition divergence (CEX broadening) |
+| P5 N₂ setpoints: flows, V_d, P_d, peak B 130 G, chamber pressure (Brabston Table 2) | 3 | measured | tabulated as reported; P_d to 3 significant figures |
+| P5 N₂ raw / corrected I_d | 3 | inferred / reconstructed | P_d/V_d; Eq. 13/14 with N₂ mass (correction 2.2–3.7 %). Fig. 5 plots N₂ powers ~43 W below Eq. 14 (Xe matches); Fig. 8 follows Eq. 14 |
+| P5 N₂ corrected thrust | 3 | reconstructed (N1, N5 abstract) / digitized + reconstructed (N2–N4, Fig. 5) | ±2.6 mN; digitization ~0.4 mN; raw by Eq. 16 inversion (ζ_en = 0.8) |
+| P5 N₂ species acceleration voltage V_a,N₂⁺, V_a,N⁺ (Fig. 10 η_V,n) | 3 | measured (E×B, 1 m, V_p-corrected) → digitized | ±11.6 V; N1–N3 only; far-field, facility conditions |
+| P5 N₂ Ψ_b, η_E, Φ_P (Fig. 9) | 3 | paper-reconstructed + digitized | N1–N3 only; consistent with Fig. 8 component η_T; divergence readings A/B differ up to 11 % (N3) |
+| P5 N₂ Φ_m,n, η_SP,n, ξ_N (Fig. 10) | 6 | model-derived (paper's Itikawa/Cosby rate approximation at an assumed T_e) | not a validation target |
+| N₂ ionization and elastic tables (Itikawa 2006, via HallThruster.jl) | 4 | evaluated cross sections → model-derived rates | evaluated data → Maxwellian integration (HallThruster.jl) |
+| N ionization table (Kim & Desclaux 2002 BEB via NIST) | 4 | model-derived (theory), experimental cross-check | BEB cross section → NIST tabulation → our Maxwellian integration; cross-checked against Brook 1978 (metastable-mix beam) |
+| N₂ dissociation table (Song et al. JPCRD 2023 Table 9 = Cosby 1993) | 4 | evaluated measurement (transcribed numeric table) → model-derived rate | Cosby 1993 + Winters 1966 measurements → Cosby weighted average (±20 %) → JPCRD Table 9 → transcribed → Maxwellian integration. Assumptions: σ = 0 below 12 eV; held above 200 eV (rates above 45 eV mean energy rest > 1 % on it); energy loss 12.14 eV = representative fixed loss for a channel-summed cross section (not a measured per-event loss), model uncertainty 9.75–13.33 eV. Validity domain T_e ≤ 30 eV |
+| N₂ ionization table (Song et al. JPCRD 2023 Table 10, σ(N₂⁺)) | 4 | evaluated measurement (transcribed numeric table) → model-derived rate | Straub 1996 / Rapp & Englander-Golden 1965 measurements → Lindsay & Mangan evaluation (±5 %) → JPCRD Table 10 partial column → transcribed → Maxwellian integration. Assumptions: σ = 0 below 16 eV; held above 1000 eV (< 1 % of the rate up to 255 eV). Replaces the shipped HallThruster table in abep-n2n-0.2 |
+| N₂ elastic momentum-transfer table (Song et al. JPCRD 2023 Table 5) | 4 | evaluated (measurement + theory), transcribed numeric table → model-derived rate | beam/swarm data and calculations → Kawaguchi et al. evaluation (no stated uncertainty; Song: "a few percent") → JPCRD Table 5 subsample (40 points) → transcribed → linear-in-E interpolation (≈ 2 % vs log-log) → Maxwellian integration. Replaces the shipped HallThruster table in abep-n2n-0.3 |
+| N₂ dissociative-ionization tables (Song 2023 Table 10 σ(N⁺ + N₂²⁺)), upper/lower variants | 4 | evaluated measurement (transcribed) → model-derived rate; lower variant statement-derived | measurements → Lindsay & Mangan / Song evaluation → Table 10 column (N⁺ and N₂²⁺ not separated) → upper = column, lower = column − 0.01 σ_total → threshold ramp from 24.284 eV (our construction) → Maxwellian integration |
+| N⁺ → N²⁺ table (Bell et al. JPCRD 1983) | 4 | evaluated measurement, fitted analytic form (parameters transcribed from page image) → model-derived rate | Harrison et al. crossed-beam data → Bell et al. recommended curve (±10 %) → Eq. (1) fit → evaluated 29.6 eV–10 keV → Maxwellian integration |
+| N₂ → N²⁺ + N table (Song 2023 Table 10 σ(N⁺⁺)) | 4 | evaluated measurement (transcribed) → model-derived rate | measurements → Table 10 N⁺⁺ yield → threshold ramp from 53.885 eV (our construction) → Maxwellian integration |
+| N₂ vibrational excitation v=0 → 1…10 (Laporta et al. 2014) | 4 | model-derived (R-matrix/LCP theory) fitted rate coefficients, transcribed | theory cross sections (resonant, ≤ 15 eV) → Laporta Maxwellian rates → Eq. (10) fit → evaluated at T_e = ⅔ ε̄. Closure assumptions: v = 0 only, no superelastic, no non-resonant excitation. Fit domain not stated by the source |
+| Atomic-N momentum transfer (Ragimkhanov et al. 2026 Fig. 1b OPM; Wang et al. 2014 BSR as re-plotted there) | 4 | model-derived (theory) → published graphically → vector-extracted | OPM / BSR calculations → plotted in Fig. 1b (vector) → our path extraction + frame calibration → Maxwellian integration. The Wang curve is a secondary reproduction. The OPM/BSR disagreement (rate ratio 0.36–0.96 over T_e 2–30 eV) is carried as a chemistry variant |
+| N₂ electronic excitation, 8 states (Su 2021 + Johnson 2005) | 4 | model-derived (R-matrix) < 20 eV; measured (EEL DCS integrated) 20–100/200 eV; assumed continuation above | Su CC BY supplementary data → used as is below 20 eV; Johnson Table 2 → owner transcription → used exactly from 20 eV; power law from Johnson's last two points above. Source disagreement in the overlap (Su/Johnson 0.6–3.8) is recorded, not renormalized |
+| Facility ingestion flow (Brabston Eq. 13) | 6 | engineering correlation | plume-entrainment estimate; enters the 1-D model at the anode (our modelling choice) |
+| Anomalous transport (any Bohm-type profile) | 7 | assumed model form | P5 transport not uniquely identifiable; ScaledGaussianBohm region carried as an uncertainty ensemble (a model hypothesis) |
+| HallThruster.jl v0.23.1 physics (pinned) | 4 | model | ingestion Torr/Pa inconsistency worked around (`hallthruster_bridge/upstream/`) |
+| ECHT N₂ setpoints: V_d, I_d, coil current, argon cathode flow, chamber pressure (Marchioni 2020 MSc thesis, Table 6.1) | 3 | measured (tabulated) | multimeter / ion-gauge readings → Table 6.1 (13 points, 180/200/220 V, 2.06 mg/s N₂; I_d to 2 s.f., ±0.05 A rounding is the only stated resolution) → transcribed in `hallthruster_bridge/identification/echt_n2/echt_n2_evidence_audit_v1.json`. ECHT-N₂ status **HISTORICAL_UNSUPPORTED** (`identification/echt_n2/STATUS.json`). It is not a transport discriminator and not score-bearing, and it cannot be scored without forced assumptions A1–A11. At most it can feed a supporting check pre-registered before any ECHT simulation, and none is pre-registered |
+| ECHT N₂ thrust (thesis Tables 6.2/6.3) | 3 | measured (thrust stand) + reduced by the author | inverted-pendulum stand → author's one-side reduction (20.62–23.41 mN, 7 runs) or averaged reduction (17.29–21.31 mN, Runs 2/4/5/6; 6–18 % lower) → transcribed. The ± values are calibration-fit only. Runs 1, 3 and 7 are flagged strongly unstable. The reduction reading is forced assumption A7, and divergence (A8) is unpublished |
+| ECHT B(z) (thesis Figs. 4.7/4.8) | 3 | digitized (of measured) at 2 A; model-derived (FEMM) + digitized at 1.5–3 A | Gauss probe / FEMM → raster figure → our digitization (±0.014 cm, ±0.2 G) → `echt_bfield_digitized_v1.json`. The profile is a flat plateau at about 4.7–8.6 cm, not exit-peaked. The measured plateau mean is 85.3 G, about 12 % below FEMM. "130 G" is the FEMM value at 3 A (model-derived), not a measured B_max. B per run needs forced assumption A3 |
+| ECHT geometry (thesis Sec. 4.1.1, p. 63) | 3 | measured (design dimension); radii inferred | 86 mm length, 10 mm channel height, "100 mm outer diameter" of the BN chamber. r_in/r_out = 40/50 mm is one reading of that (A1, verify). The anode position is unpublished (A2) |
+| ECHT JAP 2021 abstract (Marchioni & Cappelli, doi:10.1063/5.0048283) | 3 | measured (author-reported ranges; abstract only) | Paywalled; only the abstract was read, via Crossref: 500–800 W anode, 17–22 mN, 1000–1100 s, 14–18 %, 2 mg/s N₂. There are no per-point values. That it reports the same campaign as the thesis is inferred (verify) |
+| `cases/echt_n2.json` (V_d 225/250/275 V; exit-peaked Gaussian B; `B_max_T` null) | 7 | assumed | No open source. The published plateau contradicts the B shape. **HISTORICAL_UNSUPPORTED**, `score_bearing: false`, content kept. `run_cases.jl` refuses it unless `ABEP_ALLOW_HISTORICAL=1`, and then every record carries `score_bearing: false` |
+| 0-D calibration anchor "Marchioni N₂ 2 mg/s, 250 V → 24 mN, 690 W, 1230 s" (docs/HISTORY.md; `validation.calibration_anchor()`) | 7 | assumed (unverified) | No open source: the JAP abstract gives ranges only, and the open thesis has no data above 220 V. **HISTORICAL_UNSUPPORTED**. It is kept only to reproduce the withdrawn 0-D results. `abep_sim/validation.py` is documented, and no value was changed |
+
+**Future (not yet implemented):** frozen datasets and Hall-map provenance objects should carry these fields
+programmatically: `evidence_level`, `quantity_type`, `source`, `uncertainty`, `applicability_domain`, `validation_status`,
+`transformation_chain`.

@@ -1,0 +1,3190 @@
+{
+ "schema": "f3_compressor_synthesis_v1",
+ "version": "1.0.0",
+ "lane": "A9_7_F3",
+ "follow_on": "fo_a9_7_f3_compressor_synthesis",
+ "directive": "docs/decisions/OD_2026_10_01_A9_7_ARCHITECTURE_FREEZE_DESIGN_SYNTHESIS.md (F3)",
+ "base_commit": "1c9d7a648cd4ce739e587248693271e5115698e1",
+ "generated_by": "docs/design_synthesis/f3_compressor/build_f3_compressor.py",
+ "module": "abep_sim/design/compressor_synthesis.py",
+ "test": "tests/test_design_f3_compressor.py",
+ "status": "PARAMETRIC_SENSITIVITY_SCREENING (INVESTIGATION_HYPOTHESIS; not a design, not a CBE, no PASS, no winner)",
+ "what_it_is_not": [
+  "a compressor design or freeze",
+  "a replacement of DragCompressor.size_for (unchanged; goldens unaffected)",
+  "a CBE for A9B-04",
+  "an evidence-gate change",
+  "wired into archengine"
+ ],
+ "determinism": "no random numbers are used (grid search); outputs rounded to 10 significant digits",
+ "pins": {
+  "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json": "1a62fe67c257e60af936796aea14f5991f819a4a69665b04f7a5f7365890a26b",
+  "docs/procurement/web_track_v1/threads/R1_compressor.json": "d30c49cef7ecabe0e957b566cc1bb8b0e0e43552db627b1bc8eb7d6cdb510bca",
+  "docs/decisions/OD_2026_09_29_owner_answers_147.json": "50e39a4deac7d4ada4710b2f641d717f1c4febd59366cbc04d8c66de6b4532b1",
+  "docs/decisions/OD_2026_10_01_A9_7_ARCHITECTURE_FREEZE_DESIGN_SYNTHESIS.md": "fb51328d6fe07a6eaf257ef9ef9592cb0c0039ae3e8cf04ef0420007c985b129",
+  "docs/decisions/OD_2026_10_01_A9_7_architecture_freeze_design_synthesis.json": "3199a670c901967ae4dca930022470b024cac14b263335da0adc3d423c37f372"
+ },
+ "referenced_not_pinned": [
+  {
+   "path": "abep_sim/compressor.py",
+   "use": "DragCompressor.run / _run_once / size_for, dataclass defaults (called, never changed)"
+  },
+  {
+   "path": "abep_sim/materials.py",
+   "use": "DB['Ti6Al4V'] density and T_max_K (uncited priors)"
+  },
+  {
+   "path": "abep_sim/constants.py",
+   "use": "K_B, M_SPECIES"
+  },
+  {
+   "path": "abep_sim/design/compressor_synthesis.py",
+   "use": "the F3 synthesis module"
+  },
+  {
+   "path": "docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json",
+   "use": "A9B-04 compressor line (CBE TBD), MA-AL-02"
+  },
+  {
+   "path": "docs/experiments/hall_icp/integration/m16_v4/subsystem_maturity_v4.json",
+   "use": "row 3 compressor (BLOCKED)"
+  }
+ ],
+ "sources": {
+  "SRC-CHIGGIATO2013": {
+   "citation": "P. Chiggiato, 'Vacuum Technology for Ion Sources', CERN Accelerator School: Ion Sources, CERN-2013-007 (2013); arXiv:1404.0960",
+   "url": "https://arxiv.org/pdf/1404.0960",
+   "access_level": "full_text",
+   "accessed": "2026-10-01",
+   "accessed_copy_sha256": "7946e9d76a7065f15ff3f2981c2e2b922d25568f22bc20f702369faaf53419ba",
+   "note": "page numbers are PDF page indices of the arXiv PDF (same reference as compressor_downselect REF-CHIGGIATO2013, EV-01..EV-04, EV-20)"
+  },
+  "SRC-NASA-HDBK-6025": {
+   "citation": "NASA-HDBK-6025, 'Guidelines for the Specification and Certification of Titanium Alloys for NASA Flight Applications' (approved 2014-04-24)",
+   "url": "https://standards.nasa.gov/sites/default/files/standards/NASA/Baseline-w/CHANGE-1/1/Historical/NASA-HDBK-6025.pdf",
+   "access_level": "full_text",
+   "accessed": "2026-10-01",
+   "accessed_copy_sha256": "cea557a74d04f0c82ad917a06e6dca9bedbd21c5a8b444dd86e207847c267163",
+   "note": "the A-basis value is quoted by the handbook from MMPDS-06 (MMPDS itself not accessed): a secondary quotation of a design-allowables handbook"
+  },
+  "SRC-DOWNSELECT": {
+   "citation": "repository: docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json (DI-1.4 compressor down-selection, v2 = A9.16 regeneration; v1 kept as history)",
+   "access_level": "repository",
+   "note": "requirement envelope (W1 feed-state closure cases), CD-01..CD-08, EV-01..EV-20, T-1..T-9"
+  },
+  "SRC-R1-THREAD": {
+   "citation": "repository: docs/procurement/web_track_v1/threads/R1_compressor.json (Li 2015 evidence thread)",
+   "access_level": "repository",
+   "note": "LI2015 inlet diameter 500 mm: abstract via search-engine excerpts only (reconstructed, verify)"
+  },
+  "SRC-OWNER-147": {
+   "citation": "repository: docs/decisions/OD_2026_09_29_owner_answers_147.json row 54 (v0 dry-mass allocation: compressor+drive 5.5 kg; 'allocations, not CBEs')",
+   "access_level": "repository"
+  },
+  "SRC-COMPRESSOR-PY": {
+   "citation": "repository: abep_sim/compressor.py DragCompressor (dataclass defaults, run(), _run_once(), size_for())",
+   "access_level": "repository",
+   "note": "code defaults are uncited (compressor_downselect CD-01)"
+  },
+  "SRC-MATERIALS-PY": {
+   "citation": "repository: abep_sim/materials.py DB ('literature-class prior' values, no per-value citation)",
+   "access_level": "repository"
+  }
+ },
+ "parameters": [
+  {
+   "id": "P-MOLECULAR-LIMIT",
+   "value": 0.1,
+   "units": "Pa",
+   "basis": "'this type of pump works at full pumping speed only in molecular regimes (P < 10^-3 mbar)'; applied to every turbo-row and drag-stage outlet pressure as the domain of the free-molecular Gaede characteristic of DragCompressor (repository finding compressor_downselect CD-04)",
+   "source": "SRC-CHIGGIATO2013 Sec. 4.1.2, PDF p. 23 (= compressor_downselect EV-03)",
+   "evidence_class": "inferred",
+   "status": "CITED"
+  },
+  {
+   "id": "P-KN-FREE-MOLECULAR",
+   "value": 0.5,
+   "units": "-",
+   "basis": "Table 7: 'Kn > 0.5 Free molecular flow'; Kn = lambda / D (Eq. 10) with D = drag-channel depth h",
+   "source": "SRC-CHIGGIATO2013 Sec. 2.2, Eq. (10), Table 7, PDF p. 6",
+   "evidence_class": "inferred",
+   "status": "CITED"
+  },
+  {
+   "id": "P-SIGMA-C-N2",
+   "value": 4.3e-19,
+   "units": "m^2",
+   "basis": "elastic collision cross section 0.43 nm^2 (Table 6); mean free path lambda = 1/(sqrt(2) n sigma_c) (Eq. 7), mixture form 1/(sqrt(2) sum_k n_k sigma_k) as in abep_sim/interstage.py",
+   "source": "SRC-CHIGGIATO2013 Sec. 2.2, Eq. (7), Table 6, PDF p. 5",
+   "evidence_class": "inferred",
+   "status": "CITED (no primary reference given by the lecture; verify primary)"
+  },
+  {
+   "id": "P-SIGMA-C-O2",
+   "value": 4e-19,
+   "units": "m^2",
+   "basis": "elastic collision cross section 0.40 nm^2 (Table 6)",
+   "source": "SRC-CHIGGIATO2013 Sec. 2.2, Table 6, PDF p. 5",
+   "evidence_class": "inferred",
+   "status": "CITED (no primary reference given by the lecture; verify primary)"
+  },
+  {
+   "id": "P-SIGMA-C-O",
+   "value": "TBD",
+   "units": "m^2",
+   "basis": "atomic-O gas-kinetic collision cross section; not in the accessed sources (same TBD as abep_sim/interstage.py CATALOGUE 'collision_cross_section:O'). Consequence: the drag-channel Kn is evaluated with the O contribution omitted, an UPPER bound on Kn (a necessary, not sufficient, check)",
+   "source": "none",
+   "evidence_class": "TBD",
+   "status": "TBD"
+  },
+  {
+   "id": "P-U-TIP-PUBLISHED-MAX",
+   "value": 500.0,
+   "units": "m/s",
+   "basis": "'Each set of rotor blades is machined from a single block of high-strength aluminium alloys. Typical pumps equipped with a DN100 flange rotate at a frequency of 1 kHz, therefore approaching circumferential speeds up to 500 m/s': upper end of the searched tip-speed range (published commercial practice, not a Vyovrinda limit)",
+   "source": "SRC-CHIGGIATO2013 Sec. 4.1.2, PDF p. 24 (= compressor_downselect EV-04)",
+   "evidence_class": "inferred",
+   "status": "CITED"
+  },
+  {
+   "id": "P-TI64-FTY-A-BASIS",
+   "value": 827000000.0,
+   "units": "Pa",
+   "basis": "'the A-basis values of Ti-6Al-4V annealed plate with thickness of 50.8 to 101.6 mm (2 to 4 in) are: tensile strength = 896 MPa (130 ksi); yield strength = 827 MPa (120 ksi) ... (MMPDS-06 Handbook)'. Room-temperature plate value; the rotor product form and elevated-temperature knock-down are TBD",
+   "source": "SRC-NASA-HDBK-6025 Sec. 3 (definitions, 'Mechanical Properties'), p. 18 of 75",
+   "evidence_class": "inferred",
+   "status": "CITED (secondary quotation of MMPDS-06)"
+  },
+  {
+   "id": "P-TI64-DENSITY",
+   "value": 4430,
+   "units": "kg/m^3",
+   "basis": "rotor density used in sigma = rho u^2 and in the module mass model (materials.DB['Ti6Al4V'].density)",
+   "source": "SRC-MATERIALS-PY",
+   "evidence_class": "assumed",
+   "status": "UNCITED_DB_PRIOR (verify against a primary datasheet)"
+  },
+  {
+   "id": "P-TI64-T-SERVICE",
+   "value": 700,
+   "units": "K",
+   "basis": "materials.DB['Ti6Al4V'].T_max_K used as the thermal gate on the module's lumped compressor temperature",
+   "source": "SRC-MATERIALS-PY",
+   "evidence_class": "assumed",
+   "status": "UNCITED_DB_PRIOR (verify)"
+  },
+  {
+   "id": "P-STRESS-SAFETY",
+   "value": 2.0,
+   "units": "-",
+   "basis": "safety factor on the allowable (DragCompressor.stress_safety code default); the flight factor is an owner/design-policy decision",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "CODE_DEFAULT_UNCITED; LEGACY_PARAMETRIC_SENSITIVITY only (A9.9 S2.3 / OQ-F3-01: flight rotor acceptance only through a registered strength basis, rotor_strength.qualify_rotor)"
+  },
+  {
+   "id": "P-RPM-SEARCH-MIN",
+   "value": 5000.0,
+   "units": "rpm",
+   "basis": "lower end of the size_for rpm search (range(5000, ...)); used as the lower end of the tip-speed range",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "MODULE_LIMIT"
+  },
+  {
+   "id": "P-RECIRC-RTOL",
+   "value": 0.0001,
+   "units": "-",
+   "basis": "DragCompressor.run leak-recirculation fixed-point stopping criterion; a design whose re-evaluated residual exceeds it is NOT converged",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "model-derived",
+   "status": "MODULE_TOLERANCE"
+  },
+  {
+   "id": "P-OWNER-MASS-ALLOCATION",
+   "value": 5.5,
+   "units": "kg",
+   "basis": "owner v0 dry allocation 'compressor+drive 5.5' (mass_power_a9_v2 MA-AL-02); used only to report allocation margin, never as a gate or a CBE",
+   "source": "SRC-OWNER-147 row 54",
+   "evidence_class": "owner-allocation",
+   "status": "OWNER_ALLOCATION (not a CBE)"
+  },
+  {
+   "id": "P-LI2015-INLET-DIAMETER",
+   "value": 0.5,
+   "units": "m",
+   "basis": "inlet diameter of the Li 2015 active intake (abstract via search-engine excerpts only); one A_turbo grid point = pi (D/2)^2",
+   "source": "SRC-R1-THREAD (LI2015)",
+   "evidence_class": "reconstructed",
+   "status": "VERIFY (first-hand text not accessed)"
+  },
+  {
+   "id": "P-A-INLET-MIN-RANGE",
+   "value": [
+    0.1128299365,
+    0.1137287437
+   ],
+   "units": "m^2",
+   "basis": "minimum inlet area for the PROPOSED backflow target b = 0.25 over the W1 candidate-cases (in-domain closures, A9.13 S6.8), max(2S/u_ref, 4S/c_bar) (compressor_downselect CD-02); ends of the A_turbo search range",
+   "source": "SRC-DOWNSELECT requirement_summary.A_inlet_min_m2['0.25']",
+   "evidence_class": "model-derived",
+   "status": "PROPOSED-DERIVED (from PROPOSED b and W1 inputs)"
+  }
+ ],
+ "coefficients": [
+  {
+   "id": "C-turbo_rows",
+   "value": "SEARCHED",
+   "units": "-",
+   "basis": "N_turbo",
+   "source": "see search_variables",
+   "evidence_class": "see search_variables",
+   "status": "SEARCHED",
+   "role": "SEARCHED"
+  },
+  {
+   "id": "C-turbo_area_m2",
+   "value": "SEARCHED",
+   "units": "m^2",
+   "basis": "A_turbo",
+   "source": "see search_variables",
+   "evidence_class": "see search_variables",
+   "status": "SEARCHED",
+   "role": "SEARCHED"
+  },
+  {
+   "id": "C-turbo_radius_m",
+   "value": "DERIVED",
+   "units": "m",
+   "basis": "R_turbo (tip radius from A_turbo and hub ratio) = sqrt(A_turbo / (pi (1 - nu^2))) with hub ratio nu (A9.13 S6.7; nu = 0 is the zero-hub analytical bound only; closing test T-2 (hub-ratio bounds TBD))",
+   "source": "geometry",
+   "evidence_class": "model-derived",
+   "status": "DERIVED",
+   "role": "DERIVED"
+  },
+  {
+   "id": "C-turbo_kS",
+   "value": 0.2,
+   "units": "-",
+   "basis": "turbo pumping-speed coefficient; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.turbo_kS",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-2)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-turbo_kK",
+   "value": 1.2,
+   "units": "-",
+   "basis": "turbo ln K0 coefficient per row; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.turbo_kK",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-turbo_blade_area_frac",
+   "value": 0.35,
+   "units": "-",
+   "basis": "blade area fraction (drag area, mass); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.turbo_blade_area_frac",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-4/T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-turbo_disc_thickness_m",
+   "value": 0.002,
+   "units": "m",
+   "basis": "turbo disc thickness (mass); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.turbo_disc_thickness_m",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-n_stages",
+   "value": "SEARCHED",
+   "units": "-",
+   "basis": "N_drag",
+   "source": "see search_variables",
+   "evidence_class": "see search_variables",
+   "status": "SEARCHED",
+   "role": "SEARCHED"
+  },
+  {
+   "id": "C-rotor_radius_m",
+   "value": 0.06,
+   "units": "m",
+   "basis": "R_rotor (drag rotor radius); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.rotor_radius_m",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1/T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-rpm",
+   "value": "SEARCHED",
+   "units": "rpm",
+   "basis": "RPM (via turbo tip speed)",
+   "source": "see search_variables",
+   "evidence_class": "see search_variables",
+   "status": "SEARCHED",
+   "role": "SEARCHED"
+  },
+  {
+   "id": "C-h_mm",
+   "value": 3.0,
+   "units": "mm",
+   "basis": "h (drag channel depth); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.h_mm",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-w_mm",
+   "value": 12.0,
+   "units": "mm",
+   "basis": "w (drag channel width); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.w_mm",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-L_per_stage_m",
+   "value": 0.35,
+   "units": "m",
+   "basis": "L (unwrapped drag channel length per stage); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.L_per_stage_m",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-xi",
+   "value": 0.6,
+   "units": "-",
+   "basis": "xi (drag-channel geometric efficiency; the module's equivalent of the helix-angle effect); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.xi",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-1)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-rotor_material",
+   "value": "SEARCHED",
+   "units": "-",
+   "basis": "rotor material (restricted to cited allowables)",
+   "source": "see search_variables",
+   "evidence_class": "see search_variables",
+   "status": "SEARCHED",
+   "role": "SEARCHED"
+  },
+  {
+   "id": "C-stress_safety",
+   "value": 2.0,
+   "units": "-",
+   "basis": "stress safety factor; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.stress_safety",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test owner policy)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-T_gas_K",
+   "value": "FROM_INLET",
+   "units": "K",
+   "basis": "gas temperature for c_bar = inlet record T",
+   "source": "inlet record",
+   "evidence_class": "per inlet record",
+   "status": "FROM_INLET",
+   "role": "FROM_INLET_RECORD"
+  },
+  {
+   "id": "C-leak_conductance_m3_s",
+   "value": 0.0002,
+   "units": "m^3/s",
+   "basis": "outlet-to-inlet leak conductance; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.leak_conductance_m3_s",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-8)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-k_bear_W_per_rads",
+   "value": 0.0003,
+   "units": "W s/rad",
+   "basis": "bearing loss coefficient; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.k_bear_W_per_rads",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-4)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-eta_motor",
+   "value": 0.8,
+   "units": "-",
+   "basis": "motor efficiency (P_el = P_shaft / eta_motor + P_ctrl); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.eta_motor",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-4)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-P_ctrl_W",
+   "value": 8.0,
+   "units": "W",
+   "basis": "control power; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.P_ctrl_W",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-4)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-rotor_disc_thickness_m",
+   "value": 0.004,
+   "units": "m",
+   "basis": "drag rotor disc thickness (mass); not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.rotor_disc_thickness_m",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-stator_mass_factor",
+   "value": 1.2,
+   "units": "-",
+   "basis": "stator + housing mass relative to rotor; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.stator_mass_factor",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-motor_kg_per_Nm",
+   "value": 4.0,
+   "units": "kg/(N m)",
+   "basis": "motor mass per torque; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.motor_kg_per_Nm",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-bearing_kg",
+   "value": 0.6,
+   "units": "kg",
+   "basis": "bearing mass; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.bearing_kg",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-7)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-conductance_to_sink_W_K",
+   "value": 0.4,
+   "units": "W/K",
+   "basis": "thermal conductance to sink; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.conductance_to_sink_W_K",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-5)",
+   "role": "FIXED_CODE_DEFAULT"
+  },
+  {
+   "id": "C-T_sink_K",
+   "value": 293.0,
+   "units": "K",
+   "basis": "sink temperature; not searched: no accessed open source gives a value or a range (compressor_downselect CD-01)",
+   "source": "SRC-COMPRESSOR-PY DragCompressor.T_sink_K",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT_UNCITED (closing test T-5)",
+   "role": "FIXED_CODE_DEFAULT"
+  }
+ ],
+ "search_variables": [
+  {
+   "id": "N_turbo",
+   "value": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "units": "-",
+   "basis": "turbo rows 1..6: DragCompressor.size_for(max_turbo_rows=6) module limit",
+   "source": "SRC-COMPRESSOR-PY size_for",
+   "evidence_class": "assumed",
+   "status": "SEARCHED (module limit)"
+  },
+  {
+   "id": "A_turbo",
+   "value": [
+    0.1128299365,
+    0.1963495408,
+    0.1137287437
+   ],
+   "units": "m^2",
+   "basis": "ends: minimum inlet area range for the PROPOSED b = 0.25 target (P-A-INLET-MIN-RANGE); interior point: Li 2015 inlet area pi*0.25^2 (P-LI2015-INLET-DIAMETER, verify)",
+   "source": "SRC-DOWNSELECT CD-02; SRC-R1-THREAD",
+   "evidence_class": "model-derived / reconstructed",
+   "status": "SEARCHED (evidence-bounded range)"
+  },
+  {
+   "id": "R_turbo",
+   "value": "sqrt(A_turbo / (pi (1 - nu^2)))",
+   "units": "m",
+   "basis": "tip radius derived from A_turbo and the hub ratio nu (A9.13 S6.7); not an independent variable",
+   "source": "geometry",
+   "evidence_class": "model-derived",
+   "status": "DERIVED"
+  },
+  {
+   "id": "hub_ratio",
+   "value": [
+    0.0,
+    0.25,
+    0.5,
+    0.75
+   ],
+   "units": "-",
+   "basis": "hub ratio nu = R_hub / R_tip: explicit geometry variable (A9.13 S6.7). Searched values are a declared PARAMETRIC_SENSITIVITY coverage of the definitional domain [0, 1); nu = 0 is the zero-hub analytical bound only (not buildable). Bounds TBD from: shaft / bearing geometry; rotor structural analysis; motor / interface geometry; blade manufacturability; pumping-performance model",
+   "source": "owner decision A9.13 S6.7 (no numerical bound given)",
+   "evidence_class": "assumed",
+   "status": "SEARCHED (PARAMETRIC_SENSITIVITY; bounds TBD)"
+  },
+  {
+   "id": "blade_span",
+   "value": "R_tip (1 - nu)",
+   "units": "m",
+   "basis": "turbo blade span derived from the tip radius and hub ratio (A9.13 S6.7)",
+   "source": "geometry",
+   "evidence_class": "model-derived",
+   "status": "DERIVED"
+  },
+  {
+   "id": "N_drag",
+   "value": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "units": "-",
+   "basis": "drag stages 0..4: DragCompressor.size_for(max_drag_stages=4) module limit",
+   "source": "SRC-COMPRESSOR-PY size_for",
+   "evidence_class": "assumed",
+   "status": "SEARCHED (module limit)"
+  },
+  {
+   "id": "R_rotor",
+   "value": 0.06,
+   "units": "m",
+   "basis": "drag rotor radius: no accessed source gives a range",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT (excluded from search; TBD evidence T-1/T-7)"
+  },
+  {
+   "id": "RPM",
+   "value": "via turbo tip speed u_t in [u(R_turbo, 5000 rpm), 500 m/s], 6 linear points",
+   "units": "rpm",
+   "basis": "lower end: size_for rpm search start (P-RPM-SEARCH-MIN); upper end: published TMP circumferential speed (P-U-TIP-PUBLISHED-MAX); rotor-stress gate rejects the excess",
+   "source": "SRC-COMPRESSOR-PY; SRC-CHIGGIATO2013",
+   "evidence_class": "assumed / inferred",
+   "status": "SEARCHED (module limit + cited practice)"
+  },
+  {
+   "id": "h",
+   "value": 3.0,
+   "units": "mm",
+   "basis": "drag channel depth: no accessed source",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT (excluded; TBD evidence T-1)"
+  },
+  {
+   "id": "w",
+   "value": 12.0,
+   "units": "mm",
+   "basis": "drag channel width: no accessed source",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT (excluded; TBD evidence T-1)"
+  },
+  {
+   "id": "L",
+   "value": 0.35,
+   "units": "m",
+   "basis": "drag channel length per stage: no accessed source",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT (excluded; TBD evidence T-1)"
+  },
+  {
+   "id": "xi",
+   "value": 0.6,
+   "units": "-",
+   "basis": "the module has no helix angle; its equivalent is the geometric efficiency xi of the drag channel (ln K0 and S0 both scale with xi). No accessed source gives a value",
+   "source": "SRC-COMPRESSOR-PY",
+   "evidence_class": "assumed",
+   "status": "FIXED_CODE_DEFAULT (excluded; TBD evidence T-1)"
+  },
+  {
+   "id": "rotor_material",
+   "value": [
+    "Ti6Al4V"
+   ],
+   "units": "-",
+   "basis": "only materials with a CITED allowable (CITED_ALLOWABLES_PA); excluded: Al6061: allowable TBD: materials.DB yield 276 MPa is an uncited prior; no accessed A/B-basis source. Chiggiato names 'high-strength aluminium alloys' for commercial rotors (alloy and temper not stated). Re-enters only through a registered rotor-strength basis (rotor_strength.register_basis) plus an AO disposition (A9.13 S6.9); CFRP: allowable TBD (materials.DB 600 MPa uncited prior; laminate-dependent); bare CFRP wetted parts recede 0.48-15.9 mm over 26,000 h at the ram AO yield (compressor_downselect CD-07); owner OD-C3 PROPOSED metallic/coated a priori. Re-enters only through a registered basis plus laminate definition, directional allowables, temperature / moisture / environment basis, manufacturing / inspection basis and AO disposition of every exposed surface (A9.13 S6.9)",
+   "source": "SRC-NASA-HDBK-6025",
+   "evidence_class": "inferred",
+   "status": "SEARCHED (restricted)"
+  }
+ ],
+ "materials_excluded": {
+  "Al6061": "allowable TBD: materials.DB yield 276 MPa is an uncited prior; no accessed A/B-basis source. Chiggiato names 'high-strength aluminium alloys' for commercial rotors (alloy and temper not stated). Re-enters only through a registered rotor-strength basis (rotor_strength.register_basis) plus an AO disposition (A9.13 S6.9)",
+  "CFRP": "allowable TBD (materials.DB 600 MPa uncited prior; laminate-dependent); bare CFRP wetted parts recede 0.48-15.9 mm over 26,000 h at the ram AO yield (compressor_downselect CD-07); owner OD-C3 PROPOSED metallic/coated a priori. Re-enters only through a registered basis plus laminate definition, directional allowables, temperature / moisture / environment basis, manufacturing / inspection basis and AO disposition of every exposed surface (A9.13 S6.9)"
+ },
+ "gates": [
+  {
+   "id": "ROTOR_MATERIAL_ALLOWABLE_TBD",
+   "rule": "rotor material must have a cited allowable",
+   "basis": "A9.7 evidence rule"
+  },
+  {
+   "id": "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR",
+   "rule": "Fty / (SF rho u_max^2) - 1 >= 0, u_max = max(turbo, drag tip speed)",
+   "basis": "P-TI64-FTY-A-BASIS, P-STRESS-SAFETY, P-TI64-DENSITY; sigma = rho u^2 (compressor.py docstring)"
+  },
+  {
+   "id": "TIP_SPEED_ABOVE_PUBLISHED_TMP_PRACTICE",
+   "rule": "u_tip <= 500 m/s",
+   "basis": "P-U-TIP-PUBLISHED-MAX"
+  },
+  {
+   "id": "INLET_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN",
+   "rule": "inlet p <= 0.1 Pa",
+   "basis": "P-MOLECULAR-LIMIT"
+  },
+  {
+   "id": "MODEL_ERROR_NON_FINITE_OR_EXCEPTION",
+   "rule": "finite state, no exception, mirror reproduces _run_once p_out to 1e-12",
+   "basis": "no silent fallback (Governance.md rule 3)"
+  },
+  {
+   "id": "SELF_CONSISTENT_RUN_NOT_CONVERGED",
+   "rule": "re-evaluated leak-recirculation residual <= 1e-4",
+   "basis": "P-RECIRC-RTOL"
+  },
+  {
+   "id": "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY",
+   "rule": "every unclipped per-species Gaede K >= 1",
+   "basis": "compressor.py _run_once clip max(min(K, K0), 1) hides an overloaded stage"
+  },
+  {
+   "id": "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN",
+   "rule": "every stage outlet p <= 0.1 Pa",
+   "basis": "P-MOLECULAR-LIMIT"
+  },
+  {
+   "id": "DRAG_CHANNEL_KNUDSEN_BELOW_FREE_MOLECULAR_LIMIT",
+   "rule": "drag channel Kn upper bound (O omitted) >= 0.5",
+   "basis": "P-KN-FREE-MOLECULAR, P-SIGMA-C-N2/O2 (P-SIGMA-C-O TBD)"
+  },
+  {
+   "id": "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT",
+   "rule": "T_compressor <= materials.DB T_max_K",
+   "basis": "P-TI64-T-SERVICE (uncited)"
+  }
+ ],
+ "reason_codes": {
+  "R1": "ROTOR_MATERIAL_ALLOWABLE_TBD",
+  "R2": "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR",
+  "R3": "TIP_SPEED_ABOVE_PUBLISHED_TMP_PRACTICE",
+  "R4": "INLET_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN",
+  "R5": "MODEL_ERROR_NON_FINITE_OR_EXCEPTION",
+  "R6": "SELF_CONSISTENT_RUN_NOT_CONVERGED",
+  "R7": "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY",
+  "R8": "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN",
+  "R9": "DRAG_CHANNEL_KNUDSEN_BELOW_FREE_MOLECULAR_LIMIT",
+  "R10": "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT",
+  "R11": "ROTOR_QUALIFICATION_FAIL_REGISTERED_BASIS",
+  "R12": "ROTOR_QUALIFICATION_OUTSIDE_REGISTERED_BASIS_DOMAIN",
+  "R13": "MATERIAL_READMISSION_RECORDS_MISSING"
+ },
+ "objectives": {
+  "primary": [
+   [
+    "P_out_Pa",
+    "max"
+   ],
+   [
+    "mdot_delivered_total_kgps",
+    "max"
+   ],
+   [
+    "P_compressor_el_W",
+    "min"
+   ],
+   [
+    "m_compressor_kg",
+    "min"
+   ]
+  ],
+  "secondary": [
+   [
+    "P_out_Pa",
+    "max"
+   ],
+   [
+    "mdot_delivered_total_kgps",
+    "max"
+   ],
+   [
+    "P_compressor_el_W",
+    "min"
+   ],
+   [
+    "m_compressor_kg",
+    "min"
+   ],
+   [
+    "S_turbo_m3_s",
+    "max"
+   ]
+  ],
+  "rule": "weak Pareto dominance over feasible designs of ONE inlet record; ties kept; no scalar objective, no selected optimum"
+ },
+ "efficiency_basis": "P_compressor = (P_gas_drag + P_bearing) / eta_motor + P_ctrl (DragCompressor); eta_motor, k_bear and P_ctrl are uncited code defaults (closing test T-4)",
+ "mass_basis": "DragCompressor mass model: rotor discs (materials.DB density, uncited) x (1 + stator_mass_factor) + motor (motor_kg_per_Nm x torque + 0.25) + bearings; code defaults (closing test T-7)",
+ "thermal_basis": "DragCompressor lumped node T = T_sink + losses / conductance_to_sink (code defaults, T-5); T_gas_K (c_bar) is the inlet temperature and is not coupled to T_compressor by the module",
+ "strict_mode": {
+  "status": "NOT_EVALUATED_MATERIAL_BASIS",
+  "blockers": [
+   {
+    "id": "C-turbo_kS",
+    "what": "turbo pumping-speed coefficient",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-2)"
+   },
+   {
+    "id": "C-turbo_kK",
+    "what": "turbo ln K0 coefficient per row",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1)"
+   },
+   {
+    "id": "C-turbo_blade_area_frac",
+    "what": "blade area fraction (drag area, mass)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-4/T-7)"
+   },
+   {
+    "id": "C-turbo_disc_thickness_m",
+    "what": "turbo disc thickness (mass)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-7)"
+   },
+   {
+    "id": "C-rotor_radius_m",
+    "what": "R_rotor (drag rotor radius)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1/T-7)"
+   },
+   {
+    "id": "C-h_mm",
+    "what": "h (drag channel depth)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1)"
+   },
+   {
+    "id": "C-w_mm",
+    "what": "w (drag channel width)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1)"
+   },
+   {
+    "id": "C-L_per_stage_m",
+    "what": "L (unwrapped drag channel length per stage)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1)"
+   },
+   {
+    "id": "C-xi",
+    "what": "xi (drag-channel geometric efficiency; the module's equivalent of the helix-angle effect)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-1)"
+   },
+   {
+    "id": "C-stress_safety",
+    "what": "stress safety factor",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test owner policy)"
+   },
+   {
+    "id": "C-leak_conductance_m3_s",
+    "what": "outlet-to-inlet leak conductance",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-8)"
+   },
+   {
+    "id": "C-k_bear_W_per_rads",
+    "what": "bearing loss coefficient",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-4)"
+   },
+   {
+    "id": "C-eta_motor",
+    "what": "motor efficiency (P_el = P_shaft / eta_motor + P_ctrl)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-4)"
+   },
+   {
+    "id": "C-P_ctrl_W",
+    "what": "control power",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-4)"
+   },
+   {
+    "id": "C-rotor_disc_thickness_m",
+    "what": "drag rotor disc thickness (mass)",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-7)"
+   },
+   {
+    "id": "C-stator_mass_factor",
+    "what": "stator + housing mass relative to rotor",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-7)"
+   },
+   {
+    "id": "C-motor_kg_per_Nm",
+    "what": "motor mass per torque",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-7)"
+   },
+   {
+    "id": "C-bearing_kg",
+    "what": "bearing mass",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-7)"
+   },
+   {
+    "id": "C-conductance_to_sink_W_K",
+    "what": "thermal conductance to sink",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-5)"
+   },
+   {
+    "id": "C-T_sink_K",
+    "what": "sink temperature",
+    "status": "CODE_DEFAULT_UNCITED (assumed)",
+    "needs": "non-assumed evidence (compressor_downselect test T-5)"
+   },
+   {
+    "id": "INLET",
+    "what": "inlet record DC-S12-G20/alt180_low",
+    "status": "PARAMETRIC_SENSITIVITY",
+    "needs": "an F1/F2 interface record (abep_sim/design/intake_synthesis.py F1-ID-03, abep_sim/design/filter_stage.py F2-IF-03) with non-assumed evidence"
+   },
+   {
+    "id": "P-TI64-DENSITY",
+    "what": "rotor density",
+    "status": "UNCITED_DB_PRIOR",
+    "needs": "cited density for the rotor alloy"
+   },
+   {
+    "id": "ROTOR-STRENGTH-BASIS",
+    "what": "registered rotor-strength basis (A9.9 S2.3 / MCC-03)",
+    "status": "NOT_EVALUATED_MATERIAL_BASIS",
+    "needs": "an owner-registered basis in abep_sim.rotor_strength.REGISTRY (stock / product form, design temperature, yield AND ultimate allowables, factors, maximum speed, proof spin); supply its id as coefficient_evidence['rotor_strength_basis_id']"
+   }
+  ]
+ },
+ "cases": [
+  {
+   "case": "DC-S12-G20/alt180_low",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt180_low",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 1.984275572e-07,
+     "N2": 3.356014184e-07,
+     "O2": 4.10900991e-08
+    },
+    "p_total_Pa": 0.01370576923,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt180_low (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 180.0,
+     "solar_level": "low",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 3.64809878,
+     "CR_required_self_consistent_backflow": 4.296338586
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 92,
+   "n_rejected": 2068,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 100,
+    "DRAG_CHANNEL_KNUDSEN_BELOW_FREE_MOLECULAR_LIMIT": 16,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 670
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A2-U2-D0-Ti6Al4V-H0.25",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.25",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.25"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.25",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.25",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.25"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt180_low/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.01411763789,
+     0.09339288928
+    ],
+    "CR_total": [
+     1.030050751,
+     6.814129708
+    ],
+    "CR_O": [
+     1.024953164,
+     4.536900852
+    ],
+    "P_compressor_el_W": [
+     8.302447981,
+     12.83277686
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.5597704,
+     324.7043248
+    ],
+    "S_turbo_m3_s": [
+     5.90077036,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.314314597,
+     0.48070126
+    ],
+    "x_O_delivered_flow": [
+     0.4830920198,
+     0.4830920198
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 15,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 3.64809878,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.05677062835,
+      "CR_active": 4.1420972,
+      "P_el_W": 10.73364673,
+      "mass_kg": 5.288993571,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 3.64809878,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 3,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.06220352193,
+      "CR_active": 4.538491849,
+      "P_el_W": 11.63814217,
+      "mass_kg": 5.898607513,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 3.64809878,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.05788545256,
+      "CR_active": 4.223436977,
+      "P_el_W": 10.77576467,
+      "mass_kg": 5.313520941,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt180_mean",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt180_mean",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 3.010659097e-07,
+     "N2": 4.426842854e-07,
+     "O2": 3.166157219e-08
+    },
+    "p_total_Pa": 0.01874485241,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt180_mean (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 180.0,
+     "solar_level": "mean",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 2.667398969,
+     "CR_required_self_consistent_backflow": 4.016968638
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 88,
+   "n_rejected": 2072,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 100,
+    "DRAG_CHANNEL_KNUDSEN_BELOW_FREE_MOLECULAR_LIMIT": 16,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 785
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.25",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.25",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt180_mean/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.01920906042,
+     0.09502464808
+    ],
+    "CR_total": [
+     1.024764559,
+     5.069372967
+    ],
+    "CR_O": [
+     1.020909607,
+     3.602476885
+    ],
+    "P_compressor_el_W": [
+     8.339014926,
+     11.99520655
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.6511878,
+     322.6856999
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.3585426708,
+     0.5263289445
+    ],
+    "x_O_delivered_flow": [
+     0.5283163613,
+     0.5283163613
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 19,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 2.667398969,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 15000.0,
+      "p_out_Pa": 0.05518415892,
+      "CR_active": 2.943963372,
+      "P_el_W": 10.66445647,
+      "mass_kg": 5.288993571,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 2.667398969,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 3,
+      "n_stages": 0,
+      "rpm": 10000.0,
+      "p_out_Pa": 0.05409052248,
+      "CR_active": 2.885620078,
+      "P_el_W": 10.6083514,
+      "mass_kg": 5.898607513,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 2.667398969,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 15000.0,
+      "p_out_Pa": 0.05761630678,
+      "CR_active": 3.073713546,
+      "P_el_W": 10.75169219,
+      "mass_kg": 5.313520941,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt180_high",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt180_high",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 4.207311515e-07,
+     "N2": 5.456359587e-07,
+     "O2": 2.09385431e-08
+    },
+    "p_total_Pa": 0.02416022465,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt180_high (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 180.0,
+     "solar_level": "high",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 2.069517181,
+     "CR_required_self_consistent_backflow": 2.378447445
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 85,
+   "n_rejected": 2075,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 100,
+    "DRAG_CHANNEL_KNUDSEN_BELOW_FREE_MOLECULAR_LIMIT": 48,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 865
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.25",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.25",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt180_high/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.0246574417,
+     0.09893078633
+    ],
+    "CR_total": [
+     1.020579985,
+     4.09477924
+    ],
+    "CR_O": [
+     1.017616608,
+     3.135956749
+    ],
+    "P_compressor_el_W": [
+     8.377696057,
+     12.31822988
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.7478906,
+     323.4179573
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.4014921718,
+     0.5646215338
+    ],
+    "x_O_delivered_flow": [
+     0.5662657543,
+     0.5662657543
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 26,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 2.069517181,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 3,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.05488250904,
+      "CR_active": 2.271605907,
+      "P_el_W": 10.61345025,
+      "mass_kg": 4.189245178,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 2.069517181,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 2,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.05877419635,
+      "CR_active": 2.432684182,
+      "P_el_W": 11.00431755,
+      "mass_kg": 4.229071675,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 2.069517181,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 3,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.0557754465,
+      "CR_active": 2.308564896,
+      "P_el_W": 10.64569135,
+      "mass_kg": 4.207640706,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt200_low",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt200_low",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 1.136526781e-07,
+     "N2": 1.332182075e-07,
+     "O2": 1.434990449e-08
+    },
+    "p_total_Pa": 0.006407448874,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt200_low (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 200.0,
+     "solar_level": "low",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 7.803417707,
+     "CR_required_self_consistent_backflow": 13.26127973
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 99,
+   "n_rejected": 2061,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 20,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 455
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt200_low/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.006540163051,
+     0.07534617504
+    ],
+    "CR_total": [
+     1.020712483,
+     11.75915353
+    ],
+    "CR_O": [
+     1.017754048,
+     7.4515609
+    ],
+    "P_compressor_el_W": [
+     8.244386592,
+     11.87088292
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.4146169,
+     322.29959
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.3613680551,
+     0.5753842692
+    ],
+    "x_O_delivered_flow": [
+     0.577056812,
+     0.577056812
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 4,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 7.803417707,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.07631850247,
+      "CR_active": 11.91090307,
+      "P_el_W": 11.30966711,
+      "mass_kg": 7.488490357,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 7.803417707,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.05027095975,
+      "CR_active": 7.845705949,
+      "P_el_W": 11.16387944,
+      "mass_kg": 7.56814335,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 7.803417707,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15000.0,
+      "p_out_Pa": 0.05319273325,
+      "CR_active": 8.301702331,
+      "P_el_W": 10.4747462,
+      "mass_kg": 7.525281412,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt200_mean",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt200_mean",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 1.876092579e-07,
+     "N2": 2.066216391e-07,
+     "O2": 1.284585391e-08
+    },
+    "p_total_Pa": 0.01007417906,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt200_mean (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 200.0,
+     "solar_level": "mean",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 4.963183571,
+     "CR_required_self_consistent_backflow": 5.69537107
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 97,
+   "n_rejected": 2063,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 25,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 585
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.5",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt200_mean/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.01025446077,
+     0.09336892866
+    ],
+    "CR_total": [
+     1.017895425,
+     9.268142655
+    ],
+    "CR_O": [
+     1.01548618,
+     6.346013554
+    ],
+    "P_compressor_el_W": [
+     8.27115836,
+     12.95867454
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.4815464,
+     324.9884029
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.3884844463,
+     0.5996930229
+    ],
+    "x_O_delivered_flow": [
+     0.601115797,
+     0.601115797
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 9,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 4.963183571,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.06163100344,
+      "CR_active": 6.117719674,
+      "P_el_W": 10.92286287,
+      "mass_kg": 6.388741964,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 4.963183571,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 4,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.0769413425,
+      "CR_active": 7.637480141,
+      "P_el_W": 12.59067042,
+      "mass_kg": 7.56814335,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 4.963183571,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.06318271312,
+      "CR_active": 6.271748074,
+      "P_el_W": 10.98033667,
+      "mass_kg": 6.419401176,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt200_high",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt200_high",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 2.753361058e-07,
+     "N2": 2.781921191e-07,
+     "O2": 9.026382076e-09
+    },
+    "p_total_Pa": 0.01405222348,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt200_high (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 200.0,
+     "solar_level": "high",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 3.558155767,
+     "CR_required_self_consistent_backflow": 4.049194214
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 95,
+   "n_rejected": 2065,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 85,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 630
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.25",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.25",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt200_high/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.01426404158,
+     0.09287036708
+    ],
+    "CR_total": [
+     1.015073636,
+     6.608944643
+    ],
+    "CR_O": [
+     1.013173072,
+     4.851091211
+    ],
+    "P_compressor_el_W": [
+     8.299678448,
+     12.4651008
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.5528466,
+     323.9064567
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.418576817,
+     0.6262771727
+    ],
+    "x_O_delivered_flow": [
+     0.6274519765,
+     0.6274519765
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 12,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 3.558155767,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 15000.0,
+      "p_out_Pa": 0.05689867546,
+      "CR_active": 4.049087003,
+      "P_el_W": 10.77852919,
+      "mass_kg": 6.388741964,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 3.558155767,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 3,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.05753605383,
+      "CR_active": 4.094444834,
+      "P_el_W": 11.37960925,
+      "mass_kg": 5.898607513,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 3.558155767,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 15000.0,
+      "p_out_Pa": 0.06027146223,
+      "CR_active": 4.289105017,
+      "P_el_W": 10.89481896,
+      "mass_kg": 6.419401176,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "FEASIBLE_UNDER_PARAMETRIC_SENSITIVITY_INPUTS",
+     "gate_reasons": [],
+     "on_front": true,
+     "dominated_by_front": false
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt230_low",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt230_low",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 5.253879145e-08,
+     "N2": 3.658590345e-08,
+     "O2": 3.312962229e-09
+    },
+    "p_total_Pa": 0.002366924925,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt230_low (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 230.0,
+     "solar_level": "low",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 21.12445539,
+     "CR_required_self_consistent_backflow": 30.30204818
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 102,
+   "n_rejected": 2058,
+   "rejection_counts": {
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 220
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A1-U2-D0-Ti6Al4V-H0.25",
+    "T6-A1-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A1-U2-D0-Ti6Al4V-H0.25",
+    "T6-A1-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt230_low/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.002389349692,
+     0.03996024816
+    ],
+    "CR_total": [
+     1.00947422,
+     16.8827696
+    ],
+    "CR_O": [
+     1.008474811,
+     11.20939216
+    ],
+    "P_compressor_el_W": [
+     8.21336072,
+     10.38783732
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.3370523,
+     318.5919759
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.4643973972,
+     0.6988778433
+    ],
+    "x_O_delivered_flow": [
+     0.6995704384,
+     0.6995704384
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 0,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 21.12445539,
+     "size_for": {
+      "sized": false,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.02198396369,
+      "CR_active": 9.287985208,
+      "P_el_W": 9.424616748,
+      "mass_kg": 7.488490357,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 21.12445539,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.05793766849,
+      "CR_active": 24.47803387,
+      "P_el_W": 11.61225995,
+      "mass_kg": 10.90721503,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 21.12445539,
+     "size_for": {
+      "sized": false,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.02265021463,
+      "CR_active": 9.569468972,
+      "P_el_W": 9.447248394,
+      "mass_kg": 7.525281412,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt230_mean",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt230_mean",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 1.007482855e-07,
+     "N2": 7.432753943e-08,
+     "O2": 3.954272936e-09
+    },
+    "p_total_Pa": 0.004579924164,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt230_mean (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 230.0,
+     "solar_level": "mean",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 10.91721133,
+     "CR_required_self_consistent_backflow": 12.9254145
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 102,
+   "n_rejected": 2058,
+   "rejection_counts": {
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 350
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A1-U2-D0-Ti6Al4V-H0.25",
+    "T6-A1-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A0-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A1-U2-D0-Ti6Al4V-H0.25",
+    "T6-A1-U2-D0-Ti6Al4V-H0.5",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt230_mean/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.00462462704,
+     0.07749625572
+    ],
+    "CR_total": [
+     1.009760615,
+     16.92086003
+    ],
+    "CR_O": [
+     1.008721462,
+     11.2180543
+    ],
+    "P_compressor_el_W": [
+     8.229302459,
+     12.27569898
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.3769066,
+     323.3116301
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.4599289093,
+     0.6931527676
+    ],
+    "x_O_delivered_flow": [
+     0.6938668315,
+     0.6938668315
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 3,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 10.91721133,
+     "size_for": {
+      "sized": false,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.04272767606,
+      "CR_active": 9.329341389,
+      "P_el_W": 10.17927619,
+      "mass_kg": 7.488490357,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 10.91721133,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.05937687964,
+      "CR_active": 12.96459887,
+      "P_el_W": 11.69510476,
+      "mass_kg": 9.237679188,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 10.91721133,
+     "size_for": {
+      "sized": false,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.04401758918,
+      "CR_active": 9.610986471,
+      "P_el_W": 10.22544649,
+      "mass_kg": 7.525281412,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  },
+  {
+   "case": "DC-S12-G20/alt230_high",
+   "inlet": {
+    "record_id": "DC-S12-G20/alt230_high",
+    "label": "PARAMETRIC_SENSITIVITY",
+    "mdot_kgps": {
+     "O": 1.59472031e-07,
+     "N2": 1.142602649e-07,
+     "O2": 3.161884887e-09
+    },
+    "p_total_Pa": 0.007115737314,
+    "T_K": 350.0,
+    "source": "docs/architecture_comparison/compressor_downselect/compressor_downselect_v2.json#requirement_envelope/DC-S12-G20/cases/alt230_high (forward_flow_to_compressor_kgps x w_s_inlet, p_passive_Pa, T_plenum_K)",
+    "evidence_class": "model-derived",
+    "status": "PROPOSED (candidate-conditional); model-derived (from assumed design inputs and cited model forms); PARAMETRIC_SENSITIVITY inlet (down-selection envelope, not the F1/F2 records)",
+    "p_species_Pa": null,
+    "extra": {
+     "altitude_km": 230.0,
+     "solar_level": "high",
+     "setpoint_Pa": 0.05,
+     "CR_required_upper_bound_flow_basis": 7.026678725,
+     "CR_required_self_consistent_backflow": 11.86912202
+    }
+   },
+   "label": "PARAMETRIC_SENSITIVITY",
+   "status": "EVALUATED",
+   "n_designs": 2160,
+   "n_feasible": 100,
+   "n_rejected": 2060,
+   "rejection_counts": {
+    "COMPRESSOR_TEMPERATURE_ABOVE_MATERIAL_SERVICE_LIMIT": 20,
+    "GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY": 1836,
+    "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR": 1110,
+    "STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN": 435
+   },
+   "pareto_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_with_S_ids": [
+    "T1-A0-U2-D0-Ti6Al4V-H0.75",
+    "T1-A1-U0-D0-Ti6Al4V-H0.5",
+    "T1-A1-U0-D0-Ti6Al4V-H0.75",
+    "T1-A1-U1-D0-Ti6Al4V-H0.5",
+    "T1-A1-U1-D0-Ti6Al4V-H0.75",
+    "T1-A1-U2-D0-Ti6Al4V-H0.5",
+    "T1-A2-U2-D0-Ti6Al4V-H0.75",
+    "T2-A1-U0-D0-Ti6Al4V-H0.75",
+    "T2-A1-U1-D0-Ti6Al4V-H0.25",
+    "T2-A1-U1-D0-Ti6Al4V-H0.5",
+    "T2-A1-U1-D0-Ti6Al4V-H0.75",
+    "T2-A1-U2-D0-Ti6Al4V-H0.25",
+    "T2-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A0-U2-D0-Ti6Al4V-H0.75",
+    "T3-A1-U0-D0-Ti6Al4V-H0.75",
+    "T3-A1-U1-D0-Ti6Al4V-H0.5",
+    "T3-A1-U1-D0-Ti6Al4V-H0.75",
+    "T3-A1-U2-D0-Ti6Al4V-H0.25",
+    "T3-A1-U2-D0-Ti6Al4V-H0.5",
+    "T3-A2-U2-D0-Ti6Al4V-H0.75",
+    "T4-A1-U0-D0-Ti6Al4V-H0.75",
+    "T4-A1-U1-D0-Ti6Al4V-H0.25",
+    "T4-A1-U1-D0-Ti6Al4V-H0.5",
+    "T4-A1-U1-D0-Ti6Al4V-H0.75",
+    "T4-A1-U2-D0-Ti6Al4V-H0.25",
+    "T4-A1-U2-D0-Ti6Al4V-H0.5",
+    "T4-A2-U2-D0-Ti6Al4V-H0.75",
+    "T5-A0-U2-D0-Ti6Al4V-H0.75",
+    "T5-A1-U0-D0-Ti6Al4V-H0.75",
+    "T5-A1-U1-D0-Ti6Al4V-H0.25",
+    "T5-A1-U1-D0-Ti6Al4V-H0.5",
+    "T5-A1-U1-D0-Ti6Al4V-H0.75",
+    "T5-A1-U2-D0-Ti6Al4V-H0.25",
+    "T5-A1-U2-D0-Ti6Al4V-H0.5",
+    "T5-A2-U2-D0-Ti6Al4V-H0.75",
+    "T6-A0-U2-D0-Ti6Al4V-H0.75",
+    "T6-A1-U0-D0-Ti6Al4V-H0.75",
+    "T6-A1-U1-D0-Ti6Al4V-H0.25",
+    "T6-A1-U1-D0-Ti6Al4V-H0.5",
+    "T6-A1-U1-D0-Ti6Al4V-H0.75",
+    "T6-A2-U2-D0-Ti6Al4V-H0.75"
+   ],
+   "pareto_records_in": "f3_compressor_designs_v1.json#cases/DC-S12-G20/alt230_high/feasible (ids above)",
+   "front_ranges": {
+    "P_out_Pa": [
+     0.007177038828,
+     0.07096425658
+    ],
+    "CR_total": [
+     1.008614921,
+     9.972860639
+    ],
+    "CR_O": [
+     1.007731361,
+     7.175914911
+    ],
+    "P_compressor_el_W": [
+     8.247329203,
+     11.73228485
+    ],
+    "m_compressor_kg": [
+     1.989748393,
+     10.90721503
+    ],
+    "T_compressor_K": [
+     313.4219735,
+     321.9530948
+    ],
+    "S_turbo_m3_s": [
+     5.935644539,
+     11.41536836
+    ],
+    "x_O_out_partial_pressure": [
+     0.5069151443,
+     0.703937113
+    ],
+    "x_O_delivered_flow": [
+     0.7045543117,
+     0.7045543117
+    ]
+   },
+   "reference_setpoint_Pa": 0.05,
+   "reference_setpoint_status": "PROPOSED (W1 setpoint ladder; informational, not a gate)",
+   "n_feasible_reaching_reference_setpoint": 5,
+   "size_for_comparison": [
+    {
+     "a_turbo_m2": 0.1128299365,
+     "material": "Ti6Al4V",
+     "cr_target": 7.026678725,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15880.0,
+      "p_out_Pa": 0.06451174422,
+      "CR_active": 9.066066012,
+      "P_el_W": 10.98293603,
+      "mass_kg": 7.488490357,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1963495408,
+     "material": "Ti6Al4V",
+     "cr_target": 7.026678725,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 5,
+      "n_stages": 0,
+      "rpm": 12038.0,
+      "p_out_Pa": 0.09077185497,
+      "CR_active": 12.75649324,
+      "P_el_W": 13.39943224,
+      "mass_kg": 9.237679188,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    },
+    {
+     "a_turbo_m2": 0.1137287437,
+     "material": "Ti6Al4V",
+     "cr_target": 7.026678725,
+     "size_for": {
+      "sized": true,
+      "turbo_rows": 6,
+      "n_stages": 0,
+      "rpm": 15817.0,
+      "p_out_Pa": 0.06648725445,
+      "CR_active": 9.343691527,
+      "P_el_W": 11.05468612,
+      "mass_kg": 7.525281412,
+      "rotor_ok_uncited_db_yield": false,
+      "objective": "mass + 0.02 x P_el (size_for's hard-coded scalar)"
+     },
+     "gate_status": "REJECTED",
+     "gate_reasons": [
+      "ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR"
+     ],
+     "on_front": false,
+     "dominated_by_front": null
+    }
+   ]
+  }
+ ],
+ "findings": [
+  {
+   "id": "F3-01",
+   "finding": "no design with drag stages is feasible: 15552 of 15552 drag-stage design evaluations have an unclipped Gaede K < 1 (throughput above the stage capacity S0 p at the code-default channel h, w, L, xi; since A9.9 S2.5 / MCC-02 the module reports the unclipped K and flags the stage OUT_OF_MODEL_DOMAIN_STAGE_CAPACITY instead of silently using K = 1). Feasible drag-stage designs: 0. Agrees with the down-selection drag-only probe (S_required / S0 ~ 1e3)",
+   "evidence_class": "model-derived (from assumed code-default coefficients)"
+  },
+  {
+   "id": "F3-02",
+   "finding": "rotor stress: with the cited Ti-6Al-4V A-basis Fty 827 MPa and the module safety factor 2 (uncited), sigma = rho u^2 caps the tip speed at 305.5 m/s; the module's legacy sensitivity tip-speed cap (uncited DB yield 880 MPa; since A9.9 S2.3 not a qualification: rotor_ok is False without a registered strength basis) allows 315.2 m/s, so size_for in PARAMETRIC_SENSITIVITY mode can return rotors this search rejects. Both are below the 500 m/s published TMP practice (Al alloys)",
+   "evidence_class": "inferred (cited allowable) + assumed (safety factor, density)"
+  },
+  {
+   "id": "F3-03",
+   "finding": "evidence domain: every stage outlet is capped at 0.1 Pa (free-molecular, Chiggiato Sec. 4.1.2 / CD-04). Cases where a feasible design reaches the PROPOSED W1 setpoint: 8 of 9; PROPOSED setpoints above the domain: [] Pa (cannot be evaluated by this model at all; needs T-1 data or a transitional-regime model)",
+   "evidence_class": "inferred"
+  },
+  {
+   "id": "F3-04",
+   "finding": "mdot_delivered is invariant across converged designs at a fixed inlet record (DragCompressor.run delivers the captured flow in steady state), so it does not discriminate designs; the compressor's effect on delivered flow enters through the inlet pumping speed S_turbo and the plenum backflow (F1/F4 coupling), reported as a secondary Pareto objective. The delivered-flow composition equals the inlet composition; the outlet PARTIAL-PRESSURE composition is O-depleted (x_O [0.31431459698894554, 0.7039371130412178] on the fronts vs delivered-flow x_O [0.48309201980918165, 0.7045543116607601])",
+   "evidence_class": "model-derived (from assumed code-default coefficients)"
+  },
+  {
+   "id": "F3-05",
+   "finding": "Pareto fronts (all cases): P_out [0.002389349692287779, 0.09893078632703001] Pa, P_compressor (electrical, eta_motor 0.8 code default) [8.213360720364031, 12.958674535577627] W, m_compressor [1.9897483927903004, 10.907215025495107] kg vs the owner v0 allocation 5.5 kg (allocation, not CBE), T_compressor [313.3370522600607, 324.9884028634689] K. PARAMETRIC_SENSITIVITY values under uncited coefficients: not a CBE, not a design value",
+   "evidence_class": "model-derived (from assumed code-default coefficients)"
+  },
+  {
+   "id": "F3-06",
+   "finding": "size_for() consistency check (27 calls = 9 cases x 3 A_turbo): sized=23; rejected by this module's gates=21 (reasons {'ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR': 21}); on the synthesis front=6; feasible but dominated=0. size_for optimises the scalar mass + 0.02 P_el, checks only rotor_ok with an uncited yield, and applies no convergence, clipping or domain gate",
+   "evidence_class": "model-derived"
+  },
+  {
+   "id": "F3-07",
+   "finding": "cases with an empty feasible set: 0 ([]); they are reported, not relaxed",
+   "evidence_class": "model-derived (from assumed code-default coefficients)"
+  },
+  {
+   "id": "F3-08",
+   "finding": "MODE_STRICT returns NOT_EVALUATED for every case: 23 blockers (all FIXED DragCompressor coefficients are uncited code defaults, the inlet is a PARAMETRIC_SENSITIVITY record, the rotor density is an uncited DB prior). Closing evidence: compressor_downselect T-1..T-9",
+   "evidence_class": "inferred"
+  }
+ ],
+ "interface_demands": [
+  {
+   "id": "IFD-F3-01",
+   "direction": "requires",
+   "counterpart": "F1 (fo_a9_7_f1_intake_synthesis)",
+   "path": "abep_sim/design/intake_synthesis.py (F1-ID-03)",
+   "what": "intake-exit state per species (mdot_s, P, T) feeding F2. The F1 records exist, but this study's fronts use PARAMETRIC_SENSITIVITY inlets from the down-selection requirement envelope; F4 (abep_sim/design/plenum_feed.py F4-ID-01/05) and F7 couple F1 -> F3 at the F1 states over the F3 front union only (INT-01 limitation recorded in F4 / F7 / F9)",
+   "status": "AVAILABLE_NOT_CONSUMED_BY_THIS_STUDY (coupled in F4 / F7)"
+  },
+  {
+   "id": "IFD-F3-02",
+   "direction": "requires",
+   "counterpart": "F2 (fo_a9_7_f2_filter_stage)",
+   "path": "abep_sim/design/filter_stage.py (F2-IF-03)",
+   "what": "filter-outlet record = compressor inlet: compressor_synthesis.InletRecord fields (mdot_kgps per O/N2/O2, p_total_Pa, T_K, source, evidence_class, label F1_F2_INTERFACE_RECORD); optional p_species_Pa must follow the DragCompressor convention (partial pressure proportional to number flow) or is refused. Every F2 filter record is TBD / PARAMETRIC (no evidenced filter); F4 couples the filter cases",
+   "status": "AVAILABLE_NOT_CONSUMED_BY_THIS_STUDY (F2 records TBD / PARAMETRIC; coupled in F4)"
+  },
+  {
+   "id": "IFD-F3-03",
+   "direction": "provides",
+   "counterpart": "F1 / F2",
+   "path": "abep_sim/design/intake_synthesis.py (F1-ID-04); abep_sim/design/filter_stage.py (F2-IF-04)",
+   "what": "compressor inlet pumping speed S_turbo [m^3/s] per design (sets the plenum backflow / K_back coupling) and the GAEDE_CHARACTERISTIC_CLIPPED rejection (inlet pressure not self-consistent with the throughput)",
+   "status": "AVAILABLE (PARAMETRIC_SENSITIVITY)"
+  },
+  {
+   "id": "IFD-F3-04",
+   "direction": "provides",
+   "counterpart": "F4 (fo_a9_7_f4_plenum_feed)",
+   "path": "abep_sim/design/plenum_feed.py (F4-ID-05)",
+   "what": "per design: P_out, mdot_s delivered, x_s,out (partial pressure) and delivered-flow x_s, T_gas and T_compressor, P_compressor",
+   "status": "AVAILABLE (PARAMETRIC_SENSITIVITY)"
+  },
+  {
+   "id": "IFD-F3-05",
+   "direction": "requires",
+   "counterpart": "F4 (fo_a9_7_f4_plenum_feed)",
+   "path": "abep_sim/design/plenum_feed.py (F4-ID-06)",
+   "what": "downstream plenum back-pressure / feed-control boundary (DragCompressor computes P_out from a fixed inlet; a coupled plenum must close p_out against the H-1 demand)",
+   "status": "TBD"
+  },
+  {
+   "id": "IFD-F3-06",
+   "direction": "requires",
+   "counterpart": "F5 (fo_a9_7_f5_h1_freeze_candidate)",
+   "path": "docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json (IFD-F3-01, IFD-F4-01..05: TBD)",
+   "what": "H-1 inlet demand (mdot_s, P, T, x_s); the W1 setpoints used here are PROPOSED references only",
+   "status": "TBD"
+  },
+  {
+   "id": "IFD-F3-07",
+   "direction": "provides",
+   "counterpart": "F0 (fo_a9_7_f0_profiling)",
+   "path": "docs/performance/PERFORMANCE_BASELINE_98fbbb9.json",
+   "what": "compressor design-space search workload: 2160 designs x 9 inlets via `python docs/design_synthesis/f3_compressor/build_f3_compressor.py` (a few CPU seconds); size_for comparison 27 calls",
+   "status": "AVAILABLE"
+  },
+  {
+   "id": "IFD-F3-08",
+   "direction": "provides",
+   "counterpart": "F7/F8 (fo_a9_7_f7_f8_coupled_optimizer)",
+   "path": "abep_sim/design/compressor_synthesis.py",
+   "what": "x_compressor = (N_turbo, A_turbo, u_tip/RPM, N_drag, rotor_material) and evaluate_design(); MODE_STRICT returns NOT_EVALUATED until the coefficient evidence exists (never an assumed value)",
+   "status": "AVAILABLE"
+  },
+  {
+   "id": "IFD-F3-09",
+   "direction": "provides",
+   "counterpart": "mass/power budgets (A9B-04, AL-02)",
+   "path": "docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json",
+   "what": "model-derived mass/power ranges labelled PARAMETRIC_SENSITIVITY; they do NOT fill the CBE column",
+   "status": "INFORMATIONAL"
+  }
+ ],
+ "open_owner_questions": [
+  {
+   "id": "OQ-F3-01",
+   "question": "Safety factor and allowable basis for the compressor rotor: the module uses an uncited factor 2.0; the only cited allowable accessed is the Ti-6Al-4V annealed-plate A-basis Fty 827 MPa (MMPDS-06 via NASA-HDBK-6025, room temperature). Which factor and which product-form / temperature allowable govern?",
+   "proposed_answer": "none proposed (design-policy decision)",
+   "needed_by": "any F3 result used beyond PARAMETRIC_SENSITIVITY",
+   "status_as_raised": "TBD_OWNER",
+   "status": "ANSWERED (A9.9 S2.3, decision code REGISTERED_ROTOR_STRENGTH_BASIS_FAIL_CLOSED)",
+   "owner_decision": "A9.9 S2.3",
+   "decision_code": "REGISTERED_ROTOR_STRENGTH_BASIS_FAIL_CLOSED",
+   "owner_state_source": "docs/budgets/owner_decisions/owner_questions_state_v5.json rows[id=OQ-F3-01]"
+  },
+  {
+   "id": "OQ-F3-02",
+   "question": "Turbo-stage geometry definition: hub ratio / blade span relating R_turbo to A_turbo (the search uses the zero-hub limit R = sqrt(A/pi))?",
+   "proposed_answer": "none proposed",
+   "needed_by": "F7 coupled vector",
+   "status_as_raised": "TBD_OWNER",
+   "status": "ANSWERED (A9.13 S6.7, decision code EXPLICIT_HUB_RATIO)",
+   "owner_decision": "A9.13 S6.7",
+   "decision_code": "EXPLICIT_HUB_RATIO",
+   "owner_state_source": "docs/budgets/owner_decisions/owner_questions_state_v5.json rows[id=OQ-F3-02]"
+  },
+  {
+   "id": "OQ-F3-03",
+   "question": "The free-molecular domain caps every stage at 0.1 Pa while W1 PROPOSED setpoints reach 0.2 Pa: wait for T-1 data, or commission an open-literature transitional-regime stage model before any outlet above 0.1 Pa is evaluated?",
+   "proposed_answer": "wait for T-1 (no extrapolation meanwhile)",
+   "needed_by": "F4 plenum/feed closure",
+   "status_as_raised": "TBD_OWNER",
+   "status": "ANSWERED (A9.13 S6.8, decision code MODEL_AND_TEST_PARALLEL_FAIL_CLOSED)",
+   "owner_decision": "A9.13 S6.8",
+   "decision_code": "MODEL_AND_TEST_PARALLEL_FAIL_CLOSED",
+   "owner_state_source": "docs/budgets/owner_decisions/owner_questions_state_v5.json rows[id=OQ-F3-03]"
+  },
+  {
+   "id": "OQ-F3-04",
+   "question": "Re-admit aluminium-alloy or CFRP rotors to the search once a cited allowable is supplied (CFRP also subject to the AO policy OD-C3)?",
+   "proposed_answer": "only with a cited A/B-basis allowable and an AO disposition",
+   "needed_by": "next F3 revision",
+   "status_as_raised": "TBD_OWNER",
+   "status": "ANSWERED (A9.13 S6.9, decision code YES_VIA_S2_3_GATE)",
+   "owner_decision": "A9.13 S6.9",
+   "decision_code": "YES_VIA_S2_3_GATE",
+   "owner_state_source": "docs/budgets/owner_decisions/owner_questions_state_v5.json rows[id=OQ-F3-04]"
+  }
+ ],
+ "m16_impact": [
+  {
+   "row": 3,
+   "key": "compressor",
+   "state_before": "BLOCKED",
+   "state_after": "BLOCKED",
+   "change": "none: this artifact is a model-derived PARAMETRIC_SENSITIVITY screening under uncited code defaults (counts_as_evidence false); the blocking inputs remain compressor_downselect T-1..T-9 and the DI-1.4 concept freeze"
+  }
+ ],
+ "compliance": {
+  "modified_existing_modules": false,
+  "wired_into_archengine": false,
+  "goldens_affected": false,
+  "new_pytest_skips": 0,
+  "single_optimum_declared": false,
+  "pass_declared": false
+ }
+}

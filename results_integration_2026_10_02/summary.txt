@@ -1,0 +1,52 @@
+9450 configurations evaluated; 512 RFP-compliant (12 mN sustained on air, 25 mN peak, power, mass, life, IC, compressor); 0 ABEP-closed (RFP-compliant AND T > D on air).
+
+RFP-compliant count by architecture:
+architecture
+hall_1stage          291
+hall_rf              221
+ecr_gridless           0
+hall_1stage_mwcat      0
+hall_ecr               0
+helicon                0
+rf_gridded_ion         0
+
+Technical-only (no IC checks): 869 compliant, 13 closed.
+Technical-closed count by architecture:
+architecture
+hall_ecr             13
+hall_1stage           0
+ecr_gridless          0
+hall_1stage_mwcat     0
+hall_rf               0
+helicon               0
+rf_gridded_ion        0
+
+ABEP-closed count by architecture:
+architecture
+ecr_gridless         0
+hall_1stage          0
+hall_1stage_mwcat    0
+hall_ecr             0
+hall_rf              0
+helicon              0
+rf_gridded_ion       0
+
+ABEP-closed configurations by altitude / solar:
+  none
+
+Best RFP-compliant per architecture (max T/D, then min power):
+  hall_1stage          alt=180 mean  A=1.0m2 CR=2000 mdot=1.58mg/s p_in=1.39e-01Pa  T_air=18.4mN Isp=1148s P_air=916W P_peak=1034W m=28.9kg Xe=4.9kg T/D=0.53 IC=0.81
+  hall_rf              alt=180 high  A=0.5m2 CR=2000 mdot=1.02mg/s p_in=1.83e-01Pa  T_air=21.5mN Isp=2057s P_air=1212W P_peak=1273W m=30.1kg Xe=3.8kg T/D=0.96 IC=0.80
+
+Why configurations fail (count of failed hard checks):
+  chk_mass_cbe_target          7559
+  chk_mass_mev                 7039
+  chk_mass                     6708
+  chk_thrust_air_ge_req        6430
+  chk_ic_thruster              5400
+  chk_power_peak               3452
+  chk_life                     2700
+  chk_power_air                1961
+  chk_ic_total                 953
+  chk_thrust_peak_25mN         0
+  chk_compressor_feasible      0

@@ -1,0 +1,514 @@
+"""Golden benchmark cases (stabilisation gate 6).
+
+Each case records the intermediate state of the chain — not only the final thrust — so that any later implementation
+(Julia/Rust) can be checked stage by stage: atmosphere -> intake -> compressor/reservoir -> source plasma -> accelerator
+-> power/thermal/mass/life -> spacecraft T/D -> mission. Values are produced by the frozen scenario (frozen NRLMSIS
+dataset + frozen TPMC surface), so they are deterministic on any machine.
+
+    python -m abep_sim.golden generate      # rewrite abep_sim/data/golden_v2.json (only on an intentional model change)
+    python -m abep_sim.golden check         # compare; also run by the test suite
+
+golden_v2 (owner decision A9.18 GOLDEN, 2026-10-01: NEW_ADMISSIBLE_CONVERGED_GOLDEN;
+RETAIN_OLD_AS_NONCONVERGED_REGRESSION_REFERENCE). The golden_v1 design point of the gas-path-dependent cases (gas_path
+at the default reservoir setpoint, accelerators on make_gas_fn(0.7, "nominal"), architecture_closure / mission at
+intake area 1.3 m2, p_level 0.05 Pa) is not converged under G-03..G-05 (orifice setpoint unbracketed; at 1.3 m2 also
+Gaede OUT_OF_MODEL_DOMAIN). Those cases are kept, values unchanged, as the `nonconverged_reference` fixture
+(NONCONVERGED_REFERENCE / EXPECTED_NONCONVERGENCE): `check` recomputes them, compares them with the frozen v1 values and
+asserts that the solver refuses them. The canonical gas-path-dependent cases now sit at GOLDEN_DESIGN_POINT, chosen by
+the deterministic rule `select_design_point` (first admissible point of the default close_architecture gas grid in its
+own iteration order; see SELECTION_RULE). golden_v1.json is kept unchanged as history.
+"""
+from __future__ import annotations
+import copy, functools, hashlib, json, os, math
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+GOLDEN_FILE = os.path.join(DATA_DIR, "golden_v2.json")
+GOLDEN_V1_FILE = os.path.join(DATA_DIR, "golden_v1.json")      # history (A9.18): never rewritten
+
+
+def _flt(d: dict) -> dict:
+    out = {}
+    for k, v in d.items():
+        if isinstance(v, bool) or v is None or isinstance(v, str):
+            out[k] = v
+        elif isinstance(v, (int, float)):
+            out[k] = float(v)
+    return out
+
+
+def case_atmosphere():
+    from .atmosphere import atmosphere
+    out = {}
+    for alt in (180.0, 200.0, 230.0):
+        for sol in ("low", "mean", "high"):
+            a = atmosphere(alt, sol)
+            out[f"{int(alt)}_{sol}"] = _flt({k: a[k] for k in ("rho", "fO", "fN2", "fO2", "T", "n", "V", "n_O")})
+    return out
+
+
+def case_intake():
+    from .atmosphere import atmosphere
+    from .intake import IntakeParams, collection
+    atm = atmosphere(200.0, "mean"); out = {}
+    for sc in ("maxwell", "cll"):
+        for a, ld in ((0.8, 5.0), (0.95, 10.0), (0.5, 3.0)):
+            c = collection(IntakeParams(area_m2=0.7, accommodation=a, use_tpmc=True, L_over_d=ld, scattering=sc), atm)
+            out[f"{sc}_a{a}_ld{ld}"] = _flt({k: c[k] for k in ("eta_c", "C_D", "mdot_collected", "mdot_incident") if k in c})
+    return out
+
+
+def case_source_plasma():
+    from .plasma_chem import Chamber, solve_global
+    md = {"O": 0.40e-6, "N2": 0.50e-6, "O2": 0.10e-6}; out = {}
+    for P in (100.0, 300.0):
+        st = solve_global(Chamber(magnetised_wall_factor=0.3, volume_m3=1e-3, wall_area_m2=0.06), md, P, f_cutoff_Hz=2.45e9)
+        out[f"P{int(P)}"] = _flt({"Te_eV": st.Te_eV, "n_e": st.n_e, "util_total": st.util_total, "eV_per_ion": st.eV_per_usable_ion,
+                                  "P_iz_W": st.power["ionisation_excitation_W"], "P_wall_W": st.power["wall_W"],
+                                  "I_exit_A": sum(st.ion_exit_A.values()), "sustained": st.sustained})
+    return out
+
+
+def case_hall():
+    from .plasma_devices import coupled_channel, hall_run_coupled
+    out = {}
+    r = hall_run_coupled(coupled_channel(), 250.0, {"N2": 2e-6})
+    out["anchor_N2"] = _flt({k: r[k] for k in ("T_N", "P_d_W", "I_d_A", "I_beam_A", "eta_b", "Te_eV", "n_e", "P_jet_W", "f_cx", "util_hall")})
+    for md, start in ((1.0, "cold"), (1.3, "cold"), (1.7, "cold"), (1.7, "hot")):
+        f = {"O": 0.43 * md * 1e-6, "N2": 0.51 * md * 1e-6, "O2": 0.06 * md * 1e-6}
+        r = hall_run_coupled(coupled_channel(L_m=0.20), 275.0, f, start=start)
+        out[f"air_{md}_{start}"] = _flt({k: r.get(k) for k in ("T_N", "P_d_W", "I_d_A", "Te_eV", "n_e", "P_jet_W", "ignited")})
+    f = {"O": 0.43e-6, "N2": 0.51e-6, "O2": 0.06e-6}
+    r = hall_run_coupled(coupled_channel(L_m=0.20), 275.0, f, {"O+": 0.17, "N2+": 0.10, "O2+": 0.03})
+    out["air_1.0_seed0.3A"] = _flt({k: r.get(k) for k in ("T_N", "P_d_W", "Te_eV", "n_e")})
+    return out
+
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# A9.18 golden design point (owner decision OD_2026_10_01_A9_18, decision GOLDEN)
+# ---------------------------------------------------------------------------------------------------------------------
+# The default gas-path grid of archengine.close_architecture (its `gas_vars or {...}` literal; a test checks that this
+# copy matches) and its iteration order: area ascending (outer loop), p_level ascending (inner loop).
+DEFAULT_GAS_GRID = {"area": [0.6, 0.7, 0.85], "p_level": [0.02, 0.05, 0.1]}
+# The point the rule below selects. `generate` and the `design_point_selection` case re-run the rule; if it no longer
+# selects this point, that is a model change (the golden moves; justify, regenerate, log), never a silent re-pick.
+GOLDEN_DESIGN_POINT = {"area": 0.7, "p_level": 0.05}
+# The golden_v1 point, retained only as the non-converged regression reference.
+V1_DESIGN_POINT = {"area": 1.3, "p_level": 0.05}
+# Fixed (unchanged from golden_v1) closure scenario of the architecture_closure / mission cases.
+GOLDEN_ARCHITECTURE = "hall_internal+hall+lab6_xe"
+GOLDEN_P_BUS_MAX_W = 2500.0
+
+SELECTION_RULE = {
+    "id": "A9.18-SEL-1 FIRST_ADMISSIBLE_IN_DEFAULT_GRID_ORDER",
+    "rule": ("Walk the default close_architecture gas grid (DEFAULT_GAS_GRID: area [0.6, 0.7, 0.85] m2 x p_level "
+             "[0.02, 0.05, 0.1] Pa) in the solver's own loop order (area ascending outer, p_level ascending inner) and "
+             "take the FIRST point that is admissible (ADMISSIBILITY_CRITERIA). Nothing else (thrust, mass, power, T/D, "
+             "closeness to golden_v1 numbers) enters the choice."),
+    "neutrality": ("The grid and its order are fixed by archengine.close_architecture before any result is seen; the rule "
+                   "reads only pass/fail admissibility verdicts, never a performance value, so it is neither a performance "
+                   "optimum nor tuned to reproduce golden_v1. Cross-check (not used for the choice): the declared "
+                   "alternative 'admissible point closest to the golden_v1 point (1.3 m2, 0.05 Pa), same p_level first, "
+                   "then smallest |delta area|' selects the same point (0.7 m2, 0.05 Pa)."),
+    "fixed_scenario": ("unchanged from golden_v1: architecture hall_internal+hall+lab6_xe, DesignConstraints(P_bus_max "
+                       "2500 W), Spacecraft(bus_frontal_m2=0.10, pointing_sigma_deg=0.5), size_arrays, mission_envelope "
+                       "(margin 1.0); gas state make_gas_fn() defaults (alpha 0.8, L/d 5, 200 km, mean solar, frozen "
+                       "NRLMSIS + frozen TPMC surface, CompressorParams(ratio=2000), p_target = p_level)"),
+}
+ADMISSIBILITY_CRITERIA = (
+    "inputs accepted by every input-validation rule (no ValueError from intake surface / TPMC / gas path)",
+    "atmosphere from the frozen NRLMSIS dataset (atm_source 'NRLMSIS 2.1 frozen scenario ...'), TPMC intake model",
+    "G-03 compressor recirculation converged (comp_converged)",
+    "G-04 reservoir steady state converged (res_converged)",
+    "G-05 orifice sizing converged AND bracketed/reachable (orifice_converged, orifice_bracketed)",
+    "gaspath_status == CONVERGED",
+    "MCC-02 Gaede domain: comp_gaede_domain_ok, comp_gaede_K_unclipped_min >= 1, gaspath_domain_status == IN_DOMAIN",
+    "no unsized compressor fallback (comp_sized)",
+    "rotor inside the labelled legacy sensitivity cap (comp_rotor_within_legacy_sensitivity_cap); rotor qualification "
+    "PASS or the labelled NOT_EVALUATED_MATERIAL_BASIS (S2.3: no registered rotor-strength basis exists)",
+    "close_architecture at that single gas point returns a closed design: status / evidence_class in {OK, "
+    "PARAMETRIC_SENSITIVITY}, closes_constraints True, |ledger_resid| < 0.02 (gate 4)",
+)
+# PHY-06 repair: A9.18 item 1 asks for a golden point "inside the registered model domain". The 0-D Hall calibration
+# envelope (archengine.CALIBRATION / calibration_status: Marchioni & Cappelli 2021 N2 extended channel, SPT-100 Xe) is
+# NOT an admissibility criterion here; it is recorded for every closed grid point (hall_calibration,
+# hall_calibration_extrapolation) and never silent.
+HALL_CALIBRATION_DOMAIN = {
+    "criterion": "0-D Hall calibration envelope (archengine.CALIBRATION['hall'], calibration_status)",
+    "status": "RECORDED_NOT_GATING_OWNER_CONFIRMATION_REQUESTED",
+    "statement": ("The 0-D Hall closure and its calibration envelope are withdrawn (Governance.md 'Superseded / withdrawn': "
+                  "all absolute Hall results of the 0-D closure, incl. the Marchioni calibration on an invented "
+                  "geometry). This golden is a reproducibility reference of a converged numerical state, not physics "
+                  "evidence, so the withdrawn envelope is not treated as part of the 'registered model domain' of A9.18 "
+                  "item 1 for golden purposes. The selected point carries calibration = 'extrapolation' (worst relative "
+                  "excursion recorded in cases.architecture_closure and in the grid scan); every closed point of the "
+                  "default grid is an extrapolation (provenance.full_grid_scan). If the owner rules the envelope part "
+                  "of the registered domain, SELECTION_RULE finds no admissible point and the golden must be re-decided; "
+                  "it is never re-picked silently."),
+    "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; Governance.md withdrawn list",
+}
+ROTOR_LABEL = ("comp_rotor_qualification = NOT_EVALUATED_MATERIAL_BASIS, comp_sizing_mode = PARAMETRIC_SENSITIVITY, "
+               "architecture status / evidence_class = PARAMETRIC_SENSITIVITY, feasible False. A9.9 S2.3 allows a rotor "
+               "to be explored as PARAMETRIC_SENSITIVITY while no rotor-strength basis is registered; it forbids only a "
+               "qualified rotor_ok = true. The golden checks reproducibility of a converged numerical state, not "
+               "qualification, so it carries this labelled state; it is not design evidence and not a qualified rotor.")
+
+
+def _gas_record(area: float, p_level: float) -> dict:
+    """system.evaluate record of the gas state that archengine.make_gas_fn()(area, p_level) wraps (same Config)."""
+    from .system import Config, evaluate
+    from .intake import IntakeParams, CompressorParams
+    return evaluate(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
+                           CompressorParams(ratio=2000), vd_V=275, gaspath_physics=True, p_margin_over_pmin=3.0,
+                           p_target_Pa=float(p_level)))
+
+
+@functools.lru_cache(maxsize=None)
+def _closure_cached(area: float, p_level: float) -> dict:
+    """close_architecture of the fixed golden scenario at one gas point (pure function of the key, rule 5)."""
+    from . import archengine as AE
+    from .mission_env import Spacecraft
+    gf = AE.make_gas_fn(); A = {AE.arch_name(x): x for x in AE.enumerate_architectures()}
+    sc = Spacecraft(bus_frontal_m2=0.10, pointing_sigma_deg=0.5)
+    return AE.close_architecture(A[GOLDEN_ARCHITECTURE], gf, sc, AE.DesignConstraints(GOLDEN_P_BUS_MAX_W),
+                                 gas_vars={"area": [area], "p_level": [p_level]}, size_arrays=True, mission_envelope=True,
+                                 envelope_margin=1.0, keep_candidates=False)
+
+
+def _closure(area: float, p_level: float) -> dict:
+    return copy.deepcopy(_closure_cached(area, p_level))
+
+
+def admissibility(area: float, p_level: float) -> dict:
+    """Verdict of one grid point under ADMISSIBILITY_CRITERIA (labels only; no performance value is used)."""
+    try:
+        r = _gas_record(area, p_level)
+    except ValueError as e:
+        return {"verdict": "INPUT_REFUSED", "admissible": False, "reason": str(e)}
+    gas_checks = {
+        "frozen_atmosphere": str(r.get("atm_source", "")).startswith("NRLMSIS 2.1 frozen scenario"),
+        "tpmc_intake": r.get("intake_model") == "tpmc",
+        "g03_compressor_converged": bool(r["comp_converged"]),
+        "g04_reservoir_converged": bool(r["res_converged"]),
+        "g05_orifice_converged": bool(r["orifice_converged"]),
+        "g05_orifice_bracketed": bool(r["orifice_bracketed"]),
+        "gaspath_converged": r["gaspath_status"] == "CONVERGED",
+        "gaede_domain_ok": bool(r["comp_gaede_domain_ok"]) and r["comp_gaede_K_unclipped_min"] >= 1.0,
+        "in_domain": r["gaspath_domain_status"] == "IN_DOMAIN",
+        "compressor_sized": bool(r["comp_sized"]),
+        "rotor_within_legacy_cap": bool(r["comp_rotor_within_legacy_sensitivity_cap"]),
+        "rotor_label_allowed": r["comp_rotor_qualification"] in ("PASS", "NOT_EVALUATED_MATERIAL_BASIS"),
+    }
+    out = {"checks": gas_checks, "gaspath_status": r["gaspath_status"], "gaspath_domain_status": r["gaspath_domain_status"],
+           "gaspath_not_converged": ",".join(r["gaspath_not_converged"]), "comp_rotor_qualification": r["comp_rotor_qualification"]}
+    failed = [k for k, ok in gas_checks.items() if not ok]
+    if failed:
+        verdict = ("GASPATH_MODEL_NOT_CONVERGED" if r["gaspath_status"] != "CONVERGED" else
+                   "GASPATH_OUT_OF_MODEL_DOMAIN" if r["gaspath_domain_status"] != "IN_DOMAIN" else "GASPATH_NOT_ADMISSIBLE")
+        return {**out, "verdict": verdict, "admissible": False, "reason": "failed: " + ",".join(failed)}
+    c = _closure(area, p_level)
+    out["closure_status"] = c.get("status")
+    closed = (c.get("status") in ("OK", "PARAMETRIC_SENSITIVITY") and c.get("evidence_class") == c.get("status")
+              and c.get("closes_constraints") is True and abs(c.get("ledger_resid", 1.0)) < 0.02)
+    # recorded, never gating (HALL_CALIBRATION_DOMAIN)
+    out["hall_calibration"] = c.get("calibration"); out["hall_calibration_extrapolation"] = c.get("extrapolation")
+    if not closed:
+        return {**out, "verdict": f"CLOSURE_{c.get('status')}", "admissible": False, "reason": str(c.get("reason", ""))}
+    return {**out, "verdict": "ADMISSIBLE", "admissible": True, "reason": ""}
+
+
+def select_design_point(grid: dict | None = None, full_scan: bool = False) -> tuple:
+    """Apply SELECTION_RULE. Returns (selected {area, p_level} or None, ordered list of visited verdicts). With
+    full_scan the whole grid is evaluated (provenance only; the choice is still the first admissible point)."""
+    grid = grid or DEFAULT_GAS_GRID
+    visited = []; selected = None
+    for area in grid["area"]:
+        for p in grid["p_level"]:
+            v = admissibility(area, p)
+            visited.append({"area": area, "p_level": p, **v})
+            if v["admissible"] and selected is None:
+                selected = {"area": area, "p_level": p}
+                if not full_scan:
+                    return selected, visited
+    return selected, visited
+
+
+def case_design_point_selection():
+    _, visited = select_design_point()
+    return {"rule_id": SELECTION_RULE["id"], "grid_area_m2": {str(i): float(a) for i, a in enumerate(DEFAULT_GAS_GRID["area"])},
+            "grid_p_level_Pa": {str(i): float(p) for i, p in enumerate(DEFAULT_GAS_GRID["p_level"])},
+            "visited": {f"A{v['area']}_p{v['p_level']}": {"verdict": v["verdict"], "admissible": v["admissible"],
+                                                          **({"hall_calibration": v["hall_calibration"]}
+                                                             if v.get("hall_calibration") is not None else {})}
+                        for v in visited},
+            "hall_calibration_domain_status": HALL_CALIBRATION_DOMAIN["status"],
+            "selected": _flt({"area_m2": visited[-1]["area"], "p_level_Pa": visited[-1]["p_level"]}) if visited[-1]["admissible"] else {}}
+
+
+_GAS_PATH_KEYS = ("eta_c", "C_D", "mdot_air_mgps", "p_in_Pa", "P_comp_W", "m_comp_kg", "m_intake_kg", "fO_inlet", "fO2_inlet", "drag_mN")
+_GAS_PATH_LABELS = ("gaspath_status", "gaspath_domain_status", "comp_converged", "res_converged", "orifice_converged",
+                    "orifice_bracketed", "comp_sized", "comp_gaede_domain_ok", "comp_gaede_K_unclipped_min", "comp_iterations",
+                    "comp_residual", "res_iterations", "res_residual", "res_balance_residual_rel", "orifice_p_residual_rel",
+                    "comp_rotor_qualification", "comp_sizing_mode", "comp_rotor_within_legacy_sensitivity_cap",
+                    "comp_turbo_rows", "comp_drag_stages", "comp_rpm", "p_target_Pa")
+_CLOSURE_KEYS = ("status", "x_Vd", "x_L_ch", "T_mN", "P_bus_W", "P_jet_W", "ledger_resid", "T_over_D_sc", "MEV_kg", "CBE_kg",
+                 "A_array_m2", "m_system_kg", "life_sys_h", "Q_waste_W", "A_rad_m2", "xe_kg")
+_CLOSURE_LABELS = ("x_area", "x_p_level", "evidence_class", "evidence_admissible", "feasible", "closes_constraints", "gaspath_status",
+                   "gaspath_domain_status", "comp_rotor_qualification", "comp_sizing_mode", "calibration", "extrapolation",
+                   "optimum_at_search_edge")
+_MISSION_KEYS = ("mission_closed", "min_alt_km", "D_mean_mN", "T_mean_mN", "P_bus_mean_W", "P_bus_peak_W", "ao_fluence_m2", "fired_hours")
+_MISSION_LABELS = ("architecture_status", "evidence_class", "evidence_admissible")
+
+
+def _accelerator_values(gas: dict) -> dict:
+    from . import archengine as AE
+    A = {AE.arch_name(x): x for x in AE.enumerate_architectures()}
+    out = {}
+    g = AE._propulsion(A["ecr+grids+lab6_xe"], gas, {"P_ion": 800.0, "Vb": 1000.0, "A_grid": 1.2e-2, "gap": 1e-3})
+    out["ecr_grids"] = _flt({"T_N": g["T_N"], "P_acc_W": g["P_acc_W"], "I_beam_A": g["I_beam_A"], "P_hat": g["P_hat"], "f_cx": g["f_cx"],
+                             "life_h": g["life_items"]["grids"], "chi": g["chi_preion"]})
+    AE.NOZZLE_ENERGY_BOUND["on"] = False                       # as in golden_v1 (the module default; set explicitly)
+    n = AE._propulsion(A["ecr+mag_nozzle"], gas, {"P_ion": 700.0, "B0": 0.0875, "R_m": 50.0, "A_throat": 3e-3})
+    out["ecr_nozzle"] = _flt({"T_N": n["T_N"], "E_i_eV": n["E_i_eV"], "eta_det": n["eta_det"], "m_acc": n["m_acc"], "chi": n["chi_preion"]})
+    h = AE._propulsion(A["ecr+hall+lab6_xe"], gas, {"P_ion": 100.0, "Vd": 300.0, "L_ch": 0.20})
+    out["ecr_hall"] = _flt({"T_N": h["T_N"], "P_acc_W": h["P_acc_W"], "I_beam_A": h["I_beam_A"], "chi": h["chi_preion"], "P_neut_W": h["P_neut_W"]})
+    return out
+
+
+def _mission(r: dict) -> tuple:
+    from . import archengine as AE
+    from .mission_env import Spacecraft
+    from .mission5 import run_mission_generic
+    gf = AE.make_gas_fn()
+    sc = Spacecraft(bus_frontal_m2=0.10, pointing_sigma_deg=0.5)
+    pm = AE.propulsion_map(r, gf)
+    scm = copy.copy(sc); scm.array_area_m2 = r["A_array_m2"]
+    m = run_mission_generic(r, scm, gf(r["x_area"], r["x_p_level"]), hours=4000.0, dt_h=6.0, pmap=pm, P_bus_max_W=GOLDEN_P_BUS_MAX_W)
+    return pm, m
+
+
+def _gas_key(pt: dict) -> str:
+    return f"A{pt['area']}_p{pt['p_level']}"
+
+
+def case_gas_path():
+    """Gas path at the A9.18 golden design point (converged, in domain; p_target = p_level). Values plus the G-03..G-05 /
+    MCC-02 / S2.3 labels of the state."""
+    pt = GOLDEN_DESIGN_POINT
+    r = _gas_record(pt["area"], pt["p_level"])
+    return {_gas_key(pt): _flt({k: r[k] for k in _GAS_PATH_KEYS + _GAS_PATH_LABELS if k in r})}
+
+
+def case_accelerators():
+    """Accelerator physics on the gas state of the golden design point (golden_v1 used make_gas_fn()(0.7, 'nominal'),
+    an unbracketed-orifice state; kept in nonconverged_reference)."""
+    from . import archengine as AE
+    gas = AE.make_gas_fn()(GOLDEN_DESIGN_POINT["area"], GOLDEN_DESIGN_POINT["p_level"])
+    return {"gas_point": {"area_m2": float(gas["area"]), "p_level_Pa": float(GOLDEN_DESIGN_POINT["p_level"]),
+                          "gaspath_status": gas["gaspath_status"], "gaspath_domain_status": gas["gaspath_domain_status"]},
+            **_accelerator_values(gas)}
+
+
+def case_architecture_closure():
+    pt = GOLDEN_DESIGN_POINT
+    r = _closure(pt["area"], pt["p_level"])
+    return {"ext_hall_2p5kW": _flt({k: r.get(k) for k in _CLOSURE_KEYS + _CLOSURE_LABELS})}
+
+
+def case_mission():
+    pt = GOLDEN_DESIGN_POINT
+    r = _closure(pt["area"], pt["p_level"])
+    pm, m = _mission(r)
+    return {"map_T_N": {str(s): float(t) for s, t in zip(pm["scale"], pm["T_N"])},
+            "mission_4000h": _flt({k: m[k] for k in _MISSION_KEYS + _MISSION_LABELS})}
+
+
+# --- golden_v1 point: NONCONVERGED_REFERENCE / EXPECTED_NONCONVERGENCE regression fixture --------------------------
+NONCONVERGED_ROLE = "NONCONVERGED_REFERENCE"
+NONCONVERGED_EXPECTATION = "EXPECTED_NONCONVERGENCE"
+NONCONVERGED_CASES = ("gas_path", "accelerators", "architecture_closure", "mission")
+
+
+def _v1_values_and_refusal() -> tuple:
+    """Recompute the golden_v1 gas-path-dependent cases exactly as golden_v1 did (same inputs; same keys) and the labels
+    proving that the solver refuses them."""
+    from . import archengine as AE
+    from .system import Config, evaluate
+    from .intake import IntakeParams, CompressorParams
+    vals = {"gas_path": {}}; refusal = {"gas_path": {}}
+    for area in (0.7, 1.3):
+        r = evaluate(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
+                            CompressorParams(ratio=2000), vd_V=275, gaspath_physics=True))
+        vals["gas_path"][f"A{area}"] = _flt({k: r[k] for k in _GAS_PATH_KEYS if k in r})
+        refusal["gas_path"][f"A{area}"] = {"gaspath_status": r["gaspath_status"], "gaspath_not_converged": ",".join(r["gaspath_not_converged"]),
+                                           "gaspath_domain_status": r["gaspath_domain_status"],
+                                           "orifice_bracketed": bool(r["orifice_bracketed"]),
+                                           "chk_compressor_feasible": bool(r.get("chk_compressor_feasible"))}
+    gas = AE.make_gas_fn()(0.7, "nominal")
+    vals["accelerators"] = _accelerator_values(gas)
+    cls, _ = AE.gas_evidence_class(gas)
+    refusal["accelerators"] = {"gas_state": "make_gas_fn()(0.7, 'nominal')", "gaspath_status": gas["gaspath_status"],
+                               "gaspath_not_converged": gas["gaspath_not_converged"], "evidence_class": cls}
+    r = _closure(V1_DESIGN_POINT["area"], V1_DESIGN_POINT["p_level"])
+    vals["architecture_closure"] = {"ext_hall_2p5kW": _flt({k: r.get(k) for k in _CLOSURE_KEYS})}
+    refusal["architecture_closure"] = {"ext_hall_2p5kW": {k: r.get(k) for k in (
+        "status", "evidence_class", "evidence_admissible", "feasible", "gaspath_status", "gaspath_not_converged",
+        "gaspath_domain_status", "gaspath_out_of_domain")}}
+    pm, m = _mission(r)
+    vals["mission"] = {"map_T_N": {str(s): float(t) for s, t in zip(pm["scale"], pm["T_N"])},
+                       "mission_4000h": _flt({k: m[k] for k in _MISSION_KEYS})}
+    refusal["mission"] = {"mission_4000h": {k: m[k] for k in _MISSION_LABELS}}
+    return vals, refusal
+
+
+def refusal_violations(refusal: dict) -> list:
+    """Semantic EXPECTED_NONCONVERGENCE assertions (independent of the stored labels): every fixture state must be
+    refused — never CONVERGED / admissible / feasible."""
+    bad = []
+    for k, lab in refusal["gas_path"].items():
+        if lab["gaspath_status"] != "MODEL_NOT_CONVERGED" or lab["chk_compressor_feasible"]:
+            bad.append(f"gas_path/{k} not refused: {lab}")
+    if refusal["accelerators"]["evidence_class"] == "OK" or refusal["accelerators"]["gaspath_status"] == "CONVERGED":
+        bad.append(f"accelerators gas state not refused: {refusal['accelerators']}")
+    c = refusal["architecture_closure"]["ext_hall_2p5kW"]
+    if c["status"] != "MODEL_NOT_CONVERGED" or c["evidence_admissible"] or c["feasible"]:
+        bad.append(f"architecture_closure not refused: {c}")
+    m = refusal["mission"]["mission_4000h"]
+    if m["evidence_admissible"] or m["architecture_status"] != "MODEL_NOT_CONVERGED":
+        bad.append(f"mission not refused: {m}")
+    return bad
+
+
+def case_nonconverged_reference():
+    vals, refusal = _v1_values_and_refusal()
+    return {"role": NONCONVERGED_ROLE, "expectation": NONCONVERGED_EXPECTATION,
+            "design_point": _flt({"area_m2": V1_DESIGN_POINT["area"], "p_level_Pa": V1_DESIGN_POINT["p_level"]}),
+            "values": vals, "refusal": refusal, "refusal_violations": {str(i): v for i, v in enumerate(refusal_violations(refusal))}}
+
+
+CASES = {"atmosphere": case_atmosphere, "intake": case_intake, "design_point_selection": case_design_point_selection,
+         "gas_path": case_gas_path, "source_plasma": case_source_plasma, "hall": case_hall, "accelerators": case_accelerators,
+         "architecture_closure": case_architecture_closure, "mission": case_mission,
+         "nonconverged_reference": case_nonconverged_reference}
+CASE_ROLES = {**{k: "CANONICAL" for k in CASES}, "design_point_selection": "SELECTION_RECORD",
+              "nonconverged_reference": f"{NONCONVERGED_ROLE} / {NONCONVERGED_EXPECTATION}"}
+# frozen inputs whose hashes the golden carries (Governance.md rule 1)
+FROZEN_INPUTS = ("atmosphere_msis21_v1.csv", "atmosphere_msis21_v1.json", "intake_surface_v1.csv", "intake_surface_v1.json")
+
+
+def _sha256(path: str) -> str:
+    with open(path, "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()
+
+
+def _code_version() -> dict:
+    import subprocess
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    def git(*a):
+        try:
+            return subprocess.run(["git", *a], cwd=root, capture_output=True, text=True, timeout=30).stdout
+        except Exception:                                       # not a checkout (installed package): say so, no guess
+            return ""
+    head = git("rev-parse", "HEAD").strip()
+    dirty = [ln[3:] for ln in git("status", "--porcelain", "--untracked-files=all", "--", "abep_sim").splitlines()
+             if len(ln) > 3 and not ln.endswith(os.path.basename(GOLDEN_FILE))]
+    return {"git_head_at_generation": head or "UNAVAILABLE",
+            "abep_sim_paths_differing_from_head_at_generation": sorted(dirty),
+            "note": "the generating code is git_head_at_generation plus the listed working-tree paths (the commit that "
+                    "adds this file); the golden comparison, not this record, is the reproducibility gate"}
+
+
+def _provenance(full_scan: list) -> dict:
+    import platform
+    import numpy, pandas, scipy
+    return {
+        "owner_decision": "A9.18 GOLDEN = NEW_ADMISSIBLE_CONVERGED_GOLDEN; RETAIN_OLD_AS_NONCONVERGED_REGRESSION_REFERENCE",
+        "decision_records": ["docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md",
+                             "docs/decisions/OD_2026_10_01_A9_9_S2_MODEL_CHANGE_OWNER_DECISIONS.md (S2.3, S2.4 G-03..G-05, S2.5 MCC-02)"],
+        "generator": "python -m abep_sim.golden generate",
+        "previous_golden": {"file": "abep_sim/data/golden_v1.json", "sha256": _sha256(GOLDEN_V1_FILE),
+                            "status": "retained unchanged as history; its gas-path-dependent values are carried verbatim "
+                                      "in cases.nonconverged_reference.values"},
+        "frozen_inputs_sha256": {f"abep_sim/data/{f}": _sha256(os.path.join(DATA_DIR, f)) for f in FROZEN_INPUTS},
+        "code_version": _code_version(),
+        "environment": {"python": platform.python_version(), "numpy": numpy.__version__, "pandas": pandas.__version__,
+                        "scipy": scipy.__version__},
+        "selection_rule": SELECTION_RULE,
+        "admissibility_criteria": list(ADMISSIBILITY_CRITERIA),
+        "hall_calibration_domain": HALL_CALIBRATION_DOMAIN,
+        "selected_design_point": {"area_m2": GOLDEN_DESIGN_POINT["area"], "p_level_Pa": GOLDEN_DESIGN_POINT["p_level"]},
+        "previous_design_point": {"area_m2": V1_DESIGN_POINT["area"], "p_level_Pa": V1_DESIGN_POINT["p_level"],
+                                  "status": "MODEL_NOT_CONVERGED (orifice setpoint unbracketed; Gaede OUT_OF_MODEL_DOMAIN)"},
+        "full_grid_scan": [{k: v for k, v in s.items() if k != "checks"} | {"failed_checks": sorted(k for k, ok in s.get("checks", {}).items() if not ok)}
+                           for s in full_scan],
+        "rotor_qualification_label": ROTOR_LABEL,
+        "quotability": "historical 0-D / withdrawn-Hall benchmarks (Governance.md 'Superseded / withdrawn'): reproducibility "
+                       "references only; absolute values are not quotable",
+    }
+
+
+def generate() -> dict:
+    sel, full_scan = select_design_point(full_scan=True)
+    if sel != GOLDEN_DESIGN_POINT:
+        raise RuntimeError(f"A9.18 selection rule selects {sel}, not GOLDEN_DESIGN_POINT {GOLDEN_DESIGN_POINT}")
+    cases = {k: f() for k, f in CASES.items()}
+    # the fixture keeps the golden_v1 reference values exactly as frozen (not the recomputed floats)
+    v1 = json.load(open(GOLDEN_V1_FILE))["cases"]
+    errs = []
+    for k in NONCONVERGED_CASES:
+        _compare(v1[k], cases["nonconverged_reference"]["values"][k], f"nonconverged_reference/values/{k}", 1e-6, errs)
+    if errs or cases["nonconverged_reference"]["refusal_violations"]:
+        raise RuntimeError("golden_v1 non-converged reference no longer reproduces / is no longer refused:\n" +
+                           "\n".join(errs + list(cases["nonconverged_reference"]["refusal_violations"].values())))
+    cases["nonconverged_reference"]["values"] = {k: v1[k] for k in NONCONVERGED_CASES}
+    data = {"version": "golden_v2", "model": "ABEP Python Physics Candidate v1.5.1 + A9.9 S2 model changes",
+            "case_roles": CASE_ROLES, "provenance": _provenance(full_scan), "cases": cases}
+    with open(GOLDEN_FILE, "w") as f:
+        json.dump(data, f, indent=1, sort_keys=True)
+    return data
+
+
+# Absolute tolerances for quantities whose reference value is (near) zero by construction, keyed by the final path
+# element. A relative check against a stored 0.0 turns floating-point noise into an infinite change. Kept per-key
+# (not global) because the golden set also holds legitimately tiny values (e.g. atmospheric densities).
+ATOL = {"ledger_resid": 1e-12,   # relative energy-ledger residual; gate is < 2 %, so 1e-12 is pure round-off
+        # A9.18: round-off-level solver residuals of a converged gas state (tolerances 1e-6 / 1e-6)
+        "res_balance_residual_rel": 1e-12, "orifice_p_residual_rel": 1e-12}
+
+
+def _compare(ref, new, path, rtol, errs):
+    if isinstance(ref, dict):
+        for k in ref:
+            if not isinstance(new, dict) or k not in new:
+                errs.append(f"{path}/{k}: missing"); continue
+            _compare(ref[k], new[k], f"{path}/{k}", rtol, errs)
+    elif isinstance(ref, float) and isinstance(new, float):
+        atol = ATOL.get(path.rsplit("/", 1)[-1], 1e-30)
+        if not (math.isclose(ref, new, rel_tol=rtol, abs_tol=atol) or (math.isnan(ref) and math.isnan(new))):
+            errs.append(f"{path}: {ref!r} -> {new!r} ({(new / ref - 1) if ref else float('inf'):+.2e})")
+    elif ref != new:
+        errs.append(f"{path}: {ref!r} -> {new!r}")
+
+
+def check(cases=None, rtol: float = 1e-6) -> list[str]:
+    ref = json.load(open(GOLDEN_FILE))["cases"]
+    errs = []
+    for k in (cases or CASES):
+        new = json.loads(json.dumps(CASES[k]()))
+        _compare(ref[k], new, k, rtol, errs)
+        if k == "nonconverged_reference":
+            # EXPECTED_NONCONVERGENCE: the fixture must still be refused (semantic check, independent of stored labels)
+            errs += [f"nonconverged_reference: {v}" for v in new.get("refusal_violations", {}).values()]
+    return errs
+
+
+if __name__ == "__main__":
+    # Exit status (owner decision 2026-09-27, CI signalling only): `check` prints "OK" and exits 0 when nothing moved;
+    # otherwise it prints one line per deviation and exits 1, so CI can gate on the exit code (Governance.md rule 2).
+    # `generate` is unchanged (exit 0 after writing).
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "generate":
+        d = generate(); print("written", GOLDEN_FILE, sum(len(v) for v in d["cases"].values()), "entries")
+    else:
+        e = check(); print("OK" if not e else "\n".join(e))
+        sys.exit(1 if e else 0)
