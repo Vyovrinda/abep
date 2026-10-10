@@ -230,12 +230,50 @@ def test_required_rows_present_for_both_configurations(doc):
                 assert a["id"]
 
 
-def test_rfp_rows_not_frozen_and_no_interpretation_frozen(doc):
+def test_rfp_rows_frozen_only_by_the_owner_ag15_closure(doc):
+    """A9.22 G3: the owner closed AG-15; exactly the RFP_CLAUSE rows are frozen, the closure record lists them, and the
+    freeze changes no status (statuses are computed on the frozen basis; no row is PASS)."""
+    rfp = [r["id"] for r in doc["rows"] if r["requirement_origin"] == "RFP_CLAUSE"]
+    assert len(rfp) == 22
     for r in doc["rows"]:
-        if r["category"] in ("rfp_recorded", "rfp_inferred_from_repo_text", "rfp_registered") \
-                or r["requirement_origin"] == "RFP_CLAUSE":
-            assert r["requirement_frozen"] is False, r["id"]
+        if r["requirement_origin"] == "RFP_CLAUSE":
+            assert r["requirement_frozen"] is True, r["id"]
+            assert "A9.22 G3" in r["rfp_rebase"]["requirement_frozen_note"], r["id"]
+    cl = doc["rfp_rebase"]["ag15_closure"]
+    assert cl["frozen_rows"] == rfp and cl["decision_code"] == "AG15_CLOSED"
+    assert cl["decision"]["json_sha256"] == hashlib.sha256((REPO / cl["decision"]["json"]).read_bytes()).hexdigest()
+    assert cl["decision"]["md_sha256"] == hashlib.sha256((REPO / cl["decision"]["md"]).read_bytes()).hexdigest()
+    assert cl["requirements_snapshot"] == doc["rfp_rebase"]["requirements_snapshot"] == "FROZEN"
+    assert cl["accepted_rvm"]["requirements_basis_sha256"] == RB.requirements_basis_sha256(doc)
+    assert cl["unscreened_pages"]["disposition"] == "OWNER_REVIEWED_NO_ADDITIONAL_TECHNICAL_PERFORMANCE_REQUIREMENT"
+    assert set(cl["discrepancy_dispositions"]["dispositions"]) == {d["id"] for d in doc["rfp_rebase"]["discrepancies"]}
+    assert doc["rfp_rebase"]["ag_15_status"].startswith("CLOSED") and cl["decision"]["json_sha256"] in \
+        doc["rfp_rebase"]["ag_15_status"]
+    assert all(c["status"] != "PASS" for r in doc["rows"] for c in r["configurations"].values())
     assert doc["rfp_document_in_repository"] is False
+
+
+def test_ag15_closure_fails_closed():
+    """An RFP row frozen by the rows module, or a changed requirements basis, is refused (a basis change needs a new
+    owner decision)."""
+    import copy
+    rows = [{"id": "RVM-01", "requirement_frozen": True}]
+    with pytest.raises(RB.RebaseError):
+        RB.freeze_rfp_rows(rows, {"RVM-01": {"origin": "RFP_CLAUSE"}})
+    d = copy.deepcopy(_rvm())
+    d["rfp_rebase"].pop("ag15_closure")
+    d["rfp_rebase"]["ag_15_status"] = RB.PRE_CLOSURE_AG15_STATUS
+    ids = d["rfp_rebase"]["ag15_closure"]["frozen_rows"] if "ag15_closure" in d["rfp_rebase"] else \
+        [r["id"] for r in d["rows"] if r["requirement_origin"] == "RFP_CLAUSE"]
+    d2 = copy.deepcopy(d)
+    d2["rows"][0]["requirement_text"] += " (edited)"
+    with pytest.raises(RB.RebaseError):
+        RB.record_closure(d2, ids)
+    d3 = copy.deepcopy(d)
+    next(r for r in d3["rows"] if r["requirement_origin"] == "RFP_CLAUSE")["requirement_frozen"] = False
+    with pytest.raises(RB.RebaseError):
+        RB.record_closure(d3, ids)
+    assert RB.record_closure(copy.deepcopy(d), ids)["rfp_rebase"]["requirements_snapshot"] == "FROZEN"
 
 
 def _evaluated_cells(doc, key):
@@ -427,7 +465,7 @@ def test_every_row_cites_rfp_clauses_or_is_labelled(doc):
         if r["requirement_origin"] == "RFP_CLAUSE":
             assert r["rfp_clauses"], r["id"]
             assert r["requirement_basis"].startswith("RFP_CLAUSE "), r["id"]
-            assert r["requirement_frozen"] is False, r["id"]          # AG-15 closure is the owner's
+            assert r["requirement_frozen"] is True, r["id"]           # AG-15 closed by the owner (A9.22 G3)
             cited = {s["clause_id"]: s for s in r["sources"] if s["kind"] == "rfp_official_clause"}
             assert set(cited) == set(r["rfp_clauses"]), r["id"]
             for cid, s in cited.items():            # verbatim copy of the registered transcription
@@ -498,7 +536,7 @@ def test_discrepancies_recorded(doc):
     assert d["DISC-01"]["disposition"].startswith("UNVERIFIED_BY_RFP_DOCUMENT")
     assert d["DISC-02"]["rfp_clauses"] == ["RFP-P18-11"] and "wet or dry not stated" in d["DISC-02"]["rfp"]
     assert set(d["DISC-03"]["rfp_clauses"]) == {"RFP-P18-03", "RFP-P19-05"}
-    assert "AG-15" in doc["rfp_rebase"]["gate"] and doc["rfp_rebase"]["ag_15_status"].startswith("OPEN")
+    assert "AG-15" in doc["rfp_rebase"]["gate"] and doc["rfp_rebase"]["ag_15_status"].startswith("CLOSED")
 
 
 def test_absent_artifact_kind_never_passes():
@@ -530,7 +568,8 @@ def _rvm():
 def test_rfp01_reads_a915_applied_v3_packages():
     """RFP-01: the RVM evaluates the A9.15-applied v3 budgets (no retired XA9Q-07 / USABLE / CBE-level readings) and
     records the v3 DOES_NOT_CLOSE as evidence state without turning it into a FAIL."""
-    assert B.REFS["MP"][0].endswith("mass_power_a9_v3.json") and B.REFS["MP"][2] == "mass_power_a9_v3"
+    # A9.26: the current mass / power package is the v5 successor of v4 (v4 = A9.24 AFI-01 successor of v3)
+    assert B.REFS["MP"][0].endswith("mass_power_a9_v5.json") and B.REFS["MP"][2] == "mass_power_a9_v5"
     assert B.REFS["XE"][0].endswith("xe_accounting_a9_v3.json") and B.REFS["XE"][2] == "xe_accounting_a9_v3"
     assert B.REFS["RFQ2"][2] == "RFQ_A9_V3"
     d = _rvm()
@@ -540,7 +579,8 @@ def test_rfp01_reads_a915_applied_v3_packages():
     by = {r["id"]: r for r in d["rows"]}
     cell = by["RVM-06"]["configurations"]["hall_icp_neutralizer"]
     assert cell["status"] == "INCOMPLETE_EVIDENCE"
-    assert "mass_power_a9_v3" in cell["current_evidence_state"]
+    assert "mass_power_a9_v5" in cell["current_evidence_state"]
+    assert "MASS INCOMPLETE_EVIDENCE / NOT_YET_CLOSED" in cell["current_evidence_state"]      # A9.26
     assert "DOES_NOT_CLOSE 3" in cell["current_evidence_state"]
     an = next(a for a in cell["artifacts"] if a.get("detail", {}).get("analyses"))["detail"]["analyses"][0]
     assert {m["state"] for m in an["mixed_basis_states"]} == {"DOES_NOT_CLOSE"}
@@ -551,7 +591,7 @@ def test_rfp01_reads_a915_applied_v3_packages():
                  if a["path"].endswith("xe_accounting_a9_v3.json")]
     assert xe_states and all("RA-FUNC APPLIES" in s for s in xe_states)
     ids = {i["id"]: i for i in d["interface_demands"]}
-    assert "v3" in ids["RVM-ID-01"]["direction"] and "v3" in ids["RVM-ID-02"]["direction"]
+    assert "v4" in ids["RVM-ID-01"]["direction"] and "v3" in ids["RVM-ID-02"]["direction"]   # A9.24 AFI-01: MP v4
     for rid in ("RVM-15", "RVM-18"):
         paths = {a["path"] for c in by[rid]["configurations"].values() for a in c["artifacts"]}
         assert "docs/procurement/rfq_a9_v2/rfq_a9_v2.json" not in paths
@@ -559,7 +599,7 @@ def test_rfp01_reads_a915_applied_v3_packages():
 
 def test_rfp03_rvf04_rfp_citation_status_follows_registration():
     """RFP-03 / RVF-04: no step-1 'pending registration' citation status survives; registered clause ids cited; the
-    step-1 label is history; requirement_frozen stays false (AG-15 is the owner's)."""
+    step-1 label is history; requirement_frozen = true on RFP_CLAUSE rows since the owner closed AG-15 (A9.22 G3)."""
     d = _rvm()
 
     def walk(o):
@@ -583,8 +623,8 @@ def test_rfp03_rvf04_rfp_citation_status_follows_registration():
     assert "pending" not in by["RVM-09"]["a9_16"]["note"]
     assert "RFP-P18-09" in by["RVM-19"]["a9_16"]["rebased_on"] and "pending" not in by["RVM-19"]["a9_16"]["rebased_on"]
     assert "not registered" not in d["a9_16_rfp_rule"] and "registered by hash" in d["a9_16_rfp_rule"]
-    assert "requirement_frozen stays false" in d["a9_16_rfp_rule"]
-    assert all(r["requirement_frozen"] is False for r in d["rows"] if r["requirement_origin"] == "RFP_CLAUSE")
+    assert "the owner closed AG-15 (A9.22 G3)" in d["a9_16_rfp_rule"]
+    assert all(r["requirement_frozen"] is True for r in d["rows"] if r["requirement_origin"] == "RFP_CLAUSE")
 
 
 def test_rfp04_items_rebased_on_registered_clauses():
@@ -651,7 +691,7 @@ def test_a919_new_rows_traced_and_never_pass(doc):
     assert r28["requirement_basis"].startswith("OWNER_ARCHITECTURE_DECISION A9.19")
     # two supply modes: RFP clauses (verbatim sources) + the owner's Xe role
     assert r29["requirement_origin"] == "RFP_CLAUSE" and r29["rfp_clauses"] == ["RFP-P18-08", "RFP-P17-05"]
-    assert r29["requirement_frozen"] is False and "contingency / emergency" in r29["requirement_text"]
+    assert r29["requirement_frozen"] is True and "contingency / emergency" in r29["requirement_text"]   # A9.22 G3
     assert any(s["kind"] == "owner_decision" and s["key"] == "xenon_role" for s in r29["sources"])
     # C1 ground-only, outside every flight budget
     assert r30["requirement_origin"] == "OWNER_ALLOCATION" and r30["limit"]["value"] == 0
@@ -742,7 +782,7 @@ def test_rv19_10_ground_reference_cells_not_applicable_and_v3_budget_evidence(do
     # RVM-30 determining evidence: v3 budgets, never the immutable v2 budgets
     arts = by["RVM-30"]["configurations"]["hall_icp_neutralizer"]["artifacts"]
     det = [a for a in arts if a["role"] == "DETERMINING"]
-    assert {a["path"] for a in det} == {"docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json",
+    assert {a["path"] for a in det} == {"docs/budgets/mass_power_a9_v5/mass_power_a9_v5.json",
                                         "docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json"}
     assert not any("_a9_v2/" in a["path"] for a in arts)       # no v2 budget, no v2 RFQ cited on RVM-30
     rfq = [a for a in arts if a["kind"] == "PROCUREMENT"]
@@ -774,7 +814,7 @@ def test_a919_c1_retirement_from_v3_flight_budgets_detected_and_fail_closed():
     """A9.19 / A9.20: the RVM follows the v3 flight budgets. While they carry hall_c1_reference the C1 cells stay the
     labelled ground-reference evaluation; a retirement must be labelled in BOTH budgets (retired-history column in
     mass/power, retired_flight_configuration in Xe, no flight C1 Xe scenario) or the build fails closed."""
-    assert B.REFS["MP"][0].endswith("mass_power_a9_v3.json") and B.REFS["XE"][0].endswith("xe_accounting_a9_v3.json")
+    assert B.REFS["MP"][0].endswith("mass_power_a9_v5.json") and B.REFS["XE"][0].endswith("xe_accounting_a9_v3.json")
     ctx = _budget_ctx()
     cur = B.c1_retired_from_flight_budgets(ctx)
     mp, xe = copy.deepcopy(ctx.r["MP"]), copy.deepcopy(ctx.r["XE"])
@@ -812,3 +852,28 @@ def test_a919_c1_retirement_from_v3_flight_budgets_detected_and_fail_closed():
     assert B.probe_xe(rctx, c1) == {B.RETIRED_KEY: "xe"}
     assert B.probe_power(rctx, c1) == {B.RETIRED_KEY: "power"}
     assert B.RETIRED_KEY not in B.probe_xe(rctx, "hall_icp_neutralizer")
+
+
+def test_a9_24_afi05_rvm16_reading_outside_frozen_basis():
+    """A9.24 AFI-05: RVM-16 carries the current-architecture (no flight keeper) reading as a labelled record; its frozen
+    basis title / text (A9.22 G3) and the owner row-94 verbatim quote stay unchanged."""
+    d = _rvm()
+    r = {x["id"]: x for x in d["rows"]}["RVM-16"]
+    x = r["a9_24_current_architecture_reading"]
+    assert "keeper" not in x["title"] and "keeper" not in x["requirement_text"]
+    assert "RF/ICP electron-source / neutralizer" in x["title"]
+    k = x["keeper_reading"]
+    assert k["status"] == "OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING"            # A9.25 message 8 section 2
+    assert k["status_before"].startswith("RECORDER_INTERPRETATION_OWNER_MAY_REVERSE")
+    assert k["confirmed_by"]["decision"] == "A9.25" and k["confirmed_by"]["message"] == 8
+    c = k["owner_clarification"]
+    assert "no flight keeper" in c["keeper"] and "NOT a universal prohibition on graphite" in c["graphite"]
+    assert c["ao_o_exposed_components"][:2] == ["anode", "RF/ICP electron-source / neutralizer plasma-facing surfaces"]
+    assert c["compliance_status"].startswith("UNCHANGED")
+    assert x["keeper_reading"]["owner_row_94_verbatim"].startswith("Do not use graphite as the flight baseline for an "
+                                                                   "O/AO-exposed keeper")
+    assert "no graphite flight keeper" in r["requirement_text"]          # frozen basis (A9.22 G3) untouched
+    assert d["a9_24_afi05"]["stop_item"] is None
+    assert d["a9_24_afi05"]["resolved_stop_item"]["id"] == "AFI-05-S1"
+    assert d["a9_24_afi05"]["resolved_stop_item"]["state"] == "OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING"
+    assert "OWNER_MAY_REVERSE" not in json.dumps(r["a9_24_current_architecture_reading"]["requirement_text"])

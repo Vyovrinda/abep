@@ -60,7 +60,7 @@ What it never does
 * A capacity record (record_class ICP45_CAPACITY) is REFUSED (raised) when it is incomplete or not a capacity
   record at all: wrong stage, not the dedicated electron-collecting electrode, capacity_monitoring missing or not
   the single-point metered H-1 body ground, V_anode not on a high-impedance isolated channel, a required terminal
-  absent from the record (A9.4 P1Q-10 / P1Q-13; Governance.md rule 3). The A9.5 P1Q-15 exclusions are NOT refusals: an
+  absent from the record (A9.4 P1Q-10 / P1Q-13; governance.md rule 3). The A9.5 P1Q-15 exclusions are NOT refusals: an
   anode not physically disconnected / floating, a terminal declared NOT_MEASURED or I_body->ground not measured
   continuously (intentional return path unmeasured), an unintended ground path, a registered RF-ON / RF-OFF pair that
   is not matched (field, values and match rule id kept), sign conventions that differ, missing u(I_k) and the
@@ -78,7 +78,7 @@ What it never does
   FLIGHT_REPRESENTATIVE_DC_RF_SOURCE belongs to a later programme and is refused here.
 * It never applies a stable-region threshold of its own: criteria are owner inputs; without them the verdict is
   NOT_EVALUATED.
-* No hidden defaults: a missing input raises (Governance.md rule 3).
+* No hidden defaults: a missing input raises (governance.md rule 3).
 
 Pure: stdlib + numpy only, no file or network I/O, no global state.
 """
@@ -808,7 +808,7 @@ def _check_capacity_record(rec, rid):
     floating; an intentional return path declared NOT_MEASURED or I_body->ground not measured continuously; an
     unintended ground path found) are NOT refused here: they exclude the capacity point with its reason
     (capacity_structural_reasons, kirchhoff_closure) and the record stays in the raw record. A terminal that is absent
-    from the record (not even declared NOT_MEASURED) is an incomplete record and is refused (Governance.md rule 3)."""
+    from the record (not even declared NOT_MEASURED) is an incomplete record and is refused (governance.md rule 3)."""
     if rec["stage_id"] not in ICP45A_CAPACITY_STAGES:
         raise CapacityConfigurationError("%s: ICP45_CAPACITY records belong to the capacity stages %s, not %r"
                                          % (rid, ICP45A_CAPACITY_STAGES, rec["stage_id"]))

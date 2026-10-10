@@ -104,7 +104,7 @@ def test_every_verdict_has_sources_with_evidence_class():
 
 def test_dissociation_support_is_labelled_reconstructed_and_not_independent_at_join():
     """Winters' neutral points are measured-minus-measured (reconstructed), and Table 9 averages Cosby and Winters: the
-    evidence class and the join-independence caveat must stay explicit (Governance.md rule 10)."""
+    evidence class and the join-independence caveat must stay explicit (governance.md rule 10)."""
     sets = {s["set"]: s for s in _req()["verdict_criteria"]["per_table"]["dissociation_N2.dat"]["independent_sets"]}
     assert sets["Winters1966_N_points"]["class"] == "reconstructed_from_measured"
     for name in ("Winters1966_N_points", "MS1997_curve"):

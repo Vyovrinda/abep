@@ -3,7 +3,7 @@
 # remaining di_lower_nel_wang dataset, in a fresh <manifest>_attempt3 directory; the attempt-2 partial output is preserved under
 # hallthruster_bridge/validation/interrupted/<manifest>_attempt2/ and never read. Same launch configuration as attempts 1-2
 # (4 shards per dataset, pinned manifests, pinned driver in wt_followon). Execution provenance is written before any run.
-S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 LOG=$S/followon/progress_escalation_ndd_hmshigh_attempt3.log
 cd $W

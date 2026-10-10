@@ -53,7 +53,7 @@
   },
   "OQ-RFQ-07": {
    "status": "TECHNICAL_TEAM_PREPARES / OWNER_OR_PROCUREMENT_DISPATCHES",
-   "summary": "RFQ packages split by supplier speciality; the technical team/Governance prepares; commercial dispatch authority stays with P9E/Vyovrinda under Praveen's authorization; no automatic supplier contact",
+   "summary": "RFQ packages split by supplier speciality; the technical team/governance prepares; commercial dispatch authority stays with P9E/Vyovrinda under Praveen's authorization; no automatic supplier contact",
    "packages": {
     "RF": "13.56 MHz generator; directional coupler; forward/reflected sensors; local matching network components; RF coax; feedthroughs; dummy load; RF protection/interlocks",
     "gas_metrology": "Ar/N2/O2/Xe MFCs; valves; pressure instrumentation; gas isolators; calibration",
@@ -86,7 +86,7 @@
   "A9 status OWNER_AUTHORIZED_INVESTIGATION_HYPOTHESIS_NOT_FLIGHT_BASELINE",
   "the ten A9.2 statuses",
   "no purchase orders (RFQs are quotations only)",
-  "no supplier contact by Governance",
+  "no supplier contact by governance",
   "P5-N2 v1 INCONCLUSIVE; credible Hall set empty"
  ],
  "recorder_flags": [

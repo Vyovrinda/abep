@@ -12,7 +12,7 @@ dependencies = ["numpy", "pandas", "pyyaml", "matplotlib", "scipy"]
 [project.optional-dependencies]
 msis = ["pymsis>=0.13"]
 [project.scripts]
-abep-sim = "abep_sim.sweep:main"
+abep-sim = "abep_sim.programme.sweep:main"
 [build-system]
 requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
@@ -27,7 +27,7 @@ where = ["."]
 include = ["abep_sim", "abep_sim.*"]
 namespaces = false
 
-# Frozen reference data shipped with the package (Governance.md rule 1): atmosphere, intake surface, goldens, rate tables.
+# Frozen reference data shipped with the package (governance.md rule 1): atmosphere, intake surface, goldens, rate tables.
 # Explicit file list (A9.17 DATA_SIZE, docs/decisions/OD_2026_10_01_A9_17_data_artifact_owner_decisions.json): the
 # orbit-resolved atmosphere_msis21_orbit_v1.* (17 MB CSV, stored as .csv.gz) is repository evidence only. No installed
 # production module imports abep_sim.atmosphere_orbit, so it is not shipped; its accessor raises a clear error naming

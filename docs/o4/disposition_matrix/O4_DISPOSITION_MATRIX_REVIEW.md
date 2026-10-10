@@ -19,7 +19,7 @@ recommended, and no owner field is pre-filled. The owner records the disposition
   against the v1 result.
 - Admission stays gated in two ways. First, `abep_sim/hall_ensemble._check_o4` needs a bound, owner-filled
   `o4_dispositions_v1` file. Second, `_check_admission` needs a PROMOTABLE decision, which in turn needs **genuinely new
-  predictive evidence** that was not used in selection (Governance.md; v2 Question A disposition A-NO, rule 2). Recording
+  predictive evidence** that was not used in selection (governance.md; v2 Question A disposition A-NO, rule 2). Recording
   dispositions today enables no admission, because no decision lists a PROMOTABLE candidate.
 - A disposition changes no criterion, tolerance, chemistry or transport parameter. The schema rule reads: "no criterion,
   tolerance, chemistry or transport parameter changes as a result of an O4 disposition (no retuning)".

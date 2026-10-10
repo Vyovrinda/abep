@@ -936,7 +936,7 @@ def build():
         "generator": "scripts/forensics/p5_n2_v1_scoreable_subset.py",
         "official_outcome_unchanged": {
             "candidate_verdicts": inp["decision"]["candidates"],
-            "credible_set": "empty (Governance.md, project decision 2026-09-26)",
+            "credible_set": "empty (governance.md, project decision 2026-09-26)",
             "gate_3": "FAIL",
             "statement": "the v1 outcome is final and permanent (never rewritten); this analysis reads official statuses and reasons and changes none",
         },

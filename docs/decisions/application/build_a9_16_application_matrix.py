@@ -5,7 +5,26 @@ an overall status from the closed vocabulary STATUSES, the artifact applications
 commit), and residual items (blocked / pending parts). Lane applications come from the A9.16 step-1 lane results
 (commit of each lane); every one is verified at build time: the question id must occur in the lane artifact (fail
 closed). Integration applications are read from the integration artifacts' owner_answers_applied rows. Nothing here
-answers a question; decision files are only read (pinned through a9_16_lib).
+answers a question; decision files are only read (pinned through a9_16_lib and, for A9.17 .. A9.21, a9_later_lib).
+
+Later owner decisions A9.17 .. A9.21: one entry per decision item (a9_later_lib.item_keys); A9.19 / A9.20 (one flight
+configuration hall_icp_neutralizer, Xe contingency / emergency, no hollow cathode; C1 a ground-only laboratory
+reference) and A9.21 (open items + hardware programme). Earlier entries a later decision amends carry
+'amended_by_later'; the ones it supersedes (OQ-A907-07, MPQ-01: no C1 flight variant) get SUPERSEDED_BY_LATER_DECISION.
+A9.21 AL08: APPLIED where the mass / power v3 AL-08 line and Xe v3 XV3-IF-02 carry a9_21_status
+PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN (checked structurally in the artifacts); the quotation re-base stays PENDING_EVIDENCE.
+A9.21 ICP_GATE: APPLIED where the RVM owner_approved_gates and the F9 pre_lock1_gates register GNG-ICP-01 (NOT_EVALUATED,
+fail closed; checked structurally); the GO / NO-GO criteria stay PENDING_OWNER_ACCEPTANCE.
+A9.14 S9.4 / M16-V3-Q-01: the BLOCKED residual 're-derivation of M16 scheduler blocking items (M16 v5 refresh)' is
+APPLIED by M16 v5 (docs/experiments/hall_icp/integration/m16_v5; structural check of its owner_answers_applied record;
+kept on the entry as 'resolved_residual'); named persons stay PENDING_EVIDENCE (staffing ledger, owner).
+AG-15: the registration and RVM re-base parts are APPLIED (docs/requirements/rfp_official + rvm re-base); the owner
+closed AG-15 in A9.22 G3 ('ag_15' on F9-OQ-03: owner_acceptance APPLIED, verified against the RVM closure record
+rfp_rebase.ag15_closure, the registration owner_page_review and the F9 AG-15 gate; fail closed). The earlier
+PENDING_OWNER_ACCEPTANCE residuals (F9-OQ-03, OD12, A9.17 RFP) are kept as 'resolved_residual' history.
+A9.22: G3 APPLIED (AG-15 closure lane); G1, G2, G4 .. G9 APPLIED by their own governed migration lanes (structural
+record checks / artifact tokens, commits from this branch's history); residuals: G2 Option 2 is a later change needing a
+separate owner approval (LATER_SEPARATE_OWNER_APPROVAL), G9 release upload PENDING_OWNER_UPLOAD.
 
     python docs/decisions/application/build_a9_16_application_matrix.py          # write JSON + MD
     python docs/decisions/application/build_a9_16_application_matrix.py --check  # verify both are current
@@ -21,6 +40,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
 sys.path.insert(0, str(HERE))
 import a9_16_lib as L  # noqa: E402
+import a9_later_lib as X  # noqa: E402
 
 OUT_JSON = HERE / "a9_16_application_matrix.json"
 OUT_MD = HERE / "a9_16_application_matrix.md"
@@ -36,9 +56,16 @@ STATUSES = {
     "BLOCKED": "cannot be applied yet (missing input or record outside the allowed paths; named in 'residual')",
     "PARTIAL": "the decision's rule is recorded in the governing artifact but a named part it requires (a selection, a "
                "registration) is still pending - not APPLIED until that part exists (named in 'residual')",
+    "SUPERSEDED_BY_LATER_DECISION": "applied earlier and superseded by a later owner decision (named in "
+                                    "'amended_by_later'); the later decision's entry governs",
+    "PENDING_GOVERNED_MIGRATION": "owner-approved migration item (A9.22 layer separation) not yet applied: its own "
+                                  "governed migration lane applies it; no artifact is claimed here (named in "
+                                  "'residual')",
 }
 RESIDUAL_STATUSES = ("BLOCKED", "PENDING_STEP_2_MODEL_CHANGE", "PENDING_STEP_3_ARCHITECTURE", "PENDING_EVIDENCE",
-                     "PENDING_CI_CHANGE", "OPEN_OWNER_QUESTION", "PENDING_FINALIZE_DESIGN_REGEN")
+                     "PENDING_GOVERNED_MIGRATION", "PENDING_OWNER_UPLOAD", "LATER_SEPARATE_OWNER_APPROVAL",
+                     "PENDING_CI_CHANGE", "OPEN_OWNER_QUESTION", "PENDING_FINALIZE_DESIGN_REGEN",
+                     "PENDING_OWNER_ACCEPTANCE")
 
 # ------------------------------------------------------------------------------- A9.16 step 2 / step 3 / finalize
 # Applications made after step 1 (step-2 production-model commits, step-3 design-layer / RVM re-base / Rust parity v2
@@ -52,8 +79,13 @@ F_REGEN = ("the F-lane records that carry this decision (docs/design_synthesis/*
 F_REGEN_WHERE = "docs/design_synthesis/**, docs/architecture/** (A9.16 finalize design regeneration lane)"
 
 
-def _app(lane, artifact, commit, tokens, what):
-    return {"lane": lane, "artifact": artifact, "commit": commit, "tokens": list(tokens), "what": what}
+def _app(lane, artifact, commit, tokens, what, record=None, pin=None):
+    a = {"lane": lane, "artifact": artifact, "commit": commit, "tokens": list(tokens), "what": what}
+    if record:
+        a["record"] = record   # structural check of the artifact record (JSON list pointer, match, field checks)
+    if pin:
+        a["pin"] = pin         # (JSON pointer, repo path): the value at the pointer must be the file's current sha256
+    return a
 
 
 CODE_APPS = {
@@ -148,7 +180,7 @@ CODE_APPS = {
                       "b9b738733a6cab9cf32dcf65cf0f7f1e4a2e2855", ["s10_1_thresholds", "(A9.14 S10.1) applied unchanged"],
                       "PORT_CANDIDATE >= 60 s / MARGINAL >= 10 s applied unchanged to the dedicated baseline")],
     "F0-OQ-02": [_app("A9.17", "docs/performance/dedicated_baseline_2026_10_01/REGISTRATION.json",
-                      "61373fd21609268c9901a7910a9d948bed0df286", ["A9.14 S10.2 F0-OQ-02", "machine"],
+                      "b9b738733a6cab9cf32dcf65cf0f7f1e4a2e2855", ["A9.14 S10.2 F0-OQ-02", "machine"],
                       "dedicated unloaded-machine baseline registered with machine / toolchain / thread metadata")],
     "RUST-OQ-02": [_app("STEP3", ".github/workflows/rust-parity.yml", "3bd06cd3d25d9a6563c1ef5f3f57ce658910ca1a",
                         ["RUST-OQ-02 = OPTIONAL_RUST_CI_MANDATORY_PARITY_ON_RUST_CHANGES"],
@@ -159,6 +191,56 @@ CODE_APPS = {
                    _app("STEP3", "docs/performance/abep_core/parity_report_v2.json",
                         "d87d217d3306cc84d51d2cf7e54d9222cd52994e", ["ADMITTED"],
                         "parity campaign v2 report (all five kernels ADMITTED)")],
+}
+# A9.14 S9.4 / M16-V3-Q-01 residual (scheduler re-derivation, M16 v5 refresh): applied by the M16 v5 record (commit
+# below, made before this matrix so the pointer is verifiable); structural record check of its owner_answers_applied
+M16V5_REL = "docs/experiments/hall_icp/integration/m16_v5/subsystem_maturity_v5.json"
+M16V5_COMMIT = "c4062e0fad73b7159fed109516ec8d9ffae76915"
+M16V5_RESIDUAL_TEXT = ("re-derivation of M16 scheduler blocking items from the A9.8 .. A9.15 answers (M16 v5 refresh) is "
+                       "not built in A9.16; M16 v4 was regenerated only for its changed RVM inputs (RFP re-base)")
+CODE_APPS["M16-V3-Q-01"] = [
+    _app("M16_V5", M16V5_REL, M16V5_COMMIT, ['"subsystem_maturity_v5"', '"rederivation": "APPLIED"'],
+         "M16 v5: every v4 row's scheduler blocking items re-derived from the owner answers A9.8 .. A9.21 (state v5), the "
+         "A9.21 programme order and GNG-ICP-01 (removed blockers with answer pointer + sha256; remaining blockers by "
+         "category; no readiness advance without determining evidence); M16 v4 byte-identical; named persons stay "
+         "PENDING_EVIDENCE (staffing ledger, owner; none fabricated)",
+         {"list": "/owner_answers_applied", "match": ("question_id", "M16-V3-Q-01"),
+          "checks": {"rederivation": ("equals", "APPLIED"), "rows_covered": ("equals", 21),
+                     "decision_code": ("equals", "ACCEPT_ROLE_MAP_NAMES_FROM_STAFFING_LEDGER"),
+                     "named_persons": ("startswith", "PENDING_EVIDENCE")}})]
+# residual items resolved since the A9.16 matrix (kept as history on the entry: what it was, how it was resolved)
+RESOLVED_RESIDUAL = {
+    "M16-V3-Q-01": [{"status_before": "BLOCKED", "what": M16V5_RESIDUAL_TEXT,
+                     "where_before": "docs/experiments/hall_icp/integration/ (M16 v5, not started)",
+                     "status": "APPLIED", "artifact": M16V5_REL, "commit": M16V5_COMMIT}],
+}
+# A9.22 G3: the owner closed AG-15 (commit of the AG-15 closure lane: RVM closure record, registration page review,
+# F9 ag15_f9 closure-record check, state v5 a9_22_g3); the residuals that waited for it are resolved (history kept)
+A922_AG15_COMMIT = "e78c781c70f79fb46b903e19ab9cb1202db94595"
+# A9.22 governed migration lanes (commits from this branch's history)
+A922_DESIGN_SEPARATION_COMMIT = "c06c2ed7b95fc7b6fbc6eb38a9d66b908174bbe0"   # G2 / G5 seam; gates -> assessment
+A922_PHASE_B_COMMIT = "1e4b09b9681dfa6e151f92d902ba1c2a93f6a5af"             # G6 / G7 raw / assessment split
+A922_CONFIG_COMMIT = "2cbe2ddc69ac8ed786ef0bf5975e1f8ed63aa4cf"              # Phase A config (G5 mission_domain)
+A922_G1_COMMIT = "512d704950946bdc0c4e55078c1a5527f75da449"                  # G1 governed baseline change
+A922_G1_SYSTEM_COMMIT = "f2ebdb7bcf6e977c00f7d201abcf1ee7619ba9ed"           # G1 system.py completion
+A922_G4_COMMIT = "58309a115b768e4268a9dba7993778b163fbc399"                  # G4 cathodeless active golden
+A922_G8_STAGE1_COMMIT = "5dbcb539a4372450629bb7b498fb8ec8d7478cf2"           # G8 stage 1 (v2 + inventory)
+A922_G8_STAGE2_COMMIT = "a5294a766e1c58cb78eeba4287064e08378c52f1"           # G8 stage 2 migration record
+A922_G9_COMMIT = "3b2072e324cd121f2d2a7d7ae1df1e4a23dc40d8"                  # G9 F1 core view + archive manifest
+AG15_CLOSURE_POINTER = "/rfp_rebase/ag15_closure"
+AG15_CLOSURE_TOKENS = ['"ag15_closure"', '"decision_code": "AG15_CLOSED"', '"requirements_snapshot": "FROZEN"']
+_AG15_RESOLVED = lambda what: [{"status_before": "PENDING_OWNER_ACCEPTANCE", "what": what,   # noqa: E731
+                                "where_before": "owner act (AG-15 closure)", "status": "APPLIED",
+                                "artifact": "docs/requirements/rvm_a9/rvm_a9_v1.json", "commit": A922_AG15_COMMIT,
+                                "record_pointer": AG15_CLOSURE_POINTER, "by": "A9.22 G3_REQUIREMENTS_SNAPSHOT"}]
+RESOLVED_RESIDUAL_AG15 = {
+    "F9-OQ-03": _AG15_RESOLVED("AG-15 closure: the official RFP is registered by sha256 (A9.17 RFP) and the RVM is "
+                               "re-based on it (step 3) - both APPLIED ('ag_15'); requirement_frozen stays false on "
+                               "RFP rows until the owner accepts the re-base and closes AG-15"),
+    "OD12": _AG15_RESOLVED("RFP clauses registered and mapped (CG-IC / CG-SPF / CG-N2-AO carry their clauses); "
+                           "requirement_frozen stays false until the owner closes AG-15"),
+    ("A9.17", "RFP"): _AG15_RESOLVED("AG-15 closure (requirement_frozen stays false on RFP rows until the owner accepts "
+                                     "the re-base and closes AG-15)"),
 }
 # A9.13 step-3 decisions that are NOT applied by any step-3 / finalize commit at this matrix's base (truthfully BLOCKED)
 STEP3_NOT_APPLIED = {
@@ -181,16 +263,41 @@ STEP3_PARTIAL = {
 A9_9_PARTIAL = {"F1Q-04": "spec and v1 fail-closed domain implemented; the v2 surface itself is not built (BLOCKED "
                           "pending the registered AOCS pointing envelope, A9.13 S6.2 / F1Q-03)"}
 
-# A9.17 / A9.18 owner decisions (not in a9_16_lib.DECISIONS: adding them there would change the pins of every builder
-# that imports the lib). Pinned here by sha256; the verbatim .md governs.
-LATER = {
-    "A9.17": ("docs/decisions/OD_2026_10_01_A9_17_data_artifact_owner_decisions.json",
-              "9fd77c95c2f3142bb3e2faf68145e1225a29b307d22f86bf93a8cd562914c3ad",
-              "540212c0c8862528e549555244f0fd39f8f9c9272f84dfb450bfef9dc54eba13"),
-    "A9.18": ("docs/decisions/OD_2026_10_01_A9_18_golden_and_baseline_owner_decisions.json",
-              "7c170e1000ae039c1f032ccf38bcacf2c59825d5dab26b4d98658a96914a8c3a",
-              "b26b739244d87fb98001936688650c8b0cf307abeddb2ee4c494ff4f06c5951d"),
-}
+# A9.17 .. A9.21 owner decisions (not in a9_16_lib.DECISIONS: adding them there would change the pins of every builder
+# that imports the lib); pinned in a9_later_lib (json + verbatim md sha256); the verbatim .md governs.
+LATER = tuple(X.ORDER)
+# A9.19 / A9.20 application commits (in the history of this matrix's base) and the A9.17 .. A9.21 records commit of
+# this lane (owner-question state v5 + M16 v4; committed before this matrix so the pointer is verifiable)
+A919_RVM_COMMIT = "1eb021c91da662fe277d098cc11ab35c3d28afc7"       # RVM rows RVM-28..30, re-applied on the finalize RVM
+A919_BUDGETS_COMMIT = "4cd79e6425472ece6835d4c254710cdfe036b31a"   # mass / power v3 + Xe v3 A9.19 / A9.20
+A919_DESIGN_COMMIT = "90f0137842ddd59dcfc99444fc98ba46c808edd0"    # abep_sim/design/a9_19_architecture.py (adds FLIGHT_CONFIGURATIONS)
+A919_INTEGRATION_COMMIT = "f280cf4401fe1f428352b5657e97881f38cc7c79"  # F9 Xe role, H2-6 live-source CI check
+RECORDS_A917_21_COMMIT = "42453f5fdb10a645ea88ef90f56aad851d2c6520"  # state v5 + M16 v4 A9.17 .. A9.21 records
+A921_AL08_BUDGETS_COMMIT = "6a69ac52dcca091212c0dfc4cd10abcbd2e1bdcc"  # mass / power v3 AL-08 + Xe v3 XV3-IF-02 A9.21 label
+A921_ICP_GATE_COMMIT = "eae96c820ef86c281dc7ffafd6bb698ee0b2b96f"      # RVM + F9 GNG-ICP-01 registration (A9.21 ICP_GATE)
+A921_HW_PROGRAMME_COMMIT = "364a5ab3f1d61206bce54cc1a160570e8947f185"
+HW_PROGRAMME_REL = "docs/experiments/hall_icp/programme/hw_programme_a9_21_v1.json"  # programme-order record consumed by H-1, P1-P4
+V5_REL = "docs/budgets/owner_decisions/owner_questions_state_v5.json"
+M16_REL = "docs/experiments/hall_icp/integration/m16_v4/subsystem_maturity_v4.json"
+RVM_REL = "docs/requirements/rvm_a9/rvm_a9_v1.json"
+REG_REL = "docs/requirements/rfp_official/rfp_registration_v1.json"
+MP3_REL = "docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json"
+XE3_REL = "docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json"
+F9_REL = "docs/architecture/freeze_candidate/architecture_freeze_candidate_v1.json"
+
+
+AL08_LABEL = "PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN"
+ICP_GATE_ID = "GNG-ICP-01"
+ICP_CRITERIA = "PENDING_OWNER_ACCEPTANCE"
+ICP_GATE_CHECKS = {"status": ("equals", "NOT_EVALUATED"), "criteria": ("equals", ICP_CRITERIA),
+                   "placement": ("equals", "BEFORE_LOCK-1"), "mandatory": ("equals", True),
+                   "lock1_release_reportable": ("equals", False)}
+
+
+def _rec(artifact, tokens, what):
+    return _app("A9_17_21_RECORDS", artifact, RECORDS_A917_21_COMMIT, tokens, what)
+
+
 LATER_APPS = {
     ("A9.17", "WINDS"): [
         _app("A9.17", "abep_sim/data/atmosphere_msis21_hwm14_orbit_v2.json", "dcd3ef945159b8657bb5547985dc04f73358c690",
@@ -229,16 +336,269 @@ LATER_APPS = {
              ["NONCONVERGED_REFERENCE / EXPECTED_NONCONVERGENCE"],
              "new admissible converged golden; golden_v1 point kept as nonconverged_reference fixture")],
     ("A9.18", "PERF_RERUN"): [],
+    # ---- A9.19 (flight architecture) / A9.20 (C1 ground-only)
+    ("A9.19", "architecture"): [
+        _app("A9.19", RVM_REL, A919_RVM_COMMIT, ["RVM-28", "FLIGHT ARCHITECTURE (A9.19)"],
+             "RVM-28 flight architecture row; configurations: hall_icp_neutralizer the flight architecture"),
+        _app("A9.19", "abep_sim/design/a9_19_architecture.py", A919_DESIGN_COMMIT,
+             ["FLIGHT_CONFIGURATIONS = (FLIGHT_CONFIGURATION,)"],
+             "design layer: one flight configuration; hall_c1_reference refused as a flight configuration"),
+        _rec(M16_REL, ['"flight_configurations"', '"a9_19_20"'],
+             "M16 v4: one flight configuration; rows 6 / 7 / 8 / 11 labelled; requirement status split")],
+    ("A9.19", "xenon_role"): [
+        _app("A9.19", RVM_REL, A919_RVM_COMMIT, ["RVM-29"], "RVM-29 two supply modes, Xe contingency / emergency"),
+        _app("A9.19", XE3_REL, A919_BUDGETS_COMMIT, ["CONTINGENCY_EMERGENCY"], "Xe accounting v3 Xe role"),
+        _app("A9.19", F9_REL, A919_INTEGRATION_COMMIT, ["contingency / emergency role, A9.19"],
+             "F9 AFC-SY-XE-01 states the A9.19 Xe role"),
+        _rec(V5_REL, ['"AMENDED_IN_SCOPE_BY_A9_19"'], "state v5: XA9Q-07 / XV2Q-01 / OD6 amended on the ROLE of Xe")],
+    ("A9.19", "amends/A9.15"): [
+        _app("A9.19", F9_REL, A919_INTEGRATION_COMMIT, ["contingency / emergency role, A9.19"],
+             "F9: the A9.15 'not a contingency' wording superseded on the role of Xe"),
+        _rec(V5_REL, ['"superseded_statements_a9_19"'], "state v5: the two A9.15 statements superseded on the ROLE "
+                                                         "of Xe listed with A9.19 pointer + sha256")],
+    ("A9.19", "amends/A9.14 S8.33 MPQ-01 / S8.17 OQ-A907-07"): [
+        _app("A9.19", MP3_REL, A919_BUDGETS_COMMIT, ["NO_C1_XE_BRANCH_IN_FLIGHT"],
+             "mass / power v3: no AL-C1, no C1 electronics, no C1 Xe branch in the flight architecture"),
+        _rec(V5_REL, ['"SUPERSEDED_BY_A9_19"'], "state v5: OQ-A907-07 and MPQ-01 superseded (no C1 flight variant)")],
+    ("A9.19", "amends/A9 C1 CONTROL_FALLBACK"): [
+        _app("A9.19", RVM_REL, A919_RVM_COMMIT, ["is not a flight fallback (A9.19)"],
+             "RVM-15: CONTROL_FALLBACK sizing is not a flight fallback"),
+        _rec(M16_REL, ['"SUPERSEDED_FOR_FLIGHT_PRE_A9_19"'], "M16 v4: C1 fallback statements classified as pre-A9.19 "
+                                                              "history; A9.2 CONTROL_FALLBACK carried verbatim with a note"),
+        _rec(V5_REL, ['"OD-XE-5"', '"R6-Q1"', '"OD-M5"', '"HWQ-09"'],
+             "state v5: the C1 'reference/fallback' answers amended to the ground reference")],
+    ("A9.19", "owner_request"): [
+        _app("A9.19", MP3_REL, A919_BUDGETS_COMMIT, ['"c1_mass_check"'], "mass / power v3 c1_mass_check answers "
+                                                                          "'check C1 mass'")],
+    ("A9.20", "answer"): [
+        _app("A9.20", RVM_REL, A919_RVM_COMMIT, ["RVM-30", "GROUND_ONLY_LABORATORY_REFERENCE (A9.20)"],
+             "RVM-30 C1 ground-only; hall_c1_reference cells labelled ground reference"),
+        _app("A9.20", XE3_REL, A919_BUDGETS_COMMIT, ["GROUND_ONLY_LAB_REFERENCE (A9.20)"],
+             "Xe accounting v3: C1 Xe is ground test-campaign Xe, never flight Xe"),
+        _app("A9.20", MP3_REL, A919_BUDGETS_COMMIT, ['"retired_flight_configuration_history"'],
+             "mass / power v3: hall_c1_reference column retired to history"),
+        _rec(M16_REL, ["NOT_A_FLIGHT_SUBSYSTEM"], "M16 v4 row 11: C1 GROUND_ONLY_LAB_REFERENCE, not a flight subsystem")],
+    # ---- A9.21 (open items + hardware programme)
+    ("A9.21", "PERF_RERUN"): [],
+    ("A9.21", "AL08"): [
+        _rec(V5_REL, ['"KEEP_6_05KG_PROVISIONAL_WAIT_FOR_QUOTES_TO_REBASE_AL08"'], "state v5 MQ-05 AMENDED_BY_A9_21"),
+        _rec(M16_REL, ['"AL08"'], "M16 v4 rows 6 / 7 / 8: AL-08 provisional until quotations"),
+        _app("A9.21", MP3_REL, A921_AL08_BUDGETS_COMMIT, ["KEEP_6_05KG_PROVISIONAL_WAIT_FOR_QUOTES_TO_REBASE_AL08"],
+             "mass / power v3 AL-08 line: a9_21_status PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN (6.0528 kg kept as a "
+             "provisional planning floor; re-based only after the split quotations)",
+             {"list": "/lines/hall_icp_neutralizer", "match": ("line", "AL-08"),
+              "checks": {"a9_21_status": ("startswith", AL08_LABEL)}}),
+        _app("A9.21", XE3_REL, A921_AL08_BUDGETS_COMMIT, ["KEEP_6_05KG_PROVISIONAL_WAIT_FOR_QUOTES_TO_REBASE_AL08"],
+             "Xe accounting v3 XV3-IF-02 (AL-08 stored-Xe hardware): a9_21_status PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN",
+             {"list": "/interface_demands", "match": ("id", "XV3-IF-02"),
+              "checks": {"a9_21_status": ("startswith", AL08_LABEL)}})],
+    ("A9.21", "H2_6"): [
+        _app("A9.21", "scripts/ci_checks.py", A919_INTEGRATION_COMMIT, ["h2_6_live_sources"],
+             "live-source verification of the frozen H2-6 builder runs as a CI static check (implemented in the "
+             "A9.19 / A9.20 integration, SW-02; A9.21 approves it; the H2-6 builder stays byte-identical)"),
+        _app("A9.21", "docs/ci/CI.md", A919_INTEGRATION_COMMIT, ["`h2_6_live_sources`"], "CI documentation")],
+    ("A9.21", "ICP_GATE"): [
+        _rec(V5_REL, ['"RP-A919-01"', '"NOT_APPROVED_PRESERVED_FOR_OWNER_REVIEW"'],
+             "state v5 RP-A919-01 ANSWERED_BY_A9_21 in part; criteria preserved for owner review"),
+        _rec(M16_REL, ['"ICP_GATE"'], "M16 v4 row 18 carries the gate (fail closed; no numbers)"),
+        _app("A9.21", RVM_REL, A921_ICP_GATE_COMMIT, ['"owner_approved_gates"', ICP_GATE_ID],
+             "RVM owner_approved_gates: " + ICP_GATE_ID + " mandatory ICP go / no-go before LOCK-1 (own id, not "
+             "AG-01 .. AG-15), NOT_EVALUATED (fail closed), criteria PENDING_OWNER_ACCEPTANCE; RP-A919-01 (a) - (c) "
+             "preserved verbatim for owner review (never evaluated)",
+             {"list": "/owner_approved_gates", "match": ("id", ICP_GATE_ID), "checks": ICP_GATE_CHECKS}),
+        _app("A9.21", F9_REL, A921_ICP_GATE_COMMIT, ['"pre_lock1_gates"', '"lock1_precondition"', ICP_GATE_ID],
+             "F9 pre_lock1_gates: " + ICP_GATE_ID + " re-evaluated from the RVM record (NOT_EVALUATED); LOCK-1 release "
+             "not reportable while it is not GO; architecture status stays INVESTIGATION_HYPOTHESIS",
+             {"list": "/pre_lock1_gates", "match": ("id", ICP_GATE_ID),
+              "checks": {"current_status": ("equals", "NOT_EVALUATED"), "criteria": ("equals", ICP_CRITERIA),
+                         "placement": ("equals", "BEFORE_LOCK-1"),
+                         "evidence_sufficient_for_freeze": ("equals", False)}})],
+    ("A9.21", "BID_CLOSE"): [
+        _rec(V5_REL, ['"rfp_registered_document"'], "state v5 WEB-ACC-2 AMENDED_BY_A9_21 (operational deadline "
+                                                     "05-Oct-2026 17:00; RFP number from the registered document)")],
+    ("A9.21", "HW_PROGRAMME"): [
+        _rec(M16_REL, ['"HW_PROGRAMME"'], "M16 v4: programme order attached to rows 9 / 10 / 11 / 13 / 15 / 18 / 19 / "
+                                          "20 / 21"),
+        _rec(V5_REL, ['"HW_PROGRAMME"'], "state v5: confirmations on P1Q-07, F5-OQ-01 / 02, F9-OQ-02, P1-IT-52 / 55, "
+                                         "P2Q-07, P4-OQ-03"),
+        _app("A9.21", "docs/experiments/hall_icp/programme/hw_programme_a9_21_v1.json", A921_HW_PROGRAMME_COMMIT,
+             ['"H1-S7.1"', '"C1-REF"', '"ICP-45N"', '"ICP-XE-MODE"', '"P2-MAP"', '"P4-ACCEPTANCE-EXPOSURE"',
+              '"H1-THRUST-FEED-MAP"'],
+             "programme-order record: A9.21 items 6-11 as 14 ordered steps with predecessors and entry preconditions "
+             "(fail closed: never PASS / GO / START_AUTHORISED; recorder readings RR-01..RR-03 for the owner)"),
+        _app("A9.21", "docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json", A921_HW_PROGRAMME_COMMIT,
+             ["hw_programme_a9_21_v1.json"], "H-1: S7.1 FEMM points before S7.2 engineering channel point (programme "
+                                             "record pinned)",
+             pin=("/a9_21_programme/programme_record_sha256", HW_PROGRAMME_REL)),
+        _app("A9.21", "docs/experiments/hall_icp/p1_icp_bench/p1_icp_bench_v1.json", A921_HW_PROGRAMME_COMMIT,
+             ["hw_programme_a9_21_v1.json"], "P1: C1 reference before P1-S7; Ar reference -> air/N2 ICP-45 -> Xe mode, "
+                                             "one gas/mode per campaign with its own domain and provenance",
+             pin=("/a9_21_programme/programme_record_sha256", HW_PROGRAMME_REL)),
+        _app("A9.21", "docs/experiments/hall_icp/p2_impedance_map/p2_impedance_prep_v1.json", A921_HW_PROGRAMME_COMMIT,
+             ["hw_programme_a9_21_v1.json"], "P2: map only after the in-house V/I calibration + uncertainty budget freeze",
+             pin=("/a9_21_programme/programme_record_sha256", HW_PROGRAMME_REL)),
+        _app("A9.21", "docs/experiments/hall_icp/p3_coupled_thermal/p3_coupled_thermal_v2.json",
+             A921_HW_PROGRAMME_COMMIT, ["hw_programme_a9_21_v1.json"], "P3: after coupled H-1 + ICP",
+             pin=("/a9_21_programme/programme_record_sha256", HW_PROGRAMME_REL)),
+        _app("A9.21", "docs/experiments/hall_icp/p4_anode_materials/p4_anode_materials_v1.json", A921_HW_PROGRAMME_COMMIT,
+             ["hw_programme_a9_21_v1.json"], "P4: acceptance exposure only after LOCK-2 is frozen",
+             pin=("/a9_21_programme/programme_record_sha256", HW_PROGRAMME_REL))],
+    ("A9.21", "EXTERNAL_INPUTS"): [
+        _rec(V5_REL, ['"TBD_EXTERNAL_INPUT'], "state v5: F1Q-03, OQ-F78-04, OD3, OQ-F4-05 external_input_status"),
+        _rec(M16_REL, ['"EXTERNAL_INPUTS"'], "M16 v4 row 1")],
+    ("A9.21", "RFQ_DISPATCH"): [],
+    # ---- A9.22 (layer separation): G3 applied by the AG-15 closure lane; the other items by their own migrations
+    ("A9.22", "G3_REQUIREMENTS_SNAPSHOT"): [
+        _app("A9.22", RVM_REL, A922_AG15_COMMIT, AG15_CLOSURE_TOKENS + ["RP-BRIEF-01"],
+             "RVM: requirement_frozen = true on the 22 RFP_CLAUSE rows (before status evaluation; no status changed), "
+             "closure record rfp_rebase.ag15_closure (RP-BRIEF-01 format), requirements snapshot FROZEN",
+             {"list": "/rows", "match": ("id", "RVM-01"), "checks": {"requirement_frozen": ("equals", True)}}),
+        _app("A9.22", "docs/requirements/rvm_a9/rfp_rebase.py", A922_AG15_COMMIT,
+             ["A9.22 G3", "ACCEPTED_BASIS_SHA256", "def record_closure"],
+             "closure applied on the final RVM; a later change of the requirements basis is refused (new owner "
+             "decision needed)"),
+        _app("A9.22", REG_REL, A922_AG15_COMMIT,
+             ['"owner_page_review"', "OWNER_REVIEWED_NO_ADDITIONAL_TECHNICAL_PERFORMANCE_REQUIREMENT"],
+             "registration page_coverage: owner review disposition of pages 1-15 / 34-40 (owner-stated, verbatim)"),
+        _app("A9.22", F9_REL, A922_AG15_COMMIT, ['"owner_closure_recorded"', '"architecture_status": '
+                                                 '"INVESTIGATION_HYPOTHESIS"'],
+             "F9 AG-15 closed on the owner closure record (fail-closed check replaces the 'CLOSED' text prefix); "
+             "architecture stays INVESTIGATION_HYPOTHESIS",
+             {"list": "/architecture_gates", "match": ("id", "AG-15"),
+              "checks": {"evidence_sufficient_for_freeze": ("equals", True),
+                         "current_status": ("equals", "DETERMINING_EVIDENCE_PRESENT_NO_REMAINING_CONDITION")}}),
+        _app("A9.22", "docs/architecture/freeze_candidate/ag15_f9.py", A922_AG15_COMMIT,
+             ["def owner_closure_errors", "CLOSURE_DECISION"], "F9 AG-15 closure-record check (fail closed)"),
+        _app("A9.22", V5_REL, A922_AG15_COMMIT, ['"a9_22_g3"', '"PERFORMS_OWNER_ACT"'],
+             "state v5: F9-OQ-03 PERFORMS_OWNER_ACT record; a9_22_g3 with pointers + sha256")],
+    # ---- A9.22 G1 / G2 / G4 .. G9: applied by their own governed migration lanes (commits on the integration history;
+    # each (commit, artifact) pair is a commit that changed the artifact; structural record checks where a record exists)
+    ("A9.22", "G1_MISSION_LIFE"): [
+        _app("A9.22", "abep_sim/operating_inputs.py", A922_G1_COMMIT,
+             ["G1_MISSION_LIFE = MISSION_DURATION_26280_H", "SUBSYSTEM_FIRING_LIFE_ASSUMPTION",
+              "HISTORICAL_MISSION_HOURS_PRE_A9_22"],
+             "operating-inputs seam: mission-duration basis 26,280 h (26,000 h kept as the immutable historical "
+             "constant, not consumed); 15,000 h only as the labelled subsystem firing-life assumption"),
+        _app("A9.22", "abep_sim/system.py", A922_G1_SYSTEM_COMMIT, ["A9.22 G1 governed baseline change"],
+             "system.py completion: AO fluence / erosion, cathode starts, mission reliability horizon on 26,280 h"),
+        _app("A9.22", "config/mission/mission_scenario_v1.json", A922_G1_SYSTEM_COMMIT,
+             ['"authoritative_basis_h": 26280', '"g1_status": "APPLIED"'],
+             "frozen mission scenario: mission_hours 26,280 h, G1 APPLIED with the migrated consumers listed",
+             {"node": "/inputs/mission_hours", "checks": {"value": ("equals", 26280),
+                                                          "label": ("equals", "MISSION_DURATION_BASIS"),
+                                                          "g1_status": ("equals", "APPLIED")}}),
+        _app("A9.22", "abep_sim/data/golden_v2.json", A922_G1_COMMIT, ["mission-duration basis 26,280 h"],
+             "golden v2 regenerated under the governed baseline change (architecture_closure xe_kg on 26,280 h)",
+             {"node": "/provenance/a9_22", "checks": {"G1": ("startswith", "mission-duration basis 26,280 h")}}),
+        _app("A9.22", "docs/HISTORY.md", A922_G1_COMMIT, ["A9.22 G1 governed baseline change"],
+             "HISTORY entries (rule 1-2 governed baseline change, logged)")],
+    ("A9.22", "G2_C_DRAG_RFP"): [
+        _app("A9.22", "abep_sim/design/engineering_constraints.py", A922_DESIGN_SEPARATION_COMMIT,
+             ["A9.22 G2 (Option 1)", "C-DRAG-RFP", "INTAKE_DRAG_GENERATION_LIMIT_N"],
+             "C-DRAG-RFP kept as an F1 GENERATION filter read from the frozen engineering-constraints seam "
+             "(Option 1; numerical / design-space results preserved)")],
+    ("A9.22", "G4_GOLDEN_ARCHITECTURE"): [
+        _app("A9.22", "abep_sim/data/golden_v2.json", A922_G4_COMMIT,
+             ['"HISTORICAL_NON_FLIGHT_REGRESSION"', '"hall_icp_neutralizer_reference"'],
+             "golden v2 case roles: LaB6 / hollow-cathode cases HISTORICAL_NON_FLIGHT_REGRESSION; governed active "
+             "reference case hall_icp_neutralizer_reference",
+             {"node": "/case_roles", "checks": {
+                 "architecture_closure": ("equals", "HISTORICAL_NON_FLIGHT_REGRESSION"),
+                 "mission": ("equals", "HISTORICAL_NON_FLIGHT_REGRESSION"),
+                 "hall_icp_neutralizer_reference": ("equals", "GOVERNED_REFERENCE_ACTIVE_ARCHITECTURE_PARTIAL")}}),
+        _app("A9.22", "abep_sim/golden.py", A922_G4_COMMIT, ["def require_flight_eligible_case"],
+             "guard: historical non-flight golden cases refused for closure / selection / budgets"),
+        _app("A9.22", "abep_sim/archengine.py", A922_G4_COMMIT, ["def require_flight_eligible("],
+             "guard: LaB6 / hollow-cathode architectures refused as flight-eligible"),
+        _app("A9.22", "docs/HISTORY.md", A922_G4_COMMIT, ["A9.22 G4"], "HISTORY entry")],
+    ("A9.22", "G5_ALTITUDE_BAND"): [
+        _app("A9.22", "abep_sim/design/engineering_constraints.py", A922_DESIGN_SEPARATION_COMMIT,
+             ["A9.22 G5", "MISSION_DOMAIN_ALTITUDE_KM"],
+             "design seam consumes mission_domain.altitude_km = [180, 230] (no RFP clause parsing)"),
+        _app("A9.22", "config/requirements/rfp_constraints_v1.json", A922_CONFIG_COMMIT,
+             ['"mission_domain"', "A9.22 G5"],
+             "requirements snapshot: mission_domain.altitude_km [180, 230], FROZEN, provenance RVM-01",
+             {"node": "/mission_domain", "checks": {"altitude_km": ("equals", [180, 230]),
+                                                    "status": ("equals", "FROZEN"),
+                                                    "rvm_row": ("equals", "RVM-01")}}),
+        _app("A9.22", "config/mission/mission_scenario_v1.json", A922_CONFIG_COMMIT, ['"altitude_domain_km"'],
+             "frozen mission scenario: altitude domain consumed from the snapshot field mission_domain.altitude_km",
+             {"node": "/inputs/altitude_domain_km/source",
+              "checks": {"snapshot_field": ("equals", "mission_domain.altitude_km")}})],
+    ("A9.22", "G6_IC_HALL_PREFERRED"): [
+        _app("A9.22", "abep_sim/system.py", A922_PHASE_B_COMMIT,
+             ['RAW_CLOSURE_SCHEMA_VERSION = "raw_closure_v2"', "def physics_closure"],
+             "raw physics closure (schema increment raw_closure_v2): no IC metric, preference flag or compliance "
+             "classification"),
+        _app("A9.22", "abep_sim/assessment/closure_checks.py", A922_PHASE_B_COMMIT,
+             ["FORBIDDEN_RAW_KEYS", '"hall_preferred"', "def legacy_merge"],
+             "assessment layer: IC metrics, hall_preferred, RFP / compliance classifications; legacy merge keeps "
+             "the pre-split evaluate() dict for existing tools")],
+    ("A9.22", "G7_DEAD_LOGIC"): [
+        _app("A9.22", "abep_sim/transient.py", A922_PHASE_B_COMMIT,
+             ['always-true "ignition_req_met" flag was removed'], "ignition_req_met '... or True' removed"),
+        _app("A9.22", "tests/test_raw_assessment_split.py", A922_PHASE_B_COMMIT,
+             ["def test_dead_logic_removed", 'not hasattr(sizing, "RFP")', '"duty_cycle" not in'],
+             "structural test: Budgets.duty_cycle, the unused RFP import in sizing and the always-true flag are "
+             "gone; evaluate() identical to the base-commit fixture")],
+    ("A9.22", "G8_BUS_BOUNDARY"): [
+        _app("A9.22", "docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json",
+             A922_G8_STAGE1_COMMIT, ['"boundary_version": "bus_power_boundary_a9_v2"', '"configurations": ['],
+             "bus_power_boundary_a9_v2: hall_icp_neutralizer only; hall_c1_reference ground-reference / test "
+             "metadata, not a flight bus configuration (v1 immutable)",
+             {"node": "/ground_reference_test_metadata/hall_c1_reference",
+              "checks": {"role": ("equals", "GROUND_ONLY_LAB_REFERENCE"),
+                         "flight_bus_configuration": ("equals", False)}}),
+        _app("A9.22", "abep_sim/bus_boundary_a9_v2.py", A922_G8_STAGE1_COMMIT,
+             ['BOUNDARY_VERSION = "bus_power_boundary_a9_v2"'], "v2 boundary module (v1 runs unchanged)"),
+        _app("A9.22", "docs/architecture_comparison/power_boundary_a9_v2/CONSUMER_INVENTORY.json",
+             A922_G8_STAGE1_COMMIT, ['"LIVE_REPOINT"'], "consumer inventory listed before anything changed"),
+        _app("A9.22", "docs/architecture_comparison/power_boundary_a9_v2/STAGE2_MIGRATION.json",
+             A922_G8_STAGE2_COMMIT, ['"verdict": "NO_PHYSICS_RESULT_CHANGED', '"v1_family_byte_identical"'],
+             "one controlled migration: LIVE_REPOINT consumers re-pointed with pins together; v1 byte-identical; "
+             "no physics result changed")],
+    ("A9.22", "G9_F1_OUTPUT"): [
+        _app("A9.22", "docs/evidence_archives/f1_intake/F1_INTAKE_SYNTHESIS_v1_405296e.manifest.json",
+             A922_G9_COMMIT, ['"schema": "evidence_archive_manifest_v1"', '"generating_commit"', '"input_manifest"'],
+             "deterministic F1 evidence archive manifest (archive sha256 / size, generating commit, architecture / "
+             "design-state-set / input-manifest hashes, command, timestamp, per-file sha256, classification)",
+             {"node": "/storage/preferred", "checks": {"kind": ("startswith", "GitHub Release asset"),
+                                                       # A9.24 item 11 advanced PENDING_OWNER_UPLOAD -> authorized
+                                                       "status": ("startswith", "AUTHORIZED_TO_UPLOAD (A9.24 item 11)"),
+                                                       "authoritative": ("equals", False)}}),
+        _app("A9.22", "docs/design_synthesis/f1_intake/f1_core_view.py", A922_G9_COMMIT,
+             ['CORE_SCHEMA = "f1_intake_synthesis_v1_core"', "def expand_core"],
+             "compact F1 core view for consumers (lossless)"),
+        _app("A9.22", "scripts/evidence/f1_archive.py", A922_G9_COMMIT, ["def build_manifest", "def verify"],
+             "archive builder / byte-for-byte verifier (original kept until hash-verified)")],
 }
 LATER_STATUS = {
     ("A9.18", "PERF_RERUN"): ("BLOCKED", "owner-machine action after the step-3 merge (nothing to run now): the identical "
                               "dedicated procedure on the idle owner machine; not runnable in this environment"),
+    ("A9.21", "PERF_RERUN"): ("BLOCKED", "owner-machine action: the owner reruns the dedicated baseline on the exact "
+                              "commit SHA supplied to them, into a new folder (previous baseline unchanged); the SHA is "
+                              "sent after the merge; not runnable in this environment"),
+    ("A9.21", "BID_CLOSE"): ("NOT_APPLICABLE_TO_ARTIFACTS", "an operational submission deadline (DefProc tender "
+                             "2026_DRDO_788433_1), not a requirement of the registered RFP (not in the PDF); recorded in "
+                             "state v5 WEB-ACC-2"),
+    ("A9.21", "RFQ_DISPATCH"): ("NOT_APPLICABLE_TO_ARTIFACTS", "the quotation packages exist in the repository "
+                                "(docs/procurement/rfq_a9_v3); dispatch is an owner / procurement act"),
 }
 LATER_RESIDUAL = {
+    ("A9.22", "G2_C_DRAG_RFP"): [
+        ("LATER_SEPARATE_OWNER_APPROVAL", "Option 2 (generate all designs, apply drag <= 25 mN only in the "
+         "assessment layer) is recorded as a later semantic / model-pipeline change; it changes the F1-F8 Pareto "
+         "populations and robustness counts and needs a separate owner approval (not applied)", "owner")],
+    ("A9.22", "G9_F1_OUTPUT"): [
+        ("PENDING_OWNER_UPLOAD", "the hash-verified F1 archive F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst is uploaded by "
+         "the owner as the GitHub Release asset (tag evidence-f1-intake-synthesis-v1-405296e); the original full F1 "
+         "file is removed from the working tree only after the re-downloaded asset is hash-verified byte for byte",
+         "owner (GitHub Release on ppusapati/abep)")],
+    ("A9.22", "G3_REQUIREMENTS_SNAPSHOT"): [
+        ("PENDING_EVIDENCE", "compliance of the frozen rows: freezing the requirement basis changes no RVM status; "
+         "every row stays as evaluated until determining evidence exists", "hardware programme / RVM")],
     ("A9.17", "ORBIT"): [("PENDING_EVIDENCE", "inclination / LTAN from DRDO / spacecraft ICD / PDR mission definition, "
                           "then a new dataset version", "official mission ICD (owner)")],
-    ("A9.17", "RFP"): [("BLOCKED", "AG-15 closure (requirement_frozen stays false on RFP rows until the owner closes "
-                        "AG-15)", "owner act")],
     ("A9.17", "PERF"): [("BLOCKED", "superseded as the admission baseline by the A9.18 PERF_RERUN (after the step-3 "
                          "merge); the 2026-10-01 dedicated run is historical for the earlier code state",
                          "owner machine (A9.18 PERF_RERUN)")],
@@ -250,6 +610,24 @@ LATER_RESIDUAL = {
                            "docs/traceability/ (rtm_v2, not started)")],
     ("A9.18", "PERF_RERUN"): [("BLOCKED", "dedicated baseline rerun after the step-3 merge, before any Rust performance "
                                "admission", "owner machine")],
+    ("A9.21", "PERF_RERUN"): [("BLOCKED", "exact commit SHA to the owner after the merge; rerun into a new folder",
+                               "owner machine")],
+    ("A9.21", "AL08"): [("PENDING_EVIDENCE", "quotations split into tank, regulator, valves, plumbing, mounting/thermal "
+                         "and any C1-specific branch, then the formal AL-08 re-base", "supplier quotations (owner / "
+                         "procurement)"),
+],
+    ("A9.21", "ICP_GATE"): [("PENDING_OWNER_ACCEPTANCE", "numerical GO / NO-GO criteria: not approved; the recorder "
+                             "proposal text (RP-A919-01 (a) - (c)) is preserved for owner review", "owner")],
+    ("A9.21", "HW_PROGRAMME"): [("PENDING_OWNER_ACCEPTANCE", "recorder readings RR-01 (Ar reference keeps its "
+                                 "per-stage freeze points; 'close before it starts' applied to the two registered "
+                                 "campaigns), RR-02 (C1-REF after H1-S7.2) and RR-03 (step ids) recorded in the programme "
+                                 "record for the owner to accept or reverse", "owner"),
+                                ("PENDING_EVIDENCE", "the hardware runs themselves (FEMM, H-1 + C1 reference "
+                                 "characterization, ICP campaigns, P2 map, coupled thermal, measured thrust / feed map)",
+                                 "hardware programme")],
+    ("A9.21", "EXTERNAL_INPUTS"): [("PENDING_EVIDENCE", "AOCS pointing envelope, inclination / LTAN, host-spacecraft drag "
+                                    "ICD", "DRDO / spacecraft ICD / PDR mission definition")],
+    ("A9.21", "RFQ_DISPATCH"): [("BLOCKED", "dispatch of the quotation packages", "owner / procurement")],
 }
 
 INTEGRATION_COMMITS = {"repin": "5acdcde8be7d41cfb0d6c26b1ad7cb899d279871",
@@ -433,23 +811,15 @@ RESIDUAL = {
                    "F6 / H-1 / F4 are stale at this matrix's base", F_REGEN_WHERE)],
     "MQ-06": [("OPEN_OWNER_QUESTION", "controls-line allocation after the split: MPV3Q-01 (TBD_OWNER in state v5)",
                "docs/budgets/mass_power_a9_v3/")],
-    "OQ-A907-07": [("PENDING_EVIDENCE", "flight C1 BOM / C1 Xe lines wait for C1 selection (not assumed, not excluded)",
-                    "docs/budgets/mass_power_a9_v3/, docs/budgets/xe_accounting_a9_v3/")],
-    "MPQ-01": [("PENDING_EVIDENCE", "AL-C1 = 1.20 x selected C1 CBE only once C1 is selected",
-                "docs/budgets/mass_power_a9_v3/")],
-    "F9-OQ-03": [("BLOCKED", "AG-15 closure: the official RFP is registered by sha256 (A9.17 RFP) and the RVM is "
-                  "re-based on it (step 3), but requirement_frozen stays false on RFP rows until the owner closes AG-15",
-                  "owner act (AG-15 closure)")],
-    "OD12": [("BLOCKED", "RFP clauses registered and mapped (CG-IC / CG-SPF / CG-N2-AO carry their clauses); "
-              "requirement_frozen stays false until the owner closes AG-15", "owner act (AG-15 closure)")],
+    # OQ-A907-07 / MPQ-01: the 'wait for C1 selection' residuals are gone - A9.19 removes the C1 flight variant
+    # (SUPERSEDED_BY_LATER_DECISION; see the A9.19 entry)
+    # F9-OQ-03 / OD12: the PENDING_OWNER_ACCEPTANCE residuals are resolved by A9.22 G3 (RESOLVED_RESIDUAL_AG15)
     "F0-OQ-02": [("BLOCKED", "the 2026-10-01 dedicated run is historical for the earlier code state: A9.18 PERF_RERUN "
                   "(identical procedure after the step-3 merge, idle owner machine) is the Rust-admission baseline",
                   "owner machine (A9.18 PERF_RERUN)")],
+    # the BLOCKED re-derivation residual is APPLIED by M16 v5 (RESOLVED_RESIDUAL; structural record check in CODE_APPS)
     "M16-V3-Q-01": [("PENDING_EVIDENCE", "named persons from the project staffing ledger (none in the repository; none "
-                     "fabricated)", "staffing ledger (owner)"),
-                    ("BLOCKED", "re-derivation of M16 scheduler blocking items from the A9.8 .. A9.15 answers (M16 v5 "
-                     "refresh) is not built in A9.16; M16 v4 was regenerated only for its changed RVM inputs (RFP "
-                     "re-base)", "docs/experiments/hall_icp/integration/ (M16 v5, not started)")],
+                     "fabricated)", "staffing ledger (owner)")],
 }
 NOT_APPLICABLE = {
     "OQ-A910-02": "the producing stage and decision quantity are assigned at LOCK-1 from the frozen A9-01 stage map and "
@@ -474,8 +844,20 @@ RULES = [
                     "(RUST-OQ-02). Guarded by tests/test_decision_application_a9_16.py::"
                     "test_frozen_and_score_bearing_paths_never_use_rust",
      "status": "APPLIED"},
-    {"id": "R-RFP", "decision": None, "rule": L.RFP_PENDING_NOTE, "status": "APPLIED",
-     "application": "state v5 rows, F9 / RVM records carry rfp_citation_status"},
+    {"id": "R-RFP", "decision": None, "rule": "the official RFP is registered by hash in the public repository (A9.17 "
+     "RFP; docs/requirements/rfp_official/rfp_registration_v1.json, PDF in the controlled evidence store) and the RVM is "
+     "re-based on its clauses; the step-1 records keep rfp_citation_status OWNER_STATED_PENDING_RFP_REGISTRATION as the "
+     "history of the state in which they were applied (step-1 rule: " + L.RFP_PENDING_NOTE + "); the owner closed "
+     "AG-15 (A9.22 G3): requirement_frozen = true on the RFP_CLAUSE rows, RFP-derived requirements snapshot FROZEN "
+     "(basis only, no compliance claim)", "status": "APPLIED",
+     "application": "state v5 rfp_registration_now + a9_22_g3; F9-OQ-03 'ag_15' (registration + re-base + owner "
+                    "acceptance APPLIED); step-1 rows, F9 / RVM records carry rfp_citation_status as history"},
+    {"id": "R-A919", "decision": "A9.19 / A9.20", "rule": "one flight configuration hall_icp_neutralizer: one Hall "
+     "accelerator + one RF/ICP electron-source / neutralizer for air and Xe, two supply modes (ambient atmospheric "
+     "primary, Xe contingency / emergency), no conventional hollow cathode; C1 = GROUND_ONLY_LAB_REFERENCE; "
+     "hall_c1_reference retired as a flight configuration (labelled history / ground reference only)",
+     "status": "APPLIED", "application": "A9.19 / A9.20 entries below (RVM, budgets v3, design layer, F9, state v5, "
+                                         "M16 v4); earlier entries they amend carry amended_by_later"},
     {"id": "R-A915", "decision": None, "rule": L.a915_governing_statement(), "status": "APPLIED",
      "application": "A9.15 governs every 'Xe contingency-only for C1' reading; the A9.1 ICP gas-mode baseline (G-REUSE "
                     "primary, G-XE a declared ICP-feed variant) is unchanged"},
@@ -575,8 +957,67 @@ def _verify_app(spec, qid):
     missing = [t for t in spec["tokens"] if t not in text]
     if missing:
         raise SystemExit(f"{qid}: tokens {missing} not found in {spec['artifact']} (application not verifiable)")
-    return {"lane": spec["lane"], "artifact": spec["artifact"], "commit": spec["commit"], "status": "APPLIED",
-            "record_locations": list(spec["tokens"]), "what": spec["what"]}
+    out = {"lane": spec["lane"], "artifact": spec["artifact"], "commit": spec["commit"], "status": "APPLIED",
+           "record_locations": list(spec["tokens"]), "what": spec["what"]}
+    if spec.get("record"):
+        out["record_pointer"] = _verify_record(json.loads(text), spec["record"], qid, spec["artifact"])
+    if spec.get("pin"):
+        out["pin_pointer"] = _verify_pin(json.loads(text), spec["pin"], qid, spec["artifact"])
+    return out
+
+
+def _verify_pin(doc, pin, qid, artifact):
+    """Fail closed: the value at the JSON pointer must equal the sha256 of the pinned repository file as it is now."""
+    import hashlib
+    pointer, rel = pin
+    node = doc
+    for part in pointer.strip("/").split("/"):
+        node = node.get(part) if isinstance(node, dict) else None
+        if node is None:
+            raise SystemExit(f"{qid}: {artifact}{pointer} missing (pin not verifiable)")
+    want = hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
+    if node != want:
+        raise SystemExit(f"{qid}: {artifact}{pointer} = {node!r} is not the current sha256 of {rel}")
+    return f"{pointer} = sha256({rel})"
+
+
+def _verify_record(doc, rec, qid, artifact):
+    """Fail closed: exactly one record of the JSON list at rec['list'] matches rec['match'] and every field check holds
+    (('equals', v) or ('startswith', prefix)). Returns the JSON pointer of the record."""
+    if "node" in rec:      # (A9.22) a JSON object at a pointer, field checks on it (no list / match)
+        rec = {"list": rec["node"].rsplit("/", 1)[0] or "/", "_obj": rec["node"].rsplit("/", 1)[1],
+               "checks": rec["checks"]}
+    node = doc
+    for part in rec["list"].strip("/").split("/") if rec["list"].strip("/") else ():
+        node = node[int(part)] if isinstance(node, list) else node.get(part) if isinstance(node, dict) else None
+        if node is None:
+            raise SystemExit(f"{qid}: {artifact}{rec['list']} missing (application not verifiable)")
+    if "_obj" in rec:
+        x = node.get(rec["_obj"]) if isinstance(node, dict) else None
+        ptr = f"{rec['list'].rstrip('/')}/{rec['_obj']}"
+        if not isinstance(x, dict):
+            raise SystemExit(f"{qid}: {artifact}{ptr} missing or not an object (application not verifiable)")
+        for field, (op, want) in rec["checks"].items():
+            got = x.get(field)
+            if op not in ("equals", "startswith"):
+                raise SystemExit(f"{qid}: unknown record check op {op!r} for {field}")
+            ok = got == want if op == "equals" else isinstance(got, str) and got.startswith(want)
+            if not ok:
+                raise SystemExit(f"{qid}: {artifact}{ptr}.{field} = {got!r} fails {op} {want!r}")
+        return ptr
+    key, val = rec["match"]
+    hits = [i for i, x in enumerate(node) if isinstance(x, dict) and x.get(key) == val]
+    if len(hits) != 1:
+        raise SystemExit(f"{qid}: {artifact}{rec['list']}: {key}={val!r} found {len(hits)} times")
+    x = node[hits[0]]
+    for field, (op, want) in rec["checks"].items():
+        got = x.get(field)
+        if op not in ("equals", "startswith"):
+            raise SystemExit(f"{qid}: unknown record check op {op!r} for {field}")
+        ok = got == want if op == "equals" else isinstance(got, str) and got.startswith(want)
+        if not ok:
+            raise SystemExit(f"{qid}: {artifact}{rec['list']}/{hits[0]}.{field} = {got!r} fails {op} {want!r}")
+    return f"{rec['list']}/{hits[0]} ({key}={val})"
 
 
 def code_applications():
@@ -645,6 +1086,13 @@ def build():
                 e["residual"].append({"status": "BLOCKED", "what": "intake surface v2 build (rule-1 versioned) waits "
                                       "for the registered AOCS pointing envelope (A9.13 S6.2 / F1Q-03)",
                                       "where": "spacecraft / AOCS ICD (owner); abep_sim/data/ build"})
+            if qid in RESOLVED_RESIDUAL:
+                ptrs = [a.get("record_pointer") for a in applied if a["lane"] == "M16_V5"]
+                if len(ptrs) != 1 or not ptrs[0]:
+                    raise SystemExit(f"{qid}: resolved residual without one verified M16 v5 record")
+                e["resolved_residual"] = [{**x, "record_pointer": ptrs[0]} for x in RESOLVED_RESIDUAL[qid]]
+            if qid in RESOLVED_RESIDUAL_AG15:
+                e["resolved_residual"] = e.get("resolved_residual", []) + ag15_resolved(qid)
             entries.append(e)
     a15 = L.LOADED["A9.15"]
     a915_apps = [{"lane": ln, "artifact": LANES[ln][1], "commit": LANES[ln][0], "status": "APPLIED",
@@ -654,9 +1102,14 @@ def build():
                    "what": w} for ln, w in A915_REVIEWED_NA.items()]
     a915_apps += a915_integ
     a915_apps += [_verify_app(_app("STEP3", "abep_sim/design/upstream_a9_13.py", DESIGN_LAYER_COMMIT,
-                                   ["A9.15 propellants", "def propellant_paths_check"],
+                                   ["A9.15 propellants", "PROPELLANT_POLICY = {"],
                                    "design layer: ambient air AND Xe capability, two separate propellant tanks / "
-                                   "paths (propellant_paths_check)"), "A9.15"),
+                                   "paths (PROPELLANT_POLICY, AIR_PATH / XE_PATH)"), "A9.15"),
+                  _verify_app(_app("A9.22", "abep_sim/assessment/design_gates.py", A922_DESIGN_SEPARATION_COMMIT,
+                                   ["def propellant_paths_check", "A9.15 / RFP-P18-08"],
+                                   "assessment layer (A9.22 layer separation moved it from the design layer; "
+                                   "upstream_a9_13 keeps a deprecated shim): HC-10 structural check of the two "
+                                   "separate propellant tanks / paths (propellant_paths_check)"), "A9.15"),
                   _verify_app(_app("STEP3", "docs/requirements/rvm_a9/rfp_rebase.py", RVM_REBASE_COMMIT, ["A9.15"],
                                    "RVM re-base on the registered RFP carries the A9.15 propellant policy"), "A9.15")]
     for x in a915_apps:
@@ -667,52 +1120,61 @@ def build():
                     "decision_json_sha256": a15["json_sha256"], "status": "APPLIED",
                     "amends": list(L.A915_AMENDED) + ["A9.13 owner_statements.xenon"],
                     "rfp_citation_status": L.RFP_PENDING, "applications": a915_apps,
-                    "residual": [{"status": "BLOCKED", "what": "the RFP is now registered by sha256 (A9.17 RFP; "
-                                  "docs/requirements/rfp_official/rfp_registration_v1.json) and the RVM re-based on "
-                                  "it, but AG-15 is not closed by the owner (requirement_frozen stays false); the "
-                                  "OWNER_STATED_PENDING_RFP_REGISTRATION labels of the step-1 records are history of "
-                                  "that state", "where": "owner act (AG-15 closure)"}]})
-    for (dk, qid), specs in LATER_APPS.items():
-        jp, jsha, msha = LATER[dk]
-        got = L.sha256_file(jp)
-        if got != jsha:
-            raise SystemExit(f"{dk}: decision json {jp} sha256 {got} != pinned {jsha} (decision files are immutable)")
-        doc = json.loads((ROOT / jp).read_text(encoding="utf-8"))
-        if doc["verbatim"]["sha256"] != msha or L.sha256_file(doc["verbatim"]["path"]) != msha:
-            raise SystemExit(f"{dk}: verbatim md sha256 != pinned {msha}")
-        if set(doc["decisions"]) != {q for (d, q) in LATER_APPS if d == dk}:
-            raise SystemExit(f"{dk}: decision keys {sorted(doc['decisions'])} not all covered")
+                    "residual": [{"status": "PENDING_OWNER_ACCEPTANCE", "what": "the RFP is now registered by sha256 "
+                                  "(A9.17 RFP; docs/requirements/rfp_official/rfp_registration_v1.json) and the RVM "
+                                  "re-based on it, but AG-15 is not closed by the owner (requirement_frozen stays "
+                                  "false); the OWNER_STATED_PENDING_RFP_REGISTRATION labels of the step-1 records are "
+                                  "history of that state", "where": "owner act (AG-15 closure)"}]})
+    for dk in LATER:
+        if set(X.item_keys(dk)) != {q for (d, q) in LATER_APPS if d == dk}:
+            raise SystemExit(f"{dk}: decision items {X.item_keys(dk)} not all covered by LATER_APPS")
+    for (dk, qid), specs in sorted(LATER_APPS.items(), key=lambda kv: (LATER.index(kv[0][0]),
+                                                                        X.item_keys(kv[0][0]).index(kv[0][1]))):
+        d = X.LOADED[dk]
         apps = [_verify_app(s, f"{dk} {qid}") for s in specs]
-        st, reason = LATER_STATUS.get((dk, qid), ("APPLIED" if apps else "BLOCKED", None))
-        e = {"decision": dk, "question_id": qid, "sequenced_no": None, "decision_code": doc["decisions"][qid]["answer"],
-             "decision_json": jp, "decision_json_sha256": jsha, "status": st}
+        governing = [a for a in apps if a["artifact"] not in (V5_REL,)]
+        st, reason = LATER_STATUS.get((dk, qid), ("APPLIED" if governing else "BLOCKED",
+                                                  None if governing else "no governing artifact application"))
+        e = {"decision": dk, "question_id": qid, "sequenced_no": None, "decision_code": X.decision_code(dk, qid),
+             "decision_json": d["json"], "decision_json_sha256": d["json_sha256"], "pointer": X.pointer(dk, qid),
+             "status": st}
         if reason:
             e["status_reason"] = reason
         e["applications"] = apps
         e["residual"] = [{"status": s, "what": w, "where": wh} for s, w, wh in LATER_RESIDUAL.get((dk, qid), [])]
+        if (dk, qid) in RESOLVED_RESIDUAL_AG15:
+            e["resolved_residual"] = ag15_resolved((dk, qid))
         entries.append(e)
+    apply_later_amendments(entries)
+    ag15 = ag_15_record()
+    for e in entries:
+        if e["question_id"] == "F9-OQ-03":
+            e["ag_15"] = ag15
     counts, rcounts = {}, {}
     for e in entries:
         counts[e["status"]] = counts.get(e["status"], 0) + 1
         for r in e["residual"]:
             rcounts[r["status"]] = rcounts.get(r["status"], 0) + 1
     ids_by_dec = {k: len(L.decision_ids(k)) for k in L.ORDER if k != "A9.15"}
-    ids_by_dec.update({dk: sum(1 for (d, _) in LATER_APPS if d == dk) for dk in LATER})
+    ids_by_dec.update({dk: len(X.item_keys(dk)) for dk in LATER})
     return {
         "schema": "a9_16_application_matrix_v1", "id": "a9_16_application_matrix_v1",
         "lane": "A9.16 step 1 integration; refreshed in the A9.16 finalize records lane (step 2 / step 3 / A9.17 / "
-                "A9.18 applications)", "date": "2026-10-01",
+                "A9.18 applications) and in the A9.17 .. A9.21 records lane (A9.19 / A9.20 / A9.21) and in the A9.22 AG-15 closure lane (G3) and the A9.22 governed migration lanes (G1, G2, G4 .. G9)", "date": "2026-10-03",
         "generated_by": "docs/decisions/application/build_a9_16_application_matrix.py",
         "companion_document": REL(OUT_MD), "test": "tests/test_decision_application_a9_16.py",
         "status_vocabulary": STATUSES, "residual_status_vocabulary": list(RESIDUAL_STATUSES),
-        "rule": "one entry per decision id of A9.8 .. A9.14, the A9.15 governing rule and one entry per A9.17 / A9.18 "
-                "decision key; the verbatim .md governs; statuses never PASS; an application is listed only when its "
-                "question id (step-1 lanes) or its recorded locator tokens (step 2 / step 3 / A9.17 / A9.18) are "
+        "rule": "one entry per decision id of A9.8 .. A9.14, the A9.15 governing rule and one entry per decision item "
+                "of A9.17 .. A9.22; the verbatim .md governs; statuses never PASS; an application is listed only when "
+                "its question id (step-1 lanes) or its recorded locator tokens (step 2 / step 3 / A9.17 .. A9.22) are "
                 "locatable in the artifact",
-        "pins": L.pins() + [row for dk, (jp, jsha, msha) in LATER.items() for row in (
-            {"key": f"{dk}_json", "path": jp, "sha256": jsha},
-            {"key": f"{dk}_md", "path": json.loads((ROOT / jp).read_text(encoding="utf-8"))["verbatim"]["path"],
-             "sha256": msha})],
+        "pins": L.pins() + X.pins(),
+        "later_application_commits": {"a9_19_rvm": A919_RVM_COMMIT, "a9_19_budgets": A919_BUDGETS_COMMIT,
+                                      "a9_19_design": A919_DESIGN_COMMIT, "a9_19_integration": A919_INTEGRATION_COMMIT,
+                                      "a9_17_21_records": RECORDS_A917_21_COMMIT, "a9_22_ag15_closure": A922_AG15_COMMIT,
+                                      "a9_21_al08_budgets": A921_AL08_BUDGETS_COMMIT,
+                                      "a9_21_icp_gate": A921_ICP_GATE_COMMIT,
+                                      "m16_v5_rederivation": M16V5_COMMIT},
         "post_step1_commits": {"step2_merge": "f9f4749994ea17703b005c84aadfb3b04d0cff10", "design_layer": DESIGN_LAYER_COMMIT,
                                "rvm_rfp_rebase": RVM_REBASE_COMMIT},
         "integration_commits": INTEGRATION_COMMITS,
@@ -743,6 +1205,107 @@ def build():
     }
 
 
+def apply_later_amendments(entries):
+    """Earlier entries amended / superseded by A9.19 / A9.20 / A9.21 (read from the state v5 later_owner_decisions)."""
+    v5 = json.loads((ROOT / V5_REL).read_text(encoding="utf-8"))
+    later = {}
+    for r in v5["rows"]:
+        recs = [x for x in r.get("later_owner_decisions", []) if x["relation"] in ("SUPERSEDES", "AMENDS")]
+        if recs:
+            later[r["id"]] = recs
+    sup15 = v5["superseded_statements_a9_19"]
+    seen = set()
+    for e in entries:
+        qid = e["question_id"]
+        if e["decision"] in LATER:
+            continue
+        if qid == "A9.15 governing_rule":
+            e["amended_by_later"] = [{"decision": s["superseded_by"]["decision"], "item": "amends/A9.15",
+                                      "relation": "AMENDS", "pointer": s["superseded_by"]["pointer"],
+                                      "decision_json_sha256": s["superseded_by"]["sha256"],
+                                      "scope": s["scope"] + " - superseded statement: " + s["text"]} for s in sup15]
+            continue
+        if qid not in later:
+            continue
+        seen.add(qid)
+        e["amended_by_later"] = [{k: x[k] for k in ("decision", "item", "relation", "pointer", "decision_json_sha256",
+                                                    "scope")} for x in later[qid]]
+        if any(x["relation"] == "SUPERSEDES" for x in later[qid]):
+            e["status"] = "SUPERSEDED_BY_LATER_DECISION"
+            e["status_reason"] = ("applied earlier (applications kept below); superseded by " + ", ".join(sorted(
+                {x["decision"] for x in later[qid]})) + ": no C1 flight variant / no conventional hollow cathode; C1 a "
+                "ground-only laboratory reference")
+    entry_ids = {e["question_id"] for e in entries if e["decision"] not in LATER}
+    missing = sorted(q for q in later if q in entry_ids and q not in seen)
+    if missing:
+        raise SystemExit(f"later amendments not attached: {missing}")
+
+
+def ag15_resolved(key):
+    """Resolved AG-15 residual (A9.22 G3): verified against the RVM closure record (tokens + decision sha256)."""
+    rel = "docs/requirements/rvm_a9/rvm_a9_v1.json"
+    text = (ROOT / rel).read_text(encoding="utf-8")
+    if any(t not in text for t in AG15_CLOSURE_TOKENS):
+        raise SystemExit(f"{key}: AG-15 closure record not found in {rel} (resolved residual not verifiable)")
+    cl = json.loads(text)["rfp_rebase"]["ag15_closure"]
+    if cl["decision"]["json_sha256"] != X.LOADED["A9.22"]["json_sha256"]:
+        raise SystemExit(f"{key}: RVM ag15_closure does not cite the pinned A9.22 record")
+    return [dict(x) for x in RESOLVED_RESIDUAL_AG15[key]]
+
+
+def ag_15_record():
+    """AG-15 (A9.13 S6.22 / F9-OQ-03): registration + RVM re-base APPLIED; owner acceptance APPLIED by A9.22 G3 only when
+    the RVM closure record, the registration page review and the F9 AG-15 gate agree with the pinned A9.22 record
+    (fail closed); otherwise PENDING_OWNER_ACCEPTANCE."""
+    reg = json.loads((ROOT / REG_REL).read_text(encoding="utf-8"))
+    rvm = json.loads((ROOT / RVM_REL).read_text(encoding="utf-8"))
+    doc, rb = reg["document"], rvm["rfp_rebase"]
+    if reg["status"] != "REGISTERED_BY_HASH_PDF_CONTROLLED_EXTERNALLY" or len(doc.get("sha256", "")) != 64:
+        raise SystemExit("AG-15: RFP registration missing or not REGISTERED_BY_HASH_PDF_CONTROLLED_EXTERNALLY")
+    if rb["registration"]["pdf_sha256"] != doc["sha256"] or rb["registration"]["n_clauses"] != len(reg["clauses"]):
+        raise SystemExit("AG-15: RVM re-base does not match the registered RFP (sha256 / clause count)")
+    unmapped = [c["clause_id"] for c in rb["clause_coverage"] if not c["rvm_rows"] and not c.get("not_system_requirement")]
+    if unmapped or len(rb["clause_coverage"]) != len(reg["clauses"]):
+        raise SystemExit(f"AG-15: registered clauses not covered by the RVM re-base: {unmapped}")
+    frozen = [r["id"] for r in rvm["rows"] if r["category"].startswith("rfp") and r.get("requirement_frozen")]
+    rfp_rows = [r["id"] for r in rvm["rows"] if r["requirement_origin"] == "RFP_CLAUSE"]
+    cl = rb.get("ag15_closure")
+    if cl is None:
+        if frozen:
+            raise SystemExit("AG-15: RFP rows frozen without an owner closure record")
+        acceptance = {"status": "PENDING_OWNER_ACCEPTANCE", "rfp_rows_requirement_frozen": frozen,
+                      "what": "owner acceptance of the re-base / AG-15 closure (" + rb["ag_15_status"] + ")"}
+    else:
+        d = X.LOADED["A9.22"]
+        f9 = json.loads((ROOT / F9_REL).read_text(encoding="utf-8"))
+        g = [x for x in f9["architecture_gates"] if x["id"] == "AG-15"]
+        pr = reg["page_coverage"].get("owner_page_review") or {}
+        if (cl["decision"]["json"], cl["decision"]["json_sha256"]) != (d["json"], d["json_sha256"]) \
+                or cl["frozen_rows"] != rfp_rows or sorted(frozen) != sorted(rfp_rows) \
+                or pr.get("decision", {}).get("json_sha256") != d["json_sha256"] \
+                or len(g) != 1 or g[0]["evidence_sufficient_for_freeze"] is not True:
+            raise SystemExit("AG-15: closure record / registration page review / F9 AG-15 gate disagree with the "
+                             "pinned A9.22 G3 record (fail closed)")
+        acceptance = {"status": "APPLIED", "by": "A9.22 G3_REQUIREMENTS_SNAPSHOT",
+                      "decision_json": d["json"], "decision_json_sha256": d["json_sha256"],
+                      "decision_md": d["md"], "decision_md_sha256": d["md_sha256"],
+                      "decision_code": X.decision_code("A9.22", "G3_REQUIREMENTS_SNAPSHOT"),
+                      "artifact": RVM_REL, "record_pointer": AG15_CLOSURE_POINTER, "commit": A922_AG15_COMMIT,
+                      "rfp_rows_requirement_frozen": frozen, "requirements_snapshot": rb["requirements_snapshot"],
+                      "f9_gate": g[0]["current_status"],
+                      "what": "owner closure of AG-15 (requirement basis frozen; no RVM status changed, no compliance "
+                              "claim)"}
+    return {
+        "gate": "AG-15 (A9.13 S6.22 F9-OQ-03; A9.17 RFP)",
+        "registration": {"status": "APPLIED", "artifact": REG_REL, "commit": "96ace704ed78d699c5805ebcc8acd99f5cc0b125",
+                         "registered_status": reg["status"], "pdf_sha256": doc["sha256"], "pages": doc["pages"],
+                         "n_clauses": len(reg["clauses"]), "pdf_in_repository": doc["committed_to_repository"]},
+        "rvm_rebase": {"status": "APPLIED", "artifact": RVM_REL, "builder": "docs/requirements/rvm_a9/rfp_rebase.py",
+                       "commit": RVM_REBASE_COMMIT, "id": rb["id"], "clauses_covered": len(rb["clause_coverage"]),
+                       "origin_counts": rb["origin_counts"]},
+        "owner_acceptance": acceptance}
+
+
 def _c(s):
     return " ".join(str(s).split()).replace("|", "\\|")
 
@@ -762,11 +1325,18 @@ def render_md(doc):
         apps = "; ".join(f"{a['lane']}: {a['artifact'].rsplit('/', 1)[-1]} @ {a['commit'][:7]}"
                          + ("" if a["status"] == "APPLIED" else f" ({a['status']})") for a in e["applications"])
         res = "; ".join(f"{r['status']}: {r['what']}" for r in e["residual"])
+        res += "".join(f"; resolved {r['status_before']} -> {r['status']} ({r['artifact'].rsplit('/', 1)[-1]} @ "
+                       f"{r['commit'][:7]} {r['record_pointer']}): {r['what']}" for r in e.get("resolved_residual", []))
         st = e["status"] + (f" - {e['status_reason']}" if e.get("status_reason") else "")
-        out.append(f"| {e['decision']} | {e['question_id']} | {e['sequenced_no'] or '-'} | {e['decision_code']} | "
+        if e.get("amended_by_later"):
+            st += " (later: " + "; ".join(f"{x['relation']} by {x['decision']} {x['item']}"
+                                          for x in e["amended_by_later"]) + ")"
+        out.append(f"| {e['decision']} | {e['question_id']} | {e['sequenced_no'] or '-'} | {e['decision_code'] or '-'} | "
                    f"{_c(st)} | {_c(apps) or '-'} | {_c(res) or '-'} |")
     out += ["", "## Pins", ""] + [f"- `{p['path']}` sha256 `{p['sha256']}`" for p in doc["pins"]]
-    out += ["", "No PASS; no question answered here; RFP-cited facts are OWNER_STATED_PENDING_RFP_REGISTRATION."]
+    out += ["", "No PASS; no question answered here. The official RFP is registered by hash (A9.17 RFP) and the RVM "
+            "re-based; step-1 rfp_citation_status OWNER_STATED_PENDING_RFP_REGISTRATION labels are history; AG-15 is "
+            "closed by the owner (A9.22 G3; requirement basis frozen, not compliance)."]
     return "\n".join(out) + "\n"
 
 

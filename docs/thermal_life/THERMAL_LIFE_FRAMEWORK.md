@@ -82,7 +82,7 @@ the result always lists `not_covered`, and it inherits the evidence levels of it
 **Refusals (ValueError, never a default).** The module refuses:
 - a missing or unknown input;
 - a numeric input record without non-empty `uncertainty`, `applicability_domain` and `validation_status` statements
-  (Governance.md rule 10; write "unquantified" or "TBD - requires ..." explicitly);
+  (governance.md rule 10; write "unquantified" or "TBD - requires ..." explicitly);
 - a unit string different from the contract (no unit conversion is done);
 - an input without a source, or without evidence level 1–7 and a quantity type;
 - a TBD limit record or TBD value;

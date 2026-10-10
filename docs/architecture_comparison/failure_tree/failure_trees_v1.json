@@ -6,7 +6,7 @@
  "date": "2026-09-26",
  "base_commit": "c53b75a",
  "lane": "FTREE (lane 26): architecture-specific failure trees, track 2 (architecture comparison preparation)",
- "scope": "Ways each candidate thrust architecture (hall_only, rf_hall, ecr_hall) could fail the programme against the RFP hard gates (Governance.md RFP envelope: 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg, 26,000 h mission, > 15,000 h firing, air + Xe). The rf_hall and ecr_hall arms change only the pre-ionization method; the downstream Hall accelerator, feed state, cathode and bus boundary are common, so nodes on the common elements carry all three architecture ids. Built to work without absolute Hall predictions: no node uses a Hall transport closure, screening candidate or withdrawn 0-D Hall result as a performance source. Analysis routes that would need absolute Hall performance are flagged (analysis_requires_admitted_hall_closure) and the one action that needs an admitted closure (A-HALLMAP) is blocked while the credible set is empty. Hall-closure uncertainty is confined to the ionization/discharge -> acceleration/thrust block; upstream nodes (gas supply) are marked upstream_hall_independent.",
+ "scope": "Ways each candidate thrust architecture (hall_only, rf_hall, ecr_hall) could fail the programme against the RFP hard gates (governance.md RFP envelope: 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg, 26,000 h mission, > 15,000 h firing, air + Xe). The rf_hall and ecr_hall arms change only the pre-ionization method; the downstream Hall accelerator, feed state, cathode and bus boundary are common, so nodes on the common elements carry all three architecture ids. Built to work without absolute Hall predictions: no node uses a Hall transport closure, screening candidate or withdrawn 0-D Hall result as a performance source. Analysis routes that would need absolute Hall performance are flagged (analysis_requires_admitted_hall_closure) and the one action that needs an admitted closure (A-HALLMAP) is blocked while the credible set is empty. Hall-closure uncertainty is confined to the ionization/discharge -> acceleration/thrust block; upstream nodes (gas supply) are marked upstream_hall_independent.",
  "no_winner_statement": "This file declares no winner and eliminates no architecture. Every node is decision_state 'open'. Evidence status describes whether published evidence makes a failure path credible; it is not a verdict on any Vyovrinda design. The ranking orders evidence to acquire, not architectures.",
  "milestones": {
   "supports": [
@@ -20,7 +20,7 @@
   "provides_for_A": "For each architecture the open nodes of its tree, each with a milestone_A_condition sentence, are the explicit condition list a conditional selection must carry ('baseline provided that ...'): the core nodes plus the nodes of the chosen design-branch options (cathode feed; for rf_hall, the RF source type). The per-architecture core ranking says which single piece of evidence would retire the most branch-independent conditions; each branch option has its own ranking.",
   "to_reach_B": [
    "Every node with resolve_by_milestone = 'B' in the selected architecture's tree moved to resolved_pass (none may be resolved_fail on a hard gate).",
-   "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; Governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
+   "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
    "Common-boundary performance from the bus-power boundary (abep_sim/arch_boundary.py) and the comparison harness (abep_sim/arch_compare.py) for the same feed state and bus power.",
    "Evidence for architecture-specific physics (E-H transition, ECR cutoff and field interaction, interstage transmission) at the Vyovrinda design point, not only at literature devices."
   ],
@@ -188,7 +188,7 @@
     "values": []
    },
    "threshold_status": "RFP_with_TBD_share",
-   "source": "RFP envelope 'air + Xe' (Governance.md); the 12 mN on air requirement is already in abep_sim/system.py checks['thrust_air_ge_req']",
+   "source": "RFP envelope 'air + Xe' (governance.md); the 12 mN on air requirement is already in abep_sim/system.py checks['thrust_air_ge_req']",
    "existing_checks": [
     "abep_sim/system.py checks['thrust_air_ge_req']"
    ],
@@ -1092,7 +1092,7 @@
    "lane": "hallmap_spec",
    "deliverable": "docs/hallmap/",
    "blocked_by": [
-    "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+    "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
     "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
    ]
   },
@@ -5516,7 +5516,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -6107,7 +6107,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -6780,7 +6780,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -7010,7 +7010,7 @@
   "PROPOSED thresholds (oscillation bound, RF mode-transition margin, reflected power, cathode current and flow margins, break-even criterion): accept, change or replace before any of them decides a node.",
   "PROPOSED elimination rule (hardware evidence at levels 1-2, or a closure-independent physics bound): accept or amend.",
   "Lane deliverable paths for break-even, interstage, feed envelope, minimum decisive experiment and cathode integration are taken from drafts in other worktrees; confirm them when those lanes merge.",
-  "Governance.md lists 'RF/helicon pre-ionisers add nothing' as probably robust at mechanism level, from the superseded 0-D work. This lane does not use it as evidence (the section says 'do not quote'); the break-even lane (A-BREAKEVEN) is where it should be re-derived without any Hall closure, and the owner may decide whether it bears on N-UTL-02 / N-PWR-02.",
+  "governance.md lists 'RF/helicon pre-ionisers add nothing' as probably robust at mechanism level, from the superseded 0-D work. This lane does not use it as evidence (the section says 'do not quote'); the break-even lane (A-BREAKEVEN) is where it should be re-derived without any Hall closure, and the owner may decide whether it bears on N-UTL-02 / N-PWR-02.",
   "Unassigned lanes: mission_ops (A-OPS restart count), magnetic_interaction (A-BFIELD, the only deciding action for N-RF-03 and N-ECR-02; the interstage lane takes the axial field as one input and does not compute field superposition or the resonance surface), cathode_oxygen_exposure (A-OXEXPO, needed jointly for N-CAT-01) and hardware_test (no lane executes any measurement action, including M-THERMAL, M-CATHXE, M-CATHAIR and M-MWCHAIN). Assign each, fold it into an existing lane, or accept it as open.",
   "Subsystem mass allocations: N-MAS-02/03 are counted only through the total (sub_cause_of N-MAS-01). If the owner sets RF-chain or microwave-chain mass allocations, they become separate nodes with their own threshold.",
   "Microwave-chain life (N-ECR-03): accept that it needs a life or accelerated-life test of the candidate chain (M-MWCHAIN), or name a rated component whose datasheet life would be a design-fixed input.",

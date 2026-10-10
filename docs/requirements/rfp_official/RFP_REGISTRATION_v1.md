@@ -4,7 +4,7 @@
 - Issuer: Government of India, Ministry of Defence, DRDO, Directorate of Technology Development Fund (DTDF); 40 pages; sha256 `a128a419414b571983d46be9b27f7bf2c4279693408399e0b92148f598e5dd00` (20118082 bytes)
 - Provenance: PDF uploaded by the owner into the execution session on 2026-10-01 (file name 'RFP.pdf'); original distribution channel per the document: DefProc portal (www.defproc.gov.in)
 - Status: REGISTERED_BY_HASH_PDF_CONTROLLED_EXTERNALLY (the PDF is identified by hash, not committed)
-- Not in the document: bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in Governance.md is therefore NOT verified by this file
+- Not in the document: bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in governance.md is therefore NOT verified by this file
 
 ## Requirement-bearing clauses (verbatim transcription)
 
@@ -73,15 +73,15 @@
 - RFP-P20-06: milestone 3: EM thruster + PSE demonstrated with storage input (not intake)
 - RFP-P30-01: micro-newton-level thrust measurement capability (evaluation criterion)
 
-the official RFP is registered with immutable identity (sha256); RVM re-basing against these clauses is the next AG-15 step (A9.16 step 3, after the step-1 RVM changes land)
+the official RFP is registered with immutable identity (sha256); the RVM is re-based against these clauses (rvm_mapping) and AG-15 is closed by the owner (A9.22 G3; closure record docs/requirements/rvm_a9/rvm_a9_v1.json rfp_rebase.ag15_closure): RFP-derived requirements snapshot FROZEN, basis only, not compliance
 
 ## RVM mapping (re-base, AG-15)
 
 Source: `docs/requirements/rvm_a9/rvm_a9_v1.json rfp_rebase (rvm_a9_rfp_rebase_v1)`; regenerate: `python docs/requirements/rvm_a9/build_rvm_a9.py && python docs/requirements/rfp_official/rfp_clauses_v1.py`.
 
-Rule: every RVM row cites the RFP clause id(s) it derives from or is labelled DERIVED_PROJECT_REQUIREMENT / OWNER_ALLOCATION; every registered clause maps to at least one row or is a recorded programmatic item; statuses unchanged by the re-base (rvm_rules; no PASS without determining evidence, A9.13 S6.22); requirement_frozen stays false on RFP rows until the owner closes AG-15.
+Rule: every RVM row cites the RFP clause id(s) it derives from or is labelled DERIVED_PROJECT_REQUIREMENT / OWNER_ALLOCATION; every registered clause maps to at least one row or is a recorded programmatic item; statuses unchanged by the re-base (rvm_rules; no PASS without determining evidence, A9.13 S6.22); requirement_frozen = true on every RFP_CLAUSE row since the owner closed AG-15 (A9.22 G3: the requirement basis is frozen, compliance is not implied).
 
-AG-15: OPEN - RFP registered by hash with verbatim transcription and the RVM re-based; closure is the owner's (not declared here).
+AG-15: CLOSED by the owner, A9.22 G3 (docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json sha256 245307aca27b8151d0ef31a6e92f932a95920e604847694481cba6731835dc49): RVM re-base accepted (pre-closure RVM file sha256 3b89fe6ca26068f5b91124898db7c0910e65d9543f091a0d496b3bb978358305, requirements-basis sha256 1d4a7f0099e937f0c74a8c1be8fc14408b75f211c7990be4672f4eee5f9b66b5); requirement_frozen = true on the RFP_CLAUSE rows; RFP-derived requirements snapshot FROZEN; closure record rfp_rebase.ag15_closure (RP-BRIEF-01 format); not a compliance claim.
 
 | Clause | RVM rows (derived) | Related rows | Note |
 |---|---|---|---|
@@ -145,7 +145,7 @@ Requirements flagged for the RVM check, resolved:
 
 Discrepancies (recorded for the owner / DRDO; see the RVM):
 
-- DISC-01 bid due / closing date (no clause): UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; Governance.md is not edited here
+- DISC-01 bid due / closing date (no clause): UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; governance.md is not edited here
 - DISC-02 mass wet / dry (RFP-P18-11): the wet reading is the conservative owner reading and is retained; recorded for DRDO clarification; requirement_frozen stays false
 - DISC-03 indigenous content (RFP-P18-03, RFP-P19-05): recorded for DRDO clarification (A9.14 OD12)
 - DISC-04 mission life hours (RFP-P19-01): consistent within the RFP's 'Approx'; the 26,280 h basis is conservative and retained
@@ -158,7 +158,9 @@ Discrepancies (recorded for the owner / DRDO; see the RVM):
 
 ## Page coverage and screened-out items (A9.16 repair RFP-07)
 
-Pages with registered clauses: 16, 17, 18, 19, 20, 21, 27, 30. Pages screened for clauses: 16-33. pages 1-15 and 34-40 were not screened for requirement-bearing clauses in this record (bid / legal / programmatic front and back matter per the document structure, not verified page by page): status UNSCREENED_PENDING_OWNER_PAGE_REVIEW of the owner-held PDF; nothing is assumed about their content.
+Pages with registered clauses: 16, 17, 18, 19, 20, 21, 27, 30. Pages screened for clauses: 16-33. As registered: pages 1-15 and 34-40 were not screened for requirement-bearing clauses in this record (bid / legal / programmatic front and back matter per the document structure, not verified page by page): status UNSCREENED_PENDING_OWNER_PAGE_REVIEW of the owner-held PDF; nothing is assumed about their content.
+
+Owner page review (A9.22 G3, `docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json` sha256 `245307aca27b8151d0ef31a6e92f932a95920e604847694481cba6731835dc49`): pages 1-15, 34-40 OWNER_REVIEWED_NO_ADDITIONAL_TECHNICAL_PERFORMANCE_REQUIREMENT - owner statement, verbatim: "The previously unscreened RFP pages have now been reviewed and do not introduce an additional ABEP technical-performance requirement that alters the current RVM technical re-base." (the owner reviewed the owner-held PDF pages 1-15 and 34-40 and states they introduce no additional ABEP technical-performance requirement that alters the RVM technical re-base; the repository does not transcribe, screen or characterise those pages (no clause registered from them, nothing assumed about their other content)).
 
 Rule: every Part IV(B) item (no waivers, RFP-P21-03) is either a registered clause (3: RFP-P27-01, 5: RFP-P27-02) or screened out here as PROGRAMMATIC_BID_QUALIFICATION; Part IV(C) criteria other than 5 (thrust measurement, RFP-P30-01) are bid-evaluation scoring.
 

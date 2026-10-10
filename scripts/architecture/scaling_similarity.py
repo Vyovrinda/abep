@@ -15,7 +15,7 @@ dimensionless / similarity groups for
 and reports which groups match or diverge (and by how much), the same-hardware and common-channel dual-gas gaps (the RFP
 thruster takes air and Xe through the same ionization/discharge block), a transfer register (which P5-derived
 conclusions are mechanism-level and likely transferable, which are not), and what a transport-closure admission would
-need before it could be applied to Vyovrinda geometry (the "design-specific Hall maps" step of Governance.md).
+need before it could be applied to Vyovrinda geometry (the "design-specific Hall maps" step of governance.md).
 
 Nothing here is a performance prediction. No Hall solver is run. No screening candidate or unadmitted closure is used as
 a performance source (only the profile-coordinate CONVENTION of the screening set is read, to show why a closure is
@@ -223,7 +223,7 @@ ANALYSIS = {
                   "comes from unadmitted screening closures and is deliberately NOT used"},
     "T_e_search_interval_eV": {
         "value": [2.0, 30.0], "unit": "eV", "class": "assumed (project chemistry domain)",
-        "source": "PINNED.toml [reaction_set].domain T_e 2-30 eV (Governance.md); a required T_e above 30 eV is reported "
+        "source": "PINNED.toml [reaction_set].domain T_e 2-30 eV (governance.md); a required T_e above 30 eV is reported "
                   "as outside the domain, never extrapolated"},
     "T_n_K": {
         "value": [300.0, 800.0], "unit": "K", "class": "assumed (bracket)",
@@ -233,7 +233,7 @@ ANALYSIS = {
         "value": None, "unit": "mN", "class": "requirement (RFP as recorded in the repository; RFP text not re-read "
                                               "by this lane - verify)",
         "source": "abep_sim/constants.py RFPConstraints.thrust_min_mN / thrust_max_mN (docstring: 'Hard limits from "
-                  "Part III Para 2 of the RFP'); Governance.md RFP envelope 12-25 mN"},
+                  "Part III Para 2 of the RFP'); governance.md RFP envelope 12-25 mN"},
     "power_max_W": {
         "value": None, "unit": "W", "class": "requirement (RFP as recorded in the repository - verify)",
         "source": "abep_sim/constants.py RFPConstraints.power_max_W; a TOTAL system bound, used here only as a necessary "
@@ -310,7 +310,7 @@ class RateTable:
         self.k = [float(r[1]) for r in rows]
         entry = validity.get(Path(rel).name)
         if entry is None:
-            raise KeyError(f"{rel}: no entry in {IN_RATE_VALIDITY} (missing = error, Governance.md next-work 5)")
+            raise KeyError(f"{rel}: no entry in {IN_RATE_VALIDITY} (missing = error, governance.md next-work 5)")
         if entry.get("status") != "verified":
             raise ValueError(f"{rel}: rate_validity status {entry.get('status')!r}, refusing an unresolved table")
         self.max_mean_energy_eV = float(entry["max_mean_energy_eV"])
@@ -1016,7 +1016,7 @@ TRANSFER_REGISTER = [
      "evidence_needed": "the admission requirements for design-specific Hall maps (AR list)"},
     {"id": "TR-09", "quantity": "absolute I_d, thrust, efficiency, oscillation regime from any P5-calibrated model",
      "transferability": "NOT_TRANSFERABLE", "risk": "HIGH", "depends_on_groups": ["j_d", "n_n", "L_over_h"],
-     "why": "all absolute Hall numbers are withdrawn (Governance.md); geometry and density groups are design-dependent or "
+     "why": "all absolute Hall numbers are withdrawn (governance.md); geometry and density groups are design-dependent or "
             "diverge",
      "evidence_needed": "admitted closure + Vyovrinda geometry + class-matched validation"},
     {"id": "TR-10", "quantity": "wall heat flux, wall erosion and lifetime", "transferability": "NOT_TRANSFERABLE",
@@ -1039,7 +1039,7 @@ TRANSFER_REGISTER = [
     {"id": "TR-13", "quantity": "P5 calibration nuisance resolutions (registration, coil shape, divergence reading, "
                                 "facility interpretation)", "transferability": "NOT_APPLICABLE", "risk": "NONE",
      "depends_on_groups": [], "why": "layer 1 describes what the P5 experiment WAS; it is never a Vyovrinda design "
-                                     "variable, map axis or trade dimension (Governance.md); here it only widens P5 ranges",
+                                     "variable, map axis or trade dimension (governance.md); here it only widens P5 ranges",
      "evidence_needed": "none"},
     {"id": "TR-14", "quantity": "critical neutral density (xenon database) as an N2 sizing target",
      "transferability": "HYPOTHESIS", "risk": "MEDIUM", "depends_on_groups": ["n_n_over_ncXe"],
@@ -1120,12 +1120,12 @@ def check_register(comparisons) -> list[str]:
 ADMISSION_REQUIREMENTS = [
     {"id": "AR-1", "requirement": "At least one ADMITTED transport member (promotion rule: predicts new evidence not "
      "used to select it, without retuning, a <= 1/16). Today the credible set is empty.", "status": "NOT MET",
-     "source": "Governance.md next-work 1; hallthruster_bridge/ensemble/transport_ensemble_v0.json admission_rule"},
+     "source": "governance.md next-work 1; hallthruster_bridge/ensemble/transport_ensemble_v0.json admission_rule"},
     {"id": "AR-2", "requirement": "O4 staged-sensitivity dispositions complete (hall_ensemble._check_o4).",
-     "status": "NOT MET", "source": "Governance.md next-work 3"},
+     "status": "NOT MET", "source": "governance.md next-work 3"},
     {"id": "AR-3", "requirement": "A released Vyovrinda geometry and B(z) (versioned, sha256, not P5/ECHT files); one "
      "map set per member and geometry revision.", "status": "NOT MET (no design release)",
-     "source": "Governance.md next-work 1 (flow) and 5; Hall-map spec (docs/hallmap/, other lane)"},
+     "source": "governance.md next-work 1 (flow) and 5; Hall-map spec (docs/hallmap/, other lane)"},
     {"id": "AR-4", "requirement": "A pre-registered TRANSFER CONVENTION for the closure's profile coordinates: as "
      "stored (channel-length units, anchored at the anode) versus re-anchored to the Vyovrinda B-peak position. "
      "Decided before any Vyovrinda map is run; the other convention is carried as a transfer sensitivity (not a "
@@ -1145,10 +1145,10 @@ ADMISSION_REQUIREMENTS = [
      "source": "docs/EVIDENCE.md closure path; ECHT audit conclusion"},
     {"id": "AR-7", "requirement": "chemistry_trustworthy on every map point (T_e <= 30 eV domain unless a v2 domain "
      "extension is pre-registered on independent evidence) and an O/O2 reaction set for air.",
-     "status": "NOT MET (O/O2 absent)", "source": "Governance.md next-work 2, 3, 4, 5"},
+     "status": "NOT MET (O/O2 absent)", "source": "governance.md next-work 2, 3, 4, 5"},
     {"id": "AR-8", "requirement": "wall_life_trustworthy maps (ion_wall_losses = true, WallSheath, unshielded) for any "
      "erosion/life use, with wall-model evidence at the Vyovrinda wall-heat-flux level.", "status": "NOT MET",
-     "source": "Governance.md next-work 5"},
+     "source": "governance.md next-work 5"},
     {"id": "AR-9", "requirement": "Both propellants: a member admitted on N2 evidence says nothing about the Vyovrinda "
      "Xe mode and vice versa (TR-15). Each map set is per propellant, and admission evidence must exist for each "
      "propellant it is used on.", "status": "PROPOSED (owner decision)",
@@ -1159,7 +1159,7 @@ ADMISSION_REQUIREMENTS = [
      "source": "Hall reference (docs/architecture_comparison/hall_reference/, other lane); Hall-map spec"},
     {"id": "AR-11", "requirement": "No retuning on Vyovrinda geometry; the member's parameters and physical prior are "
      "inherited unchanged; Hall-closure uncertainty stays inside the ionization/discharge -> acceleration block.",
-     "status": "STANDING RULE", "source": "Governance.md next-work 1 (scope)"},
+     "status": "STANDING RULE", "source": "governance.md next-work 1 (scope)"},
 ]
 
 MILESTONES = {
@@ -1442,7 +1442,7 @@ def render_md(doc: dict) -> str:
              f"{fmt_req(sh['Te_N2_required_to_match_Xe_L_over_lambda_i']['10'], 'eV')}. "
              "So a channel that is Melikov–Morozov-similar on Xe is not on N₂ at the same T_e: N₂ needs a hotter "
              "discharge or a longer channel (TR-15). This is consistent "
-             "with, but not evidence for, the P5-N₂ v1 out-of-domain pattern recorded in Governance.md (solver T_e > 30 eV); "
+             "with, but not evidence for, the P5-N₂ v1 out-of-domain pattern recorded in governance.md (solver T_e > 30 eV); "
              "no simulated T_e is used here.")
     L.append(f"3. **Thrust per power does not transfer.** P5-N₂ T/P_d is {fmt(g5n2['all_points']['T_over_P'], 'mN/kW')} "
              f"and the class-matched ECHT stable runs give {fmt(ech['T_over_P'], 'mN/kW')}. At {tmax} mN the N₂ "
@@ -1645,7 +1645,7 @@ def render_md(doc: dict) -> str:
              + "; ".join(f"{g} {json.dumps(env[g]['row_counts'])}" for g in ("N2", "Xe")) + ".\n")
 
     L.append("## 8. Dual-gas operation of one channel\n")
-    L.append("The RFP thruster takes air and Xe through the same ionization/discharge block (Governance.md scope). Ratios "
+    L.append("The RFP thruster takes air and Xe through the same ionization/discharge block (governance.md scope). Ratios "
              "N₂/Xe below are geometry-independent: on P5 as measured (both gases at 5 mg/s anode flow on the same "
              "hardware), and at equal thrust with each gas at its anchor's α_app and I_d/I_m.\n")
     rows = []

@@ -140,7 +140,7 @@
    "used_for_values": false
   },
   "rfp": {
-   "citation": "DRDO TDF RFP DTDF/06/13516/DSP/ABEP/X/L/M/01, envelope as recorded in Governance.md and abep_sim/constants.py (RFPConstraints, 'Part III Para 2')",
+   "citation": "DRDO TDF RFP DTDF/06/13516/DSP/ABEP/X/L/M/01, envelope as recorded in governance.md and abep_sim/constants.py (RFPConstraints, 'Part III Para 2')",
    "access": "repo_frozen"
   },
   "frozen_atmosphere": {

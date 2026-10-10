@@ -22,7 +22,8 @@ still does.
 ## What is (and is not) in the distribution
 
 * Package: `abep_sim` only (no subpackages today; `abep_sim.*` is included so a future subpackage is picked up).
-  Console script `abep-sim = abep_sim.sweep:main`.
+  Console script `abep-sim = abep_sim.programme.sweep:main` (A9.22 programme layer; it was `abep_sim.sweep:main`
+  before the sweep moved out of the physics package).
 * Package data: all 8 files under `abep_sim/data` — `atmosphere_msis21_v1.{csv,json}`, `intake_surface_v1.{csv,json}`,
   `golden_v1.json`, `rates/{PROVENANCE.md, elastic_N2.dat, ionization_N2_N2+.dat}`. These are located at run time via
   `os.path.dirname(__file__)/data`, so they resolve inside `site-packages` for a wheel install.
@@ -80,7 +81,7 @@ governance only: no physics, frozen data, goldens, chemistry, pre-registration o
 | `msis = ["pymsis"]` | `msis = ["pymsis>=0.13"]` (the version floor moves with it) |
 
 * Live MSIS: `pip install -e ".[msis]"` (or the full lock file, which still pins `pymsis==0.13.0`). The frozen NRLMSIS
-  dataset needs no pymsis (gate 1; Governance.md rule 3: live MSIS only when asked).
+  dataset needs no pymsis (gate 1; governance.md rule 3: live MSIS only when asked).
 * `requirements-lock.txt` is **unchanged** and remains the dependency source of truth (pinned versions of every hard
   dependency plus pymsis). `pip check` in a no-pymsis environment is now clean (it previously reported
   "abep-sim 0.1.0 requires pymsis, which is not installed").

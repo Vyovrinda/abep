@@ -5,7 +5,7 @@ DRDO TDF ABEP bid (RFP DTDF/06/13516). Python is authoritative for the full chai
 reservoir → ionisation → accelerator → power/thermal/mass/life → spacecraft drag → 26,000 h mission → UQ/optimisation).
 HallThruster.jl (UM PEPL, MIT) is the authoritative Hall-discharge solver, run offline to produce frozen response maps.
 
-**Status: Python Physics Candidate — NOT a frozen baseline.** See `Governance.md` for the gate status, the rules for working
+**Status: Python Physics Candidate — NOT a frozen baseline.** See `governance.md` for the gate status, the rules for working
 in this repository, and what is superseded. Full change history: `docs/HISTORY.md`.
 
 ## Quick start

@@ -32,10 +32,10 @@
   "verify": "verify against RFP document",
   "note": "The repository holds only summaries of the RFP. Each gate cites the summary it rests on; the section reference 'Part III Para 2' exists only as a code docstring.",
   "recorded_in": [
-   {"id": "R1", "ref": "Governance.md, section 'What this is'", "text_as_recorded": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01; bid close 05 Oct 2026. RFP envelope: 180–230 km, 12–25 mN, < 1.5 kW, < 40 kg, 26,000 h mission, > 15,000 h firing, Hall preferred, air + Xe."},
+   {"id": "R1", "ref": "governance.md, section 'What this is'", "text_as_recorded": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01; bid close 05 Oct 2026. RFP envelope: 180–230 km, 12–25 mN, < 1.5 kW, < 40 kg, 26,000 h mission, > 15,000 h firing, Hall preferred, air + Xe."},
    {"id": "R2", "ref": "abep_sim/constants.py, class RFPConstraints", "text_as_recorded": "Docstring 'Hard limits from Part III Para 2 of the RFP.' thrust_min_mN 12.0; thrust_max_mN 25.0; power_max_W 1500.0; mass_max_kg 40.0; alt_min_km 180.0; alt_max_km 230.0; ignition_hours 15000.0 (comment '\">15,000 h\"'); mission_hours 26000.0 (comment '3 years'); ic_total_min 0.75; ic_subsystem_min thruster 0.80, intake 0.80, compressor 0.60, pse 0.70; hall_preferred True."},
    {"id": "R3", "ref": "docs/HISTORY.md, opening constraint table (v0.1)", "text_as_recorded": "12–25 mN: 12 mN sustained on air and 25 mN peak with Xe topping; < 1500 W total; < 40 kg total incl. intake, compressor, PSE, Xe + tank, structure, 10 % margin; N₂ + nascent O; Xe as propellant; > 15,000 h ignition, 26,000 h mission; 180–230 km; ≥ 75 % IC, thruster ≥ 80 %; Hall preferable. Net drag compensation on air: 'the RFP does not state it'."},
-   {"id": "R4", "ref": "docs/HISTORY.md (Hall uncertainty scope rule) and Governance.md Next work 1, 'Scope'", "text_as_recorded": "RFP architecture: atmospheric path intake → filter → compressor → atmospheric gas chamber → valve; Xe path Xe chamber → valve; both feed ionization/discharge → acceleration/thrust."},
+   {"id": "R4", "ref": "docs/HISTORY.md (Hall uncertainty scope rule) and governance.md Next work 1, 'Scope'", "text_as_recorded": "RFP architecture: atmospheric path intake → filter → compressor → atmospheric gas chamber → valve; Xe path Xe chamber → valve; both feed ionization/discharge → acceleration/thrust."},
    {"id": "R5", "ref": "abep_sim/transient.py, module docstring", "text_as_recorded": "the RFP's \">15,000 h ignition / 26,000 h mission\" pair"},
    {"id": "R6", "ref": "docs/HISTORY.md, wall recombination section", "text_as_recorded": "RFP: \"ionise nascent O\"; AO-beam test (RFP 4.1a)."},
    {"id": "R7", "ref": "abep_sim/ppu.py, module docstring", "text_as_recorded": "Redundancy per RFP: no single-point failure in electronics."}
@@ -69,7 +69,7 @@
     "value_kinds": ["lower_bound", "upper_bound", "interval", "boolean"],
     "requires_derivation_script": true,
     "requires_validated_for_this_use": false,
-    "description": "A bound that follows from conservation laws or first principles, independent of any Hall transport closure, computed by a committed deterministic script whose own inputs are cited bounds or measurements. Example form (thrust): on a control surface far enough downstream that static pressure is negligible (so any pressure thrust is already converted into momentum flux), T = ∫v dm ≤ (∫dm · ∫v² dm)^½ = √(2·ṁ_tot·P_jet) (Cauchy–Schwarz), and energy conservation gives P_jet ≤ P_in + ṁ_tot·h0,inlet, where P_in bounds every non-feed power input to the gas (electrical power delivered to the flow, at most the total propulsion bus power, plus any heat input not supplied from the bus, stated by the script), h0,inlet bounds the specific stagnation enthalpy of every feed at the thruster inlet (upstream ICD thruster-inlet interface), and ṁ_tot bounds the TOTAL exhaust mass flow (atmospheric feed, cathode flow and any xenon feed). Hence T ≤ √(2·ṁ_tot,max·(P_in,max + ṁ_tot,max·h0,inlet,max)), and conversely P_in ≥ T²/(2·ṁ_tot,max) − ṁ_tot,max·h0,inlet,max. Precedent of this kind of elimination: Governance.md 'magnetic nozzles excluded by energy per particle even at the energy bound' (mechanism-level)."
+    "description": "A bound that follows from conservation laws or first principles, independent of any Hall transport closure, computed by a committed deterministic script whose own inputs are cited bounds or measurements. Example form (thrust): on a control surface far enough downstream that static pressure is negligible (so any pressure thrust is already converted into momentum flux), T = ∫v dm ≤ (∫dm · ∫v² dm)^½ = √(2·ṁ_tot·P_jet) (Cauchy–Schwarz), and energy conservation gives P_jet ≤ P_in + ṁ_tot·h0,inlet, where P_in bounds every non-feed power input to the gas (electrical power delivered to the flow, at most the total propulsion bus power, plus any heat input not supplied from the bus, stated by the script), h0,inlet bounds the specific stagnation enthalpy of every feed at the thruster inlet (upstream ICD thruster-inlet interface), and ṁ_tot bounds the TOTAL exhaust mass flow (atmospheric feed, cathode flow and any xenon feed). Hence T ≤ √(2·ṁ_tot,max·(P_in,max + ṁ_tot,max·h0,inlet,max)), and conversely P_in ≥ T²/(2·ṁ_tot,max) − ṁ_tot,max·h0,inlet,max. Precedent of this kind of elimination: governance.md 'magnetic nozzles excluded by energy per particle even at the energy bound' (mechanism-level)."
    },
    "measurement_vyovrinda": {
     "short": "Vyovrinda hw",
@@ -131,7 +131,7 @@
     "verdict_bearing": false,
     "milestone": null,
     "hall_closure": "unadmitted",
-    "reason": "Screening candidates (sgb-screen-*) and any other unadmitted Hall transport closure are never performance sources (Governance.md; P5-N₂ v1 left the credible set empty)."
+    "reason": "Screening candidates (sgb-screen-*) and any other unadmitted Hall transport closure are never performance sources (governance.md; P5-N₂ v1 left the credible set empty)."
    },
    "engineering_estimate": {
     "short": "engineering estimate",
@@ -168,9 +168,9 @@
   },
   "flags": {
    "hall_map_trustworthy": "HallMap query 'trustworthy' (abep_sim/hall_map.py): every surrounding grid node converged and sustained, and chemistry_trustworthy.",
-   "wall_life_trustworthy": "HallMap query 'wall_life_trustworthy': trustworthy and solved with ion_wall_losses = true and the WallSheath model, unshielded (Governance.md Next work 5).",
+   "wall_life_trustworthy": "HallMap query 'wall_life_trustworthy': trustworthy and solved with ion_wall_losses = true and the WallSheath model, unshielded (governance.md Next work 5).",
    "numerically_valid": "Solver retcode success and finite state (hallthruster_bridge/prereg/p5_n2_run_status_rule_v1_addendum1_extinction.json).",
-   "chemistry_trustworthy": "No reaction activity beyond its rate table's validity limit (f_out ≤ 1e-12; Governance.md Next work 5). OUT_OF_DOMAIN states are never evidence.",
+   "chemistry_trustworthy": "No reaction activity beyond its rate table's validity limit (f_out ≤ 1e-12; governance.md Next work 5). OUT_OF_DOMAIN states are never evidence.",
    "mass_margin_free_lower_bound": "G3 FAIL side: the value is a lower bound on the margin-free current-best-estimate mass sum (no growth allowance, no margin), so it bounds the mass from below under every recorded margin policy (OD7).",
    "mass_includes_max_margin_policy": "G3 PASS side: the value is an upper bound on Σ CBE_i × (1 + max(MGA_i, 0.10)), which bounds both recorded margin policies (item-class MGA, abep_sim/mass_bom.py; '10 % margin', R3) from above (OD7)."
   }
@@ -190,7 +190,7 @@
  },
  "hall_closure_scope": {
   "rule": "Hall transport-closure uncertainty belongs only to the ionization/discharge → acceleration/thrust block. It must never leak upstream into the intake, filter, compressor, gas chambers or valves, or into Vyovrinda's own thruster geometry.",
-  "source": "Governance.md Next work 1, 'Scope'; the RFP architecture blocks as recorded (R4)",
+  "source": "governance.md Next work 1, 'Scope'; the RFP architecture blocks as recorded (R4)",
   "closure_independent_elements": ["intake", "filter", "compressor", "atmospheric_gas_chamber", "xenon_chamber_and_xenon_load", "valves_and_flow_control"],
   "per_element_criteria": "On a per_element criterion (G4, G5, P1) an item with hall_closure.status 'admitted' or 'unadmitted' that names any of these elements is rejected with an error. Their firing life, calendar capability and temperature are evaluated at the architecture's DECLARED feed flows, duty cycle and mission profile (design inputs), so they do not depend on the Hall closure; whether that profile delivers the required thrust is decided by G1 and G7, not through these elements.",
   "sum_criteria": "On a sum criterion (G2 bus power) an upstream load (compressor, flow_control) may appear in a total that also contains a closure-dependent load; the total then takes the admitted-closure basis (weakest-input rule), while the upstream load's own value must come from closure-independent inputs at the declared feed flow. G3 mass is closure-independent as a whole (Hall-closure evidence on it is rejected)."
@@ -751,8 +751,8 @@
  "not_gates": [
   {"item": "Hall preferred", "source": "R1, R2 (hall_preferred), R3 ('Hall preferable')", "reason": "A preference, not a pass/fail limit. All three architectures use the same downstream Hall accelerator, so it cannot discriminate between them."},
   {"item": "Net drag compensation on air (T ≥ D)", "source": "R3: 'the RFP does not state it'", "reason": "Not an RFP requirement as recorded, and the spacecraft drag is not specified. It can enter only as an owner-PROPOSED gate."},
-  {"item": "Comparative benefit of a pre-ionizer", "source": "Governance.md 'Probably robust': 'RF/helicon pre-ionisers add nothing'", "reason": "A comparative, mechanism-level finding, not an RFP limit: an architecture that adds nothing over hall_only still passes or fails the same gates. It can never eliminate rf_hall or ecr_hall through this matrix."},
-  {"item": "Any absolute Hall result from the withdrawn 0-D closure (v1.2-v1.6)", "source": "Governance.md 'Superseded / withdrawn (do not quote)'", "reason": "Withdrawn; never evidence for any gate."}
+  {"item": "Comparative benefit of a pre-ionizer", "source": "governance.md 'Probably robust': 'RF/helicon pre-ionisers add nothing'", "reason": "A comparative, mechanism-level finding, not an RFP limit: an architecture that adds nothing over hall_only still passes or fails the same gates. It can never eliminate rf_hall or ecr_hall through this matrix."},
+  {"item": "Any absolute Hall result from the withdrawn 0-D closure (v1.2-v1.6)", "source": "governance.md 'Superseded / withdrawn (do not quote)'", "reason": "Withdrawn; never evidence for any gate."}
  ],
  "open_owner_decisions": [
   {"id": "OD1", "topic": "Reading of '12–25 mN'", "options": ["(i) operating window: delivered thrust within [12, 25] mN (25 mN as a cap)", "(ii) 12 mN sustained floor plus 25 mN peak capability with Xe (abep_sim/system.py)"], "current_handling": "G1.thrust_floor binds under both readings (counts for PASS and FAIL). G1.thrust_ceiling (reading (i)) and G1.peak_capability_25mN (reading (ii)) both count toward PASS, so a PASS holds under either reading, but neither can FAIL G1 (counts_for_fail false) until the owner decides."},
@@ -767,7 +767,7 @@
   {"id": "OD10", "topic": "PROPOSED element lists (mass items, life-limited, calendar-life, thermal elements)", "options": ["accept", "amend"], "current_handling": "PROPOSED lists used for PASS and FAIL coverage; an amendment is a new matrix version and every verdict is re-evaluated."},
   {"id": "OD11", "topic": "Evidence-sufficiency policy (bases, milestones, flags)", "options": ["accept", "amend"], "current_handling": "PROPOSED policy used."},
   {"id": "OD12", "topic": "RFP requirements recorded but not gated (indigenous content, no single-point failure, 'ionise nascent O')", "options": ["add as gates", "keep outside the hard-gate matrix"], "current_handling": "outside the matrix, listed in rfp_requirements_recorded_not_gated."},
-  {"id": "OD13", "topic": "'>15,000 h ignition' wording", "options": ["cumulative firing time (Governance.md '> 15,000 h firing')", "something else in the RFP text"], "current_handling": "cumulative firing time: R1 records '> 15,000 h firing' and no alternative reading is recorded; verify the wording against the RFP document."},
+  {"id": "OD13", "topic": "'>15,000 h ignition' wording", "options": ["cumulative firing time (governance.md '> 15,000 h firing')", "something else in the RFP text"], "current_handling": "cumulative firing time: R1 records '> 15,000 h firing' and no alternative reading is recorded; verify the wording against the RFP document."},
   {"id": "OD14", "topic": "Is ignition from the off state on atmospheric propellant an RFP requirement? (G6.ignition is inferred from 'air + Xe' and the RFP architecture; no ignition or restart clause is recorded in the repository)", "options": ["keep G6.ignition binding (inferred)", "the RFP text states an ignition/restart clause (verify against RFP document)", "drop G6.ignition as a separate criterion"], "current_handling": "binding. Its FAIL needs every start sequence (air-only and xenon-assisted, exhaustive) excluded, which means the architecture cannot operate on atmospheric propellant at all, so the FAIL does not depend on this decision; its PASS (air-only start) is the conservative side."}
  ]
 }

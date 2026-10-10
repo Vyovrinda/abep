@@ -2,7 +2,7 @@
 
 The brief decides nothing (status DRAFT_PENDING_OWNER). These tests check its structure and that everything it copies
 from the verified lane files (lane_01_n2_domain_extension @ 0636634, lane_02_ood_attribution @ 5e5c8a7) matches them.
-The lane files are resolved read-only (checkout, then the lane commit, then .Governance/worktrees/*); if they cannot be
+The lane files are resolved read-only (checkout, then the lane commit, then .governance/worktrees/*); if they cannot be
 found, the lane-dependent tests are skipped with a message saying so.
 """
 from __future__ import annotations

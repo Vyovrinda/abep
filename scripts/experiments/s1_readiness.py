@@ -12,7 +12,7 @@ spec docs/experiments/s1_readiness/s1_readiness_conditions_v1.json, and returns
                   conditions read from A2 equal to the spec's) and all eight conditions are SATISFIED
     S1_NOT_READY  otherwise, listing every unsatisfied condition, its expected artifact(s), the failed checks and producer.
 
-Rules (Governance.md rule 3, docs/EVIDENCE.md): nothing is inferred or filled by assumption; a DRAFT / PROPOSED / PENDING
+Rules (governance.md rule 3, docs/EVIDENCE.md): nothing is inferred or filled by assumption; a DRAFT / PROPOSED / PENDING
 artifact never satisfies a condition; references are verified by recomputing sha256 on disk; only files inside the
 repository are read. The module is pure and read-only: it writes a file only when ``--out`` is given. It imports nothing
 from abep_sim or hallthruster_bridge and carries no physical, efficiency or threshold value.

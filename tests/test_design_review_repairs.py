@@ -15,12 +15,16 @@ REPO = Path(__file__).resolve().parents[1]
 
 
 def _j(rel: str) -> dict:
-    return json.loads((REPO / rel).read_text(encoding="utf-8"))
+    d = json.loads((REPO / rel).read_text(encoding="utf-8"))
+    if d.get("schema") == "f1_intake_synthesis_v1_core":      # F1 compact core view -> deliverable layout
+        from abep_sim.design import intake_synthesis as isy
+        d = isy.expand_core(d)
+    return d
 
 
 # ------------------------------------------------------------------------------------------------ RVF-02 owner state
 F_RECORDS = {
-    "F1": ("docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json",
+    "F1": ("docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json",   # compact core view (A9.22 item 9)
            "docs/design_synthesis/f1_intake/F1_INTAKE_SYNTHESIS.md"),
     "F2": ("docs/design_synthesis/f2_filter/f2_filter_stage_v1.json",
            "docs/design_synthesis/f2_filter/F2_FILTER_STAGE.md"),
@@ -30,7 +34,7 @@ F_RECORDS = {
 
 
 def test_owner_state_reads_v5_and_never_fabricates():
-    from abep_sim.design import owner_state as ost
+    from abep_sim.assessment import design_gates as ost      # owner-question state v5 reader (A9.22)
     s = ost.owner_state("F1Q-01")
     assert s["answered"] and s["decision"] == "A9.9 S2.1" and s["decision_code"] == "YES_PRODUCTION_FIX"
     assert ost.owner_state("NO-SUCH-QUESTION-ID")["status"] == ost.TBD_OWNER
@@ -39,7 +43,7 @@ def test_owner_state_reads_v5_and_never_fabricates():
 
 @pytest.mark.parametrize("lane", sorted(F_RECORDS))
 def test_f_lane_questions_carry_v5_answer_state(lane):
-    from abep_sim.design import owner_state as ost
+    from abep_sim.assessment import design_gates as ost      # owner-question state v5 reader (A9.22)
     js, md = F_RECORDS[lane]
     doc = _j(js)
     text = (REPO / md).read_text(encoding="utf-8")
@@ -133,7 +137,7 @@ def test_h2_6_live_source_verification_gates_ci(monkeypatch):
 # ----------------------------------------------------------------------------------------------------------- RFP-02
 def test_optimizer_reads_the_a9_15_applied_budgets():
     from abep_sim.design import architecture_optimizer as ao
-    assert ao.MP_REL.endswith("mass_power_a9_v3/mass_power_a9_v3.json")
+    assert ao.MP_REL.endswith("mass_power_a9_v5/mass_power_a9_v5.json")      # A9.26 successor of v4 (A9.24 v4)
     assert ao.RFQ_REL.endswith("rfq_a9_v3/rfq_a9_v3.json")
     assert ao.P3_REL.endswith("p3_coupled_thermal_v2.json")
     mp = _j(ao.MP_REL)

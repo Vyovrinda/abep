@@ -485,7 +485,7 @@ Refused: Hastelloy (generic, no exact grade) (NOT_ADMITTED_EXACT_GRADE_REQUIRED)
 | docs/decisions/OD_2026_09_30_A9_6_IMPLEMENTATION_FIRST_DIRECTIVE.md | c6ee26e57ea5ca559f4fa4e4a8809b1aa8f3a217e50c534b943fc3ad99240634 | owner directive A9.6 (verbatim) |
 | docs/decisions/OD_2026_09_29_owner_answers_147.json | 50e39a4deac7d4ada4710b2f641d717f1c4febd59366cbc04d8c66de6b4532b1 | 147 owner answers (machine-readable) |
 | docs/experiments/lifetime_ao/ao_lifetime_register_v5.json | fea8aa05bd561d5ea559b934803d472f1fb1ed1013bfa925a5afb6c68a33e637 | AO / lifetime register v5 |
-| docs/EVIDENCE.md | a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61 | evidence rules (Governance.md rule 10) |
+| docs/EVIDENCE.md | a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61 | evidence rules (governance.md rule 10) |
 | docs/hardware/h2_a9_revisions/h2_a9_revisions_v1.json | b428565299c1c41487d9ffa50c174986d2d52c544539f89ca21b7bdbc2ae44fa | H2 A9 revisions (A9H-ANODE-01/02) |
 | docs/interfaces/icp_neutralizer/ICP_NEUTRALIZER_ICD.md | d346bcc5a5edc4a4dfa289010c8e48371477a0f3548a5e9dcf8886b6f55dbe77 | ICP neutralizer ICD (ICP-21) |
 | docs/evidence/icp_neutralizer/icp_neutralizer_evidence_v1.json | 092e4ca8e1827dd2e9558058a204f46510f2633316ce188e7126b697ec6d0b53 | ICP neutralizer analog evidence |
@@ -536,3 +536,20 @@ Refused: Hastelloy (generic, no exact grade) (NOT_ADMITTED_EXACT_GRADE_REQUIRED)
 - H2 A9 uncoupled anode sensitivity (not below 1190 degC) is context only; it is never used as T_operating while ANODE_THERMAL_CLOSURE is UNRESOLVED
 - sputtering: no yield value is carried; NIFS-DATA-23 is located (elemental targets, graphical) but not digitized
 - A9.16 step 1: P4-OQ-01..05 decided (A9.12) and applied - staged validation, owner Q0 matrix, LOCK-2 after metrology, sputter data BOTH, collector negative-bias + floating; APP-FILTER added (A9.13 F2-OQ-04); every deferred number / grade / coating system / bias magnitude / filter acceptance is a registration slot that refuses today
+
+
+## A9.21 hardware-programme place (owner items 6-11)
+
+Programme record `docs/experiments/hall_icp/programme/hw_programme_a9_21_v1.json` (sha256 `135ebf82d5d716256be0b5f0066aeaa48b82231624d6aefc027a6b64a8eb921a`); decision A9.21 HW_PROGRAMME (docs/decisions/OD_2026_10_02_A9_21_open_items_and_hardware_programme_owner_decisions.json sha256 78766d3adaaa6d38730ce82607a1cd0a03ae34186c911d4189e2fd9251db6549; verbatim docs/decisions/OD_2026_10_02_A9_21_OPEN_ITEMS_AND_HARDWARE_PROGRAMME_OWNER_DECISIONS.md sha256 01f7796aa2ae03d7bc0319b191f004e0a1ba0214c2c982f34554ca52cf531440).
+
+Listing order (owner items 6-11; not a sequence: the only binding precedence is each step's predecessors below and in the programme record): H1-S7.1, H1-S7.2, C1-REF, ICP-AR-REF, ICP-45A-P1-S7, ICP-45N, ICP-XE-MODE, P2-MAP, COUPLED-H1-ICP, P3-THERMAL, P4-ACCEPTANCE-EXPOSURE, H1-THRUST-FEED-MAP, AG-12, AG-13
+
+> 10. Coupled H-1 + ICP → thermal → P4 — approved. P4 acceptance thresholds must be frozen before acceptance-bearing coupon exposure, following the LOCK-2 rule already adopted.
+
+| step | # | predecessors | entry preconditions | entry status now |
+|---|---|---|---|---|
+| P4-ACCEPTANCE-EXPOSURE | 11 | P3-THERMAL (EXPLICIT_A9_21) | P4-PRE-01: LOCK-2 acceptance thresholds frozen (after metrology commissioning) [docs/experiments/hall_icp/p4_anode_materials/p4_a9_16_rules.py:lock2_freeze] | NOT_STARTABLE_PREDECESSOR_INCOMPLETE |
+
+fail closed (hw_programme_a9_21.entry_status): a step is NOT_STARTABLE while a predecessor completion or a listed precondition registration is missing; never PASS / GO / START_AUTHORISED
+
+P4 acceptance-bearing exposure entry now: NOT_STARTABLE_PREDECESSOR_INCOMPLETE; LOCK-2 registered freeze now: NOT_EVALUATED_METROLOGY_COMMISSIONING_TBD.

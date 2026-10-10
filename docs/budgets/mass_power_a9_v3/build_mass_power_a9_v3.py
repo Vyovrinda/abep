@@ -2,8 +2,9 @@
 """A9.16 mass + power integration v3 (mass_power_a9_v3) - a REVISION of the immutable mass / power v2.
 
 Lane: A9.16 step 1, mass / power v3 + Xe accounting v3 (owner instruction 2026-10-01 'continue implementing them
-sequentially'). Deterministic; standard library plus abep_sim.bus_boundary_a9 (import only, through the new helper
-peak_sampled_gate_a9_v3.py); no Julia; well under a second. v2 (docs/budgets/mass_power_a9_v2/) is pinned by sha256 and
+sequentially'). Deterministic; standard library plus abep_sim.bus_boundary_a9_v2 (import only, through the new helper
+peak_sampled_gate_a9_v3.py; A9.22 G8 stage 2 re-pointed it from the immutable v1 abep_sim.bus_boundary_a9, whose code
+objects v2 runs unchanged); no Julia; well under a second. v2 (docs/budgets/mass_power_a9_v2/) is pinned by sha256 and
 read as data, never edited. The Xe accounting v3 JSON is read back (ids / values checked, not sha-pinned: cross-lane).
 
 v3 = v2 + the recorded owner decisions applied (the verbatim .md of each decision governs; every quote is checked
@@ -86,7 +87,14 @@ V2 = {
     "V2_BUILDER": ("docs/budgets/mass_power_a9_v2/build_mass_power_a9_v2.py",
                    "88a4f0878ba388f8a792138ee5625f83a087fc069dd67049e883a96e0701481b"),
 }
-BUS_MODULE = ("abep_sim/bus_boundary_a9.py", "7b23dbd23d39bd576691f877c0b32b64c14e83e796b2da9a662f0639319c878a")
+# A9.22 G8 stage 2: the flight bus boundary is bus_power_boundary_a9_v2 (hall_icp_neutralizer only; C1 ground-reference
+# metadata). v1 stays pinned as immutable history: the carried v2 items cite its symbols and the retired C1 power
+# configuration was evaluated under it.
+BUS_MODULE = ("abep_sim/bus_boundary_a9_v2.py", "8964520ffb55d97eeb93c4b8cc45250026e0c6a0b3082ea58fcfd834ba661e26")
+BUS_MODULE_V1 = ("abep_sim/bus_boundary_a9.py", "7b23dbd23d39bd576691f877c0b32b64c14e83e796b2da9a662f0639319c878a")
+BUS_VERSION, BUS_VERSION_V1 = "bus_power_boundary_a9_v2", "bus_power_boundary_a9_v1"
+BUS_STAGE2 = ("A9.22 G8 stage 2 (docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json "
+              "G8_BUS_BOUNDARY): configuration taxonomy only, every value identical")
 DECISIONS = {
     "A9.12": {"json": "docs/decisions/OD_2026_10_01_A9_12_s5_p3_p4_owner_decisions.json",
               "json_sha256": "1485f00b7abe7e621f8dc2d32d8d97704e10e71d53c97b4f617bc022d1f2359d",
@@ -112,6 +120,10 @@ DECISIONS = {
               "json_sha256": "9b88e441b5c3454a20c4696897c525ef5818f0cfd9f32c7a3b4fa8e1a204dcc6",
               "md": "docs/decisions/OD_2026_10_01_A9_20_C1_GROUND_ONLY_OWNER_DECISION.md",
               "md_sha256": "2b90a7a7f851ac571791ea6ba2fbafac8cf69a086a4a3724e2f66196b6b4d60c"},
+    "A9.21": {"json": "docs/decisions/OD_2026_10_02_A9_21_open_items_and_hardware_programme_owner_decisions.json",
+              "json_sha256": "78766d3adaaa6d38730ce82607a1cd0a03ae34186c911d4189e2fd9251db6549",
+              "md": "docs/decisions/OD_2026_10_02_A9_21_OPEN_ITEMS_AND_HARDWARE_PROGRAMME_OWNER_DECISIONS.md",
+              "md_sha256": "01f7796aa2ae03d7bc0319b191f004e0a1ba0214c2c982f34554ca52cf531440"},
 }
 
 CONFIGS = ("hall_icp_neutralizer",)                   # A9.19: the single flight configuration
@@ -127,6 +139,12 @@ EQUIPMENT_MARGIN = 0.2           # row 57 default for new / unselected parts; in
 HARNESS_FRACTION = 0.05          # row 60
 OWNER_MEV_FLOORS = {"AL-04": 4.2048, "AL-07": 6.0, "AL-08": 6.0528}   # A9.14 MQ-03 / MQ-04 / MQ-05 (owner-stated)
 OWNER_MQ02_CHECK = (24.0, 4.8, 28.8)                                  # A9.14 MQ-02 (owner-stated arithmetic)
+# A9.21 AL08 (owner decision 2026-10-02): label only, no number changes
+AL08_A921_STATUS = ("PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN (A9.21 KEEP_6_05KG_PROVISIONAL_WAIT_FOR_QUOTES_TO_REBASE_AL08): "
+                    "the 6.0528 kg AL-08 MEV planning floor is kept only as a provisional planning floor, not a frozen "
+                    "allocation; AL-08 is formally re-based only after quotations split tank, regulator, valves, "
+                    "plumbing, mounting/thermal and any C1-specific branch (the analog-derived figure may contain about "
+                    "0.285 kg of C1 cathode-branch hardware)")
 CLOSURE = ("CLOSES", "DOES_NOT_CLOSE", "NOT_EVALUABLE")
 C1_STATES = ("NOT_SELECTED", "SELECTED")
 
@@ -145,7 +163,7 @@ def _sha(rel: str) -> str:
 
 
 def verify_pins() -> None:
-    bad = [f"{p} (expected {s[:12]}, got {_sha(p)[:12]})" for p, s in list(V2.values()) + [BUS_MODULE]
+    bad = [f"{p} (expected {s[:12]}, got {_sha(p)[:12]})" for p, s in list(V2.values()) + [BUS_MODULE, BUS_MODULE_V1]
            if _sha(p) != s]
     for k, d in DECISIONS.items():
         for f in ("json", "md"):
@@ -192,6 +210,11 @@ def OD(key: str, qid: str, quote: str) -> dict:
         else:
             raise MassError(f"{key} has no field / amendment {qid}")
         seq = None
+    elif key == "A9.21":
+        # A9.21: 'decisions' maps an id (e.g. 'AL08') to the owner's decision string
+        if qid not in js.get("decisions", {}):
+            raise MassError(f"A9.21 has no decision {qid}")
+        seq, ans = None, js["decisions"][qid]
     else:
         rec = js["decisions"].get(qid)
         if rec is None or rec.get("status") != "OWNER_DECIDED":
@@ -329,6 +352,10 @@ def S() -> dict:
         "A920": OD("A9.20", "answer",
                    "Options offered: \"Ground-only reference (Recommended)\" / \"Remove C1 entirely\"."),
         "A920_V": OD("A9.20", "answer", "will go with your recommended"),
+        # A9.21 (2026-10-02): AL-08 stays a provisional planning floor until quotations
+        "A921_AL08": OD("A9.21", "AL08",
+                        "Xe-hardware floor: wait for quotations before formally rebasing AL-08. Keep 6.05 kg only as a "
+                        "provisional planning floor, not a frozen allocation."),
         "OQA91003": OD("A9.14", "OQ-A910-03",
                        "Only when the record satisfies the declared ≥100 kSa/s, ≥20 kHz measurement bandwidth, "
                        "anti-alias filtering, synchronized channels, no saturation and total-bus-power reconstruction "
@@ -546,6 +573,8 @@ def build_lines(v2: dict, s: dict, cfgs=CONFIGS, history: bool = False) -> dict:
                                                                          "history column)"}
                 else:
                     rec["owner_answers_applied"] += [cite(s["A919_XE"]), cite(s["A919_C1"]), cite(s["A920"])]
+                    rec["owner_answers_applied"].append(cite(s["A921_AL08"]))
+                    rec["a9_21_status"] = AL08_A921_STATUS
                     rec["c1_branch"] = c1_xe_branch_booking()
                     rec["rfp_required"] = xe_hardware_required(cfg)
                     rec["xe_role"] = XE_ROLE
@@ -833,6 +862,8 @@ APPLIED = [
                 "answers 'check C1 mass'"),
     ("A920", "C1 = GROUND_ONLY laboratory reference: BOM A9B-C01..C07 -> GROUND_ONLY_LAB_EQUIPMENT; GA-01 a9_20_rule"),
     ("A920_V", "owner chose the recommended option (ground-only reference)"),
+    ("A921_AL08", "AL-08 labelled a9_21_status PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN (6.0528 kg kept as a provisional "
+                  "planning floor, not a frozen allocation; re-based only after quotations); no number changes"),
 ]
 
 
@@ -947,11 +978,27 @@ def build_doc() -> dict:
         "configurations": {c: power["configurations"].pop(c) for c in RETIRED_FLIGHT_CONFIGS}}
     if set(power["configurations"]) != set(CONFIGS):
         raise MassError("power configurations must be the flight configuration only (A9.19)")
+    # A9.22 G8 stage 2: the flight power configuration is evaluated under bus_power_boundary_a9_v2 (same numbers);
+    # the retired C1 configuration stays on v1 (C1 is not a v2 configuration)
+    if (power["boundary_version"], power["module"], power["module_sha256"]) != (BUS_VERSION_V1,) + BUS_MODULE_V1:
+        raise MassError("v2 power block no longer names bus_power_boundary_a9_v1; review the A9.22 G8 re-point")
+    power["boundary_version"], power["module"], power["module_sha256"] = (BUS_VERSION,) + BUS_MODULE
+    power["boundary_repointed"] = {"rule": BUS_STAGE2, "carried_from_v2": {
+        "boundary_version": BUS_VERSION_V1, "module": BUS_MODULE_V1[0], "module_sha256": BUS_MODULE_V1[1]}}
+    power["retired_flight_configuration_history"]["boundary_version"] = BUS_VERSION_V1
+    power["retired_flight_configuration_history"]["module"] = BUS_MODULE_V1[0]
+    power["retired_flight_configuration_history"]["module_sha256"] = BUS_MODULE_V1[1]
+    for cfg_p in power["configurations"].values():
+        st = cfg_p["phases"]["startup"]
+        if st["template"] != "bus_boundary_a9.SEQUENCE_TEMPLATES (PROPOSED, row 112)":
+            raise MassError("v2 start-up template citation changed; review the A9.22 G8 re-point")
+        st["template"] = "bus_boundary_a9_v2.SEQUENCE_TEMPLATES (PROPOSED, row 112)"
     power["peak_sampled_rule_v3"] = {
         "decision": cite(s["OQA91003"]), "quote": s["OQA91003"]["quote"], "helper": HELPER_REL,
         "helper_sha256": _sha(HELPER_REL), "rule": helper.RULE,
-        "bus_boundary_module": "unchanged (import only); its PEAK_SAMPLED_RULE stays the A9.1 wording - this artifact "
-                               "evaluates peak_sampled records through the helper",
+        "bus_boundary_module": "abep_sim/bus_boundary_a9_v2.py unchanged (import only; v2 runs the immutable v1 code "
+                               "objects); its PEAK_SAMPLED_RULE stays the A9.1 wording - this artifact evaluates "
+                               "peak_sampled records through the helper",
         "conformance_keys": list(helper.RECORD_KEYS),
         "state_today": "NOT_EVALUABLE: no measured total-bus record exists (every load TBD); no PASS produced"}
     return {
@@ -987,11 +1034,19 @@ def build_doc() -> dict:
             "not a CBE: every value is an owner MEV allocation, an owner-stated MEV planning floor or TBD",
             "not a margin relaxation: the 40 kg exceedance is reported with the redesign need (MQ-10)",
             "not a thermal, RF-rating, anode or ICP-capacity PASS; not a P_bus demonstration (every load TBD)"],
-        "statuses": v2["statuses"],
+        "statuses": dict(v2["statuses"], a9_19_20_supersessions={
+            "C1 conventional reference": "GROUND_ONLY_LAB_EQUIPMENT (A9.20; the carried A9.2 'CONTROL_FALLBACK' is "
+                                         "superseded: C1 is never flight hardware and no hall_c1_reference flight "
+                                         "configuration exists after A9.19)"}),
         "pins": {"v2": [{"key": k, "path": p, "sha256": h} for k, (p, h) in V2.items()],
                  "decisions": [{"key": k, "json": d["json"], "json_sha256": d["json_sha256"], "md": d["md"],
                                 "md_sha256": d["md_sha256"]} for k, d in DECISIONS.items()],
-                 "bus_boundary_module": {"path": BUS_MODULE[0], "sha256": BUS_MODULE[1], "use": "import only"}},
+                 "bus_boundary_module": {"path": BUS_MODULE[0], "sha256": BUS_MODULE[1], "use": "import only",
+                                         "boundary_version": BUS_VERSION, "repointed": BUS_STAGE2},
+                 "bus_boundary_module_v1_history": {
+                     "path": BUS_MODULE_V1[0], "sha256": BUS_MODULE_V1[1], "boundary_version": BUS_VERSION_V1,
+                     "use": "immutable history: cited by the carried v2 items and by the retired C1 power "
+                            "configuration (C1 is not a v2 configuration)"}},
         "cross_lane": {"XE": {"path": XE_V3, "ids_checked": ["design_cases.loaded_split", "XV3-IF-01",
                                                              "reading_axes_resolved.RA-CASE"],
                               "sha_pinned": False, "build_order": "XE -> MP"}},
@@ -1160,6 +1215,8 @@ def render_md(d: dict) -> str:
                      "evidence class"],
                     [[r["line"], r["name"], r["row54_allocation_kg"], r["evidence_floor_cbe_kg"], r["value"]["value_kg"],
                       r["value"]["governs"], r.get("evidence_class_of_value")] for r in d["lines"][cfg]])
+        L += [f"* **{r['line']}** (A9.21): {r['a9_21_status']}" for r in d["lines"][cfg] if r.get("a9_21_status")]
+        L += [""]
     L += ["## Evidence-based dry / wet totals vs 40 kg (every TBD listed)", ""]
     for r in d["rollups"]:
         L += [f"### `{r['configuration']}`", "", r["note"] + ".", "",

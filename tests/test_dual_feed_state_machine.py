@@ -53,7 +53,7 @@ KEYWORDS = {"AND", "OR", "NOT", "abs", "integral"}
 OPERATORS = {"<", "<=", ">", ">=", "==", "!=", "+", "-", "*", "/", "(", ")", ","}
 TOKEN = re.compile(r"[A-Za-z_][A-Za-z0-9_]*|<=|>=|==|!=|\S")
 NUMERIC_LITERAL = re.compile(r"(?<![A-Za-z0-9_])\d")
-# the superseded 0-D Hall closure (Governance.md "Superseded / withdrawn"): never a guard-quantity supplier
+# the superseded 0-D Hall closure (governance.md "Superseded / withdrawn"): never a guard-quantity supplier
 ZERO_D_HALL = {"hall_run_coupled", "hall_discharge_transient", "hall_fixed_points", "HallChannel", "coupled_channel"}
 
 
@@ -557,7 +557,7 @@ def test_hall_quantities_are_not_supplied_by_superseded_or_unadmitted_models(sm)
 
 
 def test_no_calibration_nuisance_leak(sm):
-    """Layer-1 calibration nuisance (P5 evidence) is never a design/control variable (Governance.md next-work item 1)."""
+    """Layer-1 calibration nuisance (P5 evidence) is never a design/control variable (governance.md next-work item 1)."""
     with open(ENSEMBLE_FILE, encoding="utf-8") as f:
         nuisance = set(json.load(f)["calibration_nuisance"])
     names = set(sm["quantities"]) | set(sm["parameters"])

@@ -13,7 +13,7 @@ verified repository deliverable gives them. No Hall transport closure, screening
 withdrawn v1.2-v1.6 number is used. Values owned by the parallel A9 lanes are written 'PENDING <lane path>'.
 
 The readiness_n() function below is the LOCK-1 rule proposed by this lane for computing n at LOCK-2; it is pure,
-has no defaults for any physical input and raises on missing or invalid input (Governance.md rule 3).
+has no defaults for any physical input and raises on missing or invalid input (governance.md rule 3).
 """
 from __future__ import annotations
 

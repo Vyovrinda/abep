@@ -302,5 +302,5 @@ def test_no_dependency_on_parallel_lane_paths():
             if fn.endswith(".py"):
                 with open(os.path.join(d, fn), encoding="utf-8") as f:
                     src = f.read()
-                assert ".Governance/worktrees" not in src
+                assert ".governance/worktrees" not in src
                 assert "import bus_boundary_a9" not in src and "from abep_sim" not in src

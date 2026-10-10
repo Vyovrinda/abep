@@ -13,9 +13,9 @@
  },
  "purpose": "Common engineering ledger so that every propulsion subsystem exposes the same six quantities (performance, power, mass, rejected heat, life/degradation, uncertainty) with the same value/evidence record. Companion schemas: bus_power_ledger_v1.json (electrical source side) and thermal_rejection_ledger_v1.json (heat disposition side). Field names follow abep_sim/archengine.py:close_architecture where a producer exists; mapping, gaps and closure rules are in docs/ledgers/LEDGERS.md.",
  "scope": {
-  "rfp_architecture": "atmospheric path: intake -> filter -> compressor -> atmospheric gas chamber -> valve; Xe path: Xe chamber -> valve; both feed ionization/discharge -> acceleration/thrust (Governance.md, two-layer Hall uncertainty, Scope).",
+  "rfp_architecture": "atmospheric path: intake -> filter -> compressor -> atmospheric gas chamber -> valve; Xe path: Xe chamber -> valve; both feed ionization/discharge -> acceleration/thrust (governance.md, two-layer Hall uncertainty, Scope).",
   "boundary": "the propulsion subsystem, from the intake aperture to the thruster exit plane, electrically from the propulsion DC bus input (bus_power_ledger_v1 boundary). Spacecraft bus housekeeping, solar arrays and the EPS round trip are outside (abep_sim/mission_env.py:Spacecraft, abep_sim/mission_env.py:array_area_for).",
-  "not_in_scope": "new propulsion families (Governance.md rule 8); calibration-nuisance (layer-1) variables of the P5 experiment, which are never ledger fields, map axes or design variables."
+  "not_in_scope": "new propulsion families (governance.md rule 8); calibration-nuisance (layer-1) variables of the P5 experiment, which are never ledger fields, map axes or design variables."
  },
  "execution_branch_alignment": {
   "base": "names checked against the execution branch e15f66f (lanes merged after this lane was first built)",
@@ -100,7 +100,7 @@
   ],
   "status_enum": {
    "computed": "produced by the cited origin at the cited operating point and mode",
-   "superseded": "the only producer is a superseded or withdrawn model (e.g. the 0-D Hall closure, Governance.md 'Superseded / withdrawn'); value must be null and the field must name what supersedes it",
+   "superseded": "the only producer is a superseded or withdrawn model (e.g. the 0-D Hall closure, governance.md 'Superseded / withdrawn'); value must be null and the field must name what supersedes it",
    "TBD": "no producer yet; value must be null and 'requires' must say what is needed",
    "not_applicable": "the subsystem has no such quantity in this architecture or mode; value must be null and 'reason' is required"
   },
@@ -170,7 +170,7 @@
   "carrier": "values are produced by an admitted transport-ensemble member's design Hall map (abep_sim/hall_map.py:HallMap); each value carries ensemble_member_id",
   "downstream_consumer": "values are computed from Hall discharge outputs, so they are reported per admitted member (envelope), but the subsystem's own model takes no transport parameter",
   "independent": "no dependence on Hall discharge outputs; must not be retuned per member (includes Vyovrinda's own geometry and B(z))",
-  "forbidden_upstream": "upstream of the ionization/discharge block (Governance.md: intake, compressor, gas chambers, valves; Xe chamber); the transport uncertainty must never leak into these models or their uncertainty drivers",
+  "forbidden_upstream": "upstream of the ionization/discharge block (governance.md: intake, compressor, gas chambers, valves; Xe chamber); the transport uncertainty must never leak into these models or their uncertainty drivers",
   "not_applicable": "archengine screening families outside the RFP Hall architecture"
  },
  "subsystems": {
@@ -1210,7 +1210,7 @@
       "archengine_field": "res['eV_per_ion_source'] (non-Hall families only)"
      }
     },
-    "note": "source physics uses the 0-D global model with Arrhenius rates Governance.md lists as unverified (next work, item 6)"
+    "note": "source physics uses the 0-D global model with Arrhenius rates governance.md lists as unverified (next work, item 6)"
    },
    "power": {
     "status": "computed",
@@ -1923,7 +1923,7 @@
   "accelerator_other_family": {
    "name": "non-Hall accelerators of the archengine screening enumeration (grids, magnetic nozzle, MPD, PIT, electrothermal)",
    "rfp_block": "screening_only",
-   "presence": "archengine screening families only; not part of the RFP Hall architecture; mapped so every archengine ledger term has a destination (Governance.md rule 8: no new families)",
+   "presence": "archengine screening families only; not part of the RFP Hall architecture; mapped so every archengine ledger term has a destination (governance.md rule 8: no new families)",
    "hall_transport_ensemble_role": "not_applicable",
    "performance": {
     "status": "computed",

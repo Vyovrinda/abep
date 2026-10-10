@@ -11,6 +11,7 @@ Writes
   docs/procurement/rfq_a9_v3/RFQ_A9_V3.md                            companion document (rendered from the JSON data)
   docs/procurement/rfq_a9_v3/packages/RFQ3-00_common_interface.md    common top-level interface document
   docs/procurement/rfq_a9_v3/packages/RFQ3-0N_<slug>.md              one sendable package per supplier speciality
+  docs/procurement/rfq_a9_v3/dispatch/<package>_COVER.md             A9.24 cover note per authorized package
 
 What v3 changes (owner decisions; the verbatim .md of each decision governs, quotes are checked verbatim at build time)
   * A9.8 P2Q-02      new separate RF-metrology package RFQ3-RFMET under the common interface specification;
@@ -23,6 +24,16 @@ What v3 changes (owner decisions; the verbatim .md of each decision governs, quo
     (per-path DWV leakage limit), A9.14 P1Q-17 (700 V DC / 60 s triggered reverification), A9.14 F5-OQ-04 (released
     H-1 drawing basis of the FLIGHT H-1 at LOCK-1; the P1 engineering article is quoted against a P9e-controlled
     drawing set, A9.10 OQ-RFQV2-10 - A9.16 repair F4). A9.1 ICP gas-mode baseline (G-REUSE primary; G-XE a declared ICP-feed variant) is unchanged.
+  * A9.19 / A9.20 (in place): single flight architecture; C1 lines GROUND_ONLY_LAB_EQUIPMENT.
+  * A9.21 (in place; v3 is not declared immutable): item 2 AL08 - Xe storage / flow quotation split RFQ3-GAS-N05 (tank,
+    regulator, valves, plumbing, mounting/thermal, the C1-specific branch separate and ground-only, never in the flight
+    AL-08), quote-request lines GAS-L18 / GAS-L19 with supplier-proposed quantities, AL-08 mass context = provisional
+    planning floor (older allocation kept as labelled history); item 15 RFQ_DISPATCH - per-package dispatch-readiness
+    record and checklist (READY_FOR_OWNER_DISPATCH / NOT_READY_* / LATER_NOT_IN_CURRENT_DISPATCH); the repository never
+    dispatches and no purchase is ever authorized here.
+  * A9.24 (in place): item 10 RFQ dispatch - RFQ3-RF / GAS / VAC / HALLEL / MECH / RFMET AUTHORIZED_FOR_QUOTATION_ONLY
+    (status AUTHORIZED_PENDING_OWNER_SEND; one cover note per package under dispatch/), RFQ3-THRUST (TH-L09 quantity)
+    and RFQ3-H1FAB (controlled H-1 drawings) DO_NOT_DISPATCH; rule function a9_24_dispatch_status (fail closed).
 
 Rules implemented here
   * requirement and line ids are stable across revisions (v2 ids kept); new v3 ids carry the RFQ3- prefix; package ids
@@ -33,7 +44,7 @@ Rules implemented here
     state) return NOT_* / G0_NOT_EVALUATED_TBD / REFUSED_* states and never invent a number;
   * no price, supplier name, ranking, supplier contact, purchase order or PASS (RF ratings TBD_AFTER_IMPEDANCE_MAP;
     ICP_COUPLED_THERMAL UNRESOLVED; anode OPEN; ICP capacity PENDING_ICP45);
-  * missing inputs raise (Governance.md rule 3).
+  * missing inputs raise (governance.md rule 3).
 
 Usage
   python docs/procurement/rfq_a9_v3/build_rfq_a9_v3.py          # write all outputs
@@ -116,7 +127,24 @@ DECISIONS = {
               "json_sha256": "9b88e441b5c3454a20c4696897c525ef5818f0cfd9f32c7a3b4fa8e1a204dcc6",
               "md": "docs/decisions/OD_2026_10_01_A9_20_C1_GROUND_ONLY_OWNER_DECISION.md",
               "md_sha256": "2b90a7a7f851ac571791ea6ba2fbafac8cf69a086a4a3724e2f66196b6b4d60c"},
+    # A9.21 (2026-10-02): item 2 AL08 (6.05 kg provisional; quotations split tank / regulator / valves / plumbing /
+    # mounting-thermal / any C1-specific branch before the re-base) and item 15 RFQ_DISPATCH (packages finalized here;
+    # owner / procurement sends them)
+    "A9.21": {"json": "docs/decisions/OD_2026_10_02_A9_21_open_items_and_hardware_programme_owner_decisions.json",
+              "json_sha256": "78766d3adaaa6d38730ce82607a1cd0a03ae34186c911d4189e2fd9251db6549",
+              "md": "docs/decisions/OD_2026_10_02_A9_21_OPEN_ITEMS_AND_HARDWARE_PROGRAMME_OWNER_DECISIONS.md",
+              "md_sha256": "01f7796aa2ae03d7bc0319b191f004e0a1ba0214c2c982f34554ca52cf531440"},
+    # A9.24 (2026-10-04): item 10 RFQ dispatch - six packages AUTHORIZED FOR QUOTATION ONLY; RFQ3-THRUST and RFQ3-H1FAB
+    # DO NOT DISPATCH until their blocking conditions are resolved (the repository still never sends anything)
+    "A9.24": {"json": "docs/decisions/OD_2026_10_04_A9_24_rust_migration_and_open_items_owner_decisions.json",
+              "json_sha256": "fdbb4561ca8dc524e11200750c2c9c497865f8142f1697ae0146d2dae3e5cc3c",
+              "md": "docs/decisions/OD_2026_10_04_A9_24_RUST_MIGRATION_AND_OPEN_ITEMS_OWNER_DECISIONS.md",
+              "md_sha256": "9a2c950befd20dc38c63a3c56d4443ce7a30f1630903ada618b054638325b1d7"},
 }
+# owner decisions whose json 'decisions' table maps a key to a plain answer string (no per-question record)
+STRING_DECISION_KEYS = ("A9.21",)
+# owner decisions whose json carries an 'items' table (item key -> answer string or structured record)
+ITEM_DECISION_KEYS = ("A9.24",)
 # single-record owner decisions (no per-question 'decisions' table in their json): the allowed record keys
 SINGLE_RECORD_KEYS = {"A9.19": ("architecture", "xenon_role", "amends"), "A9.20": ("answer",)}
 STATE_V4 = "docs/budgets/owner_decisions/owner_questions_state_v4.json"   # read for ids only; never pinned (mutable)
@@ -215,6 +243,16 @@ def OD(key: str, qid: str, quote: str) -> dict:
         if qid != "governing_rule" and qid not in js["amendments"]:
             raise KeyError(f"A9.15 has no amendment {qid}")
         seq, ans = None, ("RFP_COMPLIANT_PROPELLANT_POLICY" if qid == "governing_rule" else js["amendments"][qid])
+    elif key in STRING_DECISION_KEYS:
+        ans = js.get("decisions", {}).get(qid)
+        if not isinstance(ans, str) or js.get("decided_by") != "owner":
+            raise KeyError(f"{key} has no owner decision {qid}")
+        seq = None
+    elif key in ITEM_DECISION_KEYS:
+        ans = (js.get("items") or {}).get(qid)
+        if ans is None or js.get("decided_by") != "owner":
+            raise KeyError(f"{key} has no owner decision item {qid}")
+        seq = None
     elif key in SINGLE_RECORD_KEYS:
         if qid not in SINGLE_RECORD_KEYS[key] or qid not in js:
             raise KeyError(f"{key} has no record {qid}")
@@ -469,8 +507,9 @@ def xe_capability_scope(configuration: str, c1_selected: bool = False, c1_requir
     c1 = bool(c1_selected) and bool(c1_requires_xe)
     return {"system_xe_capability": True, "system_xe_lines": list(SYSTEM_XE_LINES),
             "c1_xe_lines": list(C1_XE_LINES) if c1 else [],
-            "c1_xe_booking": ("inside the system Xe architecture (AL-08 / Xe accounting)" if c1 else
-                              "none (no C1 Xe consumption invented)"),
+            "c1_xe_booking": ("outside the flight AL-08: separate ground-only laboratory booking (A9.19 / A9.20 / "
+                              "A9.21 AL08); A9.15 history reading, superseded: inside the system Xe architecture "
+                              "(AL-08 / Xe accounting)" if c1 else "none (no C1 Xe consumption invented)"),
             "basis": "A9.15 governing_rule"}
 
 
@@ -506,7 +545,8 @@ def h1_fab_send_state(drawing, article="P1_ENGINEERING") -> dict:
     if d.get("configuration_control") != H1_CONFIGURATION_CONTROL:
         blockers.append("configuration_control (must be %s)" % H1_CONFIGURATION_CONTROL)
     if d.get("open_items"):
-        blockers.append("open_items: " + ", ".join(map(str, d["open_items"])))
+        oi = d["open_items"]
+        blockers.append("open_items: " + (oi if isinstance(oi, str) else ", ".join(map(str, oi))))
     if article == "FLIGHT" and d.get("release") != "LOCK-1":
         blockers.append("release (the flight H-1 needs the LOCK-1 release, A9.14 F5-OQ-04)")
     if blockers:
@@ -1706,6 +1746,542 @@ def apply_a9_19_20(c: Ctx, s: dict) -> None:
         c.modify_line(lid, ground, "A9.20 classification requirement", add_reqs=["RFQ3-HALLEL-N03"])
 
 
+# ------------------------------------------------------------------------------- A9.21 AL08 split + RFQ dispatch
+MASS_POWER_V3 = "docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json"   # read as data (budgets lane; never pinned)
+AL08_PROVISIONAL = "PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN"
+AL08_FLOOR_KG = 6.0528       # A9.14 MQ-05 MEV planning floor (owner: "6.05 kg"); A9.21: provisional only, not frozen
+AL08_CBE_FLOOR_KG = 5.044    # incomplete CBE floor (mass / power v3 AL-08 floor constituents)
+AL08_ROW54_KG = 1.5          # owner row-54 allocation: HISTORY (superseded by A9.14 MQ-05, then A9.21)
+AL08_SPLIT_ATTRIBUTES = ["mass", "envelope", "power", "lead time", "qualification / heritage status",
+                         "compliance per requirement id (COMPLIANT / DEVIATION / NOT OFFERED)",
+                         "datasheets / certificates"]
+AL08_FLIGHT = ("FLIGHT_AL08 (RFP-required system Xe capability; AL-08 provisional, re-based only after these split "
+               "quotations)")
+AL08_C1 = ("GROUND_ONLY_LAB_EQUIPMENT - quoted as a separate offer section and booked separately as laboratory "
+           "equipment; NEVER inside the flight AL-08 (A9.19 / A9.20 / A9.21)")
+AL08_SPLIT = [
+    {"category": "tank", "lines": ["GAS-L08"], "booking": AL08_FLIGHT,
+     "note": "Xe tank (one quote line per loaded-Xe design case, RFQ2-GAS-R20)"},
+    {"category": "regulator", "lines": ["GAS-L09"], "booking": AL08_FLIGHT, "note": "low-flow PMU (regulator)"},
+    {"category": "valves", "lines": ["GAS-L11", "GAS-L10"], "booking": AL08_FLIGHT,
+     "note": "Xe isolation valves (series pair, GAS-L11); the low-flow FCU (GAS-L10) is stated as its own sub-row "
+             "inside this category (recorder mapping RF3-FLAG-06: the mass / power v3 AL-08 floor books the "
+             "flow-control valves under valves; the owner may re-map)"},
+    {"category": "plumbing", "lines": ["GAS-L18"], "booking": AL08_FLIGHT,
+     "note": "new quote-request line; scope and quantity proposed by the supplier"},
+    {"category": "mounting/thermal", "lines": ["GAS-L19"], "booking": AL08_FLIGHT,
+     "note": "new quote-request line; scope and quantity proposed by the supplier"},
+    {"category": "C1-specific branch", "lines": C1_XE_LINES + ["GAS-O03"], "booking": AL08_C1,
+     "note": "C1 Xe branch of the ground-only C1 laboratory reference (A9.20); any C1-branch plumbing, fittings or "
+             "mounting a supplier offers are stated here, never inside the flight plumbing or mounting/thermal lines"},
+]
+AL08_CATEGORIES = [x["category"] for x in AL08_SPLIT]
+AL08_FLIGHT_CATEGORIES = [x["category"] for x in AL08_SPLIT if x["booking"] == AL08_FLIGHT]
+AL08_NEW_LINES = ("GAS-L18", "GAS-L19")
+AL08_OUTSIDE_SPLIT = {
+    "GAS-L04": "Xe anode-path MFC(s) (laboratory flow metrology; indicative quotation now, A9.14 OQ-RFQ-03): not one of "
+               "the A9.21 split categories; its mass is stated on its own line; whether it belongs to AL-08 is not "
+               "decided here (RF3-FLAG-06)"}
+
+
+def _positive_number(x) -> bool:
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and x > 0
+
+
+def al08_quote_split_status(quotes) -> dict:
+    """A9.21 AL08: decide whether a set of Xe storage / flow quotations carries the owner's split. `quotes` maps a
+    split category to {"mass_kg": number, "lines": [...], "booking": ...}. Fail closed: a missing flight category or a
+    missing mass blocks the re-base input; any C1 line quoted inside a flight category, or a C1 branch booked into the
+    flight AL-08, is refused. The C1-specific branch must be stated separately (a mass, or "NONE" when no C1 Xe
+    hardware is offered). Never computes or freezes an AL-08 value: the re-base itself is an owner decision."""
+    q = quotes if isinstance(quotes, dict) else {}
+    unknown = sorted(set(q) - set(AL08_CATEGORIES))
+    if unknown:
+        raise KeyError(f"unknown AL-08 split categories: {unknown}")
+    c1_lines = set(C1_XE_LINES + ["GAS-O03"])
+    for cat in AL08_FLIGHT_CATEGORIES:
+        if c1_lines & set((q.get(cat) or {}).get("lines", [])):
+            return {"state": "REFUSED_C1_HARDWARE_INSIDE_FLIGHT_AL08", "category": cat}
+    c1 = q.get("C1-specific branch")
+    if isinstance(c1, dict) and str(c1.get("booking", "")).startswith("FLIGHT_AL08"):
+        return {"state": "REFUSED_C1_HARDWARE_INSIDE_FLIGHT_AL08", "category": "C1-specific branch"}
+    missing = [cat for cat in AL08_FLIGHT_CATEGORIES if not _positive_number((q.get(cat) or {}).get("mass_kg"))]
+    if not isinstance(c1, dict) or not (c1.get("mass_kg") == "NONE" or _positive_number(c1.get("mass_kg"))):
+        missing.append("C1-specific branch")
+    if missing:
+        return {"state": "NOT_REBASEABLE_SPLIT_INCOMPLETE", "missing": missing}
+    return {"state": "SPLIT_COMPLETE_REBASE_IS_OWNER_DECISION", "al08_status": AL08_PROVISIONAL,
+            "note": "the split is complete; the formal AL-08 re-base is an owner decision (A9.21) - no value is "
+                    "computed or frozen here"}
+
+
+def _check_mass_power_al08() -> dict:
+    """Read the budgets lane's AL-08 record as data and fail closed if it no longer carries what this RFQ states."""
+    mp = _load(MASS_POWER_V3)
+    rec = [x for x in mp["lines"]["hall_icp_neutralizer"] if x.get("line") == "AL-08"]
+    if len(rec) != 1:
+        raise ValueError("mass / power v3: AL-08 record missing or duplicated")
+    r = rec[0]
+    bad = [k for k, ok in (("owner_mev_planning_floor_kg", r.get("owner_mev_planning_floor_kg") == AL08_FLOOR_KG),
+                           ("evidence_floor_cbe_kg", r.get("evidence_floor_cbe_kg") == AL08_CBE_FLOOR_KG),
+                           ("row54_allocation_kg", r.get("row54_allocation_kg") == AL08_ROW54_KG),
+                           ("a9_21_status", str(r.get("a9_21_status", "")).startswith(AL08_PROVISIONAL)),
+                           ("c1_branch.in_AL08", (r.get("c1_branch") or {}).get("in_AL08") is False)) if not ok]
+    if bad:
+        raise ValueError("mass / power v3 AL-08 record changed (re-base the RFQ mass context): " + ", ".join(bad))
+    return r
+
+
+def s_a9_21() -> dict:
+    return {
+        "A921-AL08-FLOOR": OD("A9.21", "AL08", "Xe-hardware floor: wait for quotations before formally rebasing AL-08. "
+                              "Keep 6.05 kg only as a provisional planning floor, not a frozen allocation."),
+        "A921-AL08-C1": OD("A9.21", "AL08", "The reason is important: that analog-derived figure may contain about "
+                           "0.285 kg of C1 cathode-branch hardware, while the RFP-required Xe propulsion system and any "
+                           "C1-specific Xe hardware must be accounted separately."),
+        "A921-AL08-SPLIT": OD("A9.21", "AL08", "Quotations should split tank, regulator, valves, plumbing, "
+                              "mounting/thermal, and any C1-specific branch before the final re-base."),
+        "A921-DISPATCH": OD("A9.21", "RFQ_DISPATCH", "For 15, I cannot dispatch supplier RFQs from this chat "
+                            "environment. The quotation packages can be finalized here, but you/procurement must "
+                            "actually send them."),
+    }
+
+
+def apply_a9_21(c: Ctx, s: dict) -> None:
+    """A9.21 item 2 (AL08): the Xe storage / flow quotation is split into tank, regulator, valves, plumbing,
+    mounting/thermal and any C1-specific branch (ground-only, separate, never in the flight AL-08); the 6.0528 kg AL-08
+    MEV planning floor is provisional, re-based only after the split quotations. Quotation / specification only."""
+    _check_mass_power_al08()
+    al = [s["A921-AL08-FLOOR"], s["A921-AL08-C1"], s["A921-AL08-SPLIT"]]
+    ground = [s["A920-GROUND"], s["A920-ANS"]]
+    attrs = ", ".join(AL08_SPLIT_ATTRIBUTES)
+    c.new_req("RFQ3-GAS", "RFQ3-GAS-N05", "Xe storage / flow quotation split (A9.21 AL08)",
+              "Every supplier responding to the Xe storage / flow hardware lines states " + attrs + " SEPARATELY for "
+              "each of these categories: tank (GAS-L08); regulator (low-flow PMU, GAS-L09); valves (isolation valves "
+              "in series, GAS-L11, with the low-flow FCU GAS-L10 as its own sub-row); plumbing (GAS-L18); "
+              "mounting/thermal (GAS-L19); and any C1-specific branch hardware (GAS-L05, GAS-L06, GAS-L15, GAS-O03). "
+              "A category the supplier does not offer is stated NOT OFFERED, never folded into another category. The "
+              "C1-specific branch is ground-only laboratory equipment (A9.20): it is quoted as a separate offer "
+              "section and booked separately, never inside the flight AL-08 (A9.19 / A9.20 / A9.21). No combined "
+              "mass for the Xe system replaces the per-category statement. The AL-08 MEV planning floor is "
+              "provisional (A9.21) and is formally re-based only after these split quotations (rule function "
+              "al08_quote_split_status); the quotations are re-base inputs, never a re-base by themselves.",
+              {"categories": [{"category": x["category"], "lines": list(x["lines"]), "booking": x["booking"],
+                               "note": x["note"]} for x in AL08_SPLIT],
+               "attributes_per_category": list(AL08_SPLIT_ATTRIBUTES),
+               "not_offered_rule": "state NOT OFFERED per category; never fold one category into another",
+               "c1_branch": "separate offer section; GROUND_ONLY_LAB_EQUIPMENT; never inside the flight AL-08",
+               "outside_split_categories": dict(AL08_OUTSIDE_SPLIT),
+               "al08_status": AL08_PROVISIONAL + " (A9.21)",
+               "rule_function": "al08_quote_split_status"},
+              "-", al + ground, "owner-stated", "OWNER_GIVEN", "NOW", "LATER", applies_to=list(FLIGHT_CONFIGS),
+              why="A9.21 AL08: quotation split before the AL-08 re-base")
+    for cat in AL08_SPLIT:
+        for lid in cat["lines"]:
+            if lid in AL08_NEW_LINES:
+                continue
+            c.modify_line(lid, al if cat["booking"] == AL08_FLIGHT else al + ground,
+                          "A9.21 AL08: quoted as split category '" + cat["category"] + "'",
+                          add_reqs=["RFQ3-GAS-N05"], al08_split_category=cat["category"],
+                          al08_booking=cat["booking"],
+                          qa={"documentation": ["A9.21 AL08 split category '" + cat["category"] + "': " + attrs +
+                                                " stated separately for this category (RFQ3-GAS-N05)"]})
+    for lid, cat, item in (
+            ("GAS-L18", "plumbing", "Xe storage / flow plumbing (tubing, fittings and joints between the quoted Xe "
+                                    "tank, regulator, valves and the Hall anode-feed interface) - scope proposed by the "
+                                    "supplier against its offered Xe architecture; RFP-required system Xe capability"),
+            ("GAS-L19", "mounting/thermal", "Xe storage / flow mounting and thermal hardware for the quoted Xe items "
+                                            "(tank mounting and the thermal hardware the offered architecture needs) - "
+                                            "scope proposed by the supplier; RFP-required system Xe capability")):
+        c.new_line("RFQ3-GAS", lid, item,
+                   "TBD - supplier proposes (no quantity is specified by this RFQ; requires the Xe routing and tank "
+                   "mounting design: mass / power v3 AL-08 floor constituent 'plumbing, mounting/thermal' is TBD)",
+                   "A9.21 AL08 (split category '" + cat + "'); A9.14 MQ-05 (AL-08 scope includes plumbing, mounting "
+                   "and thermal hardware)", "LATER", ["RFQ3-GAS-N05", "RFQ-07-R10", "RFQ3-GAS-N03"],
+                   al + [s["MQ-05"]], "A9.21 AL08: quote-request line for a split category that had no line",
+                   al08_split_category=cat, al08_booking=AL08_FLIGHT,
+                   qa={"acceptance": ["offer itemized as its own A9.21 split category; no quantity is invented by "
+                                      "this RFQ (supplier proposes scope and quantity against its offered architecture)"],
+                       "calibration_traceability": ["no line-specific calibration (package-level list applies)"],
+                       "documentation": ["A9.21 AL08 split category '" + cat + "': " + attrs + " stated separately "
+                                         "for this category (RFQ3-GAS-N05)"]})
+    # ---- AL-08 mass context: provisional planning floor; the older allocation kept only as labelled history
+    _p, r = c.req("RFQ-07-R10")
+    v = copy.deepcopy(r["value"])
+    if v.get("AL-08_MEV_planning_floor_kg") != AL08_FLOOR_KG or v.get("AL-08_owner_allocation_kg") != AL08_ROW54_KG:
+        raise ValueError("RFQ-07-R10: unexpected value before A9.21")
+    new = {"AL-08_MEV_planning_floor_kg": AL08_FLOOR_KG,
+           "AL-08_status": AL08_PROVISIONAL + " (A9.21 KEEP_6_05KG_PROVISIONAL_WAIT_FOR_QUOTES_TO_REBASE_AL08): "
+                           "provisional planning floor, NOT a frozen allocation; formally re-based only after the "
+                           "split quotations (RFQ3-GAS-N05: tank, regulator, valves, plumbing, mounting/thermal, any "
+                           "C1-specific branch)",
+           "AL-08_evidence_floor_cbe_kg": AL08_CBE_FLOOR_KG,
+           "evidence_floor_state": "INCOMPLETE (plumbing, mounting/thermal TBD in the floor constituents)",
+           "c1_branch": "NOT in the flight AL-08 (A9.19 / A9.20); the owner notes the analog-derived figure may "
+                        "contain about 0.285 kg of C1 cathode-branch hardware, which the split quotations separate "
+                        "(A9.21)",
+           "note": "A9.14 MQ-05 (OWNER_DECIDED): AL-08 includes the complete Xe storage / flow hardware (tank, "
+                   "regulator, valves, plumbing, mounting, thermal); A9.21: the 6.0528 kg MEV planning floor is kept "
+                   "only as a provisional planning floor; quotations / design replace it at the owner's re-base; "
+                   "supplier states mass per split category and per case",
+           "source": MASS_POWER_V3 + " lines[hall_icp_neutralizer][line=AL-08] (owner_mev_planning_floor_kg, "
+                     "evidence_floor_cbe_kg, a9_21_status, c1_branch; checked at build time)",
+           "history": {"label": "HISTORY - not current",
+                       "AL-08_owner_allocation_kg_row54": AL08_ROW54_KG,
+                       "state_before_a9_14_mq05": v.get("state"),
+                       "superseded_by": "A9.14 MQ-05 (6.0528 kg MEV planning floor), made provisional by A9.21",
+                       "source_before_a9_21": v.get("source")}}
+    c.modify_req("RFQ-07-R10", al, "A9.21 AL08: 6.0528 kg = provisional planning floor (not frozen), re-based only "
+                                   "after the split quotations; row-54 1.5 kg allocation kept only as labelled history",
+                 value=new, title="mass context (AL-08 provisional planning floor, A9.21)")
+
+
+# --------------------------------------------------------------------------------- dispatch readiness (A9.21 item 15)
+READINESS = {
+    "READY_FOR_OWNER_DISPATCH": "finalized in the repository for an owner / procurement request for quotation; the "
+                                "repository never sends it and purchase NOT authorized",
+    "NOT_READY_BLOCKING_TBD": "a NOW line has an open item that must be closed before the request can be sent",
+    "NOT_READY_AWAITING_CONTROLLED_H1_DRAWINGS": "the build-to-print lines may be sent only with the P9e "
+                                                 "configuration-controlled drawing set (A9.10 OQ-RFQV2-10)",
+    "NOT_READY_CHECKLIST_INCOMPLETE": "a package checklist item is not met",
+    "LATER_NOT_IN_CURRENT_DISPATCH": "owner dispatch tag LATER: sent with the later campaign set, not now",
+}
+OPEN_ITEM_CLASSES = {
+    "SUPPLIER_TO_ANSWER": "the request asks the supplier to state / propose it; it does not block sending",
+    "DEFERRED_TO_FREEZE_GATE": "an owner-deferred value frozen at its later gate from the procured / calibrated "
+                               "hardware (A9.8 P1-IT-52: no numbers invented now); the supplier quotes capability "
+                               "ranges; A9.4 / A9.6 allow P1_NEEDED lines to be sent for quotation; not blocking",
+    "BLOCKING_SEND": "must be closed before the line can be sent (freeze point NOW and not a supplier answer, or an "
+                     "unmet send precondition such as the controlled H-1 drawing set)",
+}
+_SUPPLIER_RE = re.compile(r"supplier (statement|data|states|proposes|propos|lists)|proposed by (each|the) supplier|"
+                          r"supplier-proposed|range options|requires the offered", re.I)
+_GATE_RE = re.compile(r"(?<![\w-])(P1-G0|LOCK-1|LOCK-2)(?![\w-])")
+# quantity texts that name a document whose registration gate is recorded on another requirement (read from data)
+QTY_GATE_REFS = {"requires module drawings": "RFQ2-MECH-N03"}   # 'TBD - requires the LOCK-1 module drawings'
+
+
+def quantity_gate(qty: str, line_gate, reqs: dict):
+    """Gate at which a TBD quantity is registered: a gate named in the quantity text, else the gate of the requirement
+    that records the named document (QTY_GATE_REFS), else the line's quote-sheet gate; None when no gate is known."""
+    m = _GATE_RE.findall(str(qty))
+    if m:
+        return max(m, key=FREEZE_POINTS.index)
+    for k, rid in QTY_GATE_REFS.items():
+        if k in str(qty):
+            return reqs[rid]["freeze_point"]
+    return line_gate
+
+
+def classify_open_item(value, freeze_point: str, send_precondition_unmet: bool = False) -> str:
+    """Fail-closed classification of one TBD / PENDING item of a line (recorder rule RF3-FLAG-07, for owner review)."""
+    if freeze_point not in FREEZE_POINTS:
+        raise ValueError(f"unknown freeze point {freeze_point!r}")
+    if send_precondition_unmet:
+        return "BLOCKING_SEND"
+    if _SUPPLIER_RE.search(value if isinstance(value, str) else json.dumps(value, ensure_ascii=False)):
+        return "SUPPLIER_TO_ANSWER"
+    if freeze_point == "NOW":
+        return "BLOCKING_SEND"
+    return "DEFERRED_TO_FREEZE_GATE"
+
+
+def line_readiness(pkg_id: str, li: dict, h1_drawing=None, reqs=None) -> dict:
+    qs = li["quote_sheet"]
+    now = li["dispatch"] == "P1_NEEDED" or qs["send_state"] == SEND_XE_INDICATIVE
+    h1 = h1_fab_send_state(h1_drawing) if pkg_id == "RFQ3-H1FAB" else None
+    h1_block = h1 is not None and h1["state"] != "READY_TO_SEND_FOR_QUOTATION_BUILD_TO_PRINT"
+    gate = quantity_gate(li["qty"], qs["freeze_gate"], reqs or {}) or "NOW"   # unknown gate: fail closed
+    items = []
+    for sp in qs["spec"]:
+        if sp["status"] in ("TBD", "PENDING"):
+            pre = h1_block and sp["requirement"] == "RFQ3-H1FAB-N02"
+            items.append({"item": sp["requirement"], "kind": "requirement", "freeze_point": sp["freeze_point"],
+                          "class": classify_open_item(sp["value"], sp["freeze_point"], pre)})
+    if "TBD" in str(li["qty"]):
+        items.append({"item": "quantity", "kind": "quantity", "freeze_point": gate,
+                      "class": classify_open_item(li["qty"], gate, h1_block)})
+    blocking = [x["item"] for x in items if x["class"] == "BLOCKING_SEND"]
+    if not now:
+        state = "LATER_NOT_IN_CURRENT_DISPATCH"
+        reason = "dispatch tag LATER (" + qs["send_state"] + ")"
+        if li.get("dispatch_gate"):
+            reason += "; gate: " + str(li["dispatch_gate"].get("gate", li["dispatch_gate"]))
+        if li.get("al08_split_category"):
+            reason += ("; A9.21: AL-08 split category '" + li["al08_split_category"] + "' - the AL-08 re-base waits "
+                       "for these quotations; sending the line earlier is an owner call (RF3-FLAG-07)")
+    elif h1_block:
+        state, reason = "NOT_READY_AWAITING_CONTROLLED_H1_DRAWINGS", "h1_fab_send_state blockers: " + \
+            ", ".join(h1["blockers"])
+    elif blocking:
+        state, reason = "NOT_READY_BLOCKING_TBD", "blocking: " + ", ".join(blocking)
+    elif qs["send_state"] not in (SEND_P1, SEND_XE_INDICATIVE):
+        state, reason = "NOT_READY_CHECKLIST_INCOMPLETE", "send state is not an owner-authorised send state"
+    else:
+        state, reason = "READY_FOR_OWNER_DISPATCH", "owner-authorised send state; no blocking open item"
+    if state == "READY_FOR_OWNER_DISPATCH" and blocking:
+        raise AssertionError(f"{li['id']}: readiness claimed with a blocking open item")
+    return {"line": li["id"], "set": "NOW" if now else "LATER", "dispatch_tag": li["dispatch"],
+            "option_line": li["option_line"], "send_state": qs["send_state"], "readiness": state, "reason": reason,
+            "open_items": items, "blocking_open_items": blocking,
+            "supplier_to_answer": [x["item"] for x in items if x["class"] == "SUPPLIER_TO_ANSWER"],
+            "deferred_to_freeze_gate": [x["item"] for x in items if x["class"] == "DEFERRED_TO_FREEZE_GATE"]}
+
+
+def package_readiness(now: list, checks: list) -> str:
+    """Package NOW-subset readiness; never READY with a blocking open item on a NOW line (fail closed)."""
+    if any(x["blocking_open_items"] for x in now):
+        if any(x["readiness"] == "NOT_READY_AWAITING_CONTROLLED_H1_DRAWINGS" for x in now):
+            return "NOT_READY_AWAITING_CONTROLLED_H1_DRAWINGS"
+        return "NOT_READY_BLOCKING_TBD"
+    if not now or not all(x["readiness"] == "READY_FOR_OWNER_DISPATCH" for x in now):
+        return "NOT_READY_CHECKLIST_INCOMPLETE"
+    if not all(c_["ok"] for c_ in checks):
+        return "NOT_READY_CHECKLIST_INCOMPLETE"
+    return "READY_FOR_OWNER_DISPATCH"
+
+
+def compute_dispatch_readiness(doc: dict, s: dict) -> None:
+    cif_txt = render_cif(doc["common_interface"])
+    cif = {"id": doc["common_interface"]["id"], "revision": "v3", "file": doc["common_interface"]["package_file"],
+           "rendered_sha256": hashlib.sha256(cif_txt.encode("utf-8")).hexdigest()}
+    reqs = {r["id"]: r for p in doc["packages"] for r in p["requirements"]}
+    h1_drawing = reqs["RFQ3-H1FAB-N02"]["value"]
+    order = list(dict.fromkeys(x["package"] for x in doc["p1_dispatch_first"]))
+    rows = []
+    for p in doc["packages"]:
+        lr = [line_readiness(p["id"], li, h1_drawing, reqs) for li in p["line_items"]]
+        now = [x for x in lr if x["set"] == "NOW"]
+        later = [x for x in lr if x["set"] == "LATER"]
+        checks = [
+            {"check": "banner states DO NOT PURCHASE - quotation / specification only",
+             "ok": p["banner"][0].startswith("DO NOT PURCHASE")},
+            {"check": "cites the common interface document " + cif["id"] + " (" + cif["file"] + ")",
+             "ok": any(cif["id"] in b for b in p["banner"])},
+            {"check": "has NOW lines (P1_NEEDED or indicative quotation now)", "ok": bool(now)},
+            {"check": "every P1_NEEDED line has a complete quote sheet (spec, acceptance, calibration, documentation)",
+             "ok": all(bool(li["quote_sheet"]["spec"] and li["quote_sheet"]["acceptance"]
+                            and li["quote_sheet"]["calibration_traceability"] and li["quote_sheet"]["documentation"])
+                       for li in p["line_items"] if li["dispatch"] == "P1_NEEDED")},
+            {"check": "every NOW line is in an owner-authorised send state with no unmet send precondition",
+             "ok": all(x["readiness"] == "READY_FOR_OWNER_DISPATCH" for x in now)},
+            {"check": "no NOW line has a blocking open item", "ok": not any(x["blocking_open_items"] for x in now)},
+            {"check": "no price, supplier name, ranking or purchase authorization (compliance record)",
+             "ok": bool(doc["compliance"]["no_prices"] and doc["compliance"]["no_supplier_ranking"]
+                        and doc["compliance"]["no_purchase_order"] and doc["compliance"]["no_supplier_names_invented"])},
+        ]
+        state = package_readiness(now, checks)
+        rec = {"package": p["id"], "package_file": p["package_file"], "common_interface": dict(cif),
+               "p1_first_order": order.index(p["id"]) + 1 if p["id"] in order else None,
+               "now_subset": {"readiness": state, "lines": [x["line"] for x in now],
+                              "supplier_to_answer": sorted({i for x in now for i in x["supplier_to_answer"]}),
+                              "deferred_to_freeze_gate": sorted({i for x in now for i in x["deferred_to_freeze_gate"]}),
+                              "blocking": sorted({i for x in now for i in x["blocking_open_items"]})},
+               "later_subset": {"readiness": "LATER_NOT_IN_CURRENT_DISPATCH" if later else None,
+                                "lines": [x["line"] for x in later],
+                                "reason": ("owner dispatch tag LATER: sent with the later campaign set; per-line "
+                                           "reasons in lines[]") if later else None},
+               "checklist": checks, "lines": lr,
+               "dispatched_by_repository": False, "purchase_authorized": False,
+               "owner_action": "owner / procurement sends the request for quotation outside the repository and keeps "
+                               "the dispatch record outside it (A9.21 item 15); no purchase order"}
+        p["dispatch_readiness"] = rec
+        rows.append(rec)
+    rows.sort(key=lambda r: (r["p1_first_order"] is None, r["p1_first_order"] or 0))
+    doc["dispatch_readiness_a9_21"] = {
+        "decision": s["A921-DISPATCH"], "repository_dispatches": False, "purchase_authorized": False,
+        "dispatch_record": "NONE_IN_REPOSITORY (the repository and governance never contact a supplier; dispatch is an "
+                           "owner / procurement act, A9.21 item 15)",
+        "status_vocabulary": dict(READINESS), "open_item_classes": dict(OPEN_ITEM_CLASSES),
+        "order_rule": "P1-first order of p1_dispatch_first (packages in first-appearance order)",
+        "common_interface": cif,
+        "rule": "a package's NOW subset is READY_FOR_OWNER_DISPATCH only if every NOW line is in an owner-authorised "
+                "send state with no BLOCKING_SEND open item; readiness is never claimed with a blocking TBD; the "
+                "classification of open items is a recorder rule for owner review (RF3-FLAG-07)",
+        "packages": [{"package": r["package"], "p1_first_order": r["p1_first_order"],
+                      "now_readiness": r["now_subset"]["readiness"], "now_lines": r["now_subset"]["lines"],
+                      "later_readiness": r["later_subset"]["readiness"], "later_lines": r["later_subset"]["lines"],
+                      "blocking": r["now_subset"]["blocking"],
+                      "common_interface": r["common_interface"]["id"] + " " + r["common_interface"]["revision"]}
+                     for r in rows]}
+
+
+# ------------------------------------------------------------------------ A9.24 item 10: owner dispatch authorization
+DISPATCH_DIR = LANE_DIR + "/dispatch"
+A924_AUTHORIZED = ["RFQ3-RF", "RFQ3-GAS", "RFQ3-VAC", "RFQ3-HALLEL", "RFQ3-MECH", "RFQ3-RFMET"]
+A924_DO_NOT_DISPATCH = {
+    # package: (owner condition, readiness state that proves the condition is still unmet, blocking line ids)
+    "RFQ3-THRUST": ("until its blocking quantity issue is resolved", "NOT_READY_BLOCKING_TBD", ["TH-L09"]),
+    "RFQ3-H1FAB": ("until controlled H-1 drawings exist", "NOT_READY_AWAITING_CONTROLLED_H1_DRAWINGS", None),
+}
+A924_PERMITS = ["quotation", "technical clarification", "datasheets", "capability information",
+                "mass/power information", "lead time"]
+A924_NOT_AUTHORIZED = ["purchase order", "advance payment", "supplier selection", "binding commitment"]
+A924_STATUS = {
+    "AUTHORIZED_PENDING_OWNER_SEND": "AUTHORIZED_FOR_QUOTATION_ONLY by the owner (A9.24 item 10); the owner / "
+                                     "procurement sends it outside the repository; nothing has been sent from here",
+    "DO_NOT_DISPATCH": "owner instruction (A9.24 item 10): not to be dispatched while its stated condition is unmet",
+    "DO_NOT_DISPATCH_CONDITION_MET_AWAITING_OWNER_AUTHORIZATION":
+        "the stated blocking condition no longer shows in the readiness record; dispatch still needs a new owner "
+        "authorization (never automatic)",
+}
+NO_COMMITMENT_CLAUSE = (
+    "This request is for quotation and information only. It is not a purchase order, not an offer to contract, not a "
+    "supplier selection and not a binding commitment of any kind; no advance payment will be made against it. "
+    "Responding creates no obligation for either party. Any purchase would require a separate written purchase order "
+    "issued by P9E/Vyovrinda under its own authorization after a separate owner decision.")
+
+
+def s_a9_24() -> dict:
+    return {
+        "A924-AUTH": OD("A9.24", "10_rfq", "AUTHORIZED FOR QUOTATION ONLY for: RFQ3-RF RFQ3-GAS RFQ3-VAC RFQ3-HALLEL "
+                                           "RFQ3-MECH RFQ3-RFMET"),
+        "A924-PERMITS": OD("A9.24", "10_rfq", "This permits: - quotation; - technical clarification; - datasheets; - "
+                                              "capability information; - mass/power information; - lead time."),
+        "A924-NOT": OD("A9.24", "10_rfq", "It does NOT authorize: - purchase order; - advance payment; - supplier "
+                                          "selection; - binding commitment."),
+        "A924-THRUST": OD("A9.24", "10_rfq", "Do not dispatch: RFQ3-THRUST until its blocking quantity issue is "
+                                             "resolved."),
+        "A924-H1FAB": OD("A9.24", "10_rfq", "Do not dispatch: RFQ3-H1FAB until controlled H-1 drawings exist."),
+    }
+
+
+def _check_a9_24_record(ans) -> None:
+    """The A9.24 json item must carry exactly the package lists this builder applies (fail closed on any drift)."""
+    if not isinstance(ans, dict):
+        raise ValueError("A9.24 10_rfq: structured record expected")
+    bad = []
+    if ans.get("AUTHORIZED_FOR_QUOTATION_ONLY") != A924_AUTHORIZED:
+        bad.append("AUTHORIZED_FOR_QUOTATION_ONLY")
+    if ans.get("permits") != A924_PERMITS:
+        bad.append("permits")
+    if ans.get("not_authorized") != A924_NOT_AUTHORIZED:
+        bad.append("not_authorized")
+    dnd = ans.get("DO_NOT_DISPATCH") or {}
+    if set(dnd) != set(A924_DO_NOT_DISPATCH) or any(dnd[k] != v[0] for k, v in A924_DO_NOT_DISPATCH.items()):
+        bad.append("DO_NOT_DISPATCH")
+    if set(A924_AUTHORIZED) | set(A924_DO_NOT_DISPATCH) != set(PKG_ORDER) or \
+            set(A924_AUTHORIZED) & set(A924_DO_NOT_DISPATCH):
+        bad.append("package partition")
+    if bad:
+        raise ValueError("A9.24 10_rfq record differs from the applied authorization: " + ", ".join(bad))
+
+
+def a9_24_dispatch_status(pkg_id: str, readiness: dict) -> dict:
+    """A9.24 item 10 dispatch status of one package (fail closed). An authorized package must be READY_FOR_OWNER_DISPATCH
+    in its A9.21 NOW-subset record, else the build refuses. A DO_NOT_DISPATCH package stays DO_NOT_DISPATCH while its
+    blocking condition shows in the readiness record; once it no longer shows, the status becomes
+    DO_NOT_DISPATCH_CONDITION_MET_AWAITING_OWNER_AUTHORIZATION - never AUTHORIZED by itself."""
+    now = readiness["now_subset"]
+    if pkg_id in A924_AUTHORIZED:
+        if now["readiness"] != "READY_FOR_OWNER_DISPATCH" or now["blocking"]:
+            raise ValueError(f"{pkg_id}: owner-authorized for quotation but its NOW subset is {now['readiness']} "
+                             f"(blocking {now['blocking']}); re-record before dispatch")
+        return {"authorization": "AUTHORIZED_FOR_QUOTATION_ONLY", "dispatch_status": "AUTHORIZED_PENDING_OWNER_SEND",
+                "condition": None, "condition_evidence": None}
+    if pkg_id not in A924_DO_NOT_DISPATCH:
+        raise KeyError(f"{pkg_id}: no A9.24 item 10 disposition")
+    cond, state, lines = A924_DO_NOT_DISPATCH[pkg_id]
+    blocked_lines = sorted(x["line"] for x in readiness["lines"] if x["set"] == "NOW" and x["blocking_open_items"])
+    if lines is not None and now["readiness"] == state and blocked_lines != sorted(lines):
+        raise ValueError(f"{pkg_id}: blocking lines {blocked_lines} differ from the recorded {lines}")
+    unmet = now["readiness"] == state
+    ev = {"now_readiness": now["readiness"], "blocking_items": list(now["blocking"]),
+          "blocking_lines": blocked_lines}
+    return {"authorization": "DO_NOT_DISPATCH",
+            "dispatch_status": "DO_NOT_DISPATCH" if unmet else
+            "DO_NOT_DISPATCH_CONDITION_MET_AWAITING_OWNER_AUTHORIZATION",
+            "condition": cond, "condition_evidence": ev}
+
+
+def cover_file(pkg_id: str) -> str:
+    return f"{DISPATCH_DIR}/{pkg_id}_COVER.md"
+
+
+def compute_dispatch_authorization(doc: dict, s: dict) -> None:
+    _check_a9_24_record(s["A924-AUTH"]["answer"])
+    dec = [s[k] for k in ("A924-AUTH", "A924-PERMITS", "A924-NOT", "A924-THRUST", "A924-H1FAB")]
+    rows = []
+    for p in doc["packages"]:
+        st = a9_24_dispatch_status(p["id"], p["dispatch_readiness"])
+        src = [s["A924-AUTH"], s["A924-PERMITS"], s["A924-NOT"]] if p["id"] in A924_AUTHORIZED else \
+            [s["A924-THRUST" if p["id"] == "RFQ3-THRUST" else "A924-H1FAB"]]
+        rec = dict(st, decisions=_decisions_of(src),
+                   cover_note=cover_file(p["id"]) if st["dispatch_status"] == "AUTHORIZED_PENDING_OWNER_SEND" else None,
+                   dispatch_scope=("NOW subset lines (A9.21 READY_FOR_OWNER_DISPATCH); LATER-tagged lines stay with the "
+                                   "later campaign set unless the owner adds them (RF3-FLAG-07)")
+                   if st["dispatch_status"] == "AUTHORIZED_PENDING_OWNER_SEND" else None,
+                   sent_by_repository=False, purchase_order=False, advance_payment=False, supplier_selection=False,
+                   binding_commitment=False)
+        p["dispatch_readiness"]["a9_24_authorization"] = rec
+        rows.append({"package": p["id"], "authorization": rec["authorization"],
+                     "dispatch_status": rec["dispatch_status"], "condition": rec["condition"],
+                     "cover_note": rec["cover_note"], "now_lines": list(p["dispatch_readiness"]["now_subset"]["lines"])})
+    doc["dispatch_authorization_a9_24"] = {
+        "decision": dec, "permits": list(A924_PERMITS), "not_authorized": list(A924_NOT_AUTHORIZED),
+        "status_vocabulary": dict(A924_STATUS),
+        "rule": "authorization applies to the package's A9.21 NOW subset; an authorized package must be "
+                "READY_FOR_OWNER_DISPATCH (rule function a9_24_dispatch_status, fail closed); DO_NOT_DISPATCH packages "
+                "never become authorized automatically when their condition clears",
+        "sent_by_repository": False, "dispatch_record": "NONE_IN_REPOSITORY (the owner sends; the repository and "
+                                                        "governance never contact a supplier)",
+        "no_commitment_clause": NO_COMMITMENT_CLAUSE,
+        "cover_notes_rule": "one dispatch-ready cover note per authorized package under " + DISPATCH_DIR + "/; no "
+                            "supplier, contact, price or date is filled in (owner fields are marked OWNER TO FILL)",
+        "packages": rows}
+
+
+def render_cover(doc: dict, p: dict) -> str:
+    a = p["dispatch_readiness"]["a9_24_authorization"]
+    da = doc["dispatch_authorization_a9_24"]
+    cif = p["dispatch_readiness"]["common_interface"]
+    now = set(p["dispatch_readiness"]["now_subset"]["lines"])
+    li_now = [li for li in p["line_items"] if li["id"] in now]
+    li_later = [li for li in p["line_items"] if li["id"] not in now]
+    q = [d for d in da["decision"] if d["key"] == "A9.24"][:3]
+    L_ = [f"# Request for quotation - cover note - {p['id']} ({p['owner_family']})", "",
+          f"Generated by `{THIS_SCRIPT}` from `{OUT_JSON}`; do not edit by hand.", "",
+          f"**Status: {a['dispatch_status']}** - {A924_STATUS[a['dispatch_status']]}.", "",
+          "**QUOTATION ONLY - NO PURCHASE, NO COMMITMENT.**", "",
+          "Owner basis (A9.24 item 10, `" + DECISIONS["A9.24"]["md"] + "`, sha256 `" + DECISIONS["A9.24"]["md_sha256"] +
+          "`):", ""]
+    L_ += [f"> {x['quote']}" for x in q]
+    L_ += ["", "## Addressing (owner to complete before sending)", "",
+           "- To: OWNER TO FILL (supplier and contact are chosen by the owner / procurement; none is named here)",
+           "- From: P9E/Vyovrinda procurement (OWNER TO FILL: sender name and contact)",
+           "- RFQ reference: " + p["id"] + " (package revision v3)",
+           "- Date sent: OWNER TO FILL",
+           "- Response requested by: OWNER TO FILL", "",
+           "## Request", "",
+           f"P9E/Vyovrinda requests a quotation and technical information for the items of package {p['id']} "
+           f"(`{p['package_file']}`), to be read together with the common interface document {cif['id']} "
+           f"{cif['revision']} (`{cif['file']}`, rendered sha256 `{cif['rendered_sha256']}`). The attached package text "
+           "governs; this note does not change any requirement.", "",
+           "### Lines in this request", ""]
+    L_ += _table(li_now, [("line", lambda x: x["id"]), ("item", lambda x: x["item"]), ("qty", lambda x: x["qty"]),
+                          ("option", lambda x: "OPTION" if x["option_line"] else "")])
+    if li_later:
+        L_ += ["", "Not in this request (dispatch tag LATER; sent with the later campaign set unless the owner adds "
+                   "them): " + ", ".join(x["id"] for x in li_later) + "."]
+    L_ += ["", "## Response items requested", "",
+           "This request permits the following, and only the following (A9.24 item 10):", ""]
+    L_ += [f"- {x}" for x in A924_PERMITS]
+    L_ += ["", "Per the package, the supplier is asked to state:", ""]
+    L_ += [f"- {x['text']}" for x in p["supplier_must_state"]]
+    L_ += ["- open items marked SUPPLIER_TO_ANSWER in the package dispatch-readiness table",
+           "- for owner-deferred values (DEFERRED_TO_FREEZE_GATE): the offered capability range; no value is frozen "
+           "by the response", "",
+           "## Not authorized by this request", ""]
+    L_ += [f"- {x}" for x in A924_NOT_AUTHORIZED]
+    L_ += ["", "## No-commitment clause", "", NO_COMMITMENT_CLAUSE, "",
+           "## Record", "",
+           "- Sent by the repository: False (the owner / procurement sends this note and keeps the dispatch record "
+           "outside the repository)",
+           "- Package readiness (A9.21 item 15): " + p["dispatch_readiness"]["now_subset"]["readiness"],
+           "- Prices: none recorded in the repository; commercial terms go to the owner directly", ""]
+    return "\n".join(L_)
+
+
 def patch_interface_demands(doc, s) -> None:
     fixes = {
         "IFD-03": {"to": "RFQ3-RFMET (and RFQ3-RF for RF-N06 / N08 / N09 / N13 / N16)",
@@ -1797,7 +2373,7 @@ def _banner() -> list:
         "are NOT authorized by this package (owner row 8; A9.1 A9-09 procurement restriction; A9.3, A9.4, A9.6 "
         "unchanged; A9.8 OQ-RFQV2-05 and A9.10 OQ-RFQV2-10: quotation / specification only).",
         "Prepared by the technical team (A9.3 OQ-RFQ-07). Commercial dispatch authority remains with P9E/Vyovrinda "
-        "under Praveen's authorization. No automatic supplier contact: neither this repository nor Governance contacts any "
+        "under Praveen's authorization. No automatic supplier contact: neither this repository nor governance contacts any "
         "supplier; dispatch, if any, is an owner/procurement act.",
         "Compatibility: this is one of eight supplier-speciality packages (the six owner families of A9.3 OQ-RFQ-07 + "
         "the RF-metrology package of A9.8 P2Q-02 + the H-1 build-to-print package of A9.10 OQ-RFQV2-10) kept "
@@ -1861,15 +2437,90 @@ def build() -> dict:
     doc["superseded_lines_v3"] = []
     c = Ctx(doc)
     src = S()
+    src.update(s_a9_21())
+    src.update(s_a9_24())
     apply_decisions(c, src)
     apply_stale_text_fixes(c, src)
     apply_a9_19_20(c, src)
+    apply_a9_21(c, src)
+    apply_bus_boundary_v2(doc)
     doc["packages"].sort(key=lambda p: PKG_ORDER.index(p["id"]))
     _rebuild_quote_sheets(doc)
     _finish_packages(doc, src)
     _common_interface(doc, src)
     _top_level(doc, v2, c, src)
     return doc
+
+
+# ------------------------------------------------------------------- A9.22 G8 stage 2: bus boundary v1 -> v2 citations
+BUS_V1_JSON = "docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json"
+BUS_V2_JSON = "docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json"
+BUS_V2_SHA = "de346f86f77ae08c2e0cc4a5b945c21c9626bc5ad0f32f904acd4a929a08f980"
+BUS_V1_SHA = "9f6e074cc2cdd1e2445d00a14eec04b4cc33f239655f8619a789e7ae863c43e6"
+# C1 rows (keeper / heater / cathode-common / C1 getter branch): C1 is not a v2 configuration -> they keep citing v1
+BUS_V1_RETAINED_C1_REQS = ("RFQ2-GAS-R26", "RFQ2-HALLEL-R22", "RFQ2-HALLEL-R25", "RFQ2-HALLEL-R29")
+BUS_SLOTS_REQ = "RFQ2-HALLEL-R14"          # channel list per configuration: flight column v2, C1 bench column v1
+BUS_REPOINT_RULE = ("A9.22 G8 stage 2 (docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json "
+                    "G8_BUS_BOUNDARY): requirement sources citing bus_power_boundary_a9_v1 re-point to "
+                    "bus_power_boundary_a9_v2 where the cited pointer resolves to the identical value in v2; C1 rows "
+                    "keep citing v1 (C1 is not a v2 configuration); requirement text and values unchanged")
+
+
+def _ptr(doc, pointer: str):
+    o = doc
+    for t in pointer.strip("/").split("/"):
+        o = o[int(t)] if isinstance(o, list) else o[t]
+    return o
+
+
+def apply_bus_boundary_v2(doc) -> None:
+    """Re-point package requirement sources from the v1 bus boundary to v2 (citation only; fail closed)."""
+    if _sha_file(BUS_V2_JSON) != BUS_V2_SHA or _sha_file(BUS_V1_JSON) != BUS_V1_SHA:
+        raise RuntimeError("bus boundary v1 / v2 documents changed (pinned inputs)")
+    v1, v2 = _load(BUS_V1_JSON), _load(BUS_V2_JSON)
+    repointed, retained = [], []
+    for p in doc["packages"]:
+        for r in p["requirements"]:
+            hits = [x for x in r.get("sources", []) if isinstance(x, dict) and x.get("path") == BUS_V1_JSON]
+            if not hits:
+                continue
+            if r["id"] in BUS_V1_RETAINED_C1_REQS:
+                retained.append(r["id"])
+                continue
+            for x in hits:
+                if r["id"] == BUS_SLOTS_REQ and x.get("pointer") == "/slots":
+                    want = r["basis"]
+                    if want != "slots with status INSTALLED / VARIANT_ONLY in bus_power_boundary_a9_v1.json":
+                        raise ValueError(f"{r['id']}: unexpected basis text")
+                    for cfg, val in r["value"].items():
+                        src = v2["slots"] if cfg in v2["configurations"] else v1["slots"]
+                        inst = sorted(sl["slot"] for sl in src if sl["configurations"][cfg] == "INSTALLED")
+                        var = sorted(sl["slot"] for sl in src if sl["configurations"][cfg] == "VARIANT_ONLY")
+                        if (inst, var) != (sorted(val["INSTALLED"]), sorted(val["VARIANT_ONLY"])):
+                            raise ValueError(f"{r['id']} {cfg}: slot list differs from the cited boundary")
+                    x["path"] = BUS_V2_JSON
+                    x["repointed_from"] = BUS_V1_JSON
+                    r["sources"].insert(r["sources"].index(x) + 1, {
+                        "type": "deliverable", "key": "BUS_V1", "path": BUS_V1_JSON, "pointer": "/slots",
+                        "note": "hall_c1_reference ground-bench column only (C1 is not a v2 configuration)"})
+                    r["basis_v2"] = want
+                    r["basis"] = ("slots with status INSTALLED / VARIANT_ONLY in bus_power_boundary_a9_v2.json "
+                                  "(hall_icp_neutralizer); the hall_c1_reference ground-bench column from "
+                                  "bus_power_boundary_a9_v1.json (C1 is not a v2 configuration)")
+                else:
+                    if _ptr(v1, x["pointer"]) != _ptr(v2, x["pointer"]) or \
+                            (x.get("id") and _ptr(v2, x["pointer"]).get("id") != x["id"]):
+                        raise ValueError(f"{r['id']}: {x['pointer']} does not resolve identically in v2")
+                    x["path"] = BUS_V2_JSON
+                    x["repointed_from"] = BUS_V1_JSON
+                repointed.append(f"{r['id']} {x.get('id') or x['pointer']}")
+    if sorted(set(retained)) != sorted(BUS_V1_RETAINED_C1_REQS):
+        raise ValueError(f"C1 rows citing v1 changed: {sorted(set(retained))}")
+    doc["bus_boundary_repoint_a9_22"] = {
+        "rule": BUS_REPOINT_RULE, "v2": {"path": BUS_V2_JSON, "sha256": BUS_V2_SHA},
+        "v1_history": {"path": BUS_V1_JSON, "sha256": BUS_V1_SHA},
+        "repointed_sources": repointed, "c1_rows_kept_on_v1": sorted(set(retained)),
+        "carried_from_v2_deliverable_pins": "unchanged (carried history keeps the v1 sha)"}
 
 
 def _finish_packages(doc, s) -> None:
@@ -2151,6 +2802,14 @@ def _top_level(doc, v2, c: Ctx, s) -> None:
                                        "wording removed (RFQ-07-R09 / R08 / R06, RFQ-08-R01, NIR-04, IFD-19, P1-HW-32); "
                                        "Xe = contingency / emergency supply mode (RFQ3-GAS-N03)",
              "source": "A9.19 architecture / xenon_role; A9.20 answer; A9.10 P1Q-07"},
+            {"id": "CL3-10", "change": "Xe storage / flow quotation split RFQ3-GAS-N05 (tank, regulator, valves, plumbing, "
+                                       "mounting/thermal, C1-specific branch separate and ground-only); new quote-request "
+                                       "lines GAS-L18 (plumbing) and GAS-L19 (mounting/thermal) with supplier-proposed "
+                                       "quantities; AL-08 mass context = provisional planning floor, row-54 allocation "
+                                       "kept as labelled history", "source": "A9.21 AL08"},
+            {"id": "CL3-11", "change": "per-package dispatch-readiness record and checklist (READY_FOR_OWNER_DISPATCH / "
+                                       "NOT_READY_* / LATER_NOT_IN_CURRENT_DISPATCH); the repository never dispatches; "
+                                       "purchase NOT authorized", "source": "A9.21 RFQ_DISPATCH (item 15)"},
         ],
         "per_requirement": per_req, "per_line_item": per_line, "counts": dict(sorted(counts.items()))}
     v2tm = {x["requirement"]: x for x in v2["traceability_matrix"]}
@@ -2171,7 +2830,8 @@ def _top_level(doc, v2, c: Ctx, s) -> None:
     for (key, qid), e in sorted(c.applied.items()):
         src = e["source"]
         js = _decision(key)[0]
-        rec = js["decisions"].get(qid) if key not in ("A9.15",) + tuple(SINGLE_RECORD_KEYS) else None
+        rec = js["decisions"].get(qid) if key not in ("A9.15",) + tuple(SINGLE_RECORD_KEYS) + \
+            STRING_DECISION_KEYS else None
         entries.setdefault(key.replace(".", "_").lower(), []).append({
             "decision_key": key, "question_id": qid,
             "sequenced_no": rec.get("sequenced_no") if rec else None,
@@ -2230,12 +2890,25 @@ def _top_level(doc, v2, c: Ctx, s) -> None:
                                       "against the A9.16-updated P1 / P2 lanes and the cross-lane pairs is for the "
                                       "integration lane; cross-lane statuses carried from v2 that name other lanes' "
                                       "questions (e.g. IFD-14 MQ-01, IFD-17 P4 IT-17) are not restated here"},
-        {"id": "RF3-FLAG-04", "flag": "the RFP (RFP(1)) is owner-held and not yet registered in the repository "
-                                      "(AG-15); A9.15 content is applied as owner-stated"},
+        {"id": "RF3-FLAG-04", "flag": "RESOLVED (history kept): when this flag was raised the RFP (RFP(1)) was owner-held "
+                                      "and not yet registered (AG-15) and A9.15 content was applied as owner-stated; the "
+                                      "RFP is now registered by hash (A9.17 RFP, docs/requirements/rfp_official/"
+                                      "rfp_registration_v1.json) and AG-15 is closed by the owner (A9.22 G3, "
+                                      "docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json)"},
         {"id": "RF3-FLAG-05", "flag": "A9.20: the owner chose the recommended ground-only option and in the same message "
                                       "asked 'is it good to remove hollow cathode' - recorded for the owner, not "
                                       "answered here; A9.19 'check C1 mass' is a mass / budget-lane request (C1 is now "
                                       "outside every flight budget), not an RFQ line change"},
+        {"id": "RF3-FLAG-06", "flag": "A9.21 AL08 split mapping (recorder reading for the owner): the low-flow FCU "
+                                      "GAS-L10 is stated as a sub-row of 'valves' (the mass / power v3 AL-08 floor books "
+                                      "the flow-control valves under valves); the laboratory Xe MFC GAS-L04 is not one "
+                                      "of the owner's split categories and is quoted on its own line; the owner may "
+                                      "re-map either"},
+        {"id": "RF3-FLAG-07", "flag": "A9.21 item 15 dispatch readiness: the classification of open items "
+                                      "(SUPPLIER_TO_ANSWER / DEFERRED_TO_FREEZE_GATE / BLOCKING_SEND, rule function "
+                                      "classify_open_item) is a recorder rule for owner review; the Xe storage / flow "
+                                      "lines whose split quotations the AL-08 re-base waits for keep their owner dispatch "
+                                      "tag LATER - sending them earlier is an owner call"},
     ]
     doc["merged_cross_lane"] = dict(doc["merged_cross_lane"])
     doc["merged_cross_lane"]["rule_v3"] = ("v2 cross-lane pairs carried as a snapshot; v3 does not run the xlane check "
@@ -2290,13 +2963,26 @@ def _top_level(doc, v2, c: Ctx, s) -> None:
                          "equipment_classes": [GROUND_ONLY], "freeze_points": FREEZE_POINTS, "requirement_statuses": STATUSES,
                          "dispatch_tags": DISPATCH, "change_types_v3": CHANGE_TYPES_V3,
                          "evidence_classes": EVIDENCE_CLASSES}
+    doc["al08_quotation_split_a9_21"] = {
+        "decision": [s["A921-AL08-FLOOR"], s["A921-AL08-C1"], s["A921-AL08-SPLIT"]],
+        "requirement": "RFQ3-GAS-N05", "mass_context": "RFQ2-GAS-R28 (RFQ-07-R10)",
+        "categories": copy.deepcopy(AL08_SPLIT), "attributes_per_category": list(AL08_SPLIT_ATTRIBUTES),
+        "new_quote_request_lines": list(AL08_NEW_LINES), "outside_split_categories": dict(AL08_OUTSIDE_SPLIT),
+        "al08_status": AL08_PROVISIONAL, "al08_mev_planning_floor_kg": AL08_FLOOR_KG,
+        "rebase": "formal AL-08 re-base only after the split quotations; an owner decision (A9.21); this RFQ never "
+                  "re-bases or freezes AL-08 (rule function al08_quote_split_status)",
+        "c1_branch": AL08_C1, "budgets_record_checked": MASS_POWER_V3}
+    compute_dispatch_readiness(doc, s)
+    compute_dispatch_authorization(doc, s)
     order = ["schema", "id", "title", "revision_of", "lane", "follow_on", "trigger", "status", "a9_status", "base_commit",
              "generated_by", "companion_document", "test", "banner", "rfp_propellant_policy", "vocabulary",
              "decision_pins_v3", "v2_pins", "never_pinned_v3", "standing_facts", "common_interface", "packages",
-             "superseded_lines_v3", "p1_dispatch_first", "a9_6_sec13_coverage", "instrument_coverage",
+             "superseded_lines_v3", "p1_dispatch_first", "dispatch_readiness_a9_21", "dispatch_authorization_a9_24",
+             "al08_quotation_split_a9_21", "a9_6_sec13_coverage", "instrument_coverage",
              "not_in_this_revision", "resolved_not_in_previous_revision", "change_log", "traceability_matrix",
              "interface_demands", "owner_answers_applied", "open_owner_questions", "recorder_flags_v3",
-             "historical_reuse", "m16_impact", "h3_h4_inputs", "merged_cross_lane", "compliance", "change_types_v3",
+             "historical_reuse", "m16_impact", "h3_h4_inputs", "merged_cross_lane", "bus_boundary_repoint_a9_22",
+             "compliance", "change_types_v3",
              "change_log_v1_to_v2", "carried_from_v2"]
     rest = [k for k in doc if k not in order]
     if rest:
@@ -2374,6 +3060,8 @@ def render_package(p: dict) -> str:
             L_.append(f"- dispatch gate: {_fmt(li['dispatch_gate'])}")
         if li.get("c1_xe_condition"):
             L_.append(f"- C1 Xe condition: {li['c1_xe_condition']}")
+        if li.get("al08_split_category"):
+            L_.append(f"- A9.21 AL-08 quotation split category: {li['al08_split_category']} - {li['al08_booking']}")
         if li.get("placement"):
             pl = li["placement"]
             L_.append(f"- package placement {pl['status']} ({pl['question']}): {pl['rule']}")
@@ -2421,6 +3109,32 @@ def render_package(p: dict) -> str:
                       f"accessed {pv['accessed']}; access: {pv['access_mode']} _({x['carried_from']})_.")
         L_.append("")
         L_.append("Reference data are not requirements, not a selection and not a supplier ranking.")
+    rd = p["dispatch_readiness"]
+    L_ += ["", "## Dispatch readiness checklist (A9.21 item 15)", "",
+           f"NOW subset: **{rd['now_subset']['readiness']}**; LATER subset: {rd['later_subset']['readiness'] or '-'}. "
+           f"Dispatched by the repository: {rd['dispatched_by_repository']}; purchase authorized: "
+           f"{rd['purchase_authorized']}. Common interface cited: {rd['common_interface']['id']} "
+           f"{rd['common_interface']['revision']} (`{rd['common_interface']['file']}`, rendered sha256 "
+           f"`{rd['common_interface']['rendered_sha256']}`). Owner action: {rd['owner_action']}.", ""]
+    L_ += [f"- [{'x' if c_['ok'] else ' '}] {c_['check']}" for c_ in rd["checklist"]]
+    au = rd["a9_24_authorization"]
+    L_ += ["", "## Owner dispatch authorization (A9.24 item 10)", "",
+           f"Authorization: **{au['authorization']}**; dispatch status: **{au['dispatch_status']}**" +
+           (f" ({au['condition']})" if au["condition"] else "") + ". " + A924_STATUS[au["dispatch_status"]] + ".", ""]
+    if au["cover_note"]:
+        L_ += ["Permits: " + "; ".join(A924_PERMITS) + ". NOT authorized: " + "; ".join(A924_NOT_AUTHORIZED) + ".", "",
+               f"Cover note: `{au['cover_note']}`. Scope: {au['dispatch_scope']}.", ""]
+    elif au["condition_evidence"]:
+        ev = au["condition_evidence"]
+        L_ += [f"Condition evidence: NOW readiness {ev['now_readiness']}; blocking items "
+               f"{', '.join(ev['blocking_items']) or '-'}; blocking lines {', '.join(ev['blocking_lines']) or '-'}.", ""]
+    L_ += [""]
+    L_ += _table(rd["lines"], [("line", lambda x: x["line"]), ("set", lambda x: x["set"]),
+                               ("readiness", lambda x: x["readiness"]),
+                               ("supplier answers", lambda x: ", ".join(x["supplier_to_answer"]) or "-"),
+                               ("deferred to gate", lambda x: ", ".join(x["deferred_to_freeze_gate"]) or "-"),
+                               ("blocking", lambda x: ", ".join(x["blocking_open_items"]) or "-"),
+                               ("reason", lambda x: x["reason"]), ("send state", lambda x: x["send_state"])])
     L_ += ["", "## Open specification items", ""]
     L_ += _table(p["open_specification_items"], [("id", lambda x: x["id"]), ("v1", lambda x: x["v1_id"]),
                                                  ("title", lambda x: x["title"]), ("value", lambda x: x["value"]),
@@ -2473,6 +3187,45 @@ def render_main(d: dict) -> str:
                                           ("item", lambda x: x["item"]), ("qty", lambda x: x["qty"]),
                                           ("option", lambda x: "OPTION" if x["option_line"] else ""),
                                           ("send state", lambda x: x["send_state"])])
+    dr = d["dispatch_readiness_a9_21"]
+    L_ += ["", "## Dispatch readiness (A9.21 item 15)", "",
+           f"> Owner (A9.21 RFQ_DISPATCH): \"{dr['decision']['quote']}\"", "",
+           f"Repository dispatches: **{dr['repository_dispatches']}**; purchase authorized: "
+           f"**{dr['purchase_authorized']}**; dispatch record: {dr['dispatch_record']}.", "",
+           f"Rule: {dr['rule']}. Order: {dr['order_rule']}. Common interface: {dr['common_interface']['id']} "
+           f"{dr['common_interface']['revision']} (`{dr['common_interface']['file']}`, rendered sha256 "
+           f"`{dr['common_interface']['rendered_sha256']}`).", ""]
+    L_ += _table(dr["packages"], [("order", lambda x: x["p1_first_order"]), ("package", lambda x: x["package"]),
+                                  ("NOW readiness", lambda x: x["now_readiness"]),
+                                  ("NOW lines", lambda x: len(x["now_lines"])),
+                                  ("blocking", lambda x: ", ".join(x["blocking"]) or "-"),
+                                  ("LATER", lambda x: x["later_readiness"] or "-"),
+                                  ("LATER lines", lambda x: len(x["later_lines"])),
+                                  ("CIF", lambda x: x["common_interface"])])
+    L_ += ["", "Status vocabulary:", ""] + [f"- `{k}`: {v}" for k, v in dr["status_vocabulary"].items()]
+    L_ += ["", "Open-item classes:", ""] + [f"- `{k}`: {v}" for k, v in dr["open_item_classes"].items()]
+    da = d["dispatch_authorization_a9_24"]
+    L_ += ["", "## Owner dispatch authorization (A9.24 item 10)", ""]
+    L_ += [f"> Owner (A9.24 {x['id']}): \"{x['quote']}\"" for x in da["decision"]]
+    L_ += ["", "Permits: " + "; ".join(da["permits"]) + ". NOT authorized: " + "; ".join(da["not_authorized"]) + ".",
+           "", f"Rule: {da['rule']}. Sent by the repository: **{da['sent_by_repository']}**; dispatch record: "
+               f"{da['dispatch_record']}.", ""]
+    L_ += _table(da["packages"], [("package", lambda x: x["package"]), ("authorization", lambda x: x["authorization"]),
+                                  ("dispatch status", lambda x: x["dispatch_status"]),
+                                  ("condition", lambda x: x["condition"] or "-"),
+                                  ("cover note", lambda x: x["cover_note"] or "-")])
+    L_ += ["", "Status vocabulary:", ""] + [f"- `{k}`: {v}" for k, v in da["status_vocabulary"].items()]
+    L_ += ["", "No-commitment clause (cover notes): " + da["no_commitment_clause"]]
+    sp = d["al08_quotation_split_a9_21"]
+    L_ += ["", "## Xe storage / flow quotation split and AL-08 (A9.21 AL08)", ""]
+    L_ += [f"> Owner (A9.21 AL08): \"{x['quote']}\"" for x in sp["decision"]]
+    L_ += ["", f"AL-08 status: **{sp['al08_status']}** - {sp['al08_mev_planning_floor_kg']:g} kg MEV planning floor is "
+               f"provisional, not frozen; {sp['rebase']}. Requirement {sp['requirement']}; mass context "
+               f"{sp['mass_context']}.", ""]
+    L_ += _table(sp["categories"], [("category", lambda x: x["category"]), ("lines", lambda x: ", ".join(x["lines"])),
+                                    ("booking", lambda x: x["booking"]), ("note", lambda x: x["note"])])
+    L_ += ["", "Per category the supplier states: " + "; ".join(sp["attributes_per_category"]) + ".", ""]
+    L_ += [f"- outside the split: {k} - {v}" for k, v in sp["outside_split_categories"].items()]
     L_ += ["", "## Owner answers applied (v3)", "", d["owner_answers_applied"]["rule_v3"], ""]
     rows = [e for k, v in d["owner_answers_applied"].items() if k.startswith("a9_") for e in v]
     L_ += _table(rows, [("decision", lambda x: x["decision_key"]), ("question", lambda x: x["question_id"]),
@@ -2535,6 +3288,9 @@ def outputs(doc: dict) -> dict:
              doc["common_interface"]["package_file"]: render_cif(doc["common_interface"])}
     for p in doc["packages"]:
         files[p["package_file"]] = render_package(p)
+        cov = p["dispatch_readiness"]["a9_24_authorization"]["cover_note"]
+        if cov:
+            files[cov] = render_cover(doc, p)
     return files
 
 
@@ -2556,12 +3312,17 @@ def main(argv=None) -> int:
         extra = sorted(set(os.listdir(_abs(PKG_DIR))) - {os.path.basename(k) for k in files if k.startswith(PKG_DIR)}) \
             if os.path.isdir(_abs(PKG_DIR)) else []
         bad += [f"{PKG_DIR}/{x} (stale extra file)" for x in extra]
+        extra = sorted(set(os.listdir(_abs(DISPATCH_DIR))) - {os.path.basename(k) for k in files
+                                                             if k.startswith(DISPATCH_DIR)}) \
+            if os.path.isdir(_abs(DISPATCH_DIR)) else []
+        bad += [f"{DISPATCH_DIR}/{x} (stale extra file)" for x in extra]
         if bad:
             print("STALE: " + ", ".join(bad))
             return 1
         print(f"OK: {len(files)} outputs reproduce")
         return 0
     os.makedirs(_abs(PKG_DIR), exist_ok=True)
+    os.makedirs(_abs(DISPATCH_DIR), exist_ok=True)
     for rel, txt in files.items():
         with open(_abs(rel), "w", encoding="utf-8") as fh:
             fh.write(txt)

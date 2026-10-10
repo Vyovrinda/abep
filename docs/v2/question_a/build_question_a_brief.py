@@ -11,7 +11,7 @@ physical value, efficiency or threshold is introduced here.
 Inputs are read READ-ONLY and pinned by sha256. They are resolved in this order:
   1. the file at its repository path in this checkout;
   2. `git show <commit>:<path>` from the lane commit (shared object store);
-  3. any `<root>/.Governance/worktrees/*/<path>`.
+  3. any `<root>/.governance/worktrees/*/<path>`.
 A pinned input that cannot be found with the pinned sha256 raises InputMissing (no fallback values).
 
 Usage:
@@ -37,10 +37,10 @@ SELF = "docs/v2/question_a/build_question_a_brief.py"
 
 LANE01 = "lane_01_n2_domain_extension"
 LANE01_COMMIT = "0636634ae7adf8790b0dc42ccb26138909bad92e"
-LANE01_WORKTREE_AT_AUTHORING = "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-2"
+LANE01_WORKTREE_AT_AUTHORING = "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-2"
 LANE02 = "lane_02_ood_attribution"
 LANE02_COMMIT = "5e5c8a7bee07da0148a8076497958b2372604418"
-LANE02_WORKTREE_AT_AUTHORING = "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-1"
+LANE02_WORKTREE_AT_AUTHORING = "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-1"
 BASE_COMMIT = "2aea8090e613baf4c36037c88d54f2ea42edbfb9"
 
 AUDIT = "docs/chemistry/n2_domain_extension/domain_extension_audit.json"
@@ -96,7 +96,7 @@ def _search_roots() -> list[str]:
         pass
     out = []
     for r in roots:
-        for c in [r] + sorted(glob.glob(os.path.join(r, ".Governance", "worktrees", "*"))):
+        for c in [r] + sorted(glob.glob(os.path.join(r, ".governance", "worktrees", "*"))):
             if c not in out:
                 out.append(c)
     return out
@@ -169,15 +169,15 @@ def build() -> dict:
         "verbatim_lane_task_source": "lane fo_v2_domain_question_a task text (workflow harness, trigger T_V2_QUESTION_A)",
         "verbatim_operating_model": qa_line.strip(),
         "verbatim_operating_model_source": f"{OPMODEL} section 4",
-        "verbatim_Governance_md": "Question A (is a wider domain source-supported?)",
-        "verbatim_Governance_md_source": "Governance.md, Next work item 3 ('v2 chemistry')",
+        "verbatim_governance_md": "Question A (is a wider domain source-supported?)",
+        "verbatim_governance_md_source": "governance.md, Next work item 3 ('v2 chemistry')",
         "scope_boundary": [
             "Question B (which electronic-excitation representation is supportable) is separate and conditional on "
             "Question A; this brief does not address it.",
             "Johnson-low (n2_n_exc_johnsonlow.toml) remains a sensitivity; this brief does not change that.",
             "The P5-N2 v1 outcome stays INCONCLUSIVE permanently; nothing here re-scores or re-labels a v1 run.",
             "A validity limit is never extended because the solver reached a higher T_e; only independent published "
-            "evidence and a new v2 pre-registration can support an extension (Governance.md, critical path after v1).",
+            "evidence and a new v2 pre-registration can support an extension (governance.md, critical path after v1).",
         ],
     }
 
@@ -467,7 +467,7 @@ def build() -> dict:
                   "outline treats a limit-only change with byte-identical tables as a minimal v2 that becomes a model "
                   "change only on a table rebuild, an addition or a re-audit promotion. Both require reruns (the frozen "
                   "records hold f_out only at 45 eV). Whether a limit-only change is logged as a model change "
-                  "(Governance.md rule 2 / docs/HISTORY.md) is for the owner."),
+                  "(governance.md rule 2 / docs/HISTORY.md) is for the owner."),
          "refs": [num(OOD, ood, ["hypothetical_limit_ladder_45eV_family", "what_it_does_not_imply"]),
                   {"file": OUTLINE, "field": "section 1, 'When the minimal v2 becomes a model change'"}]},
         {"id": "QA-4", "kind": "proxy observation",
@@ -479,11 +479,11 @@ def build() -> dict:
                   num(REQ, req, ["hypothetical_coverage", "limits", "75", "dissociation_only_at_L",
                                  "newly_covered_ood_runs"])]},
         {"id": "QA-5", "kind": "open question for the owner (not in the lane files)",
-         "text": ("The promotion rule (Governance.md) admits a candidate only after it predicts new evidence not used to "
+         "text": ("The promotion rule (governance.md) admits a candidate only after it predicts new evidence not used to "
                   "select it. A v2 scored on the same P5-N2 measurements after the v1 scores are known would need the "
                   "owner to state whether it still counts as such a test; the lane-01 outline requires a hash-locked "
                   "pre-registration before any v2 run."),
-         "refs": [{"file": "Governance.md", "field": "Next work 1, Promotion rule"},
+         "refs": [{"file": "governance.md", "field": "Next work 1, Promotion rule"},
                   {"file": OUTLINE, "field": "section 4"}]},
     ]
 
@@ -632,7 +632,7 @@ def build() -> dict:
             "admission_and_milestone_B": [
                 f"A scoreable minimal v2 can exist (it can re-score at most {n_d_only} runs), but under the derived_bounds "
                 "assumptions it cannot produce a PROMOTABLE candidate; the credible set stays empty.",
-                "Admission remains gated on the O4 dispositions (Governance.md; hall_ensemble._check_o4) regardless.",
+                "Admission remains gated on the O4 dispositions (governance.md; hall_ensemble._check_o4) regardless.",
                 "Milestone B stays blocked on an admitted Hall transport closure; Milestone A is unaffected (an "
                 "admitted closure stays an explicit condition).",
             ],

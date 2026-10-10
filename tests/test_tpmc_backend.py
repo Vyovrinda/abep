@@ -1,6 +1,6 @@
 """A9.7 Rust lane (fo_a9_7_rust_kernels): explicit TPMC backend switch and the abep_core parity record.
 
-Never skips (Governance.md rule 9: exactly 5 skips repo-wide). The Python backend is always tested through the wrapper
+Never skips (governance.md rule 9: exactly 5 skips repo-wide). The Python backend is always tested through the wrapper
 (identical to calling abep_sim.intake_tpmc with the same seed); the 'rust' request is tested in both states:
 unavailable -> clear error (forced by monkeypatch, and for real when abep_core is not built), available -> a tiny
 parity smoke. No Rust result is treated as authoritative here.

@@ -8,6 +8,12 @@ assigns them with rvm_rules.assign_status.
 from __future__ import annotations
 
 
+def bus(c):
+    """A9.22 G8 stage 2: flight cells cite the v2 bus boundary (BUS); C1 ground-reference cells keep the immutable v1
+    (BUS_V1): C1 is not a v2 configuration."""
+    return "BUS_V1" if c == "hall_c1_reference" else "BUS"
+
+
 def build_rows(B, ctx):
     B.check_rfp_not_obtained(ctx)
     hall = B.probe_hall_analysis(ctx)
@@ -114,8 +120,8 @@ def build_rows(B, ctx):
         "open_readings": [oq(ctx, "OQ-A910-03")],
         "rtm_xref": [ctx.rtm("RFP-PWR")], "lane24_gates": ["G2_bus_power"], "m16_rows": [12, 19],
         "artifacts": {c: ([B.probe_power(ctx, c), plan(ctx, "PRE", "DQ-HI-PBUS"),
-                           plan(ctx, "BUS", "A902-01", role="SUPPORTING"),
-                           plan(ctx, "BUS", "A902-03", role="SUPPORTING"),
+                           plan(ctx, bus(c), "A902-01", role="SUPPORTING"),
+                           plan(ctx, bus(c), "A902-03", role="SUPPORTING"),
                            plan(ctx, "VI", "VI-PB-03", role="SUPPORTING")]
                           + ([plan(ctx, "P2", "@doc", role="SUPPORTING",
                                    why="RF chain / delivered-power reconstruction (RF component ratings "
@@ -142,7 +148,7 @@ def build_rows(B, ctx):
                              "range is a test capability only",
         "open_readings": [],
         "rtm_xref": [], "lane24_gates": [], "m16_rows": [12, 18, 19],
-        "artifacts": {c: ([B.probe_alloc(ctx, c), plan(ctx, "BUS", "A902-04", role="SUPPORTING"),
+        "artifacts": {c: ([B.probe_alloc(ctx, c), plan(ctx, bus(c), "A902-04", role="SUPPORTING"),
                            plan(ctx, "VI", "VI-PB-04", role="SUPPORTING")]
                           + ([plan(ctx, "PRE", "DQ-HI-PALLOC")] if c == "hall_icp_neutralizer" else []))
                       for c in both},
@@ -258,7 +264,7 @@ def build_rows(B, ctx):
         "id": "RVM-11", "key": "HALL_PREFERENCE", "category": "rfp_recorded",
         "title": "Hall-effect thruster preferred",
         "requirement_text": "Preference (not mandate) for a Hall-effect thruster configuration. Both A9 configurations "
-                            "use the H-1 Hall accelerator; A9 keeps the Hall family (Governance.md rule 8).",
+                            "use the H-1 Hall accelerator; A9 keeps the Hall family (governance.md rule 8).",
         "sources": [ctx.r2("(d) Hall preferred", "Hall-effect thruster"), ctx.hgm("R1", "Hall preferred"),
                     ctx.a9("primary_hypothesis", "Hall accelerator"), ctx.a9("control_fallback", "Hall")],
         "requirement_basis": rfp_basis, "requirement_frozen": False,
@@ -354,8 +360,10 @@ def build_rows(B, ctx):
         "requirement_text": "hall_icp_neutralizer: ICP-45 capacity I_e,cap = I_e,collector,RFON - "
                             "I_e,collector,RFOFF (signed, discharge-OFF, anode disconnected and floating, Kirchhoff "
                             "admission) >= I_d,max,H1 with the pre-registered one-sided margin before any score-bearing "
-                            "point; Hall-ON is NEUTRALIZATION_CONSISTENCY only. hall_c1_reference: heated Xe-fed LaB6 C1 "
-                            "sized to the measured / derived current demand (CONTROL_FALLBACK).",
+                            "point; Hall-ON is NEUTRALIZATION_CONSISTENCY only. hall_c1_reference (GROUND_REFERENCE_ONLY, "
+                            "A9.20; never a flight or fallback flight configuration): heated Xe-fed LaB6 C1 sized to "
+                            "the measured / derived current demand for the ground H-1 reference only (owner row 88; "
+                            "the A9.2 status CONTROL_FALLBACK is history).",
         "sources": [ctx.decision("A91", "ICP-45", "I_e,cap >= I_d,max"),
                     ctx.decision("A93", "OQ-A907-02", "H1_REGISTERED_MAX"),
                     ctx.decision("A94", "P1Q-10", "OFF"), ctx.decision("A94", "P1Q-13", "FLOATING"),
@@ -466,7 +474,7 @@ def build_rows(B, ctx):
         "verification_note": "FMEA / failure-tree analysis of the selected electronics (none selected)",
         "open_readings": [od(ctx, "OD12")],
         "rtm_xref": [ctx.rtm("RFP-REDUND")], "lane24_gates": [], "m16_rows": [12, 14],
-        "artifacts": cfg_map(lambda c: [plan(ctx, "BUS", "@doc", why="supply partition exists; no FMEA")]),
+        "artifacts": cfg_map(lambda c: [plan(ctx, bus(c), "@doc", why="supply partition exists; no FMEA")]),
     })
     rows.extend(build_rfp_rebase_rows(B, ctx, hall, cfg_map, rfp_basis))
     return rows
@@ -503,7 +511,7 @@ def build_rfp_rebase_rows(B, ctx, hall, cfg_map, rfp_basis):
             absent(ctx, "RFP-P18-12", "an interface control document and a MIL-1553B configuration / high-rate "
                                       "data-logging test with the satellite onboard computer plus a discrete-interface "
                                       "thruster-operation demonstration, drivers inside the propulsion system"),
-            plan(ctx, "BUS", "@doc", role="SUPPORTING", why="power boundary only; no data interface defined"),
+            plan(ctx, bus(c), "@doc", role="SUPPORTING", why="power boundary only; no data interface defined"),
         ]),
     })
     # RVM-21 ---------------------------------------------------------------------------------------------- ENTEST

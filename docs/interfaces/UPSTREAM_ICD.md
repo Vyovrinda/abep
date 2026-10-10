@@ -13,7 +13,7 @@ which is about the HallThruster.jl upstream project (the ingestion-units issue).
 
 ## 1. Scope and chain
 
-The chain follows the RFP architecture recorded in Governance.md (Next work 1, "Scope"): atmospheric path intake → filter →
+The chain follows the RFP architecture recorded in governance.md (Next work 1, "Scope"): atmospheric path intake → filter →
 compressor → atmospheric gas chamber → valve; Xe path Xe chamber → valve; both feed ionization/discharge →
 acceleration/thrust.
 
@@ -44,7 +44,7 @@ flight upstream field).
 
 ## 2. The closure-independence rule: Hall calibration nuisance never leaks upstream
 
-The Hall uncertainty has two layers (Governance.md Next work 1; `abep_sim/hall_ensemble.py`;
+The Hall uncertainty has two layers (governance.md Next work 1; `abep_sim/hall_ensemble.py`;
 `hallthruster_bridge/ensemble/transport_ensemble_v0.json`):
 
 * **Layer 1, calibration nuisance.** P5 registration, historical coil shape, beam-efficiency reading and
@@ -200,7 +200,7 @@ existing code is checked by `test_existing_code_references_resolve`.
 
 ### IF-A0: free stream -> intake aperture
 
-Free-molecular free-stream state presented to the ram aperture. Producer: abep_sim.atmosphere.atmosphere() (frozen NRLMSIS by default, live MSIS only when asked, Governance.md rule 3); consumer: abep_sim.intake.collection().
+Free-molecular free-stream state presented to the ram aperture. Producer: abep_sim.atmosphere.atmosphere() (frozen NRLMSIS by default, live MSIS only when asked, governance.md rule 3); consumer: abep_sim.intake.collection().
 
 | field | class | unit | status | producer (file:function → key) | consumer | notes / what is missing |
 |---|---|---|---|---|---|---|
@@ -304,7 +304,7 @@ Compressed gas delivered to the atmospheric gas chamber. Physics path: compresso
 | `rotor_ok` | quality | - | **supplied** | `abep_sim/compressor.py:DragCompressor._run_once` → `rotor_ok` | `abep_sim/system.py:evaluate` |  |
 | `sized` | quality | - | **supplied** | `abep_sim/compressor.py:DragCompressor.size_for` → `sized` | `abep_sim/system.py:evaluate` |  |
 | `comp_feasible` | quality | - | **supplied** | `abep_sim/intake.py:compress` → `comp_feasible`; `abep_sim/system.py:evaluate` → `comp_feasible` | `abep_sim/system.py:evaluate` |  |
-| `recirculation_converged` | quality | - | **gap** | — | — | TBD - requires DragCompressor.run to report convergence (Governance.md rule 3; code change outside this ICD) |
+| `recirculation_converged` | quality | - | **gap** | — | — | TBD - requires DragCompressor.run to report convergence (governance.md rule 3; code change outside this ICD) |
 
 Not applicable here: pressure_loss (the compressor raises pressure; represented by compression_ratio_s).
 
@@ -331,7 +331,7 @@ Chamber outflow toward the valve. The code has no valve model: Reservoir.anode_o
 | `pressure_loss_Pa` | pressure_loss | Pa | **gap** | — | — | TBD - requires a feed-line flow model (the lumped orifice has no separate line drop) |
 | `rejected_heat_W` | rejected_heat | W | **gap** | — | — | TBD - requires a chamber thermal node |
 | `contaminant_mass_flow_kgps` | contamination | kg s^-1 | **gap** | — | — | TBD - requires IF-A3 contaminant input and chamber wall model |
-| `steady_state_converged` | quality | - | **gap** | — | — | TBD - requires Reservoir.steady_state to report convergence (Governance.md rule 3; code change outside this ICD) |
+| `steady_state_converged` | quality | - | **gap** | — | — | TBD - requires Reservoir.steady_state to report convergence (governance.md rule 3; code change outside this ICD) |
 | `orifice_sizing_converged` | quality | - | **gap** | — | — | TBD - requires the sizing routine to return its pressure residual |
 | `molecular_flow_regime_ok` | quality | - | **gap** | — | — | TBD - requires a Knudsen-number check against a stated regime limit |
 
@@ -464,14 +464,14 @@ Interface fields by status: 53 supplied, 15 derivable, 23 partial, 45 gap (136 t
 ## 7. Gap register
 
 Code findings made while aligning the ICD with the code at `7b219ba`. They're stated, not fixed: fixing them is code
-work outside this ICD. Where a fix would move golden benchmarks, it's a model change under Governance.md rule 2. None of them
+work outside this ICD. Where a fix would move golden benchmarks, it's a model change under governance.md rule 2. None of them
 is a tuning suggestion.
 
 | # | finding | evidence (file:function) | ICD fields affected |
 |---|---|---|---|
 | G-01 | **The filter's flow effect is absent on the production path.** The frozen TPMC surface has no filter (`response_surface` builds `IntakeGeometry` without one). With `IntakeParams.filter=True`, `intake.collection` only adds filter mass. The filter transmission (`filter_open_frac`, `filter_transmission`) is applied only by a direct `intake_tpmc.intake_response` call | `abep_sim/intake.py:collection`; `abep_sim/intake_tpmc.py:intake_response`, `response_surface` | IF-A2 `mdot_total_kgps`, `mdot_s_kgps`, `filter_transmission`, `filter_flow_effect_applied` |
 | G-02 | **Species-selective collection is lost.** The frozen surface is species-resolved, but `IntakeSurface.__call__` returns only the mass-weighted mean `eta_c`. `system.evaluate` then splits the collected flow by free-stream mass fractions (`md_in`) | `abep_sim/intake_tpmc.py:IntakeSurface.__call__`; `abep_sim/system.py:evaluate` | IF-A1/IF-A2 `mdot_s_kgps`, `w_s` |
-| G-03 | **No convergence flag from the compressor leak fixed point.** `DragCompressor.run` iterates up to 40 times and returns the last iterate either way (Governance.md rule 3) | `abep_sim/compressor.py:DragCompressor.run` | IF-A3 `recirculation_converged` |
+| G-03 | **No convergence flag from the compressor leak fixed point.** `DragCompressor.run` iterates up to 40 times and returns the last iterate either way (governance.md rule 3) | `abep_sim/compressor.py:DragCompressor.run` | IF-A3 `recirculation_converged` |
 | G-04 | **No convergence flag from the chamber balance.** `Reservoir.steady_state` iterates up to 200 times and returns the last iterate either way | `abep_sim/reservoir.py:Reservoir.steady_state` | IF-A4 `steady_state_converged` |
 | G-05 | **Orifice sizing returns no residual.** `size_orifice_for_pressure` bisects in [1e-8, 3e-2] m² for 60 steps and returns the area. If the target is unreachable inside the bracket, the result sits at a bracket end with no flag | `abep_sim/reservoir.py:size_orifice_for_pressure` | IF-A4 `orifice_sizing_converged` |
 | G-06 | **No valve model.** Valve, feed line and anode distributor are one molecular-flow orifice (`Reservoir.anode_orifice_area_m2 × anode_orifice_K`), sized by G-05 to hit the target chamber pressure. Valve power is part of one lumped budget `Budgets.p_ctrl_valves_sensors_W` shared by valves, sensors and control | `abep_sim/reservoir.py`; `abep_sim/system.py:Budgets` | IF-A4/IF-A5/IF-X2 conductance, pressure loss, valve heat, commands |
@@ -482,7 +482,7 @@ is a tuning suggestion.
 | G-11 | **No contamination transport.** Code has AO flux/energy/fluence and erosion depths and rates (`aochem`, `life`), and outgassing properties (`materials.Material.tml_pct`, `cvcm_pct`), but no non-propellant mass flow in any stream | `abep_sim/aochem.py`; `abep_sim/life.py`; `abep_sim/materials.py` | every `contaminant_mass_flow_kgps`, `filter_retained_mass_rate_kgps` |
 | G-12 | **Xe path has no storage state.** `mass_bom.xe_tank` sizes the wall from a design pressure parameter. There's no tank p/T state and no regulator. `transient.run_mission` tracks the topping budget (`xe_left_kg`) separately from cathode Xe | `abep_sim/mass_bom.py:xe_tank`; `abep_sim/transient.py:run_mission` | IF-X1, IF-X2 |
 | G-13 | **No upstream uncertainty is produced.** The only upstream prior is `uq_modular.PRIORS["accommodation"]`, which is sampled and not carried | `abep_sim/uq_modular.py` | every `uncertainty` |
-| G-14 | **Species and propellant scope.** The chamber models O/O2/N2 only (`Reservoir.steady_state` species tuple). The Hall bridge takes one propellant per case. Multi-species air or mixed air + Xe anode feed isn't wired (Governance.md Next work 4 gates intake-delivered mixtures behind items 1–3) | `abep_sim/reservoir.py`; `hallthruster_bridge/bridge_lib.jl` | IF-A4, IF-A5, IF-X2 |
+| G-14 | **Species and propellant scope.** The chamber models O/O2/N2 only (`Reservoir.steady_state` species tuple). The Hall bridge takes one propellant per case. Multi-species air or mixed air + Xe anode feed isn't wired (governance.md Next work 4 gates intake-delivered mixtures behind items 1–3) | `abep_sim/reservoir.py`; `hallthruster_bridge/bridge_lib.jl` | IF-A4, IF-A5, IF-X2 |
 | G-15 | **Chamber volume isn't linked to the vessel mass.** `system.evaluate` calls `mass_bom.reservoir_vessel` with a literal volume instead of `Reservoir.volume_m3` | `abep_sim/system.py:evaluate` | IF-A4 `chamber_volume_m3` |
 | G-16 | **Wall-collision counts are heuristics without a source.** Physics path: `upstream_collisions = 10 × turbo_rows + 50 × n_stages` (`system.evaluate`). Parametric path: `AOParams` collision counts (`aochem.recombination_fraction`) | `abep_sim/system.py:evaluate`; `abep_sim/aochem.py:AOParams` | IF-A3 `upstream_wall_collisions`; IF-A4 `O_survival` |
 | G-17 | **Compressor heat split is assumed.** `thermal.default_nodes` books the full compressor electrical input as compressor-node heat. The compressor doesn't report its own split | `abep_sim/thermal.py:default_nodes` | IF-A3 `rejected_heat_W` |
@@ -526,4 +526,4 @@ The fixture record in the test carries null values only. The test introduces no 
    owner decides when.
 8. **Upstream uncertainty (G-13).** Which upstream quantities should carry uncertainty fields first, and with what evidence?
 
-The owner integrates any docs/HISTORY.md or Governance.md entry for this ICD.
+The owner integrates any docs/HISTORY.md or governance.md entry for this ICD.

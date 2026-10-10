@@ -78,7 +78,7 @@ PROVENANCE_READS = {
     AOL_REL: "fea8aa05bd561d5ea559b934803d472f1fb1ed1013bfa925a5afb6c68a33e637",
     W4_REL: "7c6d37b00f38a44cded73d92d4366739eacbf013e73e98a7bfbc3fa5a5470d96",
 }
-# Never pinned, never read (mutable governance, Governance.md operating model).
+# Never pinned, never read (mutable governance, governance.md operating model).
 NEVER_PINNED = ("lane_registry_v1.json", "trigger_registry_v1.json", "fired_triggers.jsonl",
                 "trigger_ledger_v2.jsonl", "runtime_state.json")
 
@@ -192,7 +192,7 @@ SECONDS_PER_HOUR = 3600.0
 
 
 class InputMissing(ValueError):
-    """Raised when an explicit input is absent (Governance.md rule 3: no silent fallbacks)."""
+    """Raised when an explicit input is absent (governance.md rule 3: no silent fallbacks)."""
 
 
 def _req(name: str, value, positive: bool = True):

@@ -173,8 +173,8 @@ def dataset_state(manifest, followon_dir, subdir=None):
     return ("running" if os.path.isdir(os.path.join(followon_dir, subdir or manifest)) else "not_started"), {}
 
 
-DEFAULT_JOURNALS = "/root/.Governance/projects/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/subagents/workflows"
-DEFAULT_FOLLOWON = "/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/followon"
+DEFAULT_JOURNALS = "/root/.governance/projects/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/subagents/workflows"
+DEFAULT_FOLLOWON = "/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/followon"
 STALE_CLAIM_S = 900
 
 

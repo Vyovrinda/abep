@@ -50,7 +50,7 @@ These statements gate every use of the database. The JSON carries the same wordi
    closure that sets the plasma state is not identified (gate 3). Multiplying this flux by any yield below gives a
    sensitivity number, never a life prediction.
 2. **Screening transport candidates must not be used for design life.** The nine ScaledGaussianBohm screening
-   candidates (`sgb-screen-01..09`) are not admitted ensemble members; the credible set is empty (Governance.md item 1). They
+   candidates (`sgb-screen-01..09`) are not admitted ensemble members; the credible set is empty (governance.md item 1). They
    never produce design Hall maps. Their wall fields must not feed life estimates, erosion budgets or wall-thickness sizing.
 3. **No design-life number can be derived from this version.** I found no measured N⁺, N₂⁺, O⁺ or O₂⁺ yield on BN,
    BN-SiO₂ or SiC in open sources. The only measurement I found of these ions on a candidate ceramic is Espy et al.
@@ -207,7 +207,7 @@ These requirements are binding on any code that takes a yield from this database
 | where | what | assessment |
 |---|---|---|
 | `abep_sim/materials.py` | `sputter_Eth_eV` / `sputter_Y300` (atoms/ion at 300 eV, "Xe-referenced"): BN 45 / 0.25, BN_SiO2 45 / 0.20, SiC 50 / 0.30, Al2O3_anodised 60 / 0.35, Quartz 40 / 0.30, Graphite 35 / 0.2, with Y(E) ∝ ((E/E_th − 1)/(300/E_th − 1))^1.5 | level 7 / assumed. No citation. The 45 eV BN threshold matches none of the fitted Xe values (18.3, 24 ± 6, 57 eV). Units differ from the mm³/C sources. No dependence on ion species |
-| `abep_sim/plasma_devices.py` HallChannel | Y(5 T_e + 20 V), wall flux 0.2 n_e u_B × shielding | superseded 0-D closure (Governance.md: absolute Hall results withdrawn) |
+| `abep_sim/plasma_devices.py` HallChannel | Y(5 T_e + 20 V), wall flux 0.2 n_e u_B × shielding | superseded 0-D closure (governance.md: absolute Hall results withdrawn) |
 | `abep_sim/archengine.py` | Hall life = 6 mm / erosion rate; SiC/Mo cathode-antenna yield at 3 T_e + 10; Mo grid yields scaled by the energy-transfer factor vs Xe | inherits the priors; the scaling is a `PROJECTILE_PROXY` assumption |
 | `abep_sim/life.py` | `LifeInputs.hall_sputter_um_per_kh` default 300 (line 22); `hall_channel_life` life = t₀ / rate | assumed |
 | `abep_sim/mission5.py:83` | `base.get("pl_wall_erosion_um_per_kh", 150.0)` fallback | assumed |

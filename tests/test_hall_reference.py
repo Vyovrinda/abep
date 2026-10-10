@@ -301,10 +301,10 @@ def test_repository_sources_and_forbidden_files_exist(ref):
 def test_other_lane_contracts_are_repo_relative_and_not_required(ref):
     for name, c in ref["related_contracts"].items():
         p = c["path"]
-        assert not os.path.isabs(p) and ".Governance" not in p and "worktrees" not in p, name
+        assert not os.path.isabs(p) and ".governance" not in p and "worktrees" not in p, name
     for s in ref["sources"]:
         if s["kind"] == "other_lane_contract":
-            assert not os.path.isabs(s["path"]) and ".Governance" not in s["path"], s["id"]
+            assert not os.path.isabs(s["path"]) and ".governance" not in s["path"], s["id"]
 
 
 # ----------------------------------------------------------------------------------------------- contracts

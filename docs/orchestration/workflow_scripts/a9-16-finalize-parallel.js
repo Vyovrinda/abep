@@ -10,9 +10,9 @@ export const meta = {
 }
 
 // args = { base: '<sha>' }
-const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const SP = '/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
+const TRAILER = `Co-Authored-By: governance Opus 5.5 <noreply@anthropic.com>
+governance-Session: https://governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, applied: { type: 'array', items: { type: 'string' } },
   blocked: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } }, required: ['commit', 'applied', 'blocked', 'tests'] }
 const FIND = { type: 'object', properties: { findings: { type: 'array', items: { type: 'object', properties: {
@@ -21,8 +21,8 @@ const FIND = { type: 'object', properties: { findings: { type: 'array', items: {
   description: { type: 'string' }, evidence: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'file', 'area', 'description', 'evidence', 'fix_hint'] } } }, required: ['findings'] }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first. The base already contains: A9.16 steps 1+2, the three step-3 code lanes (design-layer architecture changes, RVM re-based on the registered RFP, Rust parity v2 prereg/report), A9.17 rebuilds (orbit atmosphere v1 csv.gz, HWM14 v2, sputter regen), the A9.18 golden replacement (abep_sim/data/golden_v2.json canonical; golden_v1.json history) and the CI rule-9 fix. Owner decisions: docs/decisions/OD_2026_10_01_A9_{8..18}_* (verbatim governs).
-RULES: Governance.md rules 1-10; never retune; never invent values; never weaken/skip tests (rule 9: exactly 5 SUPERSEDED skips + 1 strict xfail); never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, abep_sim/data/** frozen files (golden_v2.json only via python -m abep_sim.golden generate and only if a lane is explicitly allowed), immutable history (rfq_a9, rfq_a9_v2, owner_questions_state_v2..v4, mass_power_a9_v2, xe_accounting_a9_v2, parity v1 records, perf A9.7 baseline timings, dedicated baseline 2026-10-01 timings). Never run the v1 consolidated-questions builder (it rewrites an xlsx). No Julia.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read governance.md first. The base already contains: A9.16 steps 1+2, the three step-3 code lanes (design-layer architecture changes, RVM re-based on the registered RFP, Rust parity v2 prereg/report), A9.17 rebuilds (orbit atmosphere v1 csv.gz, HWM14 v2, sputter regen), the A9.18 golden replacement (abep_sim/data/golden_v2.json canonical; golden_v1.json history) and the CI rule-9 fix. Owner decisions: docs/decisions/OD_2026_10_01_A9_{8..18}_* (verbatim governs).
+RULES: governance.md rules 1-10; never retune; never invent values; never weaken/skip tests (rule 9: exactly 5 SUPERSEDED skips + 1 strict xfail); never modify docs/decisions/**, governance.md, hallthruster_bridge/**, abep_sim/data/** frozen files (golden_v2.json only via python -m abep_sim.golden generate and only if a lane is explicitly allowed), immutable history (rfq_a9, rfq_a9_v2, owner_questions_state_v2..v4, mass_power_a9_v2, xe_accounting_a9_v2, parity v1 records, perf A9.7 baseline timings, dedicated baseline 2026-10-01 timings). Never run the v1 consolidated-questions builder (it rewrites an xlsx). No Julia.
 Hygiene: affected builders --check and tests; git add + commit; message ends with exactly:
 ${TRAILER}
 Do NOT push. Never touch ${SP}/followon or ${SP}/wt_followon. Return the structured result.
@@ -55,7 +55,7 @@ const LENSES = [
   ['rfp', 'RFP TRACEABILITY: every clause in docs/requirements/rfp_official/rfp_registration_v1.json mapped in the RVM with verbatim text; derived/owner rows labelled; discrepancies recorded; A9.15 dual-propellant policy consistent across RVM, mass/Xe v3, RFQ v3 and optimizer.'],
 ]
 const reviews = await parallel(LENSES.map(([k, txt]) => () => agent(
-  `ADVERSARIAL REVIEW (A9.16 finalize). git worktree add --detach ${SP}/rvf_${k} ${integ.commit}; read-only there; scratch under ${SP}/rvf_${k}_scratch; remove the worktree at the end. Read Governance.md and the decision records. ${txt} Report only real problems with evidence; give each finding an 'area': design (abep_sim/design, docs/design_synthesis, docs/hardware, docs/architecture*), requirements_budgets (docs/requirements, docs/budgets, docs/decisions/application, docs/traceability, integration), experiments_procurement (docs/experiments p1-p4, docs/procurement), production_data_perf (abep_sim/*.py production, golden, atmosphere, docs/performance, scripts, CI), other. Full suite at most once.`,
+  `ADVERSARIAL REVIEW (A9.16 finalize). git worktree add --detach ${SP}/rvf_${k} ${integ.commit}; read-only there; scratch under ${SP}/rvf_${k}_scratch; remove the worktree at the end. Read governance.md and the decision records. ${txt} Report only real problems with evidence; give each finding an 'area': design (abep_sim/design, docs/design_synthesis, docs/hardware, docs/architecture*), requirements_budgets (docs/requirements, docs/budgets, docs/decisions/application, docs/traceability, integration), experiments_procurement (docs/experiments p1-p4, docs/procurement), production_data_perf (abep_sim/*.py production, golden, atmosphere, docs/performance, scripts, CI), other. Full suite at most once.`,
   { label: `verify:${k}`, phase: 'Verify', schema: FIND })))
 const all = reviews.filter(Boolean).flatMap(r => r.findings)
 const serious = all.filter(f => f.severity !== 'minor')

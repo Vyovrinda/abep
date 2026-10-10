@@ -14,7 +14,7 @@ B / C) and what is missing for the next one, the measured / model-derived / assu
 (with their stated uncertainties and sources), the top unresolved failure-tree nodes and the next decisive evidence,
 plus a provenance section (sha256 of every input file read, generation time, git commit).
 
-Rules (lane contract; Governance.md rules 3, 6, 10; docs/EVIDENCE.md)
+Rules (lane contract; governance.md rules 3, 6, 10; docs/EVIDENCE.md)
 -----------------------------------------------------------------
 * Nothing is fabricated. Every value in the dossier is copied from an input file (path given) or counted from one.
   An input that is absent is listed as UNRESOLVED with the lane id that produces it; a present input that cannot be
@@ -156,8 +156,8 @@ INPUTS: list[dict] = [
     {"key": "owner_decision_record", "lane": "owner",
      "role": "owner decision record (only an owner-recorded decision can make the dossier name an architecture)",
      "files": [OWNER_DECISION_RECORD]},
-    {"key": "Governance_md", "lane": "project instructions", "role": "gate status table (Physics Baseline 1.0)",
-     "files": ["Governance.md"]},
+    {"key": "governance_md", "lane": "project instructions", "role": "gate status table (Physics Baseline 1.0)",
+     "files": ["governance.md"]},
     {"key": "p5_n2_v1", "lane": "physics track (P5-N2 v1 vacuum campaign)", "role": "P5-N2 v1 decision and release",
      "files": ["hallthruster_bridge/validation/p5_n2_campaign_v1_vacuum_scores_decision.json",
                "hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json"]},
@@ -187,7 +187,7 @@ F = {
     "decision": "hallthruster_bridge/validation/p5_n2_campaign_v1_vacuum_scores_decision.json",
     "release": "hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json",
     "qa": "docs/v2/question_a/QUESTION_A_DISPOSITION.json",
-    "Governance": "Governance.md",
+    "governance": "governance.md",
     "owner": OWNER_DECISION_RECORD,
     "ensemble": "hallthruster_bridge/ensemble/transport_ensemble_v0.json",
 }
@@ -533,11 +533,11 @@ def milestone_a_extra(rd: Reader) -> dict:
 
 def physics_track_section(rd: Reader) -> dict:
     out: dict[str, Any] = {"state": "RESOLVED"}
-    text = rd.text(F["Governance"])
+    text = rd.text(F["governance"])
     rows = re.findall(r"^\|\s*(\d)\s+([^|]+?)\s*\|\s*(.+?)\s*\|\s*$", text, flags=re.M)
     if not rows:
-        raise Unresolved("Governance.md gate-status table not found")
-    out["Governance_md_gate_status"] = [{"gate": int(n), "name": name, "status": st} for n, name, st in rows]
+        raise Unresolved("governance.md gate-status table not found")
+    out["governance_md_gate_status"] = [{"gate": int(n), "name": name, "status": st} for n, name, st in rows]
     dec = _sec(rd.json, F["decision"])
     out["p5_n2_v1_decision"] = dec if dec.get("state") == "UNRESOLVED" else {
         "source": F["decision"], "admission_mode": dec.get("admission_mode"), "promotable": dec.get("promotable"),
@@ -942,9 +942,9 @@ def render_md(d: dict) -> str:
     if ph.get("state") == "UNRESOLVED":
         w(f"UNRESOLVED — {ph.get('reason')}")
     else:
-        w("| gate (Governance.md) | status |")
+        w("| gate (governance.md) | status |")
         w("|---|---|")
-        for g in ph["Governance_md_gate_status"]:
+        for g in ph["governance_md_gate_status"]:
             w(f"| {g['gate']} {g['name']} | {_v(g['status'], 300)} |")
         w("")
         dec = ph["p5_n2_v1_decision"]

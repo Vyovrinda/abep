@@ -2,7 +2,7 @@
  "schema": "bus_power_ledger_v1",
  "version": "1.0",
  "status": "DRAFT — PROPOSED for owner decision. Schema only: term definitions, origins, closure rules and the crosswalk onto bus_power_boundary_v1. It carries no power numbers and is not wired into abep_sim (wiring is a model change for the owner).",
- "role": "Decomposition of the archengine / ppu P_bus (the legacy trade view: load-plane terms plus POOLED converter and harness losses) and its term-by-term crosswalk onto the common bus-power boundary. The admissibility-bearing architecture-comparison ledger is the one produced by abep_sim/arch_boundary.py (function bus_power_ledger, BOUNDARY_VERSION 'bus_power_boundary_v1', schema schemas/architecture_comparison/bus_power_boundary_v1.json, lane_11_bus_boundary). This schema never redefines it and never replaces it: an architecture comparison is admissible only on the boundary ledger (Governance.md admissibility). The id 'bus_power_ledger_v1' names this decomposition schema; its instances are called 'decomposition instances' to keep them apart from arch_boundary.bus_power_ledger outputs.",
+ "role": "Decomposition of the archengine / ppu P_bus (the legacy trade view: load-plane terms plus POOLED converter and harness losses) and its term-by-term crosswalk onto the common bus-power boundary. The admissibility-bearing architecture-comparison ledger is the one produced by abep_sim/arch_boundary.py (function bus_power_ledger, BOUNDARY_VERSION 'bus_power_boundary_v1', schema schemas/architecture_comparison/bus_power_boundary_v1.json, lane_11_bus_boundary). This schema never redefines it and never replaces it: an architecture comparison is admissible only on the boundary ledger (governance.md admissibility). The id 'bus_power_ledger_v1' names this decomposition schema; its instances are called 'decomposition instances' to keep them apart from arch_boundary.bus_power_ledger outputs.",
  "milestones": {
   "supports": [
    "A",
@@ -113,7 +113,7 @@
   "source": "component sets copied by name from abep_sim/arch_boundary.py COMMON_COMPONENTS / PREIONIZER_COMPONENTS at execution branch e15f66f; tests/test_ledger_schemas.py compares them with the module whenever it is present"
  },
  "boundary": {
-  "definition": "P_bus = all electrical power crossing the spacecraft-side DC boundary into the propulsion system: discharge + pre-ionizer + cathode + magnets + PPU losses + gas path (compressor, valves/flow control) + controls + thermal control (heaters) + any other propulsion load. Wording follows the Governance.md admissibility rule for bus_power_boundary_v1.",
+  "definition": "P_bus = all electrical power crossing the spacecraft-side DC boundary into the propulsion system: discharge + pre-ionizer + cathode + magnets + PPU losses + gas path (compressor, valves/flow control) + controls + thermal control (heaters) + any other propulsion load. Wording follows the governance.md admissibility rule for bus_power_boundary_v1.",
   "plane": "input terminals of the PPU converters on the regulated spacecraft bus (abep_sim/ppu.py:PPU.V_bus); matches loads['P_bus_W'] of abep_sim/ppu.py:PPU.loads as used by abep_sim/archengine.py:close_architecture",
   "never_P_bus": [
    "absorbed RF or microwave power in the source plasma (abep_sim/plasma_devices.py:ECRSource.absorbed, RFSource.absorbed); the bus-side quantity is the DC converter output P_ion_W plus its conversion loss",
@@ -176,7 +176,7 @@
    ],
    "origin": "abep_sim/archengine.py:_propulsion P_acc_W (grids / mpd / pit / thermal branches)",
    "status": "computed",
-   "note": "screening families only; Governance.md rule 8 (no new propulsion families) applies. Not representable on bus_power_boundary_v1, which covers only the three Hall-accelerated architectures (BUS_POWER_BOUNDARY.md section 3, 'Not covered by v1')",
+   "note": "screening families only; governance.md rule 8 (no new propulsion families) applies. Not representable on bus_power_boundary_v1, which covers only the three Hall-accelerated architectures (BUS_POWER_BOUNDARY.md section 3, 'Not covered by v1')",
    "hall_transport_ensemble_role": "not_applicable",
    "boundary_components": [],
    "boundary_booking": "outside_boundary_v1",
@@ -628,10 +628,10 @@
   "decomposition_view": {
    "identity": "P_bus_W = sum of the load-plane terms (P_discharge, P_accelerator_other, P_preionizer, P_cathode, P_magnets, P_compressor, P_valves_control, P_aux_unallocated, P_thermal, P_housekeeping) + P_PPU_losses + P_harness_losses. This is what abep_sim/archengine.py:close_architecture closes against abep_sim/ppu.py:PPU.loads (P_bus = controller_W + sensors_W + sum_k P_out_k / eta_k); the harness term is absent from the code (TBD).",
    "residual": "resid = (P_bus_W - sum_terms P_term_W) / P_bus_W, with P_bus_W taken from abep_sim/ppu.py:PPU.loads",
-   "gate": "|resid| <= 0.02 (abep_sim/archengine.py:close_architecture rejects the candidate as 'energy_ledger' otherwise; Governance.md rule 4)",
+   "gate": "|resid| <= 0.02 (abep_sim/archengine.py:close_architecture rejects the candidate as 'energy_ledger' otherwise; governance.md rule 4)",
    "gate_rel_tol": 0.02,
    "gate_rel_tol_source": "abep_sim/archengine.py:close_architecture ('if abs(resid) > 0.02'); code constant, verified by tests/test_ledger_schemas.py",
-   "golden_comparison": "near-zero ledger_resid values are compared with an absolute tolerance (Governance.md gate 6)",
+   "golden_comparison": "near-zero ledger_resid values are compared with an absolute tolerance (governance.md gate 6)",
    "not_a_completeness_check": "the archengine ledger closes by construction (BUS_POWER_BOUNDARY.md section 6, point 1): a missing consumer (flow_control, thermal_control, a separate heater, an ECR magnet) leaves resid at zero. Completeness is carried by the completeness flag, never by resid."
   },
   "boundary_view": {

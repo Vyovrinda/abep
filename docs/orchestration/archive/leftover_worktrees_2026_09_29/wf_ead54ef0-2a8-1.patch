@@ -5,7 +5,7 @@
 Lane ``fo_preionizer_module_icd`` (trigger ``T_A5_PREIONIZER_ICD``, owner addendum A6). It writes
 ``schemas/interfaces/preionizer_module_icd_v1.json`` from the interface content below plus every numeric value
 **extracted by locator from the cited repository deliverable** (none is typed here). A value that cannot be found at
-its locator raises ``SourceError`` (Governance.md rule 3: no silent fallback, no default). The script also computes a
+its locator raises ``SourceError`` (governance.md rule 3: no silent fallback, no default). The script also computes a
 derived index (annex coverage, satisfiability matrix, numeric-value index, TBD register) and checks the owner-decision
 pins.
 

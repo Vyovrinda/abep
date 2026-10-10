@@ -9,7 +9,7 @@ infrastructure interruption; the interrupted attempt is never read.)
 import hashlib, json, os, subprocess, sys
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
-FOLLOWON = "/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/followon"
+FOLLOWON = "/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/followon"
 h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
 
 

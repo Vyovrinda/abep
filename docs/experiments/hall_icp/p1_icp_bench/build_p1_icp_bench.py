@@ -241,6 +241,11 @@ XL_PAIRS = {  # pair: (counterpart package, counterpart id, quantity, units, sta
 }
 
 
+# A9.24 item 13 (owner messages 2026-10-04): current C1 status; the A9.2 CONTROL_FALLBACK is a labelled quote only
+C1_GROUND_REFERENCE_ONLY = ("GROUND_REFERENCE_ONLY (A9.20 ground-only laboratory reference; A9.19 / A9.24 item 13: "
+           "no C1 flight fallback; "
+           "never in flight architecture, mass, power, Xe or thermal closure)")
+
 def xref(pair):
     """The shared description of one cross-lane interface pair (identical on both sides)."""
     pkg, cid, quantity, units, status = XL_PAIRS[pair]
@@ -364,7 +369,8 @@ H23 = "docs/hardware/h2/h2_3_gas_path_plenum/h2_3_gas_path_plenum_v1.json"
 H22 = "docs/hardware/h2/h2_2_cathode_integration/h2_2_cathode_integration_v1.json"
 H24 = "docs/hardware/h2/h2_4_ppu_bus/h2_4_ppu_bus_v1.json"
 H26 = "docs/hardware/h2/h2_6_diagnostics_fixture/h2_6_diagnostics_fixture_v1.json"
-BUS = "docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json"
+BUS = "docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json"   # A9.22 G8 stage 2 (v2)
+BUS1 = "docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json"  # immutable v1 (historical reuse)
 RFQ1 = "docs/procurement/rfq_a9/rfq_a9_v1.json"
 M16 = "docs/experiments/hall_icp/integration/m16_v3/subsystem_maturity_v3.json"
 OQS = "docs/budgets/owner_decisions/owner_questions_state_v3.json"
@@ -400,7 +406,10 @@ PINS = [
     (UB, "c6567e6d0bbc008bedd5b9c14a9716f117144ab6952b9c498f7b0c75e02a624d", "A9-04 uncertainty budget"),
     (EVI, "092e4ca8e1827dd2e9558058a204f46510f2633316ce188e7126b697ec6d0b53", "A9-05 Takahashi 2024 extraction"),
     (VIN, "fac472e370b54875df5dea90c3c7740403da5ac1edd1af29b43ed09ee679d450", "A9-05 validation-input list"),
-    (BUS, "9f6e074cc2cdd1e2445d00a14eec04b4cc33f239655f8619a789e7ae863c43e6", "A9-02 bus-power boundary"),
+    (BUS, "de346f86f77ae08c2e0cc4a5b945c21c9626bc5ad0f32f904acd4a929a08f980",
+     "A9-02 bus-power boundary, v2 (A9.22 G8: hall_icp_neutralizer only; C1 ground-reference metadata)"),
+    (BUS1, "9f6e074cc2cdd1e2445d00a14eec04b4cc33f239655f8619a789e7ae863c43e6",
+     "A9-02 bus-power boundary v1 (immutable history; historical reuse only)"),
     (MASS, "071b03fb634c6b25ef422e7ec81006d337e6c333b80133240bdea32999a4f7d4", "A9-06 mass reconciliation"),
     (REVS, "b428565299c1c41487d9ffa50c174986d2d52c544539f89ca21b7bdbc2ae44fa", "A9-07 H2 revisions"),
     (XE_A9, "37c32cda9fb04200f6e9041b0e790ca700e270866f29e7c10f8a298034ddacfd", "A9-08 Xe ledger (A9)"),
@@ -433,6 +442,9 @@ PINS = PINS + APP.pins()
 # C1 ground-only laboratory reference)
 APP19 = _load_sibling("p1_a9_19_application.py", "p1_a9_19_application_for_builder")
 PINS = PINS + APP19.pins()
+# A9.21 HW_PROGRAMME (owner decision of 2026-10-02, items 7 / 8): programme order record (refuses a stale record)
+sys.path.insert(0, os.path.join(ROOT, "docs", "experiments", "hall_icp", "programme"))
+import hw_programme_a9_21 as PROG  # noqa: E402
 GOVERNANCE_NOT_PINNED = ["docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
                          "docs/orchestration/trigger_ledger_v2.jsonl", "docs/orchestration/fired_triggers.jsonl",
                          "docs/orchestration/runtime_state.json"]
@@ -872,7 +884,7 @@ def _items_base(ar):
            "differing sign conventions and the statistical / fractional closure failures; a missing u(I_k) gives "
            "NOT_EVALUATED_UNCERTAINTY (A9.6 sec. 14). Still "
            "REFUSED (raised; input errors, not findings): a record that is incomplete (a required terminal or "
-           "capacity_monitoring field absent from the record, Governance.md rule 3) or not a capacity record at all "
+           "capacity_monitoring field absent from the record, governance.md rule 3) or not a capacity record at all "
            "(Hall ON, wrong stage, not the dedicated collector, not the single-point metered body ground, V_anode not on "
            "a high-impedance isolated channel), a missing match rule, and synthetic / measured capacity candidates "
            "mixed in one evaluation (PR #34); in the campaign driver a whole bundle mixing synthetic and measured "
@@ -2056,7 +2068,7 @@ def historical_reuse():
          "(superseded by A9.2 / A9.3; v2 = " + RFQ2 + ")"),
         (REVS, "A9H-* instrument items, REV-30 / REV-36", "thermal results (UNRESOLVED)"),
         (H24, "H24-27 8.33 A laboratory rating (sizing)", "flight discharge current values"),
-        (BUS, "A902-19/21/22/23 definitions", "no ledger computation"),
+        (BUS1, "A902-19/21/22/23 definitions", "no ledger computation"),
         (INS, "INS-04/08/10/11/17/18 ids", "HW-0/RF/ECR arm semantics (historical)"),
         (P1F, "nothing (historical A5 Phase-1 pre-ionizer framework, kept immutable per A9)",
          "all of it: hall_only / rf_hall / ecr_hall topology is superseded (owner row 28)"),
@@ -2498,6 +2510,7 @@ def build_doc():
         "interface_demands": interface_demands(),
         "owner_answers_applied": owner_answers_applied(),
         "a9_19_incorporation": APP19.incorporation(_reducer()),
+        "a9_21_programme": PROG.artifact_view("P1"),
         "open_owner_questions": open_questions(),
         "open_owner_questions_note": APP.AS_RAISED_QUESTIONS_NOTE,
         "owner_question_status_current": APP.owner_question_status_current(open_questions()),
@@ -2506,6 +2519,8 @@ def build_doc():
         "m16_impact": m16_impact(),
         "h3_h4_inputs": h3_h4(),
         "a9_2_statuses_carried_unchanged": a9_2_statuses(),
+        "a9_2_statuses_label": "HISTORICAL_QUOTE (A9.2 / A9-10 table, verbatim); the current statuses are current_statuses (A9.24 item 13)",
+        "current_statuses": {k: (C1_GROUND_REFERENCE_ONLY if v == "CONTROL_FALLBACK" else v) for k, v in a9_2_statuses().items()},
         "compliance": ["no performance prediction; no invented thresholds (TBD / PROPOSED / owner-given only; the "
                        "closure factor 3 and the 2 % are A9.5 owner values)",
                        "no Julia; no archengine wiring; no change outside " + REL + "/ and tests/test_p1_icp_bench.py",
@@ -3026,6 +3041,13 @@ def render_md(doc):
     L += _table(a16["fail_closed"], [("case", "case"), ("outcome", "outcome"), ("test", "test")]) + [""]
     L += ["Existing tests updated (behaviour changed by an owner decision): " + ", ".join(a16["existing_tests_updated"]),
           "", "Statuses: " + a16["statuses_unchanged"], "", "Pinning: " + a16["pinning_note"], ""]
+    pv = doc["a9_21_programme"]
+    L += PROG.render_view_md(pv)
+    L += ["Registered ICP gas / mode campaigns (%s): one gas / mode each, own operating-domain id and provenance, "
+          "closures %s registered before the campaign's first record; refused: %s." % (
+              ", ".join(pv["icp_campaign_rule"]["steps"]), ", ".join(pv["icp_campaign_rule"]["closures"]),
+              "; ".join(pv["icp_campaign_rule"]["refusals"])), ""]
+    L += ["- %s (%s): %s" % (r["id"], r["status"], r["reading"]) for r in pv["recorder_readings"]] + [""]
     L += ["## Pinned inputs (sha256)", ""]
     L += ["- `%s` - `%s` (%s)" % (p["path"], p["sha256"], p["role"]) for p in doc["authority_pins"]] + [""]
     L += ["Read but never pinned (mutable governance): " + "; ".join("`%s`" % g for g in

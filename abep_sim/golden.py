@@ -96,8 +96,41 @@ GOLDEN_DESIGN_POINT = {"area": 0.7, "p_level": 0.05}
 # The golden_v1 point, retained only as the non-converged regression reference.
 V1_DESIGN_POINT = {"area": 1.3, "p_level": 0.05}
 # Fixed (unchanged from golden_v1) closure scenario of the architecture_closure / mission cases.
-GOLDEN_ARCHITECTURE = "hall_internal+hall+lab6_xe"
+# A9.22 G4 (owner decision 2026-10-03, CATHODELESS_ACTIVE_BASELINE): this LaB6 Xe hollow-cathode closure is kept ONLY as
+# HISTORICAL_NON_FLIGHT_REGRESSION (numerical reproducibility of committed history). It must not participate in
+# architecture closure, selection, optimisation, current RFP compliance, flight mass/power/Xe budgets or design
+# decisions; require_flight_eligible_case() refuses those uses. The active flight architecture is hall_icp_neutralizer
+# (case hall_icp_neutralizer_reference).
+HISTORICAL_NON_FLIGHT_ROLE = "HISTORICAL_NON_FLIGHT_REGRESSION"
+HISTORICAL_NON_FLIGHT_ARCHITECTURE = "hall_internal+hall+lab6_xe"
+HISTORICAL_NON_FLIGHT_CASES = ("architecture_closure", "mission")
 GOLDEN_P_BUS_MAX_W = 2500.0
+ACTIVE_REFERENCE_ARCHITECTURE = "hall_icp_neutralizer"
+ACTIVE_REFERENCE_ROLE = "GOVERNED_REFERENCE_ACTIVE_ARCHITECTURE_PARTIAL"
+FLIGHT_USES = ("architecture_closure", "architecture_selection", "optimisation", "rfp_compliance", "flight_budget",
+               "design_decision")
+
+
+class HistoricalNonFlightError(RuntimeError):
+    """A HISTORICAL_NON_FLIGHT_REGRESSION golden case was requested for a flight use (A9.22 G4)."""
+
+
+def require_flight_eligible_case(case: str, use: str) -> None:
+    """Refuse a historical non-flight golden case for any FLIGHT_USES purpose. Regression reproduction ('regression')
+    is the only use those cases have."""
+    if use not in FLIGHT_USES + ("regression",):
+        raise ValueError(f"unknown golden use {use!r}; one of {FLIGHT_USES + ('regression',)}")
+    if use in FLIGHT_USES and CASE_ROLES.get(case) == HISTORICAL_NON_FLIGHT_ROLE:
+        raise HistoricalNonFlightError(
+            f"golden case {case!r} is {HISTORICAL_NON_FLIGHT_ROLE} ({HISTORICAL_NON_FLIGHT_ARCHITECTURE}, LaB6 Xe hollow "
+            f"cathode): it must not be used for {use!r} (A9.22 G4; active architecture {ACTIVE_REFERENCE_ARCHITECTURE})")
+
+
+def load_case(case: str, use: str) -> dict:
+    """The stored golden_v2 case for a declared use (guarded: historical non-flight cases only for 'regression')."""
+    require_flight_eligible_case(case, use)
+    with open(GOLDEN_FILE) as f:
+        return json.load(f)["cases"][case]
 
 SELECTION_RULE = {
     "id": "A9.18-SEL-1 FIRST_ADMISSIBLE_IN_DEFAULT_GRID_ORDER",
@@ -136,7 +169,7 @@ ADMISSIBILITY_CRITERIA = (
 HALL_CALIBRATION_DOMAIN = {
     "criterion": "0-D Hall calibration envelope (archengine.CALIBRATION['hall'], calibration_status)",
     "status": "RECORDED_NOT_GATING_OWNER_CONFIRMATION_REQUESTED",
-    "statement": ("The 0-D Hall closure and its calibration envelope are withdrawn (Governance.md 'Superseded / withdrawn': "
+    "statement": ("The 0-D Hall closure and its calibration envelope are withdrawn (governance.md 'Superseded / withdrawn': "
                   "all absolute Hall results of the 0-D closure, incl. the Marchioni calibration on an invented "
                   "geometry). This golden is a reproducibility reference of a converged numerical state, not physics "
                   "evidence, so the withdrawn envelope is not treated as part of the 'registered model domain' of A9.18 "
@@ -145,7 +178,7 @@ HALL_CALIBRATION_DOMAIN = {
                   "default grid is an extrapolation (provenance.full_grid_scan). If the owner rules the envelope part "
                   "of the registered domain, SELECTION_RULE finds no admissible point and the golden must be re-decided; "
                   "it is never re-picked silently."),
-    "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; Governance.md withdrawn list",
+    "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; governance.md withdrawn list",
 }
 ROTOR_LABEL = ("comp_rotor_qualification = NOT_EVALUATED_MATERIAL_BASIS, comp_sizing_mode = PARAMETRIC_SENSITIVITY, "
                "architecture status / evidence_class = PARAMETRIC_SENSITIVITY, feasible False. A9.9 S2.3 allows a rotor "
@@ -155,28 +188,42 @@ ROTOR_LABEL = ("comp_rotor_qualification = NOT_EVALUATED_MATERIAL_BASIS, comp_si
 
 
 def _gas_record(area: float, p_level: float) -> dict:
-    """system.evaluate record of the gas state that archengine.make_gas_fn()(area, p_level) wraps (same Config)."""
-    from .system import Config, evaluate
+    """Raw closure (system.physics_closure) of the gas state that archengine.make_gas_fn()(area, p_level) wraps (same
+    Config). A9.22: only raw keys are read from it (identical values to the legacy merged system.evaluate record)."""
+    from .system import Config, physics_closure
     from .intake import IntakeParams, CompressorParams
-    return evaluate(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
+    return physics_closure(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
                            CompressorParams(ratio=2000), vd_V=275, gaspath_physics=True, p_margin_over_pmin=3.0,
                            p_target_Pa=float(p_level)))
 
 
+# A9.22 G1 (governed baseline change, 2026-10-03): the canonical closure integrates the neutralizer Xe over the mission
+# duration basis (operating_inputs.MISSION_HOURS = 26,280 h). The golden_v1 non-converged reference fixture is history
+# and is recomputed exactly as golden_v1 generated it, on the pre-A9.22 26,000 h basis.
+def _canonical_xe_hours() -> float:
+    from .operating_inputs import MISSION_HOURS
+    return float(MISSION_HOURS)
+
+
+def _v1_xe_hours() -> float:
+    from .operating_inputs import HISTORICAL_MISSION_HOURS_PRE_A9_22
+    return float(HISTORICAL_MISSION_HOURS_PRE_A9_22)
+
+
 @functools.lru_cache(maxsize=None)
-def _closure_cached(area: float, p_level: float) -> dict:
+def _closure_cached(area: float, p_level: float, firing_hours: float) -> dict:
     """close_architecture of the fixed golden scenario at one gas point (pure function of the key, rule 5)."""
     from . import archengine as AE
     from .mission_env import Spacecraft
     gf = AE.make_gas_fn(); A = {AE.arch_name(x): x for x in AE.enumerate_architectures()}
     sc = Spacecraft(bus_frontal_m2=0.10, pointing_sigma_deg=0.5)
-    return AE.close_architecture(A[GOLDEN_ARCHITECTURE], gf, sc, AE.DesignConstraints(GOLDEN_P_BUS_MAX_W),
+    return AE.close_architecture(A[HISTORICAL_NON_FLIGHT_ARCHITECTURE], gf, sc, AE.DesignConstraints(GOLDEN_P_BUS_MAX_W),
                                  gas_vars={"area": [area], "p_level": [p_level]}, size_arrays=True, mission_envelope=True,
-                                 envelope_margin=1.0, keep_candidates=False)
+                                 envelope_margin=1.0, keep_candidates=False, firing_hours=firing_hours)
 
 
-def _closure(area: float, p_level: float) -> dict:
-    return copy.deepcopy(_closure_cached(area, p_level))
+def _closure(area: float, p_level: float, firing_hours: float | None = None) -> dict:
+    return copy.deepcopy(_closure_cached(area, p_level, _canonical_xe_hours() if firing_hours is None else float(firing_hours)))
 
 
 def admissibility(area: float, p_level: float) -> dict:
@@ -255,7 +302,7 @@ _CLOSURE_KEYS = ("status", "x_Vd", "x_L_ch", "T_mN", "P_bus_W", "P_jet_W", "ledg
                  "A_array_m2", "m_system_kg", "life_sys_h", "Q_waste_W", "A_rad_m2", "xe_kg")
 _CLOSURE_LABELS = ("x_area", "x_p_level", "evidence_class", "evidence_admissible", "feasible", "closes_constraints", "gaspath_status",
                    "gaspath_domain_status", "comp_rotor_qualification", "comp_sizing_mode", "calibration", "extrapolation",
-                   "optimum_at_search_edge")
+                   "optimum_at_search_edge", "firing_hours_for_xe")
 _MISSION_KEYS = ("mission_closed", "min_alt_km", "D_mean_mN", "T_mean_mN", "P_bus_mean_W", "P_bus_peak_W", "ao_fluence_m2", "fired_hours")
 _MISSION_LABELS = ("architecture_status", "evidence_class", "evidence_admissible")
 
@@ -310,17 +357,98 @@ def case_accelerators():
 
 
 def case_architecture_closure():
+    """HISTORICAL_NON_FLIGHT_REGRESSION (A9.22 G4): LaB6 Xe hollow-cathode closure, reproducibility only."""
     pt = GOLDEN_DESIGN_POINT
     r = _closure(pt["area"], pt["p_level"])
-    return {"ext_hall_2p5kW": _flt({k: r.get(k) for k in _CLOSURE_KEYS + _CLOSURE_LABELS})}
+    return {"golden_role": HISTORICAL_NON_FLIGHT_ROLE, "architecture": HISTORICAL_NON_FLIGHT_ARCHITECTURE,
+            "ext_hall_2p5kW": _flt({k: r.get(k) for k in _CLOSURE_KEYS + _CLOSURE_LABELS})}
 
 
 def case_mission():
+    """HISTORICAL_NON_FLIGHT_REGRESSION (A9.22 G4): mission run of the LaB6 Xe hollow-cathode closure."""
     pt = GOLDEN_DESIGN_POINT
     r = _closure(pt["area"], pt["p_level"])
     pm, m = _mission(r)
-    return {"map_T_N": {str(s): float(t) for s, t in zip(pm["scale"], pm["T_N"])},
+    return {"golden_role": HISTORICAL_NON_FLIGHT_ROLE, "architecture": HISTORICAL_NON_FLIGHT_ARCHITECTURE,
+            "map_T_N": {str(s): float(t) for s, t in zip(pm["scale"], pm["T_N"])},
             "mission_4000h": _flt({k: m[k] for k in _MISSION_KEYS + _MISSION_LABELS})}
+
+
+# --- A9.22 G4: governed reference case of the active flight architecture hall_icp_neutralizer ----------------------
+NOT_EVALUATED = "NOT_EVALUATED_NO_ADMITTED_MODEL"
+HALL_ICP_COMPOSITION = {
+    "accelerator": "Hall accelerator (H-1 class)",
+    "electron_source_neutralizer": "downstream RF/ICP electron source / neutralizer (13.56 MHz ICP; A9 topology)",
+    "hollow_cathode": "none (no conventional hollow cathode, no LaB6 in the flight architecture)",
+    "supply_modes": "air (intake -> filter -> compressor -> gas chamber -> valve) and Xe (Xe chamber -> valve)",
+}
+# Why each block is not evaluated (rule 6: no invented operating point; rule 8: no new propulsion family).
+HALL_ICP_NOT_EVALUATED = {
+    "hall_discharge_thrust_power": (
+        "the 0-D Hall closure (plasma_devices.hall_run_coupled) is withdrawn (governance.md 'Superseded / withdrawn'); the "
+        "HallThruster.jl transport credible set is empty (gate 3 FAIL; HallMap loads admitted members only), so no "
+        "admitted model gives thrust, discharge power/current or anode efficiency"),
+    "icp_neutralizer": (
+        "archengine's only RF electron source, Neutralizer 'rf_cathode', is an air-fed plasma-bridge cathode (5 cm3 "
+        "cavity, 3 mm orifice, extraction factor calibrated to AMPCAT microwave data, validated current capped at 0.5 A, "
+        "life ceiling without data): it does not represent the A9 downstream 13.56 MHz ICP electron source honestly. "
+        "ICP-45 capacity is NOT_EVALUATED until I_d,max,H1 is registered (A9.3-A9.6); RF ratings "
+        "TBD_AFTER_IMPEDANCE_MAP; ICP gas feed unbooked (A9 recorder flag)"),
+    "xe_supply_mode_flow": (
+        "no admitted Xe flow for the Hall or the ICP neutralizer in either supply mode (A9.19/A9.20: Xe is the "
+        "contingency / emergency supply mode); a Xe mass needs a flow and a duty profile, neither registered"),
+    "p_bus_and_ppu": ("needs the Hall discharge and ICP loads above; the bus power boundary for hall_icp_neutralizer "
+                      "is v2 work (A9.22 G8)"),
+    "thermal": "coupled H-1 / ICP thermal closure UNRESOLVED (A9 binding status; never reported as PASS)",
+    "life": "Hall channel wall life needs wall_life_trustworthy Hall maps (none admitted); ICP life not modelled",
+    "mission_closure": "needs thrust and P_bus maps of an admitted Hall member; none exists",
+}
+HALL_ICP_MASS_LINES_NOT_EVALUATED = ("hall_accelerator", "icp_neutralizer", "rf_power_and_matching", "ppu",
+                                     "thermal", "xe_load", "xe_tank", "harness", "structure")
+
+
+def case_hall_icp_neutralizer_reference():
+    """Governed reference case of the active flight architecture (A9.22 G4): only quantities the admitted, upstream
+    (architecture-common) models compute at the golden design point: air supply-mode gas path, mission-basis AO exposure
+    and coating lives, intake / compressor mass lines (PARAMETRIC_SENSITIVITY). Everything else is
+    NOT_EVALUATED_NO_ADMITTED_MODEL with its reason; nothing is fabricated."""
+    from . import archengine as AE
+    from .life import LifeInputs, intake_life
+    from .operating_inputs import MISSION_HOURS, FIRING_HOURS, FIRING_HOURS_LABEL
+    pt = GOLDEN_DESIGN_POINT
+    r = _gas_record(pt["area"], pt["p_level"])
+    gas = AE.make_gas_fn()(pt["area"], pt["p_level"])
+    il = intake_life(LifeInputs(ao_flux_ram_m2_s=r["ao_flux_m2s"], intake_alpha0=0.8, mission_h=MISSION_HOURS))
+    air = _flt({"mdot_air_mgps": r["mdot_air_mgps"], "p_in_Pa": r["p_in_Pa"], "fO_inlet": r["fO_inlet"],
+                "fO2_inlet": r["fO2_inlet"], "eta_c": r["eta_c"], "C_D": r["C_D"], "intake_drag_mN": r["drag_mN"],
+                "P_comp_W": r["P_comp_W"], "gaspath_status": r["gaspath_status"],
+                "gaspath_domain_status": r["gaspath_domain_status"],
+                "comp_rotor_qualification": str(r["comp_rotor_qualification"]),
+                "comp_sizing_mode": str(r["comp_sizing_mode"])})
+    mass = {"intake": _flt({"cbe_kg": r["m_intake_kg"], "status": "PARAMETRIC_SENSITIVITY",
+                            "basis": "system.evaluate intake model (F1Q-02: budgeting only, never a CBE / frozen mass)"}),
+            "compressor": _flt({"cbe_kg": r["m_comp_kg"], "status": "PARAMETRIC_SENSITIVITY",
+                                "basis": "compressor sizing under the labelled legacy tip-speed cap (S2.3 / MCC-03)"}),
+            **{k: {"status": NOT_EVALUATED} for k in HALL_ICP_MASS_LINES_NOT_EVALUATED},
+            "totals": {"CBE_kg": NOT_EVALUATED, "MEV_kg": NOT_EVALUATED,
+                       "reason": "most mass lines have no admitted model; a partial sum is not a system mass"}}
+    return {
+        "architecture": ACTIVE_REFERENCE_ARCHITECTURE, "golden_role": ACTIVE_REFERENCE_ROLE,
+        "composition": dict(HALL_ICP_COMPOSITION),
+        "design_point": _flt({"area_m2": pt["area"], "p_level_Pa": pt["p_level"], "alt_km": 200.0, "solar": "mean",
+                              "accommodation": 0.8, "L_over_d": 5.0}),
+        "operating_basis": _flt({"mission_hours": MISSION_HOURS, "mission_hours_basis": "A9.22 G1 MISSION_DURATION_26280_H",
+                                 "firing_life_assumption_h": FIRING_HOURS, "firing_life_label": FIRING_HOURS_LABEL}),
+        "supply_modes": {"air": {"status": "EVALUATED_UPSTREAM_ONLY", **air},
+                         "xe": {"status": NOT_EVALUATED, "reason": HALL_ICP_NOT_EVALUATED["xe_supply_mode_flow"]}},
+        "ao_exposure_mission": _flt({"ao_flux_ram_m2_s": r["ao_flux_m2s"], "ao_fluence_m2": il["ao_fluence_m2"],
+                                     "intake_coating_erosion_um": il["coating_erosion_um"],
+                                     "intake_coating_ok": il["coating_ok"], "alpha_end": il["alpha_end"],
+                                     "blade_coating_life_h": gas["blade_life_h"], "intake_life_h": gas["intake_life_h"]}),
+        "mass_ledger": mass,
+        "not_evaluated": {k: {"status": NOT_EVALUATED, "reason": v} for k, v in HALL_ICP_NOT_EVALUATED.items()},
+        "excluded_from": "flight compliance / selection claims: this is a partial reference, not a closure",
+    }
 
 
 # --- golden_v1 point: NONCONVERGED_REFERENCE / EXPECTED_NONCONVERGENCE regression fixture --------------------------
@@ -333,23 +461,25 @@ def _v1_values_and_refusal() -> tuple:
     """Recompute the golden_v1 gas-path-dependent cases exactly as golden_v1 did (same inputs; same keys) and the labels
     proving that the solver refuses them."""
     from . import archengine as AE
-    from .system import Config, evaluate
+    from .system import Config, physics_closure
     from .intake import IntakeParams, CompressorParams
     vals = {"gas_path": {}}; refusal = {"gas_path": {}}
     for area in (0.7, 1.3):
-        r = evaluate(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
+        r = physics_closure(Config("hall_1stage", 200, "mean", IntakeParams(area_m2=area, accommodation=0.8, use_tpmc=True, L_over_d=5),
                             CompressorParams(ratio=2000), vd_V=275, gaspath_physics=True))
         vals["gas_path"][f"A{area}"] = _flt({k: r[k] for k in _GAS_PATH_KEYS if k in r})
         refusal["gas_path"][f"A{area}"] = {"gaspath_status": r["gaspath_status"], "gaspath_not_converged": ",".join(r["gaspath_not_converged"]),
                                            "gaspath_domain_status": r["gaspath_domain_status"],
                                            "orifice_bracketed": bool(r["orifice_bracketed"]),
-                                           "chk_compressor_feasible": bool(r.get("chk_compressor_feasible"))}
+                                           # stored label name kept; its value is the raw model feasibility flag
+                                           # (the legacy chk_compressor_feasible was assess(): raw comp_feasible)
+                                           "chk_compressor_feasible": bool(r["comp_feasible"])}
     gas = AE.make_gas_fn()(0.7, "nominal")
     vals["accelerators"] = _accelerator_values(gas)
     cls, _ = AE.gas_evidence_class(gas)
     refusal["accelerators"] = {"gas_state": "make_gas_fn()(0.7, 'nominal')", "gaspath_status": gas["gaspath_status"],
                                "gaspath_not_converged": gas["gaspath_not_converged"], "evidence_class": cls}
-    r = _closure(V1_DESIGN_POINT["area"], V1_DESIGN_POINT["p_level"])
+    r = _closure(V1_DESIGN_POINT["area"], V1_DESIGN_POINT["p_level"], firing_hours=_v1_xe_hours())
     vals["architecture_closure"] = {"ext_hall_2p5kW": _flt({k: r.get(k) for k in _CLOSURE_KEYS})}
     refusal["architecture_closure"] = {"ext_hall_2p5kW": {k: r.get(k) for k in (
         "status", "evidence_class", "evidence_admissible", "feasible", "gaspath_status", "gaspath_not_converged",
@@ -389,10 +519,13 @@ def case_nonconverged_reference():
 CASES = {"atmosphere": case_atmosphere, "intake": case_intake, "design_point_selection": case_design_point_selection,
          "gas_path": case_gas_path, "source_plasma": case_source_plasma, "hall": case_hall, "accelerators": case_accelerators,
          "architecture_closure": case_architecture_closure, "mission": case_mission,
-         "nonconverged_reference": case_nonconverged_reference}
+         "nonconverged_reference": case_nonconverged_reference,
+         "hall_icp_neutralizer_reference": case_hall_icp_neutralizer_reference}
 CASE_ROLES = {**{k: "CANONICAL" for k in CASES}, "design_point_selection": "SELECTION_RECORD",
-              "nonconverged_reference": f"{NONCONVERGED_ROLE} / {NONCONVERGED_EXPECTATION}"}
-# frozen inputs whose hashes the golden carries (Governance.md rule 1)
+              "nonconverged_reference": f"{NONCONVERGED_ROLE} / {NONCONVERGED_EXPECTATION}",
+              **{k: HISTORICAL_NON_FLIGHT_ROLE for k in HISTORICAL_NON_FLIGHT_CASES},
+              "hall_icp_neutralizer_reference": ACTIVE_REFERENCE_ROLE}
+# frozen inputs whose hashes the golden carries (governance.md rule 1)
 FROZEN_INPUTS = ("atmosphere_msis21_v1.csv", "atmosphere_msis21_v1.json", "intake_surface_v1.csv", "intake_surface_v1.json")
 
 
@@ -442,7 +575,14 @@ def _provenance(full_scan: list) -> dict:
         "full_grid_scan": [{k: v for k, v in s.items() if k != "checks"} | {"failed_checks": sorted(k for k, ok in s.get("checks", {}).items() if not ok)}
                            for s in full_scan],
         "rotor_qualification_label": ROTOR_LABEL,
-        "quotability": "historical 0-D / withdrawn-Hall benchmarks (Governance.md 'Superseded / withdrawn'): reproducibility "
+        "a9_22": {"decision_record": "docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json",
+                  "G1": "mission-duration basis 26,280 h (architecture_closure xe_kg integrates over it; the "
+                        "nonconverged_reference fixture keeps the pre-A9.22 26,000 h basis of golden_v1)",
+                  "G4": (f"{HISTORICAL_NON_FLIGHT_ARCHITECTURE} cases {list(HISTORICAL_NON_FLIGHT_CASES)} are "
+                         f"{HISTORICAL_NON_FLIGHT_ROLE}; active reference case hall_icp_neutralizer_reference "
+                         f"({ACTIVE_REFERENCE_ROLE}); guards golden.require_flight_eligible_case and "
+                         "archengine.require_flight_eligible")},
+        "quotability": "historical 0-D / withdrawn-Hall benchmarks (governance.md 'Superseded / withdrawn'): reproducibility "
                        "references only; absolute values are not quotable",
     }
 
@@ -504,7 +644,7 @@ def check(cases=None, rtol: float = 1e-6) -> list[str]:
 
 if __name__ == "__main__":
     # Exit status (owner decision 2026-09-27, CI signalling only): `check` prints "OK" and exits 0 when nothing moved;
-    # otherwise it prints one line per deviation and exits 1, so CI can gate on the exit code (Governance.md rule 2).
+    # otherwise it prints one line per deviation and exits 1, so CI can gate on the exit code (governance.md rule 2).
     # `generate` is unchanged (exit 0 after writing).
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "generate":

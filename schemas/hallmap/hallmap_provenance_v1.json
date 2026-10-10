@@ -162,7 +162,7 @@
         }
        }
       },
-      "f_out_tolerance": {"const": 1e-12, "description": "per-reaction extrapolated-activity share allowed at a chemistry_trustworthy node (hall_map_schema_v1; Governance.md item 5). Not relaxed for maps"},
+      "f_out_tolerance": {"const": 1e-12, "description": "per-reaction extrapolated-activity share allowed at a chemistry_trustworthy node (hall_map_schema_v1; governance.md item 5). Not relaxed for maps"},
       "declared_domain": {
        "type": "object",
        "additionalProperties": false,
@@ -191,7 +191,7 @@
    "additionalProperties": false,
    "required": ["gas", "composition_basis"],
    "properties": {
-    "gas": {"type": "string", "minLength": 1, "description": "e.g. N2 or Xe; a map-set label. Mixtures need their own reaction set (Governance.md item 4) and a composition axis"},
+    "gas": {"type": "string", "minLength": 1, "description": "e.g. N2 or Xe; a map-set label. Mixtures need their own reaction set (governance.md item 4) and a composition axis"},
     "composition_basis": {"type": "string", "minLength": 1, "description": "for a composition axis: fraction definition (mole or mass) and the intake-delivered composition model it spans; 'single gas' otherwise"}
    }
   },
@@ -423,7 +423,7 @@
   "admission_record": {
    "type": "object",
    "additionalProperties": true,
-   "description": "copy of the member's admission block (hallthruster_bridge/ensemble/admission_record_schema_v1.json); required keys = abep_sim.hall_ensemble.ADMISSION_FIELDS on the execution baseline (Governance/nifty-ramanujan-w68f9z, commit bd0b6ce 'Admission gated on O4 dispositions'), including the O4 dispositions file and its sha256 that hall_ensemble._check_o4 verifies (ensemble/o4_dispositions_schema_v1.json; owner decision 2026-09-26: admission and design Hall maps stay gated until the O4 dispositions are complete, even after a PROMOTABLE result)",
+   "description": "copy of the member's admission block (hallthruster_bridge/ensemble/admission_record_schema_v1.json); required keys = abep_sim.hall_ensemble.ADMISSION_FIELDS on the execution baseline (governance/nifty-ramanujan-w68f9z, commit bd0b6ce 'Admission gated on O4 dispositions'), including the O4 dispositions file and its sha256 that hall_ensemble._check_o4 verifies (ensemble/o4_dispositions_schema_v1.json; owner decision 2026-09-26: admission and design Hall maps stay gated until the O4 dispositions are complete, even after a PROMOTABLE result)",
    "required": ["promoted_from_screening_id", "campaign_id", "preregistration", "decision_file", "decision_sha256", "scores_provenance_file", "scores_provenance_sha256", "passing_layer1_members", "admitted_utc", "decided_by", "o4_dispositions_file", "o4_dispositions_sha256"],
    "properties": {
     "promoted_from_screening_id": {"type": "string", "minLength": 1},

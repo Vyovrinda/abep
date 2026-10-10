@@ -455,7 +455,7 @@
    "id": "HG-6",
    "name": "common feed boundary",
    "rule": "the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept whose compression depends on the pre-ionizer is out of DI-1.4 scope",
-   "origin": "owner operating model (RF/ECR change only the pre-ionization method; Governance.md scope rule)",
+   "origin": "owner operating model (RF/ECR change only the pre-ionization method; governance.md scope rule)",
    "status": "binding scope rule"
   }
  ],

@@ -16,7 +16,7 @@ prediction (no thrust, efficiency, discharge current or plasma state; no Hall tr
 candidate, no abep_sim/plasma_devices.py, no withdrawn v1.2-v1.6 number), not a model change (no abep_sim module is
 modified or wired). Every pressure computed here is a COLD-FLOW (no plasma) gas-dynamics quantity. P5 calibration
 nuisance never enters. The valve-outlet feed state is taken from the W1 feed-state closure deliverable, never from the
-superseded 0-D assumptions. Analog geometry (ECHT: 86 mm long, 10 mm wide, 100 mm OD, Governance.md) is used for
+superseded 0-D assumptions. Analog geometry (ECHT: 86 mm long, 10 mm wide, 100 mm OD, governance.md) is used for
 ILLUSTRATION ONLY and is labelled as such; the H-1 geometry is PENDING docs/hardware/h2/h2_1_hall_chamber_magnet/.
 
 Inputs: immutable owner decisions + G0 record (sha256-pinned; the build refuses on mismatch); read-only consumed
@@ -518,7 +518,7 @@ GEOMETRY_OPTIONS = {
               "pim_L_m": 0.15, "stub_D_m": 0.016, "stub_L_m": 0.05},
 }
 ANALOG_CHANNEL = {"device": "ECHT (extended-channel Hall thruster)", "outer_diameter_m": 0.100, "width_m": 0.010,
-                  "length_m": 0.086, "source": "Governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, "
+                  "length_m": 0.086, "source": "governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, "
                   "100 mm OD)", "evidence_class": "inferred",
                   "use": "ILLUSTRATION ONLY of the cold-flow back-pressure scale at HALL_INLET_Z0; never an H-1 design "
                          "value (HW-H1-03 forbids P5/ECHT as design-value sources); the H-1 channel is PENDING H2-1"}

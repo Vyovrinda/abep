@@ -209,7 +209,7 @@ def test_pending_refs_point_to_lane_paths(data, mod):
 
 def test_builder_never_reads_parallel_worktrees():
     src = open(BUILDER, encoding="utf-8").read()
-    assert ".Governance/worktrees" not in src
+    assert ".governance/worktrees" not in src
     assert "import abep_sim" not in src and "from abep_sim" not in src
 
 

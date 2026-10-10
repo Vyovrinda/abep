@@ -374,5 +374,5 @@ def test_spec_states_milestones_and_architecture_scope():
     # rf_hall / ecr_hall are outside the map domain until an owner decision closes the inlet-state gap
     sec13 = text.split("## 13. Open decisions for the owner", 1)[1].split("## 14.", 1)[0]
     assert "rf_hall" in sec13 and "ecr_hall" in sec13 and "inlet-state" in sec13
-    # the pinned baseline named by Governance.md is cited as authoritative
+    # the pinned baseline named by governance.md is cited as authoritative
     assert "debce16" in text

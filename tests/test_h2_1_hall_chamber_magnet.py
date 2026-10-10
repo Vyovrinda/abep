@@ -75,7 +75,7 @@ def test_pins_recorded_and_no_mutable_governance(doc):
     for p in pinned:
         assert (ROOT / p).exists(), p
         assert "docs/orchestration" not in p and "ledger" not in p and "runtime_state" not in p, p
-    assert ".Governance/worktrees" not in BUILDER.read_text(encoding="utf-8")
+    assert ".governance/worktrees" not in BUILDER.read_text(encoding="utf-8")
 
 
 def test_architectures_and_no_winner(doc):

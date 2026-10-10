@@ -5,7 +5,7 @@ blockers; feed-envelope TBD quantities propagate as UNDETERMINED (committed data
 carries an evidence class and a source; missing design inputs raise; no forbidden wording (no ranking, no setting an
 architecture aside, no screening candidates or closures). Tests that need the pinned inputs skip ONLY when an input
 file is genuinely absent (OverlayInputError); an input that is present with a different sha256 raises
-OverlayInputMismatchError and FAILS those tests (Governance.md rules 3 and 9: a changed input is never a silent skip). In the
+OverlayInputMismatchError and FAILS those tests (governance.md rules 3 and 9: a changed input is never a silent skip). In the
 merged repository every pinned input is present, so nothing here skips.
 Values marked 'synthetic' below exist only inside these tests: they are not design values and not evidence.
 """

@@ -38,7 +38,7 @@ ROWS = [
      "yes (list) / no", N, "before Milestone B", "compressor C1 evidence, anode, materials"),
     ("A. RFP / access / repo", "WEB-SUP-1, R6-Q5", "Request supplier quotations at all (Xe tank 5-20 L, low-flow PMU/FCU, MFCs, thrust stand)? This means contacting suppliers.",
      "yes / no / which", N, "H3 wave", "procurement"),
-    ("A. RFP / access / repo", "REPO-1", "Merge the H2 hardware wave (H2-1..H2-7, all verified; on Governance/nifty-ramanujan-w68f9z) into main via a new PR?",
+    ("A. RFP / access / repo", "REPO-1", "Merge the H2 hardware wave (H2-1..H2-7, all verified; on governance/nifty-ramanujan-w68f9z) into main via a new PR?",
      "yes / not yet", N, "—", "repo (checkpoint approval was one-time)"),
     ("A. RFP / access / repo", "REPO-2", "Delete 8 leftover worktrees from failed runs (uncommitted partial edits, all superseded)?",
      "delete / keep", "delete", "—", "housekeeping"),

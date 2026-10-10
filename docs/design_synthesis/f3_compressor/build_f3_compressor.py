@@ -34,7 +34,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from abep_sim.design import compressor_synthesis as cs  # noqa: E402
-from abep_sim.design import owner_state as ost  # noqa: E402
+from abep_sim.assessment import design_gates as ost  # noqa: E402  (owner-question state v5 reader; A9.22)
 
 OUT_DIR_REL = "docs/design_synthesis/f3_compressor"
 SCRIPT_REL = f"{OUT_DIR_REL}/build_f3_compressor.py"
@@ -342,7 +342,7 @@ def build() -> tuple[dict, dict]:
             {"id": cs.R_TIP_DOMAIN, "rule": "u_tip <= 500 m/s", "basis": "P-U-TIP-PUBLISHED-MAX"},
             {"id": cs.R_INLET_DOMAIN, "rule": "inlet p <= 0.1 Pa", "basis": "P-MOLECULAR-LIMIT"},
             {"id": cs.R_MODEL, "rule": "finite state, no exception, mirror reproduces _run_once p_out to 1e-12",
-             "basis": "no silent fallback (Governance.md rule 3)"},
+             "basis": "no silent fallback (governance.md rule 3)"},
             {"id": cs.R_NONCONV, "rule": "re-evaluated leak-recirculation residual <= 1e-4", "basis": "P-RECIRC-RTOL"},
             {"id": cs.R_CLIP, "rule": "every unclipped per-species Gaede K >= 1", "basis": "compressor.py _run_once clip "
              "max(min(K, K0), 1) hides an overloaded stage"},

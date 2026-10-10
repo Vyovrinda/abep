@@ -355,7 +355,7 @@ def load_overlay_points(paths):
         ap = os.path.abspath(p).replace(os.sep, "/")
         k = ap.find("/docs/evidence/")
         repo_rel = ap[k + 1:] if k >= 0 else os.path.basename(ap)
-        wt = re.search(r"/\.Governance/worktrees/([^/]+)/", ap)
+        wt = re.search(r"/\.governance/worktrees/([^/]+)/", ap)
         matrices.append({"path": repo_rel, "read_from": ("unmerged worktree " + wt.group(1)) if wt else "this checkout",
                          "matrix_id": mid, "version": d.get("matrix_version"), "sha256": sha256_file(p)})
         for e in d.get("entries", []):

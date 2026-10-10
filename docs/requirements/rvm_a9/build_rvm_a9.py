@@ -10,7 +10,7 @@ Deterministic, standard library only, no Julia, no network, well under a second.
 What it does
   * verifies the sha256 of every pinned IMMUTABLE input (owner decisions, 147 answers, owner-question state v3,
     docs/EVIDENCE.md, the P5-N2 v1 validation release, historical RTM / lane-24 / web-track R2 records) and refuses to
-    run on any mismatch (Governance.md rule 3);
+    run on any mismatch (governance.md rule 3);
   * reads the merged A9 / A9.6 packages by path and checks their identity (id / schema) - they are mutable and are
     never pinned; if one changes, `--check` fails and the matrix must be rebuilt;
   * copies requirement quotes, owner-answer texts and decision texts FROM the pinned inputs (never typed) and checks
@@ -51,6 +51,7 @@ sys.path.insert(0, str(HERE))
 import a9_16_rvm as A16  # noqa: E402  (A9.16 step 1 owner-decision application, integration lane)
 import rfp_rebase as RB  # noqa: E402  (AG-15 re-base on the registered official RFP, A9.16 step 3)
 import a9_19_rvm as A19  # noqa: E402  (A9.19 / A9.20 owner decisions: flight architecture, Xe role, C1 ground-only)
+import a9_21_icp_gate as A21  # noqa: E402  (A9.21 ICP_GATE: mandatory ICP go / no-go gate before LOCK-1)
 JSON_NAME = "rvm_a9_v1.json"
 MD_NAME = "RVM_A9.md"
 TEST_REL = "tests/test_rvm_a9.py"
@@ -92,7 +93,7 @@ PINS = {
     "OQ3": ("docs/budgets/owner_decisions/owner_questions_state_v3.json",
             "1c2e74340852dfe8c58b1804c3cfda2bfbfb3bfb5d631aaebd715cf716b76af2", "owner question state v3"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (Governance.md rule 10)"),
+             "evidence rules (governance.md rule 10)"),
     "VREL": ("hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json",
              "0a57a397883141be20196853b7d722404dc3cb20c72fba666121fd43507dc97c",
              "P5-N2 v1 vacuum validation release (permanent INCONCLUSIVE; never rewritten)"),
@@ -114,6 +115,9 @@ for _k in ("A9.19", "A9.20"):
     _d = A19.DECISIONS[_k]
     PINS["A" + _k[1:].replace(".", "")] = (_d["json"], _d["json_sha256"], f"owner decision {_k} (applied: a9_19_rvm)")
     PINS["A" + _k[1:].replace(".", "") + "_MD"] = (_d["md"], _d["md_sha256"], f"owner decision {_k} (verbatim; governs)")
+_d = A21.X.LOADED["A9.21"]
+PINS["A921"] = (_d["json"], _d["json_sha256"], "owner decision A9.21 (applied: a9_21_icp_gate, ICP_GATE)")
+PINS["A921_MD"] = (_d["md"], _d["md_sha256"], "owner decision A9.21 (verbatim; governs)")
 HISTORICAL_KEYS = ("RTM", "HGM", "R2")
 HISTORICAL_EXTRA = {
     "docs/traceability/RTM.md": "ce5b608a5079a86d1b2096f222266f558fab2ebdabc1aa8dfef3153076faa802",
@@ -128,8 +132,12 @@ NEVER_PINNED = ("docs/orchestration/lane_registry_v1.json", "docs/orchestration/
 # ------------------------------------------------------------------------------------------------ read, never pinned
 # (key: path, identity field, expected identity value, role)
 REFS = {
-    "BUS": ("docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json", "id",
-            "bus_power_boundary_a9_v1", "A9-02 bus-power boundary (1 ms gate, 1.35 kW allocation)"),
+    # A9.22 G8 stage 2: the flight cells cite bus_power_boundary_a9_v2 (hall_icp_neutralizer only); the C1
+    # ground-reference cells keep citing the immutable v1 (C1 is not a v2 configuration)
+    "BUS": ("docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json", "id",
+            "bus_power_boundary_a9_v2", "A9-02 bus-power boundary v2 (1 ms gate, 1.35 kW allocation; A9.22 G8)"),
+    "BUS_V1": ("docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json", "id",
+               "bus_power_boundary_a9_v1", "A9-02 bus-power boundary (1 ms gate, 1.35 kW allocation)"),  # v1 role text
     "PRE": ("docs/experiments/hall_icp/prereg_framework/hall_icp_prereg_framework_v1.json", "id",
             "A9_01_hall_icp_prereg_framework_v1", "A9-01 Hall->ICP pre-registration framework (stages, DQ-HI-*)"),
     "VI": ("docs/experiments/hall_icp/validation_inputs/hall_icp_validation_inputs_v1.json", "schema",
@@ -148,8 +156,10 @@ REFS = {
            "P4 anode / collector materials framework"),
     # A9.16 repair RFP-01: the A9.15-applied v3 packages (v2 are immutable history whose readings A9.14 / A9.15
     # retired: XA9Q-07 = YES, XV2Q-01 NOT APPLICABLE, MQ-01 single MEV reading, XA9Q-01 / MQ-09 LOADED)
-    "MP": ("docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json", "id", "mass_power_a9_v3",
-           "A9.16 mass + power v3 (A9.14 / A9.15 applied)"),
+    # A9.24 AFI-01: v4 = v3 + the AL-08 cathode-feed re-base; A9.26: the current flight mass / power package is the v5
+    # successor of v4 (10 % system margin for the bid basis, AL-09 1.0 kg provisional owner allocation)
+    "MP": ("docs/budgets/mass_power_a9_v5/mass_power_a9_v5.json", "id", "mass_power_a9_v5",
+           "mass + power v5 (v4 + A9.26 bid mass policy: 10 % system margin, AL-09 1.0 kg)"),
     "XE": ("docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json", "id", "xe_accounting_a9_v3",
            "A9.16 Xe accounting v3 (A9.14 / A9.15 applied)"),
     "AOL": ("docs/experiments/lifetime_ao/ao_lifetime_register_v5.json", "schema", "ao_lifetime_register_v5",
@@ -170,6 +180,11 @@ REFS = {
 class BuildError(RuntimeError):
     pass
 
+
+# A9.24 item 13 (owner messages 2026-10-04): current C1 status; the A9.2 CONTROL_FALLBACK is a labelled quote only
+C1_GROUND_REFERENCE_ONLY = ("GROUND_REFERENCE_ONLY (A9.20 ground-only laboratory reference; A9.19 / A9.24 item 13: "
+           "no C1 flight fallback; "
+           "never in flight architecture, mass, power, Xe or thermal closure)")
 
 def sha256_file(p):
     h = hashlib.sha256()
@@ -570,7 +585,10 @@ def probe_mass(ctx, cfg, references):
     verdict = ("FAIL not admissible: (a) floor-only sums exceed the limit in "
                f"{n_exc} of {n_all} admissible readings (FAIL needs all), and (b) the floors are not verified lower "
                "bounds; per-reading results reported, status INCOMPLETE_EVIDENCE")
-    state = ("BUDGET EVALUATED (mass_power_a9_v3, A9.14 / A9.15 applied), INCONCLUSIVE - no CBE and no measured mass; "
+    state = (f"BUDGET EVALUATED ({mp['id']}, A9.14 / A9.15 applied; A9.24 AFI-01 AL-08 re-base; A9.26 10 % "
+             "system margin (bid basis) and AL-09 1.0 kg provisional owner allocation; "
+             f"{mp['mass_status']['status']}), INCONCLUSIVE - "
+             "no CBE and no measured mass; "
              "evidence floors are analog planning values declared 'not a physical lower bound' by the mass package; "
              + "; ".join(parts) + "; " + verdict)
     a = _art(REFS["MP"][0], f"{mp['id']}:rollups[{cfg}]", "DETERMINING", "BUDGET_EVALUATION", state,
@@ -637,7 +655,9 @@ def probe_p3(ctx, cfg):
     numerical = any(fce[t]["status"] == "NUMERICAL_FAILURE" for t in terms)
     if cfg == "hall_icp_neutralizer":
         scope = ("ICP_COUPLED_THERMAL UNRESOLVED and ANODE_THERMAL_CLOSURE UNRESOLVED; heat terms " +
-                 ", ".join(f"{t} {fce[t]['status']}" for t in terms))
+                 ", ".join(f"{t} {fce[t]['status']}" for t in terms) +
+                 "; the inherited H2-5 C-1 cathode-body node CB / Q_cath 9-101 W is a ground-article C1 term, "
+                 "NOT_USABLE_FOR_FLIGHT_THERMAL_CLOSURE (A9.24 AFI-03)")
     else:
         scope = ("ANODE_THERMAL_CLOSURE UNRESOLVED (shared H-1 anode; A9.2 anode_approach); the ICP heat terms do "
                  "not apply to this configuration; the H-1 network is only method-checked against H2-5 (no "
@@ -669,8 +689,9 @@ REGISTER_NOTE = ("question text from the pinned immutable v3 snapshot; current r
 # lane-24 decisions that an owner answer supersedes (same question answered; S-01): id -> (owner row, what it settles)
 LANE24_SUPERSEDED_BY_OWNER = {
     "OD13": (3, "owner row 3 retains > 15,000 h firing as a provisional hard requirement; the registered RFP prints "
-                "'Ignition Time: More than 15000 hrs' (RFP-P19-01; label recorded as DISC-05); AG-15 closure of the "
-                "wording is the owner's (RVM-ID-12), not an open question"),
+                "'Ignition Time: More than 15000 hrs' (RFP-P19-01; label recorded as DISC-05); the wording is part "
+                "of the RFP basis frozen by the owner's AG-15 closure (A9.22 G3, RVM-ID-12; the DISC-05 DRDO "
+                "clarification stays open), not an open question"),
 }
 
 
@@ -846,8 +867,8 @@ def build_interface_demands(ctx):
         return {"id": iid, "direction": direction, "counterpart": counterpart, "content": content, "status": status}
 
     return [
-        idd("RVM-ID-01", "RVM <- mass/power v3", f"{REFS['MP'][0]} (rollups, lines, power)",
-            "mass rows: < 40 kg wet and 34 / 36 kg from the v3 single-owner-reading roll-ups (no CBE); power rows: "
+        idd("RVM-ID-01", "RVM <- mass/power v4", f"{REFS['MP'][0]} (rollups, lines, power)",
+            "mass rows: < 40 kg wet and 34 / 36 kg from the v4 single-owner-reading roll-ups (no CBE); power rows: "
             "< 1.5 kW and 1.35 kW from the A9 ledger (all loads TBD); consumed as RVM-04 / -05 / -06 / -07 (v2, "
             "MPV2-ID-11, is immutable history)", "CONSUMED", ("MP", "@doc")),
         idd("RVM-ID-02", "RVM <- Xe accounting v3", f"{REFS['XE'][0]} (evaluations, reading_axes_resolved)",
@@ -886,14 +907,17 @@ def build_interface_demands(ctx):
         idd("RVM-ID-12", "RVM <- official RFP", "owner rows 1-2 (legitimate owner / portal route); registered in "
                                                      + RB.REG_REL,
             "the canonical RFP PDF with sha256 is registered with a verbatim clause transcription and every row is "
-            "re-based on it (rfp_rebase); AG-15 closure (requirement_frozen = true on RFP rows) is the owner's",
-            "REGISTERED_BY_HASH; AG-15 CLOSURE AWAITING_OWNER_ACTION"),
+            "re-based on it (rfp_rebase); AG-15 closed by the owner (A9.22 G3): requirement_frozen = true on the "
+            "RFP_CLAUSE rows, closure record rfp_rebase.ag15_closure",
+            "REGISTERED_BY_HASH; AG-15 CLOSED_BY_OWNER (A9.22 G3)"),
     ]
 
 
 # ------------------------------------------------------------------------------------------------ (c) owner answers
 OWNER_ROWS_APPLIED = [
-    (1, "no RFP interpretation frozen: every RFP-recorded row carries requirement_frozen = false"),
+    (1, "no RFP interpretation frozen from secondary sources: the canonical RFP is registered by sha256 (A9.17 RFP) "
+        "and every RFP_CLAUSE row cites its registered clauses; requirement_frozen = true on the RFP_CLAUSE rows only "
+        "since the owner closed AG-15 on that registered basis (A9.22 G3, rfp_rebase.ag15_closure)"),
     (2, "RFP reference / bid date not frozen here"),
     (3, "RVM-12 (> 15,000 h provisional) and RVM-13 (>= 26,280 h basis)"),
     (4, "RVM-02 (>= 12 mN sustained atmospheric) and RVM-03 (25 mN capability; Xe not required, booked if used)"),
@@ -910,9 +934,12 @@ OWNER_ROWS_APPLIED = [
     (55, "RVM-19 limited redundancy carried beside the recorded no-SPF statement"),
     (86, "RVM-17 >= 50 K margin, 20 % heat-load margin"),
     (87, "RVM-17 no unsourced anode target"),
-    (88, "RVM-15 C1 sized to the measured / derived current demand (CONTROL_FALLBACK)"),
+    (88, "RVM-15 C1 sized to the measured / derived current demand, ground reference only (GROUND_REFERENCE_ONLY, "
+         "A9.20; the A9.2 CONTROL_FALLBACK is history)"),
     (93, "RVM-14 120 s dwell cap, two retries (preliminary)"),
-    (94, "RVM-16 no graphite flight keeper for O / AO exposure"),
+    (94, "RVM-16 no graphite as the flight baseline for O / AO-exposed plasma-facing / electron-source parts "
+         "(the owner text names a keeper; no flight keeper exists in hall_icp_neutralizer, A9.19; "
+         "OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING, A9.25 message 8; not a universal graphite prohibition)"),
     (102, "RVM-09 delivered species state measured; O survival never assumed"),
     (103, "RVM-16 no silver in O / AO-wetted parts"),
     (106, "RVM-16 flight anode material open until coupon evidence"),
@@ -1037,7 +1064,14 @@ def build_doc():
         new_rows = A19.build_rows(ns, ctx)
     except A19.A919Error as e:
         raise BuildError(str(e)) from e
-    rows = evaluate_rows(ctx, rows_mod.build_rows(ns, ctx) + new_rows)
+    raw_rows = rows_mod.build_rows(ns, ctx) + new_rows
+    rebase_table = dict(RB.REBASE)
+    rebase_table.update(A19.REBASE)
+    try:   # A9.22 G3: AG-15 closed by the owner -> RFP_CLAUSE rows frozen BEFORE status evaluation (statuses unchanged)
+        frozen_ids = RB.freeze_rfp_rows(raw_rows, rebase_table)
+    except RB.RebaseError as e:
+        raise BuildError(str(e)) from e
+    rows = evaluate_rows(ctx, raw_rows)
     counts = {c: {s: sum(1 for r in rows if r["configurations"][c]["status"] == s) for s in R.STATUSES}
               for c in CONFIGS}
     a92 = pins["A92"]["decisions"]["a9_10_statuses"]
@@ -1073,13 +1107,15 @@ def build_doc():
         "evidence_rule": "PASS only with a DETERMINING artifact of kind MEASUREMENT that is measured, verified, "
                          "non-synthetic, in domain, meets and covers the requirement, and a frozen requirement basis; "
                          "FAIL only from such a measurement or from a VERIFIED lower-bound floor exceeding the limit "
-                         "under every admissible open reading (docs/EVIDENCE.md; Governance.md rules 6, 10)",
+                         "under every admissible open reading (docs/EVIDENCE.md; governance.md rules 6, 10)",
         "rfp_document_in_repository": False,
         "rfp_registered_in_repository": "BY_HASH_WITH_VERBATIM_CLAUSE_TRANSCRIPTION (" + RB.REG_REL + "; PDF kept in the "
                                         "controlled project evidence store, A9.17)",
         "hall_status": {"credible_set": "EMPTY", "p5_n2_v1": "INCONCLUSIVE (permanent)",
                         "absolute_0d_results": "WITHDRAWN"},
         "a9_2_statuses_carried": a92,
+        "a9_2_statuses_label": "HISTORICAL_QUOTE (A9.2 / A9-10 table, verbatim); the current statuses are current_statuses (A9.24 item 13)",
+        "current_statuses": {k: (C1_GROUND_REFERENCE_ONLY if v == "CONTROL_FALLBACK" else v) for k, v in a92.items()},
         "a9_6_fixed_statuses_carried": pins["A96"]["summary"]["fixed_statuses"],
         "pins": [{"key": k, "path": v[0], "sha256": v[1], "role": v[2]} for k, v in PINS.items()],
         "referenced_not_pinned": [{"key": k, "path": v[0], "identity": {v[1]: v[2]}, "role": v[3],
@@ -1100,7 +1136,7 @@ def build_doc():
             {"id": "DER-NETDRAG", "why": "derived purpose of ABEP; docs/HISTORY.md records that the RFP does not state "
                                          "it; covered physically by RVM-01..-03"},
             {"id": "DER-HALL-CLOSURE", "why": "an enabler of analysis (probe_hall_analysis), not a system requirement"},
-            {"id": "DER-MODEL-INTEGRITY", "why": "simulator integrity gates (Governance.md rules 1-5), not a system "
+            {"id": "DER-MODEL-INTEGRITY", "why": "simulator integrity gates (governance.md rules 1-5), not a system "
                                                  "requirement"},
         ],
         "compliance": {
@@ -1115,8 +1151,7 @@ def build_doc():
         doc = A19.apply(doc)
     except A19.A919Error as e:
         raise BuildError(str(e)) from e
-    rebase = dict(RB.REBASE)
-    rebase.update(A19.REBASE)
+    rebase = rebase_table
     try:
         RB.REBASE, saved = rebase, RB.REBASE
         try:
@@ -1129,12 +1164,122 @@ def build_doc():
         doc = A16.registered_rfp_citations(doc)   # A9.16 repair RFP-03 / RVF-04
     except RuntimeError as e:
         raise BuildError(str(e)) from e
+    try:
+        doc = A21.apply_rvm(doc)                  # A9.21 ICP_GATE: GNG-ICP-01 registered before LOCK-1 (fail closed)
+    except A21.IcpGateError as e:
+        raise BuildError(str(e)) from e
+    try:
+        doc = RB.record_closure(doc, frozen_ids)   # A9.22 G3 closure record (RP-BRIEF-01), on the final RVM
+    except RB.RebaseError as e:
+        raise BuildError(str(e)) from e
+    doc = apply_a9_24_afi05(doc)                   # A9.24 AFI-05: RVM-16 reading outside the frozen basis
     R.assert_status_vocabulary(doc)
     R.assert_no_pass_without_measurement(doc)
     for r in rows:
         for c in CONFIGS:
             if r["configurations"][c]["status"] == "PASS":
                 raise BuildError(f"{r['id']}/{c}: PASS produced although no verified measurement exists in the repo")
+    return doc
+
+
+# A9.24 item 13 / AFI-05 (owner messages 2026-10-04): RVM-16 names a flight keeper although hall_icp_neutralizer has
+# none (A9.19 / A9.20). Its title / requirement_text are the RFP-derived requirements basis that the owner FROZE
+# (A9.22 G3, rfp_rebase.ACCEPTED_BASIS_SHA256): they are not rewritten here. The current-architecture wording is carried
+# as a labelled reading outside the basis. A9.25 message 8 section 2 (former stop item AFI-05-S1): the owner does NOT
+# re-freeze the basis and CONFIRMS the current-architecture reading (OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING) with
+# a clarification (no flight keeper; AO / O compatibility of the actual AO / O-exposed parts; graphite not the current
+# flight baseline for an O / AO-exposed plasma-facing or electron-source surface until coupon evidence; not a universal
+# graphite prohibition). No compliance status changes.
+A9_25_MD = ("docs/decisions/OD_2026_10_04_A9_25_PRE_BID_OWNER_DECISIONS.md",
+            "159ea2049e3cc05ce7a18b3e6bbdf6fee97c168a74f23fd2359cfef3a1d26106")
+A9_25_JSON = ("docs/decisions/OD_2026_10_04_A9_25_pre_bid_owner_decisions.json",
+              "c05fcc45de0194e60ef30b93aa91294c54a7762d129dac69e933e9a679679385")
+A9_25_M8 = {"n": 8, "key": "FINAL_PRE_BID_AFI_RESOLUTION",
+            "text_sha256": "a48dfcbb9fa33421bf19ff45fa241070c22a8379a3eb4e887b661fb8ceb93624"}
+AFI05_STATUS = "OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING"
+AFI05_TOKENS = ("Do NOT alter/re-freeze the A9.22 G3 frozen RVM-16 requirement basis", "there is no flight keeper",
+                "OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING", "This is NOT a universal prohibition on graphite",
+                "Do NOT change requirement compliance status because of this interpretation")
+AFI05_AO_SCOPE = ["anode", "RF/ICP electron-source / neutralizer plasma-facing surfaces",
+                  "collector / bias electrode where applicable", "gas-path surfaces",
+                  "other AO/O-exposed plasma-facing parts"]
+AFI05_TITLE = ("Atomic-oxygen / material compatibility (AO-beam test; anode, RF/ICP electron-source / neutralizer, "
+               "collector, plasma-facing and gas-path materials)")
+AFI05_TEXT = ("All parts in intake, compressor and thruster take care of nascent atomic-oxygen erosion for the lifetime "
+              "(RFP-P19-04); materials compatible with VLEO nascent oxygen (RFP-P17-02); coating and surface tests with "
+              "atomic-oxygen beam exposure and erosion-yield measurement (RFP-P19-06 a); space-qualified materials and "
+              "processes for the QM (RFP-P19-02). Owner rules carried: 316L REJECTED_AS_CURRENT_BASELINE for the flight "
+              "anode; final anode / collector material OPEN until coupon evidence; no graphite as the flight baseline "
+              "for O / AO-exposed plasma-facing / electron-source parts until coupon evidence supports it "
+              "(current-architecture reading of owner row 94, OWNER_CONFIRMED_CURRENT_ARCHITECTURE_READING, A9.25 "
+              "message 8; not a universal graphite prohibition); no silver in O / AO-wetted gas-path parts.")
+
+
+def _a9_25_message8() -> dict:
+    """The A9.25 message 8 owner record (pinned files, verbatim-text sha256, applied tokens; fail closed)."""
+    for rel, want in (A9_25_MD, A9_25_JSON):
+        if hashlib.sha256((REPO / rel).read_bytes()).hexdigest() != want:
+            raise BuildError(f"A9.25 owner record {rel} changed (pinned sha256 {want[:12]})")
+    md = (REPO / A9_25_MD[0]).read_text(encoding="utf-8")
+    head = f"## Message {A9_25_M8['n']} — {A9_25_M8['key']} — "
+    if md.count(head) != 1:
+        raise BuildError("A9.25 message 8 heading not found exactly once")
+    text = md.split(head, 1)[1].split("````text\n", 1)[1].split("\n````", 1)[0]
+    if hashlib.sha256(text.encode("utf-8")).hexdigest() != A9_25_M8["text_sha256"]:
+        raise BuildError("A9.25 message 8 verbatim text does not reproduce its recorded sha256")
+    flat = " ".join(text.split())
+    for tok in AFI05_TOKENS:
+        if tok not in flat:
+            raise BuildError(f"A9.25 message 8 token {tok!r} missing")
+    return {"decision": "A9.25", "message": A9_25_M8["n"], "key": A9_25_M8["key"], "section": 2,
+            "text_sha256": A9_25_M8["text_sha256"], "md": A9_25_MD[0], "md_sha256": A9_25_MD[1],
+            "json": A9_25_JSON[0], "json_sha256": A9_25_JSON[1]}
+
+
+def apply_a9_24_afi05(doc):
+    """Add the A9.24 AFI-05 current-architecture reading to RVM-16 (outside the frozen requirements basis)."""
+    by = {r["id"]: r for r in doc["rows"]}
+    r = by["RVM-16"]
+    if "keeper" not in r["title"] or "no graphite flight keeper" not in r["requirement_text"]:
+        raise BuildError("RVM-16 frozen wording changed: review the A9.24 AFI-05 reading")
+    q94 = [s for s in r["sources"] if s.get("row") == 94]
+    if len(q94) != 1 or "keeper" not in q94[0].get("verbatim", ""):
+        raise BuildError("RVM-16: owner row 94 verbatim source not found exactly once")
+    a925 = _a9_25_message8()
+    r["a9_24_current_architecture_reading"] = {
+        "applied_by": "A9.24 item 13 / AFI-05 (owner messages 2026-10-04, relayed by the orchestrating session; not "
+                      "recorded verbatim in the repository)",
+        "title": AFI05_TITLE,
+        "requirement_text": AFI05_TEXT,
+        "keeper_reading": {
+            "owner_row_94_verbatim": q94[0]["verbatim"],
+            "architecture_fact": "no flight keeper exists in hall_icp_neutralizer (A9.19: one Hall + one RF/ICP "
+                                 "electron-source / neutralizer, no conventional hollow cathode; A9.20: C1 ground-only)",
+            "reading": "the owner's graphite exclusion (stated for an O/AO-exposed keeper) is applied to O / AO-exposed "
+                       "plasma-facing / electron-source parts of the current architecture",
+            "status": AFI05_STATUS,
+            "status_before": "RECORDER_INTERPRETATION_OWNER_MAY_REVERSE (A9.24 AFI-05, at 4c2b3b3)",
+            "confirmed_by": a925,
+            "owner_clarification": {
+                "keeper": "for hall_icp_neutralizer there is no flight keeper; references to the historical flight "
+                          "keeper are not interpreted as requiring a keeper",
+                "ao_o_compatibility_applies_to": "the actual AO/O-exposed components of the selected architecture, "
+                                                 "as applicable: " + "; ".join(AFI05_AO_SCOPE),
+                "ao_o_exposed_components": list(AFI05_AO_SCOPE),
+                "graphite": "do not use graphite as the CURRENT FLIGHT BASELINE for an O/AO-exposed plasma-facing or "
+                            "electron-source surface until appropriate erosion / oxidation coupon evidence supports it; "
+                            "this is NOT a universal prohibition on graphite everywhere in the system (graphite outside "
+                            "the relevant O/AO exposure environment is not excluded)",
+                "final_materials": "evidence-dependent",
+                "compliance_status": "UNCHANGED (A9.25 message 8 section 2: no requirement compliance status change "
+                                     "because of this interpretation)"}},
+        "frozen_basis": "title / requirement_text of this row are the A9.22 G3 frozen requirements basis (sha256 "
+                        + RB.ACCEPTED_BASIS_SHA256 + ") and stay verbatim with the official RFP provenance; the owner "
+                        "decided NOT to alter / re-freeze that basis (A9.25 message 8 section 2, former stop item "
+                        "AFI-05-S1); the current-architecture reading is the mechanism"}
+    doc["a9_24_afi05"] = {"rows": ["RVM-16"], "stop_item": None,
+                          "resolved_stop_item": {"id": "AFI-05-S1", "state": AFI05_STATUS, "decided_by": a925},
+                          "note": "current-architecture reading only; no requirement, status or basis field changed"}
     return doc
 
 
@@ -1187,8 +1332,9 @@ def render_md(doc):
     a(f"- The official RFP {rb['registration']['rfp_number']} is registered by hash (PDF sha256 "
       f"`{rb['registration']['pdf_sha256']}`, not committed; A9.17) with a verbatim clause transcription in "
       f"`{rb['registration']['path']}`. Every row cites the RFP clause(s) it derives from or is labelled "
-      f"DERIVED_PROJECT_REQUIREMENT / OWNER_ALLOCATION (AG-15 re-base). RFP rows keep `requirement_frozen = false` "
-      f"until the owner closes AG-15; the interpretation readings are recorded as discrepancies below.")
+      f"DERIVED_PROJECT_REQUIREMENT / OWNER_ALLOCATION (AG-15 re-base). AG-15 is closed by the owner (A9.22 G3): RFP rows "
+      f"carry `requirement_frozen = true` (requirement basis frozen; statuses unchanged, not compliance); the "
+      f"interpretation readings stay recorded as discrepancies below.")
     a(f"- Hall: credible set {doc['hall_status']['credible_set']}; P5-N2 v1 {doc['hall_status']['p5_n2_v1']}; "
       f"0-D absolute results {doc['hall_status']['absolute_0d_results']} - no thrust, power or life analysis "
       f"evidence exists.")
@@ -1343,6 +1489,17 @@ def render_md(doc):
             if rest:
                 a(f"- {r['id']}: " + _esc("; ".join(f"{k}: {v}" for k, v in rest.items())))
     a("")
+    for r in doc["rows"]:
+        x24 = r.get("a9_24_current_architecture_reading")
+        if x24:
+            k = x24["keeper_reading"]
+            a(f"- {r['id']} A9.24 AFI-05 current-architecture reading ({x24['applied_by']}): title "
+              f"\"{_esc(x24['title'])}\"; {_esc(k['reading'])} ({k['status']}, {k['confirmed_by']['decision']} message "
+              f"{k['confirmed_by']['message']}); owner clarification: "
+              + _esc("; ".join(f"{c}: {v}" for c, v in k["owner_clarification"].items()
+                               if c != "ao_o_exposed_components"))
+              + f"; {_esc(x24['frozen_basis'])}.")
+    a("")
     a("Owner answers applied (A9.19 / A9.20):")
     a("")
     for o in doc["a9_19_owner_answers_applied"]:
@@ -1353,7 +1510,24 @@ def render_md(doc):
     a("")
     for pr in doc["recorder_proposals_open_for_owner"]:
         a(f"- **{pr['id']}** [{pr['status']}]: {_esc(pr['proposal'])} Why raised: {_esc(pr['why_raised'])} "
-          f"Numbers: {pr['numbers']}. Handling: {pr['handling']}.")
+          f"Numbers: {pr['numbers']}. Handling: {pr['handling']}."
+          + (f" A9.21: {pr['a9_21_disposition']['gate_part']}; {pr['a9_21_disposition']['criteria_part']}."
+             if pr.get("a9_21_disposition") else ""))
+    a("")
+    a("## (d2c) Owner-approved gates outside AG-01 .. AG-15 (A9.21)")
+    a("")
+    for g in doc["owner_approved_gates"]:
+        oa = g["owner_approved"]
+        pc = g["proposed_criteria_for_owner_review"]
+        a(f"- **{g['id']}** {g['gate']}: placement **{g['placement']}** (mandatory: {str(g['mandatory']).lower()}); "
+          f"status **{g['status']}** ({g['status_reason']}); criteria **{g['criteria']}**; LOCK-1 release reportable: "
+          f"{str(g['lock1_release_reportable']).lower()}. Owner approval {oa['decision']} {oa['item']} "
+          f"`{oa['decision_code']}` ({oa['approved_scope']}; json sha256 {oa['decision_json_sha256'][:12]}..., "
+          f"verbatim md sha256 {oa['decision_md_sha256'][:12]}...). {g['not_in_ag_series']}.")
+        a(f"    - Proposed criteria for owner review ({pc['source_proposal']}, {pc['status']}; never evaluated): "
+          f"\"{_esc(pc['text_verbatim'])}\"")
+    for o in doc["a9_21_owner_answers_applied"]:
+        a(f"- {o['decision']} `{o['question_id']}` -> {', '.join(o['record_ids'])}: {_esc(o['how_applied'])}")
     a("")
     a("## (d3) RFP re-base (AG-15)")
     a("")
@@ -1364,6 +1538,25 @@ def render_md(doc):
       + "; ".join(rb["decisions"]) + ".")
     a("")
     a("Origins: " + ", ".join(f"{k} {v}" for k, v in rb["origin_counts"].items()) + ".")
+    a("")
+    cl = rb["ag15_closure"]
+    a(f"### AG-15 closure record ({cl['format']})")
+    a("")
+    a(f"- Decision: {cl['decision_code']} - {cl['decision']['item']} = {cl['decision']['code']} "
+      f"(`{cl['decision']['json']}` sha256 `{cl['decision']['json_sha256']}`; verbatim `{cl['decision']['md']}` sha256 "
+      f"`{cl['decision']['md_sha256']}`). Owner text: " + " ".join(_esc(x) for x in cl["decision"]["verbatim_excerpts"]))
+    a(f"- Requirements snapshot: **{cl['requirements_snapshot']}**. {cl['what_it_is_not']}.")
+    a(f"- Accepted registration: `{cl['accepted_registration']['path']}` (PDF sha256 "
+      f"`{cl['accepted_registration']['pdf_sha256']}`, clauses sha256 `{cl['accepted_registration']['clauses_sha256']}`).")
+    ar = cl["accepted_rvm"]
+    a(f"- Accepted RVM: `{ar['path']}` pre-closure file sha256 `{ar['pre_closure_file_sha256']}` at "
+      f"`{ar['pre_closure_commit']}` (identical at the brief commit `{ar['brief_commit']}`); requirements-basis sha256 "
+      f"`{ar['requirements_basis_sha256']}` ({ar['basis_hash_rule']}).")
+    a(f"- Frozen rows ({len(cl['frozen_rows'])}): {', '.join(cl['frozen_rows'])}.")
+    a(f"- Discrepancy dispositions: {cl['discrepancy_dispositions']['status']} - "
+      f"{cl['discrepancy_dispositions']['note']}.")
+    a(f"- Pages {cl['unscreened_pages']['pages']}: {cl['unscreened_pages']['disposition']} "
+      f"({_esc(cl['unscreened_pages']['basis'])}; {cl['unscreened_pages']['scope']}).")
     a("")
     a("| RFP clause | page | section | RVM rows (derived) | related rows | note |")
     a("|---|---|---|---|---|---|")

@@ -2,14 +2,14 @@
  "$schema": "https://json-schema.org/draft/2020-12/schema",
  "$id": "urn:abep:schemas:interfaces:upstream_icd_v1",
  "title": "ABEP upstream gas-chain interface control document (ICD) v1",
- "description": "JSON Schema for one upstream-state record crossing the ABEP gas-supply chain intake -> filter -> compressor -> atmospheric gas chamber -> valve -> thruster, and Xe chamber -> valve -> thruster (RFP architecture, Governance.md 'Next work' 1, scope note). Each property of an interface is a quantity object (value, unit, evidence class, uncertainty). The 'x-field' annotation on each property records the code that produces and consumes it at this commit, its status (supplied / partial / derivable / gap), validity domain and uncertainty source. The explanation is docs/interfaces/UPSTREAM_ICD.md; tests/test_upstream_icd.py checks the references. This is an interface definition, not a physics model, a validation claim or an ABEP closure claim. 'Upstream' here means the gas-supply chain upstream of the thruster, not hallthruster_bridge/upstream/ (the HallThruster.jl project).",
+ "description": "JSON Schema for one upstream-state record crossing the ABEP gas-supply chain intake -> filter -> compressor -> atmospheric gas chamber -> valve -> thruster, and Xe chamber -> valve -> thruster (RFP architecture, governance.md 'Next work' 1, scope note). Each property of an interface is a quantity object (value, unit, evidence class, uncertainty). The 'x-field' annotation on each property records the code that produces and consumes it at this commit, its status (supplied / partial / derivable / gap), validity domain and uncertainty source. The explanation is docs/interfaces/UPSTREAM_ICD.md; tests/test_upstream_icd.py checks the references. This is an interface definition, not a physics model, a validation claim or an ABEP closure claim. 'Upstream' here means the gas-supply chain upstream of the thruster, not hallthruster_bridge/upstream/ (the HallThruster.jl project).",
  "x-icd": {
   "name": "upstream_icd",
   "version": "1.0.0",
   "versioning": "semantic: removing or renaming a field, changing a unit or the species set = major; adding a field or an interface = minor; annotation/status/producer updates = patch. The instance's icd_version must equal this version.",
   "status": "DRAFT for owner review (2026-09-26)",
   "code_baseline_commit": "7b219ba",
-  "architecture_source": "Governance.md, Next work 1, 'Scope' paragraph (RFP architecture)",
+  "architecture_source": "governance.md, Next work 1, 'Scope' paragraph (RFP architecture)",
   "chain": {
    "atmospheric": [
     "ambient",
@@ -55,7 +55,7 @@
    "model-derived",
    "assumed"
   ],
-  "evidence_source": "docs/EVIDENCE.md (quantity type); Governance.md rules 6 and 10",
+  "evidence_source": "docs/EVIDENCE.md (quantity type); governance.md rules 6 and 10",
   "status_values": {
    "supplied": "an existing function/attribute returns the quantity (output_key, in the ICD unit or a stated native unit)",
    "derivable": "no function returns it, but it follows from supplied quantities by the stated derivation",
@@ -115,7 +115,7 @@
    "D-TBD": "No producer, so no validity domain is defined. TBD with the producer."
   },
   "closure_independence": {
-   "rule": "The thruster boundary (IF-A5, IF-X2) and every upstream interface are defined identically for every Hall transport closure. No field may name, depend on, or be produced by a transport closure, an ensemble member, or a layer-1 calibration-nuisance variable (P5 registration, coil shape, beam-efficiency reading, facility-ingestion interpretation). Calibration nuisance is marginalized when admitting closures and never leaks upstream into intake, filter, compressor, gas chambers or valves (Governance.md Next work 1; abep_sim/hall_ensemble.py docstring). Hall maps are queried WITH the boundary state; they never write into it.",
+   "rule": "The thruster boundary (IF-A5, IF-X2) and every upstream interface are defined identically for every Hall transport closure. No field may name, depend on, or be produced by a transport closure, an ensemble member, or a layer-1 calibration-nuisance variable (P5 registration, coil shape, beam-efficiency reading, facility-ingestion interpretation). Calibration nuisance is marginalized when admitting closures and never leaks upstream into intake, filter, compressor, gas chambers or valves (governance.md Next work 1; abep_sim/hall_ensemble.py docstring). Hall maps are queried WITH the boundary state; they never write into it.",
    "calibration_nuisance_keys_source": "hallthruster_bridge/ensemble/transport_ensemble_v0.json -> calibration_nuisance",
    "identifiers": [
     "p5_registration",
@@ -538,7 +538,7 @@
   "IF-A0": {
    "type": "object",
    "title": "IF-A0: free stream -> intake aperture",
-   "description": "Free-molecular free-stream state presented to the ram aperture. Producer: abep_sim.atmosphere.atmosphere() (frozen NRLMSIS by default, live MSIS only when asked, Governance.md rule 3); consumer: abep_sim.intake.collection().",
+   "description": "Free-molecular free-stream state presented to the ram aperture. Producer: abep_sim.atmosphere.atmosphere() (frozen NRLMSIS by default, live MSIS only when asked, governance.md rule 3); consumer: abep_sim.intake.collection().",
    "x-interface": {
     "id": "IF-A0",
     "name": "free stream -> intake aperture",
@@ -3157,7 +3157,7 @@
       "validity_domain": "D-TBD",
       "evidence_class_current": "TBD",
       "uncertainty": "not applicable to a flag",
-      "requires": "TBD - requires DragCompressor.run to report convergence (Governance.md rule 3; code change outside this ICD)"
+      "requires": "TBD - requires DragCompressor.run to report convergence (governance.md rule 3; code change outside this ICD)"
      }
     }
    },
@@ -3772,7 +3772,7 @@
       "validity_domain": "D-TBD",
       "evidence_class_current": "TBD",
       "uncertainty": "not applicable to a flag",
-      "requires": "TBD - requires Reservoir.steady_state to report convergence (Governance.md rule 3; code change outside this ICD)"
+      "requires": "TBD - requires Reservoir.steady_state to report convergence (governance.md rule 3; code change outside this ICD)"
      }
     },
     "orifice_sizing_converged": {

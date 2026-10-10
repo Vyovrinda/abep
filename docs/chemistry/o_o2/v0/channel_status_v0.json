@@ -10,7 +10,7 @@
   "docs/decisions/OD_HARDWARE_PIVOT_2026_09_27.json (W7_o_o2_chemistry)",
   "docs/architecture_comparison/feed_envelope/FEED_ENVELOPE.md (lane 16; free-stream composition)"
  ],
- "authority_and_precedence": "The lane-13 DRAFT completeness rule asks to be frozen before any O/O2 table is built. It is DRAFT_PENDING_OWNER and binds nothing; the owner's od_hardware_pivot disposition (W7, 2026-09-27) registered this lane to build first DRAFT tables. This lane therefore builds tables only: no F_P, F_ion, F_S or F_att value is computed, no process is included, promoted or excluded, and no table enters hallthruster_bridge/propellants/. Governance.md 'Next work' item 4 (O2/O only if items 1-3 succeed) is not changed by this file; these tables are unused until the owner promotes them.",
+ "authority_and_precedence": "The lane-13 DRAFT completeness rule asks to be frozen before any O/O2 table is built. It is DRAFT_PENDING_OWNER and binds nothing; the owner's od_hardware_pivot disposition (W7, 2026-09-27) registered this lane to build first DRAFT tables. This lane therefore builds tables only: no F_P, F_ion, F_S or F_att value is computed, no process is included, promoted or excluded, and no table enters hallthruster_bridge/propellants/. governance.md 'Next work' item 4 (O2/O only if items 1-3 succeed) is not changed by this file; these tables are unused until the owner promotes them.",
  "why_it_matters_context": {
   "statement": "Free-stream mole fractions at 180-230 km from the frozen NRLMSIS dataset (lane 16): x_O 0.4831-0.7046, x_N2 0.2784-0.4669, x_O2 0.006985-0.05002.",
   "source": "docs/architecture_comparison/feed_envelope/FEED_ENVELOPE.md, table rows x_s.O / x_s.N2 / x_s.O2 (model-derived from abep_sim/data/atmosphere_msis21_v1)",

@@ -1779,7 +1779,7 @@ def build(root: str = ROOT_DEFAULT) -> dict:
 
     snapshot = {
         "bundle1_outcome": reg.bundle1,
-        "credible_hall_set": "EMPTY (Governance.md gate 3 FAIL; A4 project_conclusion; hard_gate_status admitted_members = [])",
+        "credible_hall_set": "EMPTY (governance.md gate 3 FAIL; A4 project_conclusion; hard_gate_status admitted_members = [])",
         "hard_gates_eliminated": reg.hg_eliminated,
         "hard_gates_admitted_members": reg.hg_admitted,
         "veto_layer_status_counts": reg.veto_counts,

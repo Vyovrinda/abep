@@ -13,7 +13,7 @@ What it does
   * books every Xe use per configuration (``hall_c1_reference`` / ``hall_icp_neutralizer``), per ICP gas mode (G-REUSE
     primary; G-ATM and G-XE declared contingency variants) and per ledger (FLIGHT / GROUND_TEST) under the owner's
     PHASE_TOTAL_FLOW convention (row 42), evaluating each product term with the v1 module's unit/validation functions;
-  * refuses every total that still has a TBD input (no hidden defaults, Governance.md rule 3) and reports floors on the
+  * refuses every total that still has a TBD input (no hidden defaults, governance.md rule 3) and reports floors on the
     closed terms only, labelled as floors;
   * evaluates the owner's 2 / 5 / 10 kg design cases (row 48) for tank volume at 323.15 K from the NIST WebBook
     (Lemmon & Span 2006 equation of state) over an explicit MEOP axis, and for the head-room each case leaves after the

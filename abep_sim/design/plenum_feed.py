@@ -44,7 +44,7 @@ Physics (free-molecular throughout; every relation below is the one the called m
     compressor lumped temperature <= materials.DB T_max (F3 R_THERMAL). A plenum target above the compressor's
     admissible outlet is NOT_EVALUATED_OUT_OF_DOMAIN (A9.13 S6.8) and is never extrapolated.
 
-Evidence discipline (Governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md; A9.7 F7 rule): MODE_STRICT refuses
+Evidence discipline (governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md; A9.7 F7 rule): MODE_STRICT refuses
 (NOT_EVALUATED, blockers listed) while any input is TBD or an uncited code default. MODE_PARAMETRIC runs on the
 labelled code defaults / parametric cases and labels every output PARAMETRIC_SENSITIVITY. The H-1 required inlet state
 is TBD (F5 IFD-F4-01..05): it is a parametric requirement sweep and the output is a feasibility region, never a
@@ -66,6 +66,15 @@ the shared rules live in abep_sim/design/upstream_a9_13.py):
     the value is still reported as ``ripple_transfer_shaft``).
   * S6.5 / S6.19: the filter is a separate element (F2); 'none' (FC-00) is a reference bound only (``FilterCase.role``).
   * S6.21 / F9-OQ-02: ``R_FLOW`` belongs to the parametric requirement sweep only; no fixed mg/s flight gate.
+  * S6.13 / OQ-F4-04 (NO_REQUIREMENT_RELAXATION): the flow gap is worked in the owner order (performance-derived H-1
+    feed requirement first, PENDING_EVIDENCE; then capture / collection; then compressor / feed efficiency; then the
+    scheduled setpoint, ``u13.flow_gap_record``); 0.38 mg/s is ground characterization only; a result over a subset of
+    the required states (higher-density-only operation) is labelled SENSITIVITY_ONLY_NOT_BASELINE
+    (``scheduled_operation`` / ``u13.state_coverage``) and never lowers the feed requirement.
+
+A9.14 S9.8 OD3 / A9.13 S6.14 OQ-F4-05: the F1 records are evaluated at every required state of the frozen design-state
+set v2 (plus the design-case reference point h200_f150 at index 0); every statewise reduction here is over that full
+set. The set is a broad envelope (inclination / LTAN TBD, A9.21): results carry isy.ORBIT_BASIS_LABEL.
 """
 from __future__ import annotations
 
@@ -85,6 +94,7 @@ from ..materials import DB
 from ..reservoir import Reservoir
 from . import compressor_synthesis as cs
 from . import filter_stage as fs
+from . import intake_synthesis as isy
 from . import upstream_a9_13 as u13
 
 SCHEMA = "f4_plenum_feed_v1"
@@ -145,7 +155,7 @@ SETTLE_BAND = 0.02                               # metric definition (not a requ
 RTOL = 1e-5                                      # solve_ivp relative tolerance (convergence vs 1e-8 reported by the study)
 RTOL_REFERENCE = 1e-8                            # tighter tolerance of the numerical-convergence check
 ATOL_SCALED = 1e-11                              # solve_ivp absolute tolerance on the scaled states
-MASS_TOL = 1e-6                                  # |mass residual| / throughput (Governance.md rule 4 gate for F4)
+MASS_TOL = 1e-6                                  # |mass residual| / throughput (governance.md rule 4 gate for F4)
 BISECT_ITERS = 90                                # log-area bisection steps (relative bracket width < 1e-12)
 A_EQ_BRACKET_M2 = (1e-12, 1e2)                   # orifice-equivalent area search bracket (residual reported)
 BISECT_RTOL = 1e-6                               # gate on the bisection residual |p/target - 1| (numerics, SW-06)
@@ -225,8 +235,11 @@ def parameter_registry() -> list[dict]:
            "(valve authority r = 1..3, assumed there)", "TBD", "TBD", parametric_case_value=3.0),
         _p("F4-P-10", "TBD", "mixed", "H-1 required inlet state (mdot_s, P, T, x_s, transient tolerances)",
            "SRC-F5 IFD-F4-01..05 (TBD)", "TBD", "TBD (parametric requirement sweep, see requirement_sweep)"),
-        _p("F4-P-11", "TBD", "-", "orbit-scale modulation of the free-stream density (the frozen atmosphere is orbit-"
-           "averaged; local-time states NOT_IN_FROZEN_DATASET)", "SRC-F1 coverage_rule", "TBD", "TBD",
+        _p("F4-P-11", "TBD", "-", "orbit-scale modulation of the free-stream density along one revolution: the F1 "
+           "states are points of the orbit-resolved design-state set v2 (local time, latitude, season and solar "
+           "activity extrema), but the revolution through them needs the inclination / LTAN, which are TBD (A9.21; no "
+           "code default as mission truth), so no amplitude is derived from the dataset (A9.13 S6.14: no invented "
+           "amplitude); the parametric sinusoid stays a labelled sensitivity", "SRC-F1 coverage_rule", "TBD", "TBD",
            parametric_case_value=0.2),
         _p("F4-P-12", SETTLE_BAND, "-", "settling / recovery band (metric definition, not a requirement)", "definition",
            "definition", "DEFINITION"),
@@ -237,7 +250,7 @@ def parameter_registry() -> list[dict]:
            "restarted at every event; a sample is re-run with BDF at the reference tolerance (numerical_convergence)",
            "definition", "definition", "DEFINITION"),
         _p("F4-P-14", MASS_TOL, "-", "mass-conservation gate: |m(t) - m(0) - (integrated in - out)| / integrated "
-           "throughput (Governance.md rule 4)", "definition", "definition", "DEFINITION"),
+           "throughput (governance.md rule 4)", "definition", "definition", "DEFINITION"),
         _p("F4-P-15", "derived", "s", "orbital period T = 2 pi sqrt((R_E + h)^3 / mu) at the state altitude (circular "
            "Kepler orbit)", "SRC-CONSTANTS-PY MU_EARTH, R_EARTH", "model-derived", "DERIVED"),
         _p("F4-P-16", "TBD", "kg", "plenum mass (wall thickness, material, ports): TBD; volume V and wall area A_w are "
@@ -281,7 +294,7 @@ class IntakeState:
 
     @property
     def alt_km(self) -> float:
-        return float(re.match(r"h(\d+)_f", self.state).group(1))
+        return isy.state_alt_km(self.state)
 
     def q_fwd(self) -> dict:
         return {s: self.mdot_fwd_kgps[s] / M_SPECIES[s] * K_B * self.T_K for s in SPECIES}
@@ -302,18 +315,28 @@ def f1_candidate_id(area_m2: float, L_over_d: float, phi: float) -> str:
 
 
 def load_f1(repo: Path) -> dict:
-    return json.loads((Path(repo) / "docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json").read_text())
+    """The F1 deliverable as its consumers read it: the committed compact core view, expanded to the deliverable's
+    layout (A9.22 item 9; the 36.7 MB full output is an evidence archive; values identical, intake_synthesis)."""
+    return isy.load_f1_view(repo)
+
+
+_F1_STATE_REASON = re.compile(r"(?:C-DRAG-RFP|MODEL_ERROR) at (\S+?)(?=: |$)")
 
 
 def f1_state_infeasibility(f1: dict) -> dict:
-    """{(scenario, d-collapsed candidate id): {state: reason}} from F1 envelope infeasible_reasons (C-DRAG-RFP)."""
+    """{(scenario, d-collapsed candidate id): {state: reason}} from F1 envelope infeasible_reasons (C-DRAG-RFP /
+    MODEL_ERROR at a state). The state id is the text between 'at ' and ': ' (design-state ids contain ':' but no
+    space); every id must be an evaluated F1 state (fail closed)."""
+    known = set(f1["coverage_rule"]["orbit_states"])
     out: dict = {}
     for sc, cands in f1["infeasible_reasons"]["envelope"].items():
         for cid, reasons in cands.items():
             m = re.match(r"A([\d.]+)_d[\d.]+_Ld([\d.]+)_phi([\d.]+)$", cid)
             key = (sc, f1_candidate_id(float(m.group(1)), float(m.group(2)), float(m.group(3))))
             for r in reasons:
-                for st in re.findall(r"h\d+_f\d+", r):
+                for st in _F1_STATE_REASON.findall(r):
+                    if st not in known:
+                        raise RuntimeError(f"F1 reason names an unknown state {st!r}: {r!r}")
                     prev = out.setdefault(key, {}).get(st)
                     if prev is not None and prev != r:
                         raise RuntimeError(f"F1 d-collapse inconsistent for {key} at {st}: {prev!r} vs {r!r}")
@@ -1371,7 +1394,7 @@ def strict_blockers() -> list[dict]:
         {"id": "F4-P-09", "what": "valve authority", "status": "TBD", "needs": "metering-valve sizing"},
         {"id": "F4-P-10", "what": "H-1 required inlet state", "status": "TBD", "needs": "F5 IFD-F4-01..05 / Phase 1"},
         {"id": "F4-P-11", "what": "orbit-scale density modulation", "status": "TBD",
-         "needs": "orbit-resolved free stream (not in the frozen dataset)"},
+         "needs": "registered inclination / LTAN (mission ICD) to sample a revolution of the orbit-resolved dataset"},
         {"id": "F4-P-18", "what": "compressor-inlet node volume", "status": "TBD", "needs": "duct geometry"},
         {"id": "F4-H1-TOL", "what": "measured H-1 feed tolerances (pressure, flow, composition, ripple)",
          "status": "TBD", "needs": "LOCK-2 H-1 feed-sensitivity measurement (A9.13 S6.12 / S6.17)"},
@@ -1459,8 +1482,14 @@ def scheduled_operation(filt: FilterCase, plant: CompressorPlant, plenum: Plenum
         rows.append(row)
     ok = [r for r in rows if r["status"] == ST_FEASIBLE]
     md = [r["offered"]["mdot_total_kgps"] for r in ok]
+    # A9.13 S6.13: a run over a subset of the required states (e.g. the higher-density states only) is a sensitivity
+    # and never baseline (fail closed: the coverage is computed against the frozen design-state set)
+    cov = u13.state_coverage([it.state for it in intakes], [s.id for s in isy.required_states()])
     return {"mode": control.mode, "mode_role": u13.CONTROL_MODES[control.mode], "control": control.to_dict(),
-            "label": LABEL_PARAMETRIC, "rows": rows, "n_states": len(rows), "n_feasible": len(ok),
+            "label": LABEL_PARAMETRIC, "state_coverage": cov,
+            "operation_role": "ELIGIBLE_BY_COVERAGE (S6.15 still governs)" if cov["baseline_admissible_by_coverage"]
+            else u13.DENSE_STATE_ONLY_ROLE, "orbit_basis": isy.ORBIT_BASIS_LABEL,
+            "rows": rows, "n_states": len(rows), "n_feasible": len(ok),
             "all_states_feasible": len(ok) == len(rows),
             "worst_state_mdot_kgps": min(md) if len(ok) == len(rows) and md else None,
             "authority": u13.cite("A9.13")}
@@ -1480,23 +1509,3 @@ def compare_control_modes(filt: FilterCase, plant: CompressorPlant, plenum: Plen
 
 
 # =================================================================================================== A9.13 S6.12 / S6.17
-def feed_quality(case_result: Mapping, tolerances: Mapping[str, "u13.H1Tolerance"] | None = None) -> dict:
-    """Feed-quality constraints of one transient case against measured H-1 tolerances (S6.12 / S6.17): pressure
-    peak deviation and ripple. With a TBD tolerance the constraint is NOT_EVALUATED; F4's provisional 2 % band never
-    replaces a tighter measured H-1 limit. Values from this model are PARAMETRIC_SENSITIVITY."""
-    tol = dict(tolerances or {})
-    obj = case_result.get("objectives") or {}
-    pk = obj.get("peak_deviation_max")
-    rip = obj.get("ripple_transfer_shaft")
-    p_tol = tol.get("pressure") or u13.h1_tolerance_tbd("pressure")
-    r_tol = tol.get("ripple") or u13.h1_tolerance_tbd("ripple")
-    band = u13.governing_band("pressure", SETTLE_BAND, p_tol)
-    if p_tol.status == u13.VALUE_TBD or pk is None:
-        p_status = u13.C_NOT_EVALUATED
-    else:
-        p_status = u13.constraint_status(pk <= p_tol.value_frac, u13.combine_value_status([u13.VALUE_PARAMETRIC,
-                                                                                         p_tol.status]))
-    return {"framework": TRANSIENT_FRAMEWORK["status"], "pressure_band": band,
-            "pressure_peak_deviation": {"value_frac": pk, "status": p_status},
-            "ripple": u13.ripple_feed_quality(rip, u13.VALUE_PARAMETRIC if rip is not None else u13.VALUE_TBD, r_tol),
-            "authority": u13.cite("A9.13")}

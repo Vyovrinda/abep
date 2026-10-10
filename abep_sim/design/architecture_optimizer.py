@@ -27,7 +27,7 @@ compressor space. Every Pareto member carries the list of NOT_EVALUATED system o
 synthetic fixtures labelled SYNTHETIC_TEST_DATA_NOT_EVIDENCE, and a synthetic-only ranking is labelled as such
 (mixing synthetic and evidence refuses).
 
-Design decisions recorded here (evidence discipline, Governance.md rules 3, 6, 10; docs/EVIDENCE.md; A9.7 F7):
+Design decisions recorded here (evidence discipline, governance.md rules 3, 6, 10; docs/EVIDENCE.md; A9.7 F7):
   * The filter case is a CONTEXT axis, not a searched variable: the only benefit of a filter (contamination / AO
     protection, F2) is NOT_EVALUATED, so comparing a filter against 'none' on flow alone would silently score that TBD
     benefit as zero. Each filter case gets its own Pareto set.
@@ -41,7 +41,8 @@ Design decisions recorded here (evidence discipline, Governance.md rules 3, 6, 1
   * Thrust T needs an admitted Hall response map. The credible set is EMPTY and P5-N2 v1 is INCONCLUSIVE, so T and
     T - D are NOT_EVALUATED for every vector; x_Hall is bounded (F5 windows, admissibility function) but no objective
     depends on it today, so it is not searched.
-  * P_bus uses the A9-02 boundary module abep_sim.bus_boundary_a9 (called, never modified): the official ledger keeps
+  * P_bus uses the A9-02 boundary module abep_sim.bus_boundary_a9_v2 (called, never modified; A9.22 G8 stage 2 moved
+    it from the immutable v1 abep_sim.bus_boundary_a9, whose code objects v2 runs unchanged): the official ledger keeps
     the compressor slot TBD (row 22: the compressor ICD has not supplied it) and is PARTIAL_BOUNDARY; a separate,
     labelled parametric-sensitivity ledger books the F3/F4 compressor draw and reports its lower bound only.
   * Mass: allocation, evidence floor, parametric design value and CBE are kept in separate columns (mass/power
@@ -51,6 +52,17 @@ Design decisions recorded here (evidence discipline, Governance.md rules 3, 6, 1
 
 Not wired into archengine; no existing module is modified; golden benchmarks cannot move. Nothing here is a design, a
 selection, a winner, a requirement or a PASS.
+
+A9.14 S9.8 OD3 / A9.13 S6.14 OQ-F4-05 (design states): ``states()`` = the F1 states = the design-case reference point
+h200_f150 (index 0; design-case values, a_eq and ripple reference) + EVERY required state of the frozen design-state set
+atmosphere_msis21_orbit_v1_design_states_v2 (sha256-pinned in intake_synthesis; fail closed when missing or altered).
+HC-09 ('intake-face drag at every orbit state'), the all-state upstream feasibility and the AG-12 / AG-13 statewise
+records run over that full set; no subset is taken. The set is a broad envelope (every inclination / LTAN; A9.21: no
+code-default orbit as mission truth), so every result carries isy.ORBIT_BASIS_LABEL.
+A9.13 S6.1 / F1Q-02: an intake structural mass (honeycomb wall / coating / support) is a PARAMETRIC_SENSITIVITY for
+budgeting only; ``intake_mass_code_default`` and ``wet_mass`` refuse any other use and never book it as a CBE.
+A9.13 S6.13 / OQ-F4-04: the flow gap is worked in the owner order (u13.flow_gap_record); 0.38 mg/s is ground
+characterization only; a state-subset (higher-density-only) result is a sensitivity, never baseline.
 
 A9.13 / A9.14 / A9.15 / A9.17 owner decisions applied (A9.16 step 3 design layer; shared rules and decision hashes in
 abep_sim/design/upstream_a9_13.py; requirement source docs/requirements/rfp_official/rfp_registration_v1.json):
@@ -77,11 +89,16 @@ A9.19 / A9.20 owner decisions applied (abep_sim/design/a9_19_architecture.py; ve
   * no hollow-cathode element may appear in a flight configuration (``flight_configuration_elements`` +
     a9_19_architecture.refuse_hollow_cathode_elements, checked by ``evaluate_system``);
   * HC-10 marks the Xe path role CONTINGENCY_EMERGENCY (capability still required, RFP-P17-05 / RFP-P18-08).
+
+A9.22 layer separation: this module computes design quantities only and does not import the assessment layer. The
+functions that apply the design-gate assessment (context_pareto, bus_power, evaluate_system, rank_full_system,
+statewise_T_minus_D) are in the programme layer, abep_sim/programme/design_synthesis.py; the hard-constraint table,
+evaluate_constraints and the S6.17 system comparison (pareto_s6_17, formerly system_pareto) are in
+abep_sim/assessment/design_gates.py.
 """
 from __future__ import annotations
 
 import functools
-import importlib.util
 import json
 import math
 import re
@@ -92,7 +109,8 @@ from typing import Mapping, Sequence
 
 import numpy as np
 
-from .. import bus_boundary_a9 as bb
+from .. import bus_boundary_a9_v2 as bb
+from .. import h1_geometry as h1g
 from .. import rotor_strength as rs
 from ..constants import M_SPECIES
 from . import filter_stage as fs
@@ -108,14 +126,33 @@ LANE = "fo_a9_7_f7_f8_coupled_optimizer"
 LANE_KEY = "A9_7_F78"
 DIRECTIVE = "docs/decisions/OD_2026_10_01_A9_7_ARCHITECTURE_FREEZE_DESIGN_SYNTHESIS.md"
 SPECIES = ("O", "N2", "O2")
-STATES = tuple(s.id for s in isy.ENVELOPE_STATES)          # h200_f150 (design state) + the four RFP-band corners
 DESIGN_STATE = isy.DESIGN_STATE.id
+ORBIT_BASIS_LABEL = isy.ORBIT_BASIS_LABEL
+
+
+def states() -> tuple:
+    """F1 state ids every statewise check runs over: design-case reference (index 0) + every required design state of
+    the frozen design-state set v2 (A9.14 S9.8 OD3). Loading fails closed when the set is missing or altered."""
+    return tuple(s.id for s in isy.envelope_states())
+
+
+def required_state_ids() -> tuple:
+    return tuple(s.id for s in isy.required_states())
+
+
+def __getattr__(name):
+    # STATES is resolved lazily (the design-state set is repository-only data; importing the module must not need it)
+    if name == "STATES":
+        return states()
+    # A9.22: HARD_CONSTRAINTS / PRE_EVALUATED_OBJECTIVES are assessment definitions (abep_sim/assessment/design_gates.py)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 LABEL_PARAMETRIC = "PARAMETRIC_SENSITIVITY"
 SYN_CLASS = "SYNTHETIC_TEST_DATA_NOT_EVIDENCE"
 FORBIDDEN_STATUS_WORDS = ("PASS", "SELECTED", "WINNER", "QUALIFIED", "OPTIMUM")
 
 # lane inputs (read; the JSON outputs are the committed lane deliverables)
-F1_REL = "docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json"
+F1_REL = "docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json"   # the F1 deliverable (cited by pointer)
+F1_CORE_REL = isy.F1_CORE_REL     # what is read and pinned: its committed compact core view (A9.22 item 9)
 F2_REL = "docs/design_synthesis/f2_filter/f2_filter_stage_v1.json"
 F3_REL = "docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json"
 F3D_REL = "docs/design_synthesis/f3_compressor/f3_compressor_designs_v1.json"
@@ -127,9 +164,11 @@ P1_REL = "docs/experiments/hall_icp/p1_icp_bench/p1_icp_bench_v1.json"
 P2_REL = "docs/experiments/hall_icp/p2_impedance_map/p2_impedance_prep_v1.json"
 P3_REL = "docs/experiments/hall_icp/p3_coupled_thermal/p3_coupled_thermal_v2.json"   # supersedes v1 (A9.16)
 P4_REL = "docs/experiments/hall_icp/p4_anode_materials/p4_anode_materials_v1.json"
-MP_REL = "docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json"          # A9.15-applied (RFP-02); v2 = history
-# RV19-11: the A9.19 hollow-cathode refusal reads the current mass / power package (v3), never the immutable v2
-# history (MP_REL is already v3 since the A9.16 RFP-02 repair; kept as a named alias for the refusal reader)
+# A9.26: the current mass / power package is v5 (v4 + the A9.26 bid mass policy: 10 % system margin, AL-09 1.0 kg);
+# v4 (A9.24 AFI-01 AL-08 re-base) / v3 / v2 = history
+MP_REL = "docs/budgets/mass_power_a9_v5/mass_power_a9_v5.json"
+# RV19-11: the A9.19 hollow-cathode refusal reads the current mass / power package, never the immutable v2 history
+# (kept as a named alias for the refusal reader; the name predates v4 / v5)
 MP_V3_REL = MP_REL
 RFQ_REL = "docs/procurement/rfq_a9_v3/rfq_a9_v3.json"                    # A9.15-applied (RFP-02); v2 = history
 RVM_REL = "docs/requirements/rvm_a9/rvm_a9_v1.json"
@@ -165,11 +204,13 @@ RANK_COMPUTED_SYNTHETIC = "PARETO_LAYERS_COMPUTED_SYNTHETIC_TEST_ONLY_NOT_EVIDEN
 RANK_STATUSES = (RANK_REFUSED_INCOMPLETE, RANK_REFUSED_NO_FEASIBLE, RANK_REFUSED_MIXED, RANK_COMPUTED,
                  RANK_COMPUTED_SYNTHETIC)
 
-# A9.19 / A9.20: the flight configurations are hall_icp_neutralizer only; hall_c1_reference (bb.CONFIGURATIONS keeps
-# it for the A9-02 boundary history) is a GROUND_REFERENCE label only, never a flight candidate
+# A9.19 / A9.20: the flight configurations are hall_icp_neutralizer only; hall_c1_reference is a GROUND_REFERENCE
+# label only, never a flight candidate. A9.22 G8: bus_power_boundary_a9_v2 carries exactly that split (flight bus
+# CONFIGURATIONS; C1 only as GROUND_REFERENCE_TEST_METADATA)
 CONFIGURATIONS = a919.FLIGHT_CONFIGURATIONS
 GROUND_REFERENCE_CONFIGURATIONS = (a919.GROUND_REFERENCE_CONFIGURATION,)
-assert set(CONFIGURATIONS) | set(GROUND_REFERENCE_CONFIGURATIONS) == set(bb.CONFIGURATIONS)
+assert tuple(CONFIGURATIONS) == tuple(bb.CONFIGURATIONS)
+assert GROUND_REFERENCE_CONFIGURATIONS == tuple(bb.GROUND_REFERENCE_TEST_METADATA)
 
 
 class OptimizerError(ValueError):
@@ -187,6 +228,17 @@ def read_json(rel: str, repo: Path = REPO) -> dict:
     return _read_json_cached(str(p), p.stat().st_mtime_ns)
 
 
+@functools.lru_cache(maxsize=4)
+def _read_f1_cached(repo: str, mtime_ns: int) -> dict:
+    return isy.load_f1_view(repo)
+
+
+def read_f1(repo: Path = REPO) -> dict:
+    """The F1 deliverable as consumers read it (expanded compact core view, isy.load_f1_view; cached on path + mtime;
+    callers never mutate the returned object)."""
+    return _read_f1_cached(str(repo), (Path(repo) / F1_CORE_REL).stat().st_mtime_ns)
+
+
 def _var(vid, block, symbol, value, units, basis, source, evidence_class, status, **extra):
     d = {"id": vid, "block": block, "symbol": symbol, "value": value, "units": units, "basis": basis,
          "source": source, "evidence_class": evidence_class, "status": status}
@@ -200,18 +252,11 @@ BLOCK_STATES = ("SEARCHED", "CONTEXT_AXIS_NOT_SEARCHED", "BOUNDED_NOT_SEARCHED_N
                 "NOT_SEARCHABLE_BOUNDS_TBD")
 
 
-def _f5_builder(repo: Path = REPO):
-    """The F5 builder module (for its fail-closed geometric_admissibility); imported by path, read-only."""
-    spec = importlib.util.spec_from_file_location("_f7_h1_builder", Path(repo) / F5_BUILDER_REL)
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-
 def design_vector_blocks(repo: Path = REPO) -> list[dict]:
     """The common design vector, block by block, with every variable's value / bounds / TBD, units, basis, source,
     evidence class and status taken from the lane that owns it."""
-    f1, f3, f4, f5, f6 = (read_json(r, repo) for r in (F1_REL, F3_REL, F4_REL, F5_REL, F6_REL))
+    f1 = read_f1(repo)
+    f3, f4, f5, f6 = (read_json(r, repo) for r in (F3_REL, F4_REL, F5_REL, F6_REL))
     p3, mp = read_json(P3_REL, repo), read_json(MP_REL, repo)
     blocks = []
 
@@ -234,7 +279,15 @@ def design_vector_blocks(repo: Path = REPO) -> list[dict]:
              "TBD", "CONTEXT_AXIS (uncertainty, F8)"),
         _var("x_intake.structure", "x_intake", "(t_wall, coating, support)", "TBD", "mixed", "structural inputs "
              "of the geometric mass model are TBD (F1-P-02..05); the code-default case is a labelled parametric "
-             "sensitivity case; the wall area is the mass proxy", f"{F1_REL} items F1-P-02..05", "TBD", "TBD"),
+             "sensitivity case; the wall area is the mass proxy. A9.13 S6.1 / F1Q-02: PARAMETRIC_SENSITIVITY, budgeting "
+             "only; never a CBE, frozen intake mass or structural qualification; sourced structural definition "
+             "required before LOCK-1", f"{F1_REL} items F1-P-02..05", "TBD", "TBD", f1q02=isy.f1q02_label()),
+        _var("x_intake.orbit_states", "x_intake", "orbit / atmosphere states", {
+             "design_state_set": isy.DESIGN_STATE_SET_ID, "sha256": isy.DESIGN_STATE_SET_SHA256,
+             "n_required_states": len(isy.required_states()), "design_case_reference": DESIGN_STATE,
+             "orbit_basis": isy.ORBIT_BASIS_LABEL}, "-", "every required state of the frozen design-state set v2 "
+             "(A9.14 S9.8 OD3) plus the design-case reference point; broad envelope, inclination / LTAN TBD (A9.21)",
+             f"{F1_REL} coverage_rule.design_state_set", "model-derived", "FROZEN_DATASET (all states evaluated)"),
     ]})
 
     blocks.append({"block": "x_filter", "lane": "F2 (through F4 filter cases)", "path": F2_REL,
@@ -330,7 +383,7 @@ def design_vector_blocks(repo: Path = REPO) -> list[dict]:
     chain = mp["power"]["icp_rf_chain"]
     rv = [
         _var("x_RF.frequency", "x_RF", "f_RF", bb.RF_FREQUENCY_HZ, "Hz", "13.56 MHz ICP drive (row 72 / A9)",
-             f"{MP_REL} items_v2 MPV2-P07; abep_sim/bus_boundary_a9.py RF_FREQUENCY_HZ", "owner-allocation",
+             f"{MP_REL} items_v2 MPV2-P07; abep_sim/bus_boundary_a9_v2.py RF_FREQUENCY_HZ", "owner-allocation",
              "OWNER_GIVEN"),
         _var("x_RF.chain_topology", "x_RF", "RF chain", chain["chain"], "-", "flight-representative DC-RF source, "
              "directional coupler, 50-ohm line, local adjustable match, antenna (A9.2 / A9.3 decisions)",
@@ -341,7 +394,7 @@ def design_vector_blocks(repo: Path = REPO) -> list[dict]:
              f"{MP_REL} items_v2 MPV2-P08", "TBD", "TBD"),
         _var("x_RF.lab_forward_range", "x_RF", "P_fwd lab", list(bb.LAB_RF_FORWARD_W_RANGE), "W", "laboratory "
              "source + inline chain sizing: a TEST capability, never a flight allowance (row 72)",
-             "abep_sim/bus_boundary_a9.py LAB_RF_FORWARD_W_RANGE", "owner-allocation", "TEST_CAPABILITY_ONLY"),
+             "abep_sim/bus_boundary_a9_v2.py LAB_RF_FORWARD_W_RANGE", "owner-allocation", "TEST_CAPABILITY_ONLY"),
     ]
     blocks.append({"block": "x_RF", "lane": "P2 framework / RFQ v3 / mass-power v3", "path": P2_REL,
                    "state": "NOT_SEARCHABLE_BOUNDS_TBD", "variables": rv})
@@ -368,9 +421,12 @@ def cs_hub_ratios() -> tuple:
 
 def hall_admissibility(h_mm: float, d_mean_mm: float, L_mm: float, assumptions: str = "worst_case_assumptions",
                        repo: Path = REPO) -> dict:
-    """x_Hall geometric admissibility through the F5 builder's fail-closed function (never a PASS; every Hall
-    performance quantity stays NOT_EVALUATED)."""
-    return _f5_builder(repo).geometric_admissibility(h_mm, d_mean_mm, L_mm, assumptions)
+    """x_Hall geometric admissibility through the F5 fail-closed function (never a PASS; every Hall performance
+    quantity stays NOT_EVALUATED). A9.22: the function is the library abep_sim/h1_geometry.py (verbatim from the F5
+    builder F5_BUILDER_REL, no longer imported by path); the window definition is the committed F5 record
+    x_hall_design_space.definition (identical to the builder's x_hall_definition())."""
+    return h1g.geometric_admissibility(h_mm, d_mean_mm, L_mm, assumptions,
+                                       read_json(F5_REL, repo)["x_hall_design_space"]["definition"])
 
 
 # ================================================================================================= upstream inputs
@@ -378,10 +434,11 @@ UPSTREAM_TARGETS_PA = (0.002, 0.005, 0.01, 0.02, 0.05, 0.1)   # F4 requirement s
 VOLUMES_M3 = (1e-3, 1e-2, 1e-1)                                # F4 search grid x_plenum.V
 WALL_CASES = ("WALL-G0", "WALL-TI64-DB")                       # F4-P-06 parametric cases
 UPSTREAM_OBJECTIVES = (
-    ("mdot_delivered_min_kgps", "max", "kg/s", "delivered (valve) total flow, minimum over the five orbit states at "
-     "one plenum set pressure (single setpoint for all states)"),
-    ("drag_intake_max_N", "min", "N", "intake-face drag, maximum over the five orbit states (F1 convention: full "
-     "aperture, spacecraft body excluded)"),
+    ("mdot_delivered_min_kgps", "max", "kg/s", "delivered (valve) total flow, minimum over every F1 state (design-case "
+     "reference + every required design state of the frozen design-state set v2) at one plenum set pressure (single "
+     "setpoint for all states)"),
+    ("drag_intake_max_N", "min", "N", "intake-face drag, maximum over every F1 state (F1 convention: full aperture, "
+     "spacecraft body excluded)"),
     ("P_compressor_el_max_W", "min", "W", "compressor electrical input (DragCompressor model, code-default "
      "coefficients), maximum over states"),
     ("m_compressor_max_kg", "min", "kg", "compressor mass of the DragCompressor model (code-default coefficients; "
@@ -423,7 +480,7 @@ def drag_table(f1: dict) -> dict:
     (the F1 candidate_state_metrics expression; reproduces F1 candidate_metrics drag_N to the 6-digit rounding, test).
     SE combined in quadrature from C_D_species_se."""
     cols = f1["species_table"]["columns"]
-    atm = {s.id: s.atm() for s in isy.ENVELOPE_STATES}
+    atm = {s.id: s.atm() for s in isy.envelope_states()}
     wkey = {"O": "fO", "N2": "fN2", "O2": "fO2"}
     acc: dict = {}
     for row in f1["species_table"]["rows"]:
@@ -440,7 +497,7 @@ def drag_table(f1: dict) -> dict:
 
 
 def load_upstream_inputs(repo: Path = REPO) -> UpstreamInputs:
-    f1 = read_json(F1_REL, repo)
+    f1 = read_f1(repo)
     areas = tuple(float(a) for a in f1["design_space"]["variables"]["area_m2"])
     recs = pf.load_f1_records(f1, areas)
     records = {(r.candidate, r.scenario, r.state): r for r in recs}
@@ -451,9 +508,13 @@ def load_upstream_inputs(repo: Path = REPO) -> UpstreamInputs:
                 geom[_cid(A, float(Ld), float(phi))] = (A, float(Ld), float(phi))
     cands = tuple(sorted(geom, key=lambda c: geom[c]))
     scenarios = tuple(f1["pareto"]["envelope"].keys())
+    sts = states()
+    if tuple(f1["coverage_rule"]["orbit_states"]) != sts:
+        raise RuntimeError("F1 deliverable was not evaluated on the current state set (design-case reference + the "
+                           "required states of the pinned design-state set v2): regenerate F1")
     for c in cands:
         for sc in scenarios:
-            for st in STATES:
+            for st in sts:
                 if (c, sc, st) not in records:
                     raise RuntimeError(f"F1 record missing for {c} {sc} {st}")
     f4 = read_json(F4_REL, repo)
@@ -495,11 +556,22 @@ def ripple_transfer_arrays(side_e: Mapping, plant: pf.CompressorPlant, pl: pf.Pl
     return out
 
 
-def intake_mass_code_default(A: float, Ld: float, phi: float) -> float:
+def intake_mass_code_default(A: float, Ld: float, phi: float, use: str = isy.F1Q02_USE) -> float:
     """F1 geometric intake mass under the labelled code-default structural case (PARAMETRIC_SENSITIVITY_CASE; every
-    structural input except the Al density is uncited). d-invariant at fixed L/d (test)."""
+    structural input except the Al density is uncited). d-invariant at fixed L/d (test). A9.13 S6.1 / F1Q-02: budgeting
+    sensitivity only; any other ``use`` (CBE, frozen intake mass, structural qualification) is refused."""
+    isy.require_budgeting_use(use)
     d0 = isy.GeometryCandidate(A, 10.0, Ld, phi)
-    return isy.intake_mass(d0, isy.STRUCTURAL_CODE_DEFAULT)["m_intake_kg"]
+    return isy.intake_mass(d0, isy.STRUCTURAL_CODE_DEFAULT, use=use)["m_intake_kg"]
+
+
+INTAKE_MASS_LINE = "AL-01"        # mass/power v3 line 'intake/filter/duct'
+
+
+def intake_mass_budget_record(A: float, Ld: float, phi: float) -> dict:
+    """The intake structural mass as a mass/power design-parametric record (F1Q-02 labelled; never a CBE)."""
+    return {"m_intake_parametric_kg": intake_mass_code_default(A, Ld, phi), "status": LABEL_PARAMETRIC,
+            "structural_case": isy.STRUCTURAL_CODE_DEFAULT.id, "f1q02": isy.f1q02_label()}
 
 
 def design_id(cand: str, filt: str, comp: str, V: float, P: float) -> str:
@@ -527,6 +599,7 @@ def upstream_context(inp: UpstreamInputs, scenario: str, filt: str, wall: str, v
     if scenario not in inp.scenarios:
         raise OptimizerError(f"unknown scenario {scenario!r}")
     fc = inp.filters[filt]
+    STATES = states()
     recs = [inp.records[(c, scenario, st)] for c in cands for st in STATES]
     side = pf.intake_side(recs, fc)
     f1ok = np.array([r.f1_status == "FEASIBLE_AT_STATE" for r in recs])
@@ -585,7 +658,7 @@ def upstream_context(inp: UpstreamInputs, scenario: str, filt: str, wall: str, v
     capt = np.empty(nC)
     for ci, c in enumerate(cands):
         A, Ld, phi = inp.geometry[c]
-        dd = [inp.drag_per_area[(scenario, Ld, phi, st)] for st in STATES]
+        dd = [inp.drag_per_area[(scenario, Ld, phi, st)] for st in STATES]   # HC-09: every F1 state
         j = int(np.argmax([x[0] for x in dd]))
         drag[ci], drag_se[ci] = A * dd[j][0], A * dd[j][1]
         capt[ci] = min(sum(inp.records[(c, scenario, st)].mdot_fwd_kgps.values()) for st in STATES)
@@ -633,55 +706,6 @@ def pareto_mask(F: np.ndarray, senses: Sequence[str], chunk: int = 256) -> np.nd
         dom = (le & lt).any(axis=1)
         keep[idx_f[i0:i0 + chunk]] = ~dom
     return keep
-
-
-def context_pareto(ctx: dict, objectives=OBJ_KEYS) -> dict:
-    """Pareto set per set pressure of one evaluated context. Returns {P_set: {n_evaluated, n_feasible, status counts,
-    reason counts, members: [row dicts]}}; every member carries the NOT_EVALUATED system objectives."""
-    arr = ctx["arrays"]
-    cands, comps, vols, tgs = ctx["candidates"], ctx["compressors"], ctx["volumes"], ctx["targets"]
-    res = {}
-    for ti, P in enumerate(tgs):
-        sl = (slice(None), slice(None), slice(None), ti)
-        feas = ctx["feasible"][sl]
-        bits = ctx["bits"][sl]
-        idx = np.argwhere(feas)
-        F = np.column_stack([arr[k][sl][feas] for k in objectives]) if len(idx) else np.zeros((0, len(objectives)))
-        mask = pareto_mask(F, [OBJ_SENSE[k] for k in objectives]) if len(idx) else np.zeros(0, bool)
-        status_counts: dict = {}
-        reason_counts: dict = {}
-        for b in bits.ravel():
-            rs = pf.reasons_from_bits(int(b))
-            st = pf.status_from_reasons(rs)
-            status_counts[st] = status_counts.get(st, 0) + 1
-            for r in rs:
-                reason_counts[r] = reason_counts.get(r, 0) + 1
-        members = []
-        for (ci, ki, vi), m in zip(idx, mask):
-            if not m:
-                continue
-            g = (ci, ki, vi, ti)
-            row = {"design_id": design_id(cands[ci], ctx["filter"], comps[ki], vols[vi], P),
-                   "candidate": cands[ci], "compressor": comps[ki], "V_m3": vols[vi], "P_set_Pa": P}
-            for k in objectives:
-                row[k] = float(arr[k][g])
-            for k in ("mdot_captured_min_kgps", "drag_intake_max_se_N", "mdot_delivered_design_kgps", "xO_flow_min",
-                      "xO_flow_max", "deadhead_margin_min", "kn_upper_min", "T_comp_max_K", "a_eq_design_m2"):
-                row[k] = float(arr[k][g])
-            for k in REPORTED_CONSTRAINT_COLUMNS:
-                if k in arr:
-                    row[k] = float(arr[k][g])
-            row["ripple_feed_quality"] = u13.ripple_feed_quality(row.get("ripple_transfer_shaft"), u13.VALUE_PARAMETRIC,
-                                                                 u13.h1_tolerance_tbd("ripple"))["status"]
-            row["characterization_coverage"] = u13.characterization_coverage(row["mdot_delivered_min_kgps"])["position"]
-            row["context_role"] = ctx.get("context_role", "ARCHITECTURE_CONTEXT")
-            row["system_not_evaluated"] = list(SYSTEM_NOT_EVALUATED_CODES)
-            members.append(row)
-        members.sort(key=lambda r: r["design_id"])
-        res[P] = {"context_id": context_id(ctx["scenario"], ctx["filter"], ctx["wall"], P),
-                  "n_evaluated": int(bits.size), "n_feasible": int(feas.sum()), "status_counts": status_counts,
-                  "reason_counts": reason_counts, "n_pareto": len(members), "members": members}
-    return res
 
 
 # ================================================================================================= system objectives
@@ -747,7 +771,7 @@ def hall_gated_thrust(name: str, rec: Mapping | None, repo: Path = REPO) -> dict
 
 UNLOCK = {
     "T": "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered "
-         "predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), "
+         "predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), "
          "HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 "
          "thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
     "D_spacecraft": "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft geometry in the "
@@ -761,8 +785,9 @@ UNLOCK = {
     "Q_reject": "the P3 coupled network solved: ICP geometry P3-G-01..08, emittances P3-R-01..04, conductances "
                 "P3-K-01..06, heat terms from P1/P2 data (Q_RF/match, Q_collector) and Phase-1 plume data (Q_plume)",
     "I_e_margin": "registered I_d,max,H1 (A9.3 OQ-A907-02, from measured H-1 operation) AND a P1 ICP-45A result "
-                  "EVALUATED_ENGINEERING_ONLY (discharge-OFF capacity, one-sided LCB, A9.4 P1Q-10 / A9.5 P1Q-16); "
-                  "for hall_c1_reference a registered C1 emission capacity",
+                  "EVALUATED_ENGINEERING_ONLY (discharge-OFF capacity, one-sided LCB, A9.4 P1Q-10 / A9.5 P1Q-16) "
+                  "for the single flight configuration hall_icp_neutralizer (A9.19; the ground C1 reference is never "
+                  "a flight objective, A9.20)",
     "life": "Hall wall-erosion life (needs an admitted Hall map with wall_life_trustworthy) or a life test; anode / "
             "collector material with gate-admissible evidence (P4: all 352 gate cells INCOMPLETE_EVIDENCE); intake "
             "/ plenum / filter AO compatibility (coupon programme, owner row 132)",
@@ -851,48 +876,6 @@ def official_ledger(config: str, repo: Path = REPO, compressor_P_W: float | None
     return bb.ledger(config, loads, effs, fe, label=label)
 
 
-def bus_power(config: str, compressor_P_W: float | None, supplied: Mapping | None = None, repo: Path = REPO) -> dict:
-    """P_bus objective. EVALUATED only from supplied COMPLETE ledgers (steady + start-up steps) whose loads are all of
-    a rankable class; the RFP gate verdict of bus_boundary_a9.rfp_power_gate is carried for the hard constraint.
-    Otherwise NOT_EVALUATED with the official ledger status and the parametric lower bound."""
-    if supplied is not None:
-        steady, startup = supplied["steady"], supplied["startup"]
-        gate = bb.rfp_power_gate(steady, startup)
-        def _ledger_classes(led):
-            # every evidence class that enters P_bus: loads, slot efficiencies, front-end efficiency (PR #36 review)
-            c = set(led["load_evidence_classes"])
-            c |= {it["efficiency_evidence_class"] for it in led["items"]
-                  if it.get("efficiency") is not None and it.get("efficiency_evidence_class")}
-            if any(it.get("path") == "internal_bus" and it.get("state") != "OFF" for it in led["items"]):
-                c.add(led["front_end"]["evidence_class"] or "TBD")
-            return c
-        classes = _ledger_classes(steady)
-        for s in startup:
-            classes |= _ledger_classes(s)
-        if steady["status"] != "COMPLETE":
-            return _obj("P_bus_W", INCOMPLETE, None, "W", reason=f"supplied steady ledger {steady['status']}",
-                        unlock=[UNLOCK["P_bus"]], gate_verdict=gate["verdict"],
-                        lower_bound_W=steady["P_bus_lower_bound_W"])
-        syn = supplied.get("synthetic", False)
-        st = SYNTHETIC_ONLY if syn else (EVALUATED if classes <= set(RANKABLE_CLASSES) else PARAMETRIC_ONLY)
-        return _obj("P_bus_W", st, steady["P_bus_W"], "W", evidence_class=SYN_CLASS if syn else
-                    ",".join(sorted(classes)), source=supplied.get("source", "supplied A9-02 ledgers"),
-                    gate_verdict=gate["verdict"], power_basis=steady["power_basis"])
-    off = official_ledger(config, repo)
-    par = official_ledger(config, repo, compressor_P_W) if compressor_P_W is not None else None
-    return _obj("P_bus_W", NOT_EVALUATED, None, "W",
-                reason=f"A9-02 official ledger status {off['status']} ({len(off['tbd'])} TBD terms; compressor load "
-                       "TBD per row 22); every Hall / ICP / C1 / valve / thermal / housekeeping load and every supply "
-                       "efficiency is TBD", unlock=[UNLOCK["P_bus"]],
-                official_status=off["status"], official_lower_bound_W=off["P_bus_lower_bound_W"],
-                parametric_lower_bound_W=None if par is None else par["P_bus_lower_bound_W"],
-                parametric_status=None if par is None else par["status"],
-                gate_verdict="NOT_EVALUABLE",
-                allocation_context={"design_allocation_W": bb.DESIGN_ALLOCATION_W,
-                                    "common_allocation_W": bb.COMMON_ALLOCATION_W,
-                                    "rule": "owner allocations (rows 109, 114), never gates or predictions"})
-
-
 # ----------------------------------------------------------------------------------------------- m_wet
 MASS_LINES_DESIGN = {"AL-01": "intake (+ filter / duct)", "AL-02": "compressor + drive", "AL-03": "plenum / feed",
                      "AL-05": "ICP neutralizer"}
@@ -930,6 +913,9 @@ def wet_mass(config: str, design_masses: Mapping | None = None, supplied: Mappin
               "exceedance_kg": w.get("exceedance_kg")} for w in wets]
     lines = []
     dm = dict(design_masses or {})
+    if INTAKE_MASS_LINE in dm:
+        # A9.13 S6.1 / F1Q-02: an intake structural mass enters only as a labelled budgeting sensitivity (fail closed)
+        isy.require_f1q02_label(dm[INTAKE_MASS_LINE])
     for ln in mp["lines"][config]:
         lid = ln["line"]
         val = ln.get("value") or {}
@@ -960,7 +946,9 @@ def heat_rejection(compressor_P_W: float | None, supplied: Mapping | None = None
     fce = {k: v["status"] for k, v in p3["fail_closed_evaluations"].items()}
     return _obj("Q_reject_W", NOT_EVALUATED, None, "W",
                 reason=f"P3 framework {p3['status']}; fail-closed evaluations {fce}; ICP_COUPLED_THERMAL and "
-                       "ANODE_THERMAL_CLOSURE UNRESOLVED (never reported as PASS)", unlock=[UNLOCK["Q_reject"]],
+                       "ANODE_THERMAL_CLOSURE UNRESOLVED (never reported as PASS); the H2-5 C-1 cathode-body node CB / "
+                       "Q_cath 9-101 W inherited by P3 v2 is a ground-article C1 term, "
+                       "NOT_USABLE_FOR_FLIGHT_THERMAL_CLOSURE (A9.24 AFI-03)", unlock=[UNLOCK["Q_reject"]],
                 p3_evaluations=fce,
                 partial={"compressor_local_dissipation_upper_bound_W": compressor_P_W,
                          "basis": "electrical input = local dissipation + energy carried by the gas, so the local "
@@ -1050,118 +1038,9 @@ SYSTEM_OBJECTIVE_CODE = {"T_minus_D_spacecraft_N": "T_minus_D", "P_bus_W": "P_bu
                          "Q_reject_W": "Q_reject", "I_e_cap_minus_I_d_max_A": "I_e_margin",
                          "life_material": "life_material"}
 
-# ----------------------------------------------------------------------------------------------- hard constraints
-HARD_CONSTRAINTS = (
-    {"id": "HC-01", "rvm": "RVM-02", "rfp": "RFP-P18-06", "quantity": "T (sustained, atmospheric propellant)",
-     "comparator": ">=", "limit": 0.012, "units": "N", "objective": "thrust_N", "category": "rfp_recorded"},
-    {"id": "HC-02", "rvm": "RVM-03", "rfp": "RFP-P18-06; RFP-P18-10",
-     "quantity": "demonstrated thrust capability at P_bus < 1500 W", "comparator": ">=",
-     "limit": 0.025, "units": "N", "objective": "thrust_capability_N", "category": "rfp_recorded"},
-    {"id": "HC-03", "rvm": "RVM-04", "rfp": "RFP-P18-10", "quantity": "P_bus,1ms,max (steady and start-up, A9-02 gate)",
-     "comparator": "<", "limit": 1500.0, "units": "W", "objective": "P_bus_W", "category": "rfp_recorded"},
-    {"id": "HC-04", "rvm": "RVM-06", "rfp": "RFP-P18-11", "quantity": "wet propulsion-system mass", "comparator": "<",
-     "limit": 40.0, "units": "kg", "objective": "m_wet_kg", "category": "rfp_recorded"},
-    {"id": "HC-05", "rvm": "RVM-15", "quantity": "I_e,cap - I_d,max,H1 (one-sided LCB)", "comparator": ">",
-     "limit": 0.0, "units": "A", "objective": "I_e_cap_minus_I_d_max_A", "category": "derived_from_owner_decision"},
-    {"id": "HC-06", "rvm": "RVM-17", "quantity": "thermal margin below validated limits", "comparator": ">=",
-     "limit": 50.0, "units": "K", "objective": "thermal_margin_K", "category": "derived_project"},
-    {"id": "HC-07", "rvm": "RVM-12", "rfp": "RFP-P19-01", "quantity": "cumulative firing time capability",
-     "comparator": ">", "limit": 15000.0, "units": "h", "objective": "firing_life_h", "category": "rfp_recorded"},
-    {"id": "HC-08", "rvm": "AG-13 (owner decision A9.13 S6.15 / OQ-F78-01; A9.14 S9.7 statewise quantifier)",
-     "rfp": "RFP-P18-04; RFP-P18-06",
-     "quantity": "T_available(state) - D_spacecraft(state) at EVERY required state (statewise; worst state governs; "
-                 "the orbit average never hides a deficit)", "comparator": ">=", "limit": 0.0, "units": "N",
-     "objective": "statewise_T_minus_D", "category": "owner_decision_hard_statewise", "statewise": True},
-    {"id": "HC-09", "rvm": "F1 C-DRAG-RFP (RFP thrust max as recorded, F1-P-11)",
-     "quantity": "intake-face drag at every orbit state", "comparator": "<=", "limit": 0.025, "units": "N",
-     "objective": "drag_intake_max_N", "category": "upstream (evaluable now; necessary, not sufficient)"},
-    {"id": "HC-10", "rvm": "A9.15 RFP-compliant propellant policy", "rfp": "RFP-P18-08; RFP-P17-05",
-     "quantity": "ambient-air AND Xe operating capability with two separate propellant tanks / paths "
-                 "(1 = both demonstrated)", "comparator": ">=", "limit": 1.0, "units": "-",
-     "objective": "propellant_capability", "category": "rfp_recorded"},
-    {"id": "HC-11", "rvm": "AG-12 (owner decision A9.13 S6.21 / F9-OQ-02)", "rfp": "RFP-P18-06; RFP-P18-05",
-     "quantity": "statewise feed-state sufficiency (mdot, P, T, composition, ripple) vs the requirement derived from "
-                 "the required thrust and a VALIDATED H-1 map (no fixed mg/s gate)", "comparator": ">=", "limit": 0.0,
-     "units": "-", "objective": "feed_state_sufficiency", "category": "owner_decision_hard_statewise",
-     "statewise": True},
-    {"id": "HC-12", "rvm": "A9.13 S6.17 / S6.12 feed-quality", "rfp": "-",
-     "quantity": "compressor / plenum ripple <= measured H-1 ripple tolerance", "comparator": "<=", "limit": None,
-     "units": "-", "objective": "ripple_feed_quality", "category": "owner_decision_hard_constraint"},
-)
-# constraints whose record is a pre-evaluated upstream_a9_13 constraint result (status carried, not recomputed)
-PRE_EVALUATED_OBJECTIVES = ("statewise_T_minus_D", "feed_state_sufficiency", "ripple_feed_quality")
-
-
-def _from_u13(status: str) -> tuple[str, str | None]:
-    """Map an upstream_a9_13 constraint status onto this module's (constraint status, value status)."""
-    return {u13.C_MET: (C_MET, EVALUATED), u13.C_VIOLATED: (C_VIOLATED, EVALUATED),
-            u13.C_MET_SYNTHETIC: (C_MET, SYNTHETIC_ONLY), u13.C_VIOLATED_SYNTHETIC: (C_VIOLATED, SYNTHETIC_ONLY),
-            u13.C_MET_PARAMETRIC: (C_MET_PARAMETRIC, PARAMETRIC_ONLY),
-            u13.C_VIOLATED_PARAMETRIC: (C_VIOLATED_PARAMETRIC, PARAMETRIC_ONLY)}.get(status, (C_NOT_EVALUATED, None))
-
-
-def _cmp(v: float, comparator: str, limit: float) -> bool:
-    return {">=": v >= limit, ">": v > limit, "<": v < limit, "<=": v <= limit}[comparator]
-
-
-def evaluate_constraints(values: Mapping) -> list[dict]:
-    """Fail-closed hard constraints. ``values``: objective name -> objective record (status + value) or None.
-    A constraint is MET_ON_SUPPLIED_VALUES or VIOLATED only on an EVALUATED or SYNTHETIC numeric value (the label
-    travels with it; rank_full_system never lets synthetic and evidence meet). On a PARAMETRIC_SENSITIVITY_ONLY value
-    (assumed, owner-allocation, code-default or parametric inputs) the comparison is reported as
-    MET_ON_PARAMETRIC_VALUES_SENSITIVITY_ONLY_NOT_MET / VIOLATED_ON_PARAMETRIC_VALUES_SENSITIVITY_ONLY and never
-    counts as satisfied (A9.7: a TBD is never converted to an assumed value to obtain an optimum). Anything else is
-    NOT_EVALUATED. HC-03 uses the A9-02 gate verdict when one is carried (PASS -> met, FAIL -> violated,
-    NOT_EVALUABLE -> not evaluated) only on an EVALUATED or SYNTHETIC ledger; on a PARAMETRIC_SENSITIVITY_ONLY ledger the
-    verdict maps to the parametric sensitivity statuses, and on any other status to NOT_EVALUATED."""
-    out = []
-    for c in HARD_CONSTRAINTS:
-        rec = values.get(c["objective"])
-        st, basis = C_NOT_EVALUATED, "no evaluable value (fail closed: never counted as satisfied)"
-        if c["objective"] in PRE_EVALUATED_OBJECTIVES:
-            if rec is None:
-                basis = ("no statewise record over the required state set (a single value never closes a statewise "
-                         "constraint; A9.13 S6.15 / S6.21 / A9.14 S9.7)" if c.get("statewise") else
-                         "measured H-1 tolerance / ripple not evaluated (A9.13 S6.17)")
-                vst = None
-            else:
-                st, vst = _from_u13(rec.get("status"))
-                basis = f"upstream_a9_13 {c['objective']} status {rec.get('status')}"
-                if rec.get("average_hides_violation"):
-                    basis += "; orbit average non-negative but a state is below zero (the statewise result governs)"
-            out.append({"id": c["id"], "rvm": c["rvm"], "rfp": c.get("rfp"), "quantity": c["quantity"],
-                        "rule": c["quantity"], "status": st, "value_status": vst, "basis": basis})
-            continue
-        if rec is not None and c["id"] == "HC-03" and rec.get("gate_verdict") is not None:
-            gv = rec["gate_verdict"]
-            vst = rec.get("status")
-            if vst in (EVALUATED, SYNTHETIC_ONLY):
-                st = {"PASS": C_MET, "FAIL": C_VIOLATED}.get(gv, C_NOT_EVALUATED)
-                basis = f"bus_boundary_a9.rfp_power_gate verdict {gv} ({vst})"
-            elif vst == PARAMETRIC_ONLY:
-                # the gate ignores evidence class: on assumed / parametric loads its verdict is a sensitivity
-                # comparison only and never counts as satisfied (fail closed; OPT-04)
-                st = {"PASS": C_MET_PARAMETRIC, "FAIL": C_VIOLATED_PARAMETRIC}.get(gv, C_NOT_EVALUATED)
-                basis = (f"bus_boundary_a9.rfp_power_gate verdict {gv} on {vst} ledger values: sensitivity "
-                         "comparison only, never counted as satisfied (fail closed)")
-            else:
-                st = C_NOT_EVALUATED
-                basis = (f"bus_boundary_a9.rfp_power_gate verdict {gv} but value status {vst}: "
-                         "not evaluable (fail closed)")
-        elif rec is not None and rec.get("status") in (EVALUATED, PARAMETRIC_ONLY, SYNTHETIC_ONLY) and \
-                rec.get("value") is not None and math.isfinite(float(rec["value"])):
-            ok = _cmp(rec["value"], c["comparator"], c["limit"])
-            if rec["status"] == PARAMETRIC_ONLY:
-                st = C_MET_PARAMETRIC if ok else C_VIOLATED_PARAMETRIC
-                basis = (f"value {rec['value']:.6g} {c['units']} ({rec['status']}): sensitivity comparison only, "
-                         "never counted as satisfied (fail closed)")
-            else:
-                st = C_MET if ok else C_VIOLATED
-                basis = f"value {rec['value']:.6g} {c['units']} ({rec['status']})"
-        out.append({"id": c["id"], "rvm": c["rvm"], "rfp": c.get("rfp"), "quantity": c["quantity"],
-                    "rule": f"{c['comparator']} {c['limit']:g} {c['units']}", "status": st,
-                    "value_status": None if rec is None else rec.get("status"), "basis": basis})
-    return out
+# A9.22: HARD_CONSTRAINTS, PRE_EVALUATED_OBJECTIVES and evaluate_constraints (+ _from_u13 / _cmp) moved to the
+# assessment layer abep_sim/assessment/design_gates.py (limits from abep_sim/design/engineering_constraints.py).
+# Deprecated shims: evaluate_constraints below and the module __getattr__ (HARD_CONSTRAINTS, PRE_EVALUATED_OBJECTIVES).
 
 
 def _line_hc_elements(ln: Mapping, config: str) -> list[dict]:
@@ -1215,17 +1094,38 @@ def flight_configuration_elements(config: str, repo: Path = REPO) -> list[dict]:
     flight_lines = mp["lines"][config]
     for ln in flight_lines:
         els += _line_hc_elements(ln, config)
-    present = {ln.get("line") for ln in flight_lines}
+    present = {ln.get("line"): ln for ln in flight_lines}
     for gcfg in GROUND_REFERENCE_CONFIGURATIONS:
         for where, glines in ground_reference_lines(mp, gcfg):
             for ln in glines:
                 m = _EMBEDDED_C1_RE.search(str(ln.get("floor_arithmetic", "")))
                 if m and m.group(3) in present:
+                    src = f"{MP_V3_REL} {where}.{gcfg}.{ln.get('line')}.floor_arithmetic"
+                    absent = _floor_c1_resolution(present[m.group(3)])
+                    if absent:
+                        # the flight line itself was re-based and states that no C1 hardware remains in its floor
+                        # (mass / power v4 AFI-01 + A9.25 message 8 AFI-01-S1): the historical ground-reference text
+                        # is reported as an absence statement (re-verified by the refusal), no longer flagged
+                        els.append({"id": f"{m.group(3)}.embedded_c1_cathode_xe_branch",
+                                    "name": "C1 cathode Xe branch", "kind": "c1_branch",
+                                    "state": f"NO_C1_HARDWARE_IN_FLIGHT_FLOOR ({absent[1]})", "in_line": False,
+                                    "kg_history": float(m.group(1)), "ref": m.group(2),
+                                    "booking": a919.C1_DECLARED_ABSENT,
+                                    "source": f"{src}; {MP_V3_REL} lines.{config}.{m.group(3)}.{absent[0]}"})
+                        continue
                     els.append({"id": f"{m.group(3)}.embedded_c1_cathode_xe_branch", "name": "C1 cathode Xe branch",
                                 "kind": "embedded_floor_branch", "kg": float(m.group(1)), "ref": m.group(2),
-                                "booking": a919.C1_BOOKING_EMBEDDED,
-                                "source": f"{MP_V3_REL} {where}.{gcfg}.{ln.get('line')}.floor_arithmetic"})
+                                "booking": a919.C1_BOOKING_EMBEDDED, "source": src})
     return els
+
+
+def _floor_c1_resolution(line: Mapping) -> tuple[str, str] | None:
+    """(key, statement) when a flight budget line states that NO C1 hardware remains in its floor (a field named
+    c1_hardware_in_flight* whose text starts with 'NONE'); None otherwise (the embedded flag then stands)."""
+    for k, v in line.items():
+        if str(k).startswith("c1_hardware_in_flight") and isinstance(v, str) and v.strip().upper().startswith("NONE"):
+            return k, v
+    return None
 
 
 def ground_reference_lines(mp: Mapping, gcfg: str) -> list[tuple[str, list]]:
@@ -1239,68 +1139,6 @@ def ground_reference_lines(mp: Mapping, gcfg: str) -> list[tuple[str, list]]:
     if gcfg in hist:
         out.append(("retired_flight_configuration_history.lines", hist[gcfg]))
     return out
-
-
-def evaluate_system(upstream_row: Mapping | None, config: str, design: Mapping | None = None,
-                    supplied: Mapping | None = None, repo: Path = REPO) -> dict:
-    """Every system objective of one design vector (upstream sub-vector from an F7 row; x_Hall / x_ICP / x_RF /
-    x_thermal through the supplied records) and the fail-closed hard constraints. ``supplied`` keys: thrust,
-    thrust_capability, spacecraft_drag, bus (ledgers), m_wet, Q_reject, I_e_margin, thermal_margin, firing_life,
-    life_material (a record {value, evidence_class, source} standing for a closed life / material assessment),
-    drag_intake_max (a record replacing the row's parametric F1 intake-drag value for HC-09), statewise_T_minus_D
-    (upstream_a9_13.statewise_drag_compensation result, HC-08), feed_state_sufficiency (upstream_a9_13.
-    feed_state_sufficiency result, HC-11), ripple_feed_quality (upstream_a9_13.ripple_feed_quality result, HC-12),
-    propellant_capability (a record, 1 = air AND Xe operation demonstrated, HC-10) and propellant_paths (the
-    modelled paths; default MODELLED_PROPELLANT_PATHS, checked structurally against A9.15)."""
-    if config in GROUND_REFERENCE_CONFIGURATIONS:
-        raise OptimizerError(f"REFUSED: {config!r} is not a flight configuration (A9.19: no conventional hollow "
-                             "cathode; A9.20: C1 is a GROUND-ONLY laboratory reference)")
-    if config not in CONFIGURATIONS:
-        raise OptimizerError(f"unknown configuration {config!r}")
-    hc = a919.refuse_hollow_cathode_elements(config, flight_configuration_elements(config, repo))
-    s = dict(supplied or {})
-    row = dict(upstream_row or {})
-    pel = row.get("P_compressor_el_max_W")
-    objs = {
-        "T_minus_D_spacecraft_N": thrust_minus_drag(row.get("drag_intake_max_N"), row.get("drag_intake_max_se_N"),
-                                                    s.get("thrust"), s.get("spacecraft_drag"), repo,
-                                                    intake_drag=s.get("drag_intake_max")),
-        "P_bus_W": bus_power(config, pel, s.get("bus"), repo),
-        "m_wet_kg": wet_mass(config, {"AL-02": {"m_compressor_max_kg": row.get("m_compressor_max_kg"),
-                                                 "status": LABEL_PARAMETRIC, "allocation_kg": 5.5}}
-                             if row.get("m_compressor_max_kg") is not None else None, s.get("m_wet"), repo),
-        "Q_reject_W": heat_rejection(pel, s.get("Q_reject"), repo),
-        "I_e_cap_minus_I_d_max_A": electron_margin(config, s.get("I_e_margin"), repo),
-        "life_material": _life_material(design, s.get("life_material"), repo),
-    }
-    cvals = dict(objs)
-    for k, name, units in (("thrust", "thrust_N", "N"), ("thrust_capability", "thrust_capability_N", "N"),
-                           ("thermal_margin", "thermal_margin_K", "K"), ("firing_life", "firing_life_h", "h")):
-        cvals[name] = supplied_objective(name, s.get(k), units)
-        if k in ("thrust", "thrust_capability"):
-            cvals[name] = hall_gated_thrust(name, cvals[name], repo)
-    if row.get("drag_intake_max_N") is not None:
-        cvals["drag_intake_max_N"] = _obj("drag_intake_max_N", PARAMETRIC_ONLY, row["drag_intake_max_N"], "N",
-                                          "model-derived", "F1 (TPMC) at a TBD surface scenario")
-    if s.get("drag_intake_max") is not None:     # a supplied (e.g. measured / synthetic) intake-drag record
-        cvals["drag_intake_max_N"] = supplied_objective("drag_intake_max_N", s["drag_intake_max"], "N")
-    # A9.13 S6.15 / S6.21 / S6.17 pre-evaluated statewise / feed-quality records (never recomputed from one number)
-    for k in PRE_EVALUATED_OBJECTIVES:
-        cvals[k] = s.get(k)
-    if cvals["ripple_feed_quality"] is None and row.get("ripple_transfer_shaft") is not None:
-        cvals["ripple_feed_quality"] = u13.ripple_feed_quality(row["ripple_transfer_shaft"], u13.VALUE_PARAMETRIC,
-                                                               u13.h1_tolerance_tbd("ripple"))
-    prop = u13.propellant_paths_check(s.get("propellant_paths", MODELLED_PROPELLANT_PATHS))
-    cvals["propellant_capability"] = supplied_objective("propellant_capability", s.get("propellant_capability"), "-")
-    cons = evaluate_constraints(cvals)
-    ne = [SYSTEM_OBJECTIVE_CODE[k] for k, v in objs.items() if v["status"] != EVALUATED]
-    return {"configuration": config, "design_id": row.get("design_id"), "objectives": objs, "constraints": cons,
-            "propellant_paths": prop, "hollow_cathode_check": hc["check"],
-            "c1_provisions_flagged": [e["id"] for e in hc["c1_provisions_flagged"]],
-            "c1_absence_statements": [e["id"] for e in hc["c1_absence_statements"]],
-            "system_not_evaluated": ne,
-            "constraints_not_evaluated": [c["id"] for c in cons if c["status"] == C_NOT_EVALUATED],
-            "constraints_violated": [c["id"] for c in cons if c["status"] == C_VIOLATED]}
 
 
 # ----------------------------------------------------------------------------------------------- full-system ranking
@@ -1328,83 +1166,6 @@ def _upstream_value(ev: Mapping, key: str) -> tuple[float | None, str | None]:
     if isinstance(v, Mapping):
         return v.get("value"), v.get("status")
     return v, (ev.get("upstream_status") or {}).get(key)
-
-
-def rank_full_system(evaluations: Sequence[Mapping], upstream_objectives: Sequence[str] = ()) -> dict:
-    """Full-system ranking over evaluated design vectors: non-dominated sorting layers of the system objectives (plus
-    optional upstream objective keys present in each record's 'upstream'), after removing vectors that VIOLATE a hard
-    constraint or have one not MET on rankable values (fail closed). REFUSED_INCOMPLETE when ANY record has a system
-    objective that is not EVALUATED / synthetic, including the life / material indicator set (no subset ranking:
-    ranking only what happens to be measurable would bias the set); REFUSED_MIXED when synthetic and evidence records
-    meet, in the objectives OR in the values a hard constraint was met on; REFUSED_PARAMETRIC_UPSTREAM when a ranked
-    upstream objective is not EVALUATED / synthetic (the committed upstream values are PARAMETRIC_SENSITIVITY). A
-    synthetic-only ranking is labelled SYNTHETIC_TEST_ONLY_NOT_EVIDENCE. Never a winner: layer 1 is a set.
-
-    life_material is a gate, not a Pareto axis: it is an indicator set with no scalar (its life scalar is HC-07,
-    firing life > 15,000 h); the ranking refuses until it is EVALUATED (or synthetic in a synthetic-only test)."""
-    if not evaluations:
-        return {"status": RANK_REFUSED_NO_FEASIBLE, "reason": "no candidate supplied", "layers": {}}
-    missing = {}
-    kinds = set()
-    for ev in evaluations:
-        for name in [n for n, _ in SYSTEM_OBJECTIVES] + ["life_material"]:
-            o = ev["objectives"][name]
-            ok_value = name == "life_material" or o["value"] is not None
-            if o["status"] not in (EVALUATED, SYNTHETIC_ONLY) or not ok_value:
-                missing.setdefault(name, 0)
-                missing[name] += 1
-            else:
-                kinds.add(o["status"])
-    if missing:
-        return {"status": RANK_REFUSED_INCOMPLETE,
-                "reason": "system objectives (incl. the life / material indicator gate) not EVALUATED for some or "
-                          "all candidates (fail closed, no subset ranking)", "missing_counts": missing,
-                "n_candidates": len(evaluations), "unlock": {k: v for k, v in UNLOCK.items()}, "layers": {}}
-    bad_up = {}
-    for ev in evaluations:
-        for k in upstream_objectives:
-            v, st = _upstream_value(ev, k)
-            if st not in (EVALUATED, SYNTHETIC_ONLY) or v is None or not math.isfinite(float(v)):
-                bad_up.setdefault(k, set()).add(str(st))
-            else:
-                kinds.add(st)
-    if bad_up:
-        return {"status": RANK_REFUSED_PARAMETRIC_UPSTREAM,
-                "reason": "a ranked upstream objective is not EVALUATED / synthetic (PARAMETRIC_SENSITIVITY or "
-                          "unlabelled values never enter an evidence ranking; rank them in the labelled F7 upstream "
-                          "Pareto sets instead)", "upstream_statuses": {k: sorted(v) for k, v in bad_up.items()},
-                "layers": {}}
-    for ev in evaluations:
-        for c in ev["constraints"]:
-            if c["status"] == C_MET and c.get("value_status") in (EVALUATED, SYNTHETIC_ONLY):
-                kinds.add(c["value_status"])
-    if kinds == {EVALUATED, SYNTHETIC_ONLY}:
-        return {"status": RANK_REFUSED_MIXED, "reason": "synthetic test data and evidence never meet in one ranking "
-                "(objectives, ranked upstream values and the values hard constraints were met on)", "layers": {}}
-    synthetic = kinds == {SYNTHETIC_ONLY}
-    admissible, excluded = [], []
-    for ev in evaluations:
-        bad = [c["id"] for c in ev["constraints"] if c["status"] != C_MET]
-        (excluded if bad else admissible).append((ev, bad))
-    if not admissible:
-        return {"status": RANK_REFUSED_NO_FEASIBLE, "reason": "every candidate violates a hard constraint or has one "
-                "not met on rankable values (NOT_EVALUATED or parametric only; fail closed)",
-                "excluded": [{"design_id": e["design_id"], "constraints": b} for e, b in excluded], "layers": {}}
-    keys = [k for k, _ in SYSTEM_OBJECTIVES] + list(upstream_objectives)
-    senses = [s for _, s in SYSTEM_OBJECTIVES] + [OBJ_SENSE[k] for k in upstream_objectives]
-    F = np.array([[ev["objectives"][k]["value"] for k, _ in SYSTEM_OBJECTIVES] +
-                  [_upstream_value(ev, k)[0] for k in upstream_objectives] for ev, _ in admissible], dtype=float)
-    lay = nondominated_layers(F, senses)
-    layers: dict = {}
-    for (ev, _), l in zip(admissible, lay):
-        layers.setdefault(int(l), []).append(ev["design_id"])
-    for l in layers:
-        layers[l].sort()
-    return {"status": RANK_COMPUTED_SYNTHETIC if synthetic else RANK_COMPUTED,
-            "label": SYNTHETIC_ONLY if synthetic else "NOT_A_SELECTION (Pareto layers; no winner)",
-            "objectives": keys, "senses": senses, "layers": layers,
-            "life_material": "gate only (indicator set, no scalar axis; its life scalar is HC-07)",
-            "excluded": [{"design_id": e["design_id"], "constraints": b} for e, b in excluded]}
 
 
 # ================================================================================================= reporting helpers
@@ -1492,18 +1253,6 @@ def require_all_admitted_scenarios(used, inp: UpstreamInputs | None = None, admi
     set) unless a pre-registered DI-1.3 narrowing record is supplied."""
     adm = list(admitted) if admitted is not None else list(inp.scenarios)
     return u13.require_all_admitted_scenarios(list(used), adm, narrowing_record)
-
-
-def statewise_T_minus_D(states, thrust_fn, drag_fn, repo: Path = REPO) -> dict:
-    """HC-08 / AG-13 statewise record (A9.13 S6.15) with the admitted-Hall-member gate read from the repository."""
-    return u13.statewise_drag_compensation(states, thrust_fn, drag_fn,
-                                           hall_admitted=bool(hall_response_status(repo)["admitted_members"]))
-
-
-def system_pareto(rows, weights=None) -> dict:
-    """A9.13 S6.17 system comparison: hard constraints first, then a Pareto filter over worst-state margin, drag,
-    upstream power, mass, volume and heat-rejection burden; a weighted scalar is refused."""
-    return u13.pareto_s6_17(rows, weights=weights)
 
 
 def robust_pareto_set(member_ids, version: str, provenance: str, regenerated_after=()) -> "u13.RobustParetoSet":

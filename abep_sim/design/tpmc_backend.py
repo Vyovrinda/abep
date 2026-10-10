@@ -8,7 +8,7 @@ acceleration admission order" item 1). This wrapper exposes the TPMC channel-tra
     caller's numpy Generator, so results are identical to calling the reference with the same seed;
   * ``backend="rust"`` calls the optional native extension ``abep_core`` (source ``abep_core/``, built with maturin,
     see abep_core/README.md). It is used only when explicitly requested. If ``abep_core`` is not importable the call
-    RAISES ``RustBackendUnavailable`` - there is no silent fallback to Python (Governance.md rule 3).
+    RAISES ``RustBackendUnavailable`` - there is no silent fallback to Python (governance.md rule 3).
 
 Random streams: the Rust kernels use their own generator (xoshiro256++). The wrapper seeds it with ONE 64-bit draw
 from the caller's numpy Generator (``rng.integers(0, 2**64, dtype=np.uint64)``), so the same Generator state gives the

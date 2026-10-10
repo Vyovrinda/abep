@@ -39,7 +39,7 @@ All inputs are read-only and pinned by sha256 in `build_question_a_brief.py`.
 | `docs/orchestration/OPERATING_MODEL.md` | base | the question as the operating model words it |
 
 When this brief was written, the lane files were read from the lane worktrees
-(`.Governance/worktrees/wf_17c9b0e6-1cb-2`, `…-1cb-1`). The builder resolves them from this checkout if they are
+(`.governance/worktrees/wf_17c9b0e6-1cb-2`, `…-1cb-1`). The builder resolves them from this checkout if they are
 present, and otherwise from the lane commits.
 
 **How numbers are traced.** Every number below is in `question_a_brief.json` as `{value, file, field}`. Quoted
@@ -53,7 +53,7 @@ itself are the integer counts in `derived_bounds` (see §2b.2). They use a state
   beyond the pre-registered 45 eV mean energy (T_e 30 eV)?"*
 - `docs/orchestration/OPERATING_MODEL.md` §4: *"**Question A** (`fo_v2_domain_question_a`): does the source evidence
   justify expanding the admissible energy domain (fixes OOD)?"*
-- Governance.md, next-work item 3: *"Question A (is a wider domain source-supported?)"*
+- governance.md, next-work item 3: *"Question A (is a wider domain source-supported?)"*
 
 ## 2. Evidence by table family (lane 01, copied)
 
@@ -449,7 +449,7 @@ the two lane-01 files: "decision 12" is the Winters points in the audit, but the
 These are consequences, not recommendations.
 
 **Common to all options.**
-- Admission stays gated on the O4 dispositions (Governance.md; `hall_ensemble._check_o4`).
+- Admission stays gated on the O4 dispositions (governance.md; `hall_ensemble._check_o4`).
 - The facility mode never gates (O3).
 - Milestone B needs credible envelopes from validated Hall transport. It stays blocked until a closure is admitted.
 - Milestone C stays behind B.
@@ -483,7 +483,7 @@ any v2 run. It does not address this point.
   mapping in §4.
 - **QA-3.** Lane 02 calls any extension "a model change with its own reruns". The lane-01 outline treats a
   limit-only change with byte-identical tables as a minimal v2. Both require reruns. How to log a limit-only change
-  (Governance.md rule 2, docs/HISTORY.md) is the owner's call.
+  (governance.md rule 2, docs/HISTORY.md) is the owner's call.
 - **QA-4.** In the proxy, the evaluated reading (dissociation 75 eV + a¹Π_g 150 eV) covers 22 OOD runs, the same
   as dissociation alone at 75 eV. The a¹Π_g extension therefore adds no proxy-covered run by itself.
 - **QA-5.** The promotion-rule question in §5.

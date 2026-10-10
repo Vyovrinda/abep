@@ -2,7 +2,7 @@
 
 Authority: A9.13 S6.14 / OQ-F4-05 (versioned orbit-resolved dataset), A9.14 S9.7 / OD2 (statewise quantifier) and
 S9.8 / OD3 (design states from the dataset). The accessor tests run without pymsis. The producer re-run (check mode)
-and the direct-MSIS comparisons branch inside the test on pymsis (no skips, Governance.md rule 9): with pymsis they compare
+and the direct-MSIS comparisons branch inside the test on pymsis (no skips, governance.md rule 9): with pymsis they compare
 against live NRLMSIS 2.1; without it (CI pymsis-absent leg) they assert the clean NOT_RUN / ImportError refusal while the
 frozen-data checks still run.
 """

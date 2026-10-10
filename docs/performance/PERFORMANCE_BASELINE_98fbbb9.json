@@ -1968,11 +1968,11 @@
    "params": {},
    "unit_of_work": "closures",
    "covered_by": null,
-   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
+   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
    "reference": {
     "id": "golden_check",
     "units_of_work": 2,
-    "basis": "abep_sim/golden.py: case_architecture_closure and case_mission each run this closure once per python -m abep_sim.golden check (Governance.md rule 2 gate)",
+    "basis": "abep_sim/golden.py: case_architecture_closure and case_mission each run this closure once per python -m abep_sim.golden check (governance.md rule 2 gate)",
     "method": "EXTRAPOLATED: median seconds x 2 (the second call shares no cache in a cold process only if caches are cleared; in practice it is warm, so this is an upper bound)"
    },
    "repeats": 3,
@@ -2251,7 +2251,7 @@
      "port": 60.0,
      "marginal": 10.0
     },
-    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
+    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
    }
   },
   {
@@ -2265,7 +2265,7 @@
    },
    "unit_of_work": "paired samples",
    "covered_by": null,
-   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
+   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
    "reference": {
     "id": "run_uq_default",
     "units_of_work": 200,
@@ -2547,7 +2547,7 @@
      "port": 60.0,
      "marginal": 10.0
     },
-    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
+    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
    }
   },
   {
@@ -2561,7 +2561,7 @@
    },
    "unit_of_work": "MC samples",
    "covered_by": null,
-   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
+   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted",
    "reference": {
     "id": "robust_design_default_per_candidate",
     "units_of_work": 60,
@@ -2841,7 +2841,7 @@
      "port": 60.0,
      "marginal": 10.0
     },
-    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
+    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
    }
   },
   {
@@ -2855,7 +2855,7 @@
    },
    "unit_of_work": "propagator steps",
    "covered_by": null,
-   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map)",
+   "physics_note": "drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map)",
    "reference": {
     "id": "rfp_mission_26000h",
     "units_of_work": 4333,
@@ -3138,7 +3138,7 @@
      "port": 60.0,
      "marginal": 10.0
     },
-    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map); porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
+    "qualifier": "DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map); porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists"
    }
   },
   {

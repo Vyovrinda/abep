@@ -4,18 +4,18 @@
 Producing design Hall maps is **blocked** until all of the following are true:
 
 1. At least one **admitted** transport-ensemble member exists. As of 2026-09-26 the credible set is **empty**
-   (`hallthruster_bridge/ensemble/transport_ensemble_v0.json`, `admission_rule_status`; Governance.md gate 3 FAIL).
+   (`hallthruster_bridge/ensemble/transport_ensemble_v0.json`, `admission_rule_status`; governance.md gate 3 FAIL).
 2. Vyovrinda's **own** thruster geometry and B(z) are in the repository with a source and a sha256. Neither exists as of
    2026-09-26: *TBD, requires a Vyovrinda design release (drawing/document id and revision, plus a magnetic-circuit
    computation or a measured B(z)).*
 3. The numerical-convergence pre-registration is frozen by the owner. The draft is
    `docs/hallmap/drafts/hallmap_convergence_prereg_DRAFT.json`, with status `DRAFT_PENDING_OWNER`.
-4. The **O4 dispositions** for the admitting decision are complete (owner decision 2026-09-26, Governance.md "Next work"
+4. The **O4 dispositions** for the admitting decision are complete (owner decision 2026-09-26, governance.md "Next work"
    item 3). Admission and design Hall maps stay gated until then, **even if a later campaign yields PROMOTABLE**: every
    pre-registered O4 staged sensitivity and every escalation its trigger requires must be scored, and each must carry a
    recorded owner disposition that clears the member. This is enforced by `abep_sim.hall_ensemble._check_o4`, with the
    record format `hallthruster_bridge/ensemble/o4_dispositions_schema_v1.json`. The authoritative execution baseline is
-   the one Governance.md pins (branch `Governance/nifty-ramanujan-w68f9z` at `debce16`, and its successors on that branch). The
+   the one governance.md pins (branch `governance/nifty-ramanujan-w68f9z` at `debce16`, and its successors on that branch). The
    gate was introduced earlier in that history by commit `bd0b6ce` ("Admission gated on O4 dispositions"), which is an
    ancestor of `debce16`; `bd0b6ce` is cited only as the introducing commit, not as the baseline.
 
@@ -75,7 +75,7 @@ that is consistent with the table above.
 
 ## 1. Where the maps sit
 
-The flow is fixed by the project decision of 2026-09-26 (Governance.md "Next work" item 1): P5 evidence ensemble → credible
+The flow is fixed by the project decision of 2026-09-26 (governance.md "Next work" item 1): P5 evidence ensemble → credible
 closure set → **Vyovrinda design-specific Hall maps (own geometry and B(z), one map set per member)** → whole-system UQ
 reporting envelopes across members.
 
@@ -115,14 +115,14 @@ A **map set** is fixed by a tuple of discrete labels. Labels are **never interpo
 
 - **Member.** Exactly one per map set (`meta.ensemble_member_id`). Members are an **unweighted** scenario set: maps of
   different members are never averaged, weighted or blended. The architecture trade and UQ run once per member and report
-  envelopes (Governance.md item 5).
+  envelopes (governance.md item 5).
 - **Chemistry config.** PROPOSED: one map set per primary chemistry configuration pinned for P5-N₂ (`n2_n.toml`,
   `n2_n_di_lower.toml`, `n2_n_nel_wang.toml`, `n2_n_di_lower_nel_wang.toml`; `PINNED.toml` `uncertainty_variants`). The
   chemistry spread is carried as a further envelope dimension. Chemistry uncertainty is **not** calibration nuisance: it
   concerns rate data that do transfer to Vyovrinda's thruster. It is still a discrete label, not an axis. Owner decides
   whether the staged sensitivity branches also get map sets.
 - **Propellant.** Separate map sets for Xe (built-in HallThruster.jl tables) and N₂ (project reaction set `abep-n2n-0.11`).
-  Air mixtures (N₂/O₂/O) are **blocked**: no O/O₂ chemistry exists yet (Governance.md item 4, "only if 1–3 succeed").
+  Air mixtures (N₂/O₂/O) are **blocked**: no O/O₂ chemistry exists yet (governance.md item 4, "only if 1–3 succeed").
 - **Geometry and B(z) shape.** Fixed per map set. A geometry revision is a new map set, not an axis. This replaces the
   continuous `L_ch` variable of the superseded 0-D Hall branch in `abep_sim/archengine.py`.
 - **Wall setting and numerics.** Fixed per map set and recorded in provenance (section 7 and section 11).
@@ -130,19 +130,19 @@ A **map set** is fixed by a tuple of discrete labels. Labels are **never interpo
 ## 4. Grid axes (PROPOSED)
 
 Axis names follow the example in `abep_sim/hall_map.py` (`Vd, mdot_kgps, x_O, ...`). Ranges are **not** given here,
-because giving them would mean inventing operating points (Governance.md rule 6).
+because giving them would mean inventing operating points (governance.md rule 6).
 
 | axis | unit | meaning | range | source / evidence class |
 |---|---|---|---|---|
 | `Vd` | V | discharge voltage | TBD, requires the Vyovrinda PPU/anode-supply design range | design input (requirement). The current `archengine._variables` Hall grid (225–325 V) belongs to the superseded 0-D model and is **assumed**, so it must not be reused without owner confirmation |
-| `mdot_kgps` | kg/s | anode mass flow of the map's propellant | TBD, requires the intake → compressor → gas-chamber → valve delivered flow over the RFP altitude band (180–230 km, requirement per Governance.md, verify against the RFP text) for air, and the Xe feed design for Xe | model-derived (frozen NRLMSIS + TPMC intake + compressor), computed by a named script in the production PR, not here |
+| `mdot_kgps` | kg/s | anode mass flow of the map's propellant | TBD, requires the intake → compressor → gas-chamber → valve delivered flow over the RFP altitude band (180–230 km, requirement per governance.md, verify against the RFP text) for air, and the Xe feed design for Xe | model-derived (frozen NRLMSIS + TPMC intake + compressor), computed by a named script in the production PR, not here |
 | `B_scale` | – | amplitude multiplier on Vyovrinda's fixed-shape B(z) (`B_ref_T × B_scale`) | TBD, requires the Vyovrinda coil/magnet design range | design input. Applied the way validation applied it (bridge `measured_bfield` B_ref scaling, solver `magnetic_field_scale = 1`), so no code path is used that validation never exercised |
 | `x_O`, `x_O2` (mole or mass fractions, basis recorded) | – | intake-delivered composition | **blocked** (no O/O₂ chemistry) | model-derived from the intake chain when it becomes available |
 
 ### 4.1 Forbidden axes: calibration nuisance is NEVER a map axis
 
 Layer-1 calibration nuisance is uncertainty in what the P5 experiment **was**. It is marginalized when admitting closures
-and is never a Vyovrinda design variable, map axis, map-set label or trade dimension (Governance.md item 1;
+and is never a Vyovrinda design variable, map axis, map-set label or trade dimension (governance.md item 1;
 `transport_ensemble_v0.json` `calibration_nuisance`). The keys are:
 
 - `p5_registration` (L38-hist / L32-anode / L32-exit)
@@ -198,14 +198,14 @@ Forbidden, in addition to that:
 | numerical extrapolation beyond the axis box | enforced by `HallMap` |
 | interpolating between members, chemistry configs, propellants, geometries, B(z) shapes, wall settings or numerics | discrete labels (section 3). Envelopes are formed downstream from per-set results |
 | using a node whose chemistry used a table beyond its validity limit | `chemistry_trustworthy` false, so the query is not `trustworthy` (section 8) |
-| filling a failed node with a number | Governance.md item 5 "never fill missing fields with placeholders". PROPOSED convention: a node without solver output stores JSON `null` in every non-flag field (loaded as NaN) and `false` in every flag. Queries touching it then return NaN and `trustworthy = False` |
+| filling a failed node with a number | governance.md item 5 "never fill missing fields with placeholders". PROPOSED convention: a node without solver output stores JSON `null` in every non-flag field (loaded as NaN) and `false` in every flag. Queries touching it then return NaN and `trustworthy = False` |
 | using a map for a gas, geometry or B(z) other than its provenance | provenance binding |
 
 **Transport transfer is not numerical extrapolation, but it must be declared.** A design map evaluates an admitted
 closure on a thruster it was never validated on. Every map set therefore records the member's validation domain and an
 explicit transfer statement in `validity_domain`. The transport form stays at evidence level 7 ("assumed model form",
 docs/EVIDENCE.md register) for the design geometry until Vyovrinda hardware data exist. Hardware validation supersedes
-the literature-derived closure within its validated domain (Governance.md rule 10).
+the literature-derived closure within its validated domain (governance.md rule 10).
 
 PROPOSED consumer additions (not implemented; outside this lane):
 
@@ -288,13 +288,13 @@ Observations for the owner (no change made):
 - A node is `chemistry_trustworthy` only if, for **every** reaction, the extrapolated activity share f_out (activity
   n_e·n_target·k_r(3/2 T_e) summed over every saved frame of the averaging window and every cell, from cells above the
   file's mean-energy limit) is ≤ 1e-12. This is evaluated per frame, not on time averages (`hall_map_schema_v1`;
-  `checks/chemistry_validity_check.jl`; Governance.md item 5). **f_out = 0 is not relaxed for maps**, and no
+  `checks/chemistry_validity_check.jl`; governance.md item 5). **f_out = 0 is not relaxed for maps**, and no
   reaction-contribution allowance exists unless one is pre-registered.
 - Declared domain of the N₂ set (`PINNED.toml [reaction_set].domain`): T_e 2–30 eV (mean energy 3–45 eV); vibrational
   and rotational excitation audited over T_e 0.2–30 eV. Status `COMPLETE_FOR_P5_N2_VALIDATION`, scoped to P5-N₂
   validation only. Using the set for design maps is a separate owner decision: the status text makes no general
   completeness claim. Nodes whose discharge reaches T_e beyond a capped table's limit are **not** trustworthy. The pre-campaign
-  blind closure state envelope already showed this for some screening candidates (Governance.md item 2, "Open for the P5-N₂
+  blind closure state envelope already showed this for some screening candidates (governance.md item 2, "Open for the P5-N₂
   pre-registration"). That is an audit record, not a validation result.
 - The chemistry config and its sha256, the rate-validity manifest sha256 and every rate file's sha256 are recorded in
   provenance.
@@ -374,7 +374,7 @@ The provenance object is embedded as `meta.provenance`. It is required in full a
     and the quiet/breathing class must not flip.
   - The node-selection rule is fixed before any refined run, and there is no post hoc dropping of nodes.
   - Every tolerance carries its rationale and is explicitly a proposal for the owner.
-- Governance.md gate 5 ("numerical convergence: pass") was recorded before this 1-D design-map pipeline existed. This spec
+- governance.md gate 5 ("numerical convergence: pass") was recorded before this 1-D design-map pipeline existed. This spec
   does not change gate 5 and does not claim that design maps are converged.
 
 ## 12. Consumer wiring (`abep_sim/archengine.py`), for the later PR
@@ -394,7 +394,7 @@ continuous design variables `Vd` and `L_ch` (`_variables`). When it is rewired t
 
 Rules for the rewired branch:
 
-- A query that is not `trustworthy`, or that is outside the axes, becomes `MODEL_ERROR` / out-of-domain (Governance.md rule 3).
+- A query that is not `trustworthy`, or that is outside the axes, becomes `MODEL_ERROR` / out-of-domain (governance.md rule 3).
   It is never infeasible-by-default, and it is never silently clamped to the box.
 - `L_ch` stops being continuous: geometry is chosen among map sets.
 - Architectures that feed a **pre-ionized** flow into the Hall channel (plasma ionizer → Hall), i.e. `rf_hall` and
@@ -439,14 +439,14 @@ Every number here was taken from a repository file or the installed solver sourc
 | 200 cells, dt 5e-9 s, 2e-3 s, averaging from 1e-3 s | `prereg/p5_n2_validation_criteria_v1.json` `no_retuning`; `cases/p5_n2.json` | assumed (numerical setting) |
 | adaptive = true, CFL 0.799, min_dt 1e-10 s, max_dt 1e-7 s, max_small_steps 100, num_save 1000, `ion_wall_losses = false`, `magnetic_field_scale = 1.0` | HallThruster.jl v0.23.1 installed source, `src/simulation/types.jl`, `configuration.jl` (identity with pin: verify) | assumed (software default) |
 | `WallSheath(BNSiO2, 1.0)` default wall model | `PINNED.toml` `defaults_used` | assumed (software default) |
-| f_out tolerance 1e-12 | `hall_map_schema_v1.json`; Governance.md item 5 | pre-registered rule |
+| f_out tolerance 1e-12 | `hall_map_schema_v1.json`; governance.md item 5 | pre-registered rule |
 | T_e 2–30 eV (mean energy 3–45 eV); vib/rot T_e 0.2–30 eV | `PINNED.toml [reaction_set].domain` | declared model domain (project decision) |
 | `sustained` threshold 1 % of window mean | `hall_map_schema_v1.json` `conventions` | bookkeeping convention |
 | quiet diagnostic `Id_rms_rel` < 0.5 | `bridge_lib.jl` (internal diagnostic, "no experimental meaning") | assumed (diagnostic threshold) |
 | `anom_scale` ≤ 1/16 | `transport_ensemble_v0.json` `admission_rule` | assumed (physical prior) |
 | 15 % I_d tolerance; 5.2–5.6 mN thrust tolerances | `prereg/p5_n2_validation_criteria_v1.json` D3 | pre-registered rule (context only) |
 | < 0.2 % and up to 21 % I_d changes at 400 cells / 4 ms | docs/HISTORY.md, 2026-09-25 sections (driver runs, P5 xenon untuned; P5 xenon rerun with measured B(z)) | model-derived |
-| 180–230 km, 12–25 mN, < 1.5 kW, 26,000 h, > 15,000 h | Governance.md summary of RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 | requirement (not a simulator input); verify against the RFP text |
+| 180–230 km, 12–25 mN, < 1.5 kW, 26,000 h, > 15,000 h | governance.md summary of RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 | requirement (not a simulator input); verify against the RFP text |
 | 225–325 V Hall grid | `abep_sim/archengine.py` `_variables` (superseded 0-D) | assumed; not adopted |
 
 Sources accessed for this spec: repository files named above, and the locally installed HallThruster.jl v0.23.1 source

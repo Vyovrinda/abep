@@ -100,7 +100,7 @@
    },
    {
     "path": "abep_sim/system.py",
-    "sha256": "d95d01e35fd5968cc4f1ac31b24d2e8904bb51c85ffeec7e4aad1812734981ad"
+    "sha256": "3a2f4e230dcd2f879510c6cff12ee8d801dbddc27786d6bfec51290cdc362f84"
    },
    {
     "path": "docs/decisions/OD_HARDWARE_PIVOT_2026_09_27.json",
@@ -14014,7 +14014,7 @@
   },
   {
    "id": "DI-1.2",
-   "question": "Intake geometry (L/d, phi) and whether a TPMC surface beyond the frozen grid (e.g. specular designs) is authorised (Governance.md rule 1 rebuild)",
+   "question": "Intake geometry (L/d, phi) and whether a TPMC surface beyond the frozen grid (e.g. specular designs) is authorised (governance.md rule 1 rebuild)",
    "options": [
     "G10",
     "G20",

@@ -23,7 +23,7 @@ It does **not** claim:
 - any simulator prediction of arm differences. The Hall transport credible set is empty and gate 3 is FAIL, so the
   repository cannot currently predict absolute Hall performance. The withdrawn 0-D closure results (including every
   pre-ionizer trade number in docs/HISTORY.md) are not quoted or used. The repository's mechanism-level expectation
-  that RF/helicon pre-ionizers "add nothing" (Governance.md) is a model hypothesis that this experiment is designed to be
+  that RF/helicon pre-ionizers "add nothing" (governance.md) is a model hypothesis that this experiment is designed to be
   able to confirm or contradict. It is not a prior that the protocol assumes.
 - demonstrated ABEP closure, an architecture selection or any transport admission.
 - anything about the P5-N2 v1 validation. That outcome is final and is not re-scored, re-labelled or re-interpreted.
@@ -43,7 +43,7 @@ Out of scope, and declared as limitations:
 - **Atomic oxygen.** Bottled O2/N2 mixtures cannot reproduce intake-delivered atomic O. The mixtures are not claimed
   to be a surrogate for it.
 - Intake, compressor and spacecraft performance. The upstream ICD supplies the delivered flow and composition.
-- Life and erosion (a separate test). Any change to the Hall geometry between arms. Any new propulsion family (Governance.md rule 8).
+- Life and erosion (a separate test). Any change to the Hall geometry between arms. Any new propulsion family (governance.md rule 8).
 
 ## 2. Arms, controls and hardware configurations
 
@@ -161,7 +161,7 @@ partial-boundary ratios are never reported as `bus_power_boundary_v1` ratios (§
   gas. That heat load is reported per arm, outside the boundary, because in flight the thermal subsystem would have to
   reject it. Facility pumping and laboratory instrumentation are excluded identically for all arms.
 - **Ledger check (THR-LEDGER, PROPOSED).** The residual is |P_main − Σ branch| / P_main, and it must not exceed
-  `ledger_residual_max`. That value is the simulator's energy-ledger gate from Governance.md rule 4, proposed here for the
+  `ledger_residual_max`. That value is the simulator's energy-ledger gate from governance.md rule 4, proposed here for the
   experimental ledger.
 - **Uncertainty target (THR-UNC-BUS, PROPOSED).** The expanded relative uncertainty of P_bus,lab (and of P_bus,v1, including the ICD
   compressor uncertainty, when it is formed) must not exceed
@@ -320,7 +320,7 @@ sufficient, and failing one ranks nothing.
   needs T ≥ rfp_thrust_min at total system power below rfp_power_max. The laboratory bus power cannot exceed the system
   power, so T / P_bus,lab must exceed the floor.
 
-The RFP values are transcriptions recorded in the repository (`abep_sim/constants.py`, Governance.md). This lane did not
+The RFP values are transcriptions recorded in the repository (`abep_sim/constants.py`, governance.md). This lane did not
 re-read them from the RFP (verify).
 
 ## 15. Statistics
@@ -394,7 +394,7 @@ Numeric values (41), each with source and evidence class:
 | id | value | unit | status | evidence class | source |
 |---|---|---|---|---|---|
 | `mfc_calibration_interval` | 12 | months (maximum) | PROPOSED | assumed | REF-SNYDER2017 Sec. VI (paraphrase: calibrations traceable to NIST, performed at least every twelve months over the entire flow scale) |
-| `ledger_residual_max` | 0.02 | fraction | PROPOSED | assumed | Governance.md rule 4 (architecture energy-ledger residual < 2 % for the simulator); adoption for the experimental ledger is a proposal |
+| `ledger_residual_max` | 0.02 | fraction | PROPOSED | assumed | governance.md rule 4 (architecture energy-ledger residual < 2 % for the simulator); adoption for the experimental ledger is a proposal |
 | `bus_unc_ratio` | 0.25 | fraction of delta_m1 | PROPOSED | assumed | XPROT draft proposal, analogous to the common 4:1 test-uncertainty-ratio convention (from memory - verify); not derived from data |
 | `thrust_cal_before_min` | 10 | calibrations (minimum) | PROPOSED | assumed | REF-POLK2017 Sec. V.A ('Perform a minimum of ten calibrations to generate a calibration curve') |
 | `thrust_cal_after_min` | 10 | calibrations (minimum) | PROPOSED | assumed | REF-POLK2017 Sec. V.A ('Perform a minimum of ten calibrations after thruster operation') |
@@ -420,9 +420,9 @@ Numeric values (41), each with source and evidence class:
 | `confidence_level_m3` | 0.95 | - | PROPOSED | assumed | XPROT draft proposal (same as THR-M1) |
 | `confidence_level_m4` | 0.95 | - | PROPOSED | assumed | XPROT draft proposal (same as THR-M1) |
 | `ignition_confidence` | 0.95 | - | PROPOSED | assumed | XPROT draft proposal (conventional level) |
-| `rfp_thrust_min` | 12 | mN | REQUIREMENT_TRANSCRIBED | assumed | RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 Part III Para 2, as transcribed in abep_sim/constants.py (RFPConstraints.thrust_min_mN) and Governance.md; not re-read from the RFP by this lane - verify |
+| `rfp_thrust_min` | 12 | mN | REQUIREMENT_TRANSCRIBED | assumed | RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 Part III Para 2, as transcribed in abep_sim/constants.py (RFPConstraints.thrust_min_mN) and governance.md; not re-read from the RFP by this lane - verify |
 | `rfp_thrust_max` | 25 | mN | REQUIREMENT_TRANSCRIBED | assumed | RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.thrust_max_mN); verify |
-| `rfp_power_max` | 1500 | W | REQUIREMENT_TRANSCRIBED | assumed | RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.power_max_W; Governance.md '< 1.5 kW'); verify |
+| `rfp_power_max` | 1500 | W | REQUIREMENT_TRANSCRIBED | assumed | RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.power_max_W; governance.md '< 1.5 kW'); verify |
 | `rfp_thrust_per_power_floor` | 8.0 | mN/kW | DERIVED | model-derived | derived by protocol_tools.py: rfp_thrust_min / rfp_power_max. A point with T >= rfp_thrust_min at total system power < rfp_power_max has T / P_system > this value, and P_bus,lab <= P_system, so T / P_bus,lab > this value is necessary |
 | `rfp_thrust_min_ref` | 12 | mN | REQUIREMENT_TRANSCRIBED | assumed | rfp_screens.rfp_values.rfp_thrust_min |
 | `rfp_thrust_max_ref` | 25 | mN | REQUIREMENT_TRANSCRIBED | assumed | rfp_screens.rfp_values.rfp_thrust_max |

@@ -630,7 +630,7 @@ def differential(comps: dict, hd: dict, ab) -> dict:
                          "feed actuator would add its coil power here (design question)", "0 W unless a source valve is added"),
         "compressor": ("COMMON_MODE", "0",
                        "the flow is fixed by the common feed state; pre-ionizer and Hall-closure uncertainty never leak "
-                       "upstream into the intake/compressor/gas chambers/valves (Governance.md scope)", "0 W"),
+                       "upstream into the intake/compressor/gas chambers/valves (governance.md scope)", "0 W"),
         "thermal_control": ("COMMON_MODE_CONDITIONAL", "DeltaP_bus,tc from any heater the pre-ionizer hardware needs",
                             "common gas-path and Xe heaters cancel; a pre-ionizer may add heaters or change the thermal "
                             "balance of the PPU/gas chamber (lane_15 thermal/life)", "TBD (lane 15)"),

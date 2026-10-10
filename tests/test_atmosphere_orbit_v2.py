@@ -2,7 +2,7 @@
 
 Authority: A9.17 WINDS / ORBIT / DATA_SIZE (docs/decisions/OD_2026_10_01_A9_17_data_artifact_owner_decisions.json).
 The accessor tests run from the frozen files only (no HWM14, no gfortran, no pymsis). The HWM14 re-run tests need the
-verified NRL package in $ABEP_HWM14_DIR and gfortran; without them they do not skip (Governance.md rule 9) but branch inside
+verified NRL package in $ABEP_HWM14_DIR and gfortran; without them they do not skip (governance.md rule 9) but branch inside
 the test and assert the documented refusal (check: re-run SKIPPED with the reason; runner: HWM14Unavailable).
 """
 import gzip
@@ -122,7 +122,7 @@ def test_source_register_matches_module():
 
 def test_no_hwm14_code_or_data_redistributed():
     for d, _, files in os.walk(ROOT):
-        if any(p in d for p in (".git", ".Governance", "node_modules")):
+        if any(p in d for p in (".git", ".governance", "node_modules")):
             continue
         for f in files:
             assert f not in ("hwm14.f90", "hwm123114.bin", "dwm07b104i.dat", "gd2qd.dat", "checkhwm14.f90"), \

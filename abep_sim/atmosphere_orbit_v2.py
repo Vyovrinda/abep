@@ -260,7 +260,7 @@ def _authority() -> dict:
                                 "answer": "KEEP_DATA_ARTIFACT_EXCLUDE_FROM_INSTALL_WHERE_POSSIBLE"},
             "v1 open item": {"id": "ATM-OI-01", "dataset": V1_DATASET_ID,
                              "relation": "resolved for v2 users by this dataset; v1 and its open item are unchanged"},
-            "Governance.md rule 1": "versioned new dataset; atmosphere_msis21_orbit_v1.* untouched"}
+            "governance.md rule 1": "versioned new dataset; atmosphere_msis21_orbit_v1.* untouched"}
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -545,7 +545,7 @@ def _source_record(runner) -> dict:
 
 
 def build(path: str | None = None) -> dict:
-    """Intentional rebuild (Governance.md rule 1). Requires the verified HWM14 package + gfortran and the frozen v1 data."""
+    """Intentional rebuild (governance.md rule 1). Requires the verified HWM14 package + gfortran and the frozen v1 data."""
     v1_meta = v1.load()["meta"]
     if v1_meta["sha256"] != V1_CSV_SHA256:
         raise RuntimeError("frozen v1 dataset sha256 differs from the pinned V1_CSV_SHA256; v2 is defined on that v1")

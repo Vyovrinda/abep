@@ -1,6 +1,6 @@
 """Repository-integrity checks (scripts/ci_checks.py, docs/ci/CI.md): they pass on the committed tree, they write nothing, and
 they detect tampering. Every tamper test works on a copy in tmp_path; the repository itself is never modified. Fast (seconds).
-No test here is skipped or xfailed (Governance.md rule 9 counts stay 5 skipped / 1 xfail)."""
+No test here is skipped or xfailed (governance.md rule 9 counts stay 5 skipped / 1 xfail)."""
 import importlib.util
 import json
 import os
@@ -87,7 +87,7 @@ def test_parse_tree_reports_bad_files_and_prunes_run_output(tmp_path):
     (tmp_path / "dup.json").write_text('{"a": 1, "a": 2}')
     (tmp_path / "bad.toml").write_text("a = = 1\n")
     (tmp_path / "ok.toml").write_text('a = "b"\n')
-    for pruned in ("hallthruster_bridge/out", ".venv/lib", "__pycache__", ".Governance/worktrees/x", "results"):
+    for pruned in ("hallthruster_bridge/out", ".venv/lib", "__pycache__", ".governance/worktrees/x", "results"):
         (tmp_path / pruned).mkdir(parents=True)
         (tmp_path / pruned / "broken.json").write_text("{")
     (tmp_path / "ledger.jsonl").write_text('{"a": 1}\n\n{"b": 2}\n')
@@ -215,7 +215,7 @@ def _workflow(name):
 
 def test_ci_workflow_runs_the_gates():
     doc, on, text = _workflow("ci.yml")
-    assert set(on) == {"pull_request", "push"} and on["push"]["branches"] == ["main", "Governance/nifty-ramanujan-w68f9z"]
+    assert set(on) == {"pull_request", "push"} and on["push"]["branches"] == ["main", "governance/nifty-ramanujan-w68f9z"]
     for job in ("integrity", "tests"):                                      # rule 9 needs full history (provenance tests)
         co = [s for s in doc["jobs"][job]["steps"] if s.get("uses", "").startswith("actions/checkout@")]
         assert len(co) == 1 and co[0]["with"]["fetch-depth"] == 0, job

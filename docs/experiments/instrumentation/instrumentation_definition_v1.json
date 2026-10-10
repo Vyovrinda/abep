@@ -1627,7 +1627,7 @@
    ],
    "feasibility": {
     "status": "FEASIBLE_IN_PRINCIPLE",
-    "why": "magnetostatic; the P5 non-identifiability (Governance.md) is the reason it is mandatory with coil currents"
+    "why": "magnetostatic; the P5 non-identifiability (governance.md) is the reason it is mandatory with coil currents"
    },
    "notes": [],
    "traces_to_provisions": [

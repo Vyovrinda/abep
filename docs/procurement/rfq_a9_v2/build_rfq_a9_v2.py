@@ -33,7 +33,7 @@ Rules implemented here
   * no price, supplier ranking, supplier contact, winner, performance prediction or Hall-closure source; RF component
     ratings stay TBD_AFTER_IMPEDANCE_MAP; ICP thermal and anode items are never PASS;
   * computed values are deterministic arithmetic on cited inputs (evidence class model-derived);
-  * missing inputs raise (Governance.md rule 3).
+  * missing inputs raise (governance.md rule 3).
 
 Usage
   python docs/procurement/rfq_a9_v2/build_rfq_a9_v2.py          # write all outputs
@@ -728,7 +728,7 @@ def banner_lines() -> list:
         "row 8: quotations only, no purchase order until H3/A9 interfaces are frozen; A9.1 A9-09 procurement "
         "restriction; A9.3 unchanged: no purchase orders).",
         "Prepared by the technical team (A9.3 OQ-RFQ-07). Commercial dispatch authority remains with P9E/Vyovrinda "
-        "under Praveen's authorization. No automatic supplier contact: neither this repository nor Governance contacts any "
+        "under Praveen's authorization. No automatic supplier contact: neither this repository nor governance contacts any "
         "supplier; dispatch, if any, is an owner/procurement act.",
         "Compatibility: this is one of six supplier-speciality packages kept compatible by the common top-level "
         "interface document RFQ2-CIF (packages/RFQ2-00_common_interface.md). Shared interface ids, reference planes, "
@@ -741,9 +741,9 @@ def banner_lines() -> list:
         "A9.4 (owner, 2026-09-30, execution_decisions.p1_needed_rfqs): the owner / procurement may SEND the lines tagged "
         "P1_NEEDED to suppliers for quotation - requests for quotation, technical clarification, indicative lead time, "
         "commercial quotation, datasheets/certificates. NOT authorized: purchase orders, advance payments, binding "
-        "commitments. Governance / the technical team still never contacts suppliers.",
+        "commitments. governance / the technical team still never contacts suppliers.",
         "A9.6 (owner, 2026-09-30, sec. 13): RFQ only - no purchase order authorization. Packages completed so that the "
-        "P1_NEEDED lines are ready to send; the owner / procurement sends them; Governance never contacts suppliers.",
+        "P1_NEEDED lines are ready to send; the owner / procurement sends them; governance never contacts suppliers.",
     ]
 
 
@@ -2838,7 +2838,7 @@ def change_log(reqs: list, pkgs: list) -> dict:
         {"id": "CL-14", "change": "A9.4 incorporation: owner / procurement authorized to SEND the P1_NEEDED packages for "
                                   "quotation (RFQ, clarification, indicative lead time, commercial quotation, datasheets "
                                   "/ certificates); no purchase orders, advance payments or binding commitments; no "
-                                  "supplier contact by Governance / the team (banner, dispatch_authority, H3 gate)",
+                                  "supplier contact by governance / the team (banner, dispatch_authority, H3 gate)",
          "source": "A9.4 execution_decisions.p1_needed_rfqs"},
         {"id": "CL-15", "change": "A9.6 RFQ completion: RF metrology lines RF-L12..RF-L19 and option RF-O01 (V/I probe, "
                                   "VNA, calibration kits, attenuators, antenna-simulator load, phase-stable cables, "
@@ -2930,7 +2930,7 @@ def owner_answers_applied(reqs: list) -> dict:
                   "the 1.05 kV DC / 60 s initial DWV; ICP-44 RF insulation OPEN",
         "p1_needed_rfqs": "P1_NEEDED packages may be sent for quotation by the owner / procurement (banner, "
                           "dispatch_authority.a9_4_quotation_dispatch, H3 gate); no PO / advance payment / binding "
-                          "commitment; no supplier contact by Governance / the team",
+                          "commitment; no supplier contact by governance / the team",
         "P1Q-13": "A9.6 RFQ completion: H-1 body single-point metered ground-current monitor (HE-L15, "
                   "RFQ2-HALLEL-N06), high-impedance isolated V_anode / V_ref channel (HE-L16) and anode physical "
                   "disconnect means (HE-L17, RFQ2-HALLEL-N07); CIF X-18; closes OQ-RFQV2-07",
@@ -3283,14 +3283,14 @@ def build() -> dict:
         "dispatch_authority": {
             "prepares": "technical team (repository lane)",
             "dispatches": "P9E/Vyovrinda under Praveen's authorization (commercial dispatch authority)",
-            "supplier_contact": "none by the repository or Governance; no automatic supplier contact",
-            "source": A93("OQ-RFQ-07", "Governance/team shall **not contact suppliers automatically**."),
+            "supplier_contact": "none by the repository or governance; no automatic supplier contact",
+            "source": A93("OQ-RFQ-07", "governance/team shall **not contact suppliers automatically**."),
             "a9_4_quotation_dispatch": {
                 "authorized": ["requests for quotation", "technical clarification", "indicative lead time",
                                "commercial quotation", "datasheets/certificates"],
                 "not_authorized": ["purchase orders", "advance payments", "binding commitments"],
                 "scope": "packages / lines tagged P1_NEEDED; packages stay split by speciality",
-                "sent_by": "owner / procurement (P9E/Vyovrinda); Governance / the technical team never contacts suppliers",
+                "sent_by": "owner / procurement (P9E/Vyovrinda); governance / the technical team never contacts suppliers",
                 "sources": [A94("p1_needed_rfqs", "The P1-needed RFQ packages may now be sent to suppliers for "
                                                   "quotation."),
                             A94("p1_needed_rfqs", "It does not authorize:"),

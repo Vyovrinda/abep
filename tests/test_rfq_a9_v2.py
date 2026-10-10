@@ -628,7 +628,7 @@ def test_rfq_only_banner_and_no_supplier_contact(doc):
     for p in doc["packages"]:
         txt = " ".join(p["banner"])
         assert "RFQ only - no purchase order authorization" in txt
-        assert "Governance never contacts suppliers" in txt
+        assert "governance never contacts suppliers" in txt
         md = (REPO / p["package_file"]).read_text(encoding="utf-8")
         assert "RFQ only - no purchase order authorization" in md[:4000]
         for li in p["line_items"]:

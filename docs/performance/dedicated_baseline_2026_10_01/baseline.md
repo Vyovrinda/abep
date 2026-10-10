@@ -56,7 +56,7 @@ F0-01: the 'addressable' column and the findings' 'addressable <= X s' are inter
 
 The measured Rust wall speed-ups are in docs/performance/abep_core/parity_report_v1.json (sections speedup and speedup_served_path; time removed = 1 - 1/speed-up). Latest campaign 2026-10-01T09:46:29Z: W1 = tpmc_trace_channel 7.36x kernel-only (admission gate bypassed; 86.4 % removed), 7.55x through the served, admission-gated backend (86.8 % removed), against an interpreter-only share of 0.6875. (The first campaign, 2026-10-01T04:52:48Z, recorded 5.44x kernel-only on W1; that report version is at commit e2aeb3f, the current report keeps only verdicts and source hashes of earlier campaigns.)
 
-F0-02: the 'usage' of the TPMC PORT_CANDIDATE is the frozen_intake_surface_build reference workload, which Governance.md rule 1 and RUST-ID-06 forbid running with the Rust backend, and no current consumer opts in to the Rust backend (F1 calls intake_tpmc.intake_response directly, RUST-ID-03 OPEN; F7 / F8 run no TPMC). The admitted kernels therefore have no consumer today; the F1 synthesis search (the real use) is not quantified here. A re-based judgement needs the F1 / F7 search point counts x the measured per-point cost.
+F0-02: the 'usage' of the TPMC PORT_CANDIDATE is the frozen_intake_surface_build reference workload, which governance.md rule 1 and RUST-ID-06 forbid running with the Rust backend, and no current consumer opts in to the Rust backend (F1 calls intake_tpmc.intake_response directly, RUST-ID-03 OPEN; F7 / F8 run no TPMC). The admitted kernels therefore have no consumer today; the F1 synthesis search (the real use) is not quantified here. A re-based judgement needs the F1 / F7 search point counts x the measured per-point cost.
 
 F0-03: the per-workload 'interpreter share' in the workload table is the sum of individually rounded fractions and can exceed 1 by rounding (e.g. 1.0001); the table above sums the stored fractions once. Workloads with CPU above wall reflect library / BLAS threads or background contention, not speed-up (see Method notes): uq6_robust_design CPU/wall 1.226 (repeats CPU s [0.0469, 0.0312, 0.0469] vs wall s [0.0416, 0.0382, 0.0378]).
 
@@ -247,9 +247,9 @@ Robust design search: abep_sim.uq6.robust_design (legacy phase-6 routine over th
 - workload: nested constrained closure of hall_internal+hall+lab6_xe at 2.5 kW, area 1.3, p_level 0.05, arrays sized, mission envelope; solver caches cleared before every repeat (cold)
 - params: `{}`
 - wall s per repeat [7.1726, 7.0854, 7.1034]; CPU s [7.0781, 7.0625, 7.0625]; load avg before/after [-1.0, -1.0]
-- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
-- reference workload `golden_check` (2 units): abep_sim/golden.py: case_architecture_closure and case_mission each run this closure once per python -m abep_sim.golden check (Governance.md rule 2 gate). EXTRAPOLATED: median seconds x 2 (the second call shares no cache in a cold process only if caches are cleared; in practice it is warm, so this is an upper bound).
-- port judgement: **MARGINAL**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
+- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
+- reference workload `golden_check` (2 units): abep_sim/golden.py: case_architecture_closure and case_mission each run this closure once per python -m abep_sim.golden check (governance.md rule 2 gate). EXTRAPOLATED: median seconds x 2 (the second call shares no cache in a cold process only if caches are cleared; in practice it is warm, so this is an upper bound).
+- port judgement: **MARGINAL**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
 - cProfile: 44241789 calls, overhead ratio 2.44; tottime fractions {"interpreter_builtin": 0.198, "library_python_wrapper": 0.0709, "native_array_call": 0.0877, "project_python": 0.0, "stdlib_python": 0.6433}
 
 | top by cumulative | ncalls | tottime s | cumtime s | class |
@@ -271,9 +271,9 @@ Robust design search: abep_sim.uq6.robust_design (legacy phase-6 routine over th
 - workload: one batch of paired samples (each sample re-runs propulsion at mean / solar-min / solar-max captured flow with shared prior draws) for hall_internal+hall+lab6_xe, Vd 300, L_ch 0.20, area 1.0, p_level 0.05, A_array 6, P_cap 1500 (tests/test_sim.py test_v131_modular_uq_runs)
 - params: `{"n": 6, "seed": 1}`
 - wall s per repeat [3.929, 2.4797, 2.4799]; CPU s [2.8594, 2.4844, 2.4844]; load avg before/after [-1.0, -1.0]
-- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
+- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
 - reference workload `run_uq_default` (200 units): abep_sim/uq_modular.py run_uq(n=200) default. EXTRAPOLATED: median seconds per sample x 200.
-- port judgement: **PORT_CANDIDATE**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
+- port judgement: **PORT_CANDIDATE**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
 - cProfile: 15496566 calls, overhead ratio 2.426; tottime fractions {"interpreter_builtin": 0.1978, "library_python_wrapper": 0.072, "native_array_call": 0.0878, "project_python": 0.0, "stdlib_python": 0.6424}
 
 | top by cumulative | ncalls | tottime s | cumtime s | class |
@@ -295,9 +295,9 @@ Robust design search: abep_sim.uq6.robust_design (legacy phase-6 routine over th
 - workload: one candidate design (area 0.7, L_ch 0.20, Vd 275, xe_aug_h 500, hall_1stage) through monte_carlo6 (correlated priors, full chain + mission ROM)
 - params: `{"n_mc": 3, "seed": 5}`
 - wall s per repeat [0.0416, 0.0382, 0.0378]; CPU s [0.0469, 0.0312, 0.0469]; load avg before/after [-1.0, -1.0]
-- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
+- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted
 - reference workload `robust_design_default_per_candidate` (60 units): abep_sim/uq6.py robust_design(n_mc=60) default, per candidate (candidate count is set by the caller; F8 robust optimisation is PENDING, lane fo_a9_7_f7_f8_coupled_optimizer). EXTRAPOLATED: median seconds per sample x 60 (one candidate). (PENDING as measured; the named lane is merged, see 'Cross-lane resolution (consolidated verification round 2)'.)
-- port judgement: **NOT_A_BOTTLENECK**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
+- port judgement: **NOT_A_BOTTLENECK**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted; porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
 - cProfile: 159738 calls, overhead ratio 1.979; tottime fractions {"interpreter_builtin": 0.1625, "library_python_wrapper": 0.2073, "native_array_call": 0.0443, "project_python": 0.0, "stdlib_python": 0.586}
 
 | top by cumulative | ncalls | tottime s | cumtime s | class |
@@ -319,9 +319,9 @@ Robust design search: abep_sim.uq6.robust_design (legacy phase-6 routine over th
 - workload: secular J2 / energy-balance propagator (orbit-averaged: no intra-orbit resolution, so 'one orbit-day' = 24 h / dt_h steps) with TPMC-ROM intake and AO ageing per step; golden case_mission set-up (closure result reused, propulsion map, P_bus_max 2500 W)
 - params: `{"dt_h": 6.0, "hours": 26000.0}`
 - wall s per repeat [2.2348, 2.1952, 2.2185]; CPU s [2.2188, 2.1875, 2.2188]; load avg before/after [-1.0, -1.0]
-- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map)
+- physics note: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map)
 - reference workload `rfp_mission_26000h` (4333 units): abep_sim/constants.py RFP.mission_hours = 26000 h at dt_h 6 (run_mission_generic default). MEASURED directly (the full-mode workload is the 26000 h mission).
-- port judgement: **NOT_A_BOTTLENECK**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map); porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
+- port judgement: **NOT_A_BOTTLENECK**; DEFER_PORT: drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted (the closure feeds the thrust map); porting a driver of withdrawn physics adds no decision value - re-profile the F7/F8 driver once it exists
 - cProfile: 1620099 calls, overhead ratio 1.251; tottime fractions {"interpreter_builtin": 0.036, "library_python_wrapper": 0.2003, "native_array_call": 0.0924, "project_python": 0.0, "stdlib_python": 0.6713}
 
 | top by cumulative | ncalls | tottime s | cumtime s | class |

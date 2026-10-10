@@ -1,13 +1,14 @@
 {
  "case_roles": {
   "accelerators": "CANONICAL",
-  "architecture_closure": "CANONICAL",
+  "architecture_closure": "HISTORICAL_NON_FLIGHT_REGRESSION",
   "atmosphere": "CANONICAL",
   "design_point_selection": "SELECTION_RECORD",
   "gas_path": "CANONICAL",
   "hall": "CANONICAL",
+  "hall_icp_neutralizer_reference": "GOVERNED_REFERENCE_ACTIVE_ARCHITECTURE_PARTIAL",
   "intake": "CANONICAL",
-  "mission": "CANONICAL",
+  "mission": "HISTORICAL_NON_FLIGHT_REGRESSION",
   "nonconverged_reference": "NONCONVERGED_REFERENCE / EXPECTED_NONCONVERGENCE",
   "source_plasma": "CANONICAL"
  },
@@ -44,11 +45,12 @@
    }
   },
   "architecture_closure": {
+   "architecture": "hall_internal+hall+lab6_xe",
    "ext_hall_2p5kW": {
     "A_array_m2": 8.220602282886157,
     "A_rad_m2": 0.5058049897308248,
-    "CBE_kg": 42.94863073976071,
-    "MEV_kg": 49.88045491831906,
+    "CBE_kg": 43.02504899163571,
+    "MEV_kg": 49.96406543847815,
     "P_bus_W": 1183.3355394537623,
     "P_jet_W": 568.6744537159775,
     "Q_waste_W": 400.42146975604044,
@@ -62,19 +64,21 @@
     "evidence_class": "PARAMETRIC_SENSITIVITY",
     "extrapolation": 0.6667819824909338,
     "feasible": false,
+    "firing_hours_for_xe": 26280.0,
     "gaspath_domain_status": "IN_DOMAIN",
     "gaspath_status": "CONVERGED",
     "ledger_resid": -1.921464097564328e-16,
     "life_sys_h": 28225.44918361367,
-    "m_system_kg": 76.18638222355476,
+    "m_system_kg": 76.26999274371386,
     "optimum_at_search_edge": "Vd",
     "status": "PARAMETRIC_SENSITIVITY",
     "x_L_ch": 0.2,
     "x_Vd": 325.0,
     "x_area": 0.7,
     "x_p_level": 0.05,
-    "xe_kg": 5.616
-   }
+    "xe_kg": 5.676479999999999
+   },
+   "golden_role": "HISTORICAL_NON_FLIGHT_REGRESSION"
   },
   "atmosphere": {
    "180_high": {
@@ -301,6 +305,135 @@
     "util_hall": 0.9747197890127495
    }
   },
+  "hall_icp_neutralizer_reference": {
+   "ao_exposure_mission": {
+    "alpha_end": 0.9499999999999998,
+    "ao_fluence_m2": 3.5512588617722285e+27,
+    "ao_flux_ram_m2_s": 3.753655992909932e+19,
+    "blade_coating_life_h": 28225.44918361367,
+    "intake_coating_erosion_um": 0.0,
+    "intake_coating_ok": true,
+    "intake_life_h": 1000000.0
+   },
+   "architecture": "hall_icp_neutralizer",
+   "composition": {
+    "accelerator": "Hall accelerator (H-1 class)",
+    "electron_source_neutralizer": "downstream RF/ICP electron source / neutralizer (13.56 MHz ICP; A9 topology)",
+    "hollow_cathode": "none (no conventional hollow cathode, no LaB6 in the flight architecture)",
+    "supply_modes": "air (intake -> filter -> compressor -> gas chamber -> valve) and Xe (Xe chamber -> valve)"
+   },
+   "design_point": {
+    "L_over_d": 5.0,
+    "accommodation": 0.8,
+    "alt_km": 200.0,
+    "area_m2": 0.7,
+    "p_level_Pa": 0.05,
+    "solar": "mean"
+   },
+   "excluded_from": "flight compliance / selection claims: this is a partial reference, not a closure",
+   "golden_role": "GOVERNED_REFERENCE_ACTIVE_ARCHITECTURE_PARTIAL",
+   "mass_ledger": {
+    "compressor": {
+     "basis": "compressor sizing under the labelled legacy tip-speed cap (S2.3 / MCC-03)",
+     "cbe_kg": 6.667217876448296,
+     "status": "PARAMETRIC_SENSITIVITY"
+    },
+    "hall_accelerator": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "harness": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "icp_neutralizer": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "intake": {
+     "basis": "system.evaluate intake model (F1Q-02: budgeting only, never a CBE / frozen mass)",
+     "cbe_kg": 3.2926634999999997,
+     "status": "PARAMETRIC_SENSITIVITY"
+    },
+    "ppu": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "rf_power_and_matching": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "structure": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "thermal": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "totals": {
+     "CBE_kg": "NOT_EVALUATED_NO_ADMITTED_MODEL",
+     "MEV_kg": "NOT_EVALUATED_NO_ADMITTED_MODEL",
+     "reason": "most mass lines have no admitted model; a partial sum is not a system mass"
+    },
+    "xe_load": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "xe_tank": {
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    }
+   },
+   "not_evaluated": {
+    "hall_discharge_thrust_power": {
+     "reason": "the 0-D Hall closure (plasma_devices.hall_run_coupled) is withdrawn (governance.md 'Superseded / withdrawn'); the HallThruster.jl transport credible set is empty (gate 3 FAIL; HallMap loads admitted members only), so no admitted model gives thrust, discharge power/current or anode efficiency",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "icp_neutralizer": {
+     "reason": "archengine's only RF electron source, Neutralizer 'rf_cathode', is an air-fed plasma-bridge cathode (5 cm3 cavity, 3 mm orifice, extraction factor calibrated to AMPCAT microwave data, validated current capped at 0.5 A, life ceiling without data): it does not represent the A9 downstream 13.56 MHz ICP electron source honestly. ICP-45 capacity is NOT_EVALUATED until I_d,max,H1 is registered (A9.3-A9.6); RF ratings TBD_AFTER_IMPEDANCE_MAP; ICP gas feed unbooked (A9 recorder flag)",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "life": {
+     "reason": "Hall channel wall life needs wall_life_trustworthy Hall maps (none admitted); ICP life not modelled",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "mission_closure": {
+     "reason": "needs thrust and P_bus maps of an admitted Hall member; none exists",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "p_bus_and_ppu": {
+     "reason": "needs the Hall discharge and ICP loads above; the bus power boundary for hall_icp_neutralizer is v2 work (A9.22 G8)",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "thermal": {
+     "reason": "coupled H-1 / ICP thermal closure UNRESOLVED (A9 binding status; never reported as PASS)",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    },
+    "xe_supply_mode_flow": {
+     "reason": "no admitted Xe flow for the Hall or the ICP neutralizer in either supply mode (A9.19/A9.20: Xe is the contingency / emergency supply mode); a Xe mass needs a flow and a duty profile, neither registered",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    }
+   },
+   "operating_basis": {
+    "firing_life_assumption_h": 15000.0,
+    "firing_life_label": "SUBSYSTEM_FIRING_LIFE_ASSUMPTION",
+    "mission_hours": 26280.0,
+    "mission_hours_basis": "A9.22 G1 MISSION_DURATION_26280_H"
+   },
+   "supply_modes": {
+    "air": {
+     "C_D": 2.05490760966916,
+     "P_comp_W": 26.647324036652133,
+     "comp_rotor_qualification": "NOT_EVALUATED_MATERIAL_BASIS",
+     "comp_sizing_mode": "PARAMETRIC_SENSITIVITY",
+     "eta_c": 0.643894588016098,
+     "fO2_inlet": 0.07558441870188275,
+     "fO_inlet": 0.3978164326660236,
+     "gaspath_domain_status": "IN_DOMAIN",
+     "gaspath_status": "CONVERGED",
+     "intake_drag_mN": 12.121575812576323,
+     "mdot_air_mgps": 0.975342587489833,
+     "p_in_Pa": 0.05000000000000002,
+     "status": "EVALUATED_UPSTREAM_ONLY"
+    },
+    "xe": {
+     "reason": "no admitted Xe flow for the Hall or the ICP neutralizer in either supply mode (A9.19/A9.20: Xe is the contingency / emergency supply mode); a Xe mass needs a flow and a duty profile, neither registered",
+     "status": "NOT_EVALUATED_NO_ADMITTED_MODEL"
+    }
+   }
+  },
   "intake": {
    "cll_a0.5_ld3.0": {
     "C_D": 2.0287055227450765,
@@ -340,6 +473,8 @@
    }
   },
   "mission": {
+   "architecture": "hall_internal+hall+lab6_xe",
+   "golden_role": "HISTORICAL_NON_FLIGHT_REGRESSION",
    "map_T_N": {
     "0.3": 0.0010744578140520374,
     "0.45": 0.005005043841427461,
@@ -538,6 +673,11 @@
  },
  "model": "ABEP Python Physics Candidate v1.5.1 + A9.9 S2 model changes",
  "provenance": {
+  "a9_22": {
+   "G1": "mission-duration basis 26,280 h (architecture_closure xe_kg integrates over it; the nonconverged_reference fixture keeps the pre-A9.22 26,000 h basis of golden_v1)",
+   "G4": "hall_internal+hall+lab6_xe cases ['architecture_closure', 'mission'] are HISTORICAL_NON_FLIGHT_REGRESSION; active reference case hall_icp_neutralizer_reference (GOVERNED_REFERENCE_ACTIVE_ARCHITECTURE_PARTIAL); guards golden.require_flight_eligible_case and archengine.require_flight_eligible",
+   "decision_record": "docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json"
+  },
   "admissibility_criteria": [
    "inputs accepted by every input-validation rule (no ValueError from intake surface / TPMC / gas path)",
    "atmosphere from the frozen NRLMSIS dataset (atm_source 'NRLMSIS 2.1 frozen scenario ...'), TPMC intake model",
@@ -552,11 +692,10 @@
   ],
   "code_version": {
    "abep_sim_paths_differing_from_head_at_generation": [
-    "abep_sim/design/compressor_synthesis.py",
-    "abep_sim/golden.py",
-    "abep_sim/system.py"
+    "abep_sim/archengine.py",
+    "abep_sim/golden.py"
    ],
-   "git_head_at_generation": "f676854606e0bfa89b378f3cd124fd62c125a806",
+   "git_head_at_generation": "512d704950946bdc0c4e55078c1a5527f75da449",
    "note": "the generating code is git_head_at_generation plus the listed working-tree paths (the commit that adds this file); the golden comparison, not this record, is the reproducibility gate"
   },
   "decision_records": [
@@ -718,9 +857,9 @@
   ],
   "generator": "python -m abep_sim.golden generate",
   "hall_calibration_domain": {
-   "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; Governance.md withdrawn list",
+   "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; governance.md withdrawn list",
    "criterion": "0-D Hall calibration envelope (archengine.CALIBRATION['hall'], calibration_status)",
-   "statement": "The 0-D Hall closure and its calibration envelope are withdrawn (Governance.md 'Superseded / withdrawn': all absolute Hall results of the 0-D closure, incl. the Marchioni calibration on an invented geometry). This golden is a reproducibility reference of a converged numerical state, not physics evidence, so the withdrawn envelope is not treated as part of the 'registered model domain' of A9.18 item 1 for golden purposes. The selected point carries calibration = 'extrapolation' (worst relative excursion recorded in cases.architecture_closure and in the grid scan); every closed point of the default grid is an extrapolation (provenance.full_grid_scan). If the owner rules the envelope part of the registered domain, SELECTION_RULE finds no admissible point and the golden must be re-decided; it is never re-picked silently.",
+   "statement": "The 0-D Hall closure and its calibration envelope are withdrawn (governance.md 'Superseded / withdrawn': all absolute Hall results of the 0-D closure, incl. the Marchioni calibration on an invented geometry). This golden is a reproducibility reference of a converged numerical state, not physics evidence, so the withdrawn envelope is not treated as part of the 'registered model domain' of A9.18 item 1 for golden purposes. The selected point carries calibration = 'extrapolation' (worst relative excursion recorded in cases.architecture_closure and in the grid scan); every closed point of the default grid is an extrapolation (provenance.full_grid_scan). If the owner rules the envelope part of the registered domain, SELECTION_RULE finds no admissible point and the golden must be re-decided; it is never re-picked silently.",
    "status": "RECORDED_NOT_GATING_OWNER_CONFIRMATION_REQUESTED"
   },
   "owner_decision": "A9.18 GOLDEN = NEW_ADMISSIBLE_CONVERGED_GOLDEN; RETAIN_OLD_AS_NONCONVERGED_REGRESSION_REFERENCE",
@@ -734,7 +873,7 @@
    "sha256": "1f7fbb626f79e38d743bf69516e9ea62b8ddef2ff2726d2f0fd4f4df6b377fb8",
    "status": "retained unchanged as history; its gas-path-dependent values are carried verbatim in cases.nonconverged_reference.values"
   },
-  "quotability": "historical 0-D / withdrawn-Hall benchmarks (Governance.md 'Superseded / withdrawn'): reproducibility references only; absolute values are not quotable",
+  "quotability": "historical 0-D / withdrawn-Hall benchmarks (governance.md 'Superseded / withdrawn'): reproducibility references only; absolute values are not quotable",
   "rotor_qualification_label": "comp_rotor_qualification = NOT_EVALUATED_MATERIAL_BASIS, comp_sizing_mode = PARAMETRIC_SENSITIVITY, architecture status / evidence_class = PARAMETRIC_SENSITIVITY, feasible False. A9.9 S2.3 allows a rotor to be explored as PARAMETRIC_SENSITIVITY while no rotor-strength basis is registered; it forbids only a qualified rotor_ok = true. The golden checks reproducibility of a converged numerical state, not qualification, so it carries this labelled state; it is not design evidence and not a qualified rotor.",
   "selected_design_point": {
    "area_m2": 0.7,

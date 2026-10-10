@@ -4,7 +4,7 @@
  "decided_by": "owner",
  "date": "2026-10-01",
  "decision": "A9_10_S3_P1_LATER_STAGE_DECISIONS_RECORDED",
- "applies_to": "group S3 of docs/budgets/owner_decisions/OWNER_QUESTIONS_SEQUENCED_v1.md (rows of owner_questions_state_v4) on execution branch Governance/nifty-ramanujan-w68f9z",
+ "applies_to": "group S3 of docs/budgets/owner_decisions/OWNER_QUESTIONS_SEQUENCED_v1.md (rows of owner_questions_state_v4) on execution branch governance/nifty-ramanujan-w68f9z",
  "parents": [
   "docs/decisions/OD_2026_10_01_A9_8_s1_p1_start_owner_decisions.json",
   "docs/decisions/OD_2026_10_01_A9_9_s2_model_change_owner_decisions.json"

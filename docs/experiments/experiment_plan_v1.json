@@ -7,11 +7,11 @@
   "premise": {
     "architecture_winner": "NONE. The plan does not assume one and is designed so that each outcome discriminates between the hypotheses.",
     "p5_n2_validation_dependence": "INDEPENDENT. The plan is valid whether or not any transport closure is ever admitted. It does not use any campaign result that is still running.",
-    "hall_transport_status": "Credible closure set = empty (Governance.md, project decision 2026-09-26). P5-N2 v1 vacuum outcome: all nine screening candidates INCONCLUSIVE / NOT ELIGIBLE (hallthruster_bridge/validation/p5_n2_campaign_v1_vacuum_scores_report.md). This outcome is permanent and is not rewritten.",
+    "hall_transport_status": "Credible closure set = empty (governance.md, project decision 2026-09-26). P5-N2 v1 vacuum outcome: all nine screening candidates INCONCLUSIVE / NOT ELIGIBLE (hallthruster_bridge/validation/p5_n2_campaign_v1_vacuum_scores_report.md). This outcome is permanent and is not rewritten.",
     "consequence": "The simulator cannot currently predict absolute Hall thrust, current or T/P_bus for any architecture. Accuracy requirements are therefore stated as discrimination rules tied to decision thresholds and to model uncertainty, not as invented numbers."
   },
   "evidence_rules": {
-    "policy": "docs/EVIDENCE.md; Governance.md rules 6 and 10",
+    "policy": "docs/EVIDENCE.md; governance.md rules 6 and 10",
     "every_value_carries": [
       "source",
       "evidence_level",
@@ -23,16 +23,16 @@
     ],
     "numeric_values_in_this_file": "Only values copied from repository files, each with its path. Every other threshold is 'TBD - requires <what>'. Nothing from memory is used as a requirement.",
     "evidence_level_of_results": "Measurements on the actual Vyovrinda hardware at its operating condition = level 1. Measurements on an IIST laboratory thruster that is not the Vyovrinda design = level 2 or 3 depending on similarity (owner to classify). Within the validated operating domain of the tested hardware, these supersede literature-derived assumptions (EVIDENCE.md rule).",
-    "no_tuning": "Data from this experiment are never used to retune a transport closure. If they are used to test closures, the acceptance criteria are pre-registered and the measurements audited before any simulation is compared to them (Governance.md promotion rule)."
+    "no_tuning": "Data from this experiment are never used to retune a transport closure. If they are used to test closures, the acceptance criteria are pre-registered and the measurements audited before any simulation is compared to them (governance.md promotion rule)."
   },
   "architecture_scope": {
-    "source": "abep_sim/archengine.py IONIZERS / ACCELERATORS / NEUTRALIZERS; Governance.md scope of Hall uncertainty (ionization/discharge -> acceleration/thrust block only)",
+    "source": "abep_sim/archengine.py IONIZERS / ACCELERATORS / NEUTRALIZERS; governance.md scope of Hall uncertainty (ionization/discharge -> acceleration/thrust block only)",
     "families_compared": {
       "hall_only": "ionizer 'hall_internal' + accelerator 'hall' (ionisation inside the Hall channel)",
       "rf_hall": "ionizer 'rf_icp' (13.56 MHz inductive, model prior) -> Interstage -> accelerator 'hall'",
       "ecr_hall": "ionizer 'ecr' (2.45 GHz ECR, model prior; resonance field 0.0875 T in abep_sim/plasma_devices.py ECRSource.B_res_T) -> Interstage -> accelerator 'hall'"
     },
-    "not_compared": "Grids, magnetic nozzle, MPD, PIT, thermal families (Governance.md rule 8: no new propulsion families; grids and magnetic nozzles already 'probably robust' excluded on mechanism grounds).",
+    "not_compared": "Grids, magnetic nozzle, MPD, PIT, thermal families (governance.md rule 8: no new propulsion families; grids and magnetic nozzles already 'probably robust' excluded on mechanism grounds).",
     "model_priors_the_experiment_replaces": [
       {
         "name": "RF source minimum pressure p_min_Pa",
@@ -79,7 +79,7 @@
   "hypotheses": [
     {
       "id": "H0",
-      "statement": "At matched feed state, V_d and coil currents, powering an RF or ECR pre-ionizer does not improve thrust per bus power T/P_bus over Hall-only (the Governance.md 'probably robust' finding that RF/helicon pre-ionisers add nothing, extended to ECR as a test).",
+      "statement": "At matched feed state, V_d and coil currents, powering an RF or ECR pre-ionizer does not improve thrust per bus power T/P_bus over Hall-only (the governance.md 'probably robust' finding that RF/helicon pre-ionisers add nothing, extended to ECR as a test).",
       "status": "mechanism-level model finding; untested on hardware"
     },
     {
@@ -239,7 +239,7 @@
       "lab_dc_input": "The DC input of each laboratory supply and generator is ALSO recorded, but only as efficiency evidence: eta_lab = P_load / P_DC,in at the operating point (evidence for the ledger efficiency, evidence class 'measured' for lab hardware, not flight). A secondary lab-basis ratio may be reported, labelled LAB_CHAIN, never as a bus_power_boundary_v1 result. Rationale: charging the rf_hall / ecr_hall arms at non-flight laboratory generator efficiency would bias the comparison toward H0, the hypothesis under test.",
       "compressor": "ABSENT_IN_LAB in every mode: the laboratory feed starts at the valve outlets, so no compressor exists. The compressor row is carried explicitly as unavailable from E1 and is RECONSTRUCTED from the upstream ICD (compressor bus draw at the delivered total flow and composition of the point; evidence class 'reconstructed', with ICD revision and uncertainty), as in lane_06_experiment_protocol section 5. It is never a placeholder and never zero.",
       "totals": "P_bus,lab = sum over the components measured in E1 (compressor excluded) is a PARTIAL_BOUNDARY total and is labelled PARTIAL_BOUNDARY wherever it appears. P_bus,v1 = P_bus,lab + P_compressor,ICD only when the ICD supplies it; otherwise P_bus,v1 is UNAVAILABLE. A common additive term does not cancel in paired ratios, so partial-boundary ratios are never reported as bus_power_boundary_v1 ratios. Common loads the lab hardware does not represent (flow_control, housekeeping, thermal_control of flight hardware) are ledger inputs with their evidence class, identical across arms (lane_25_min_decisive_experiment section 5).",
-      "rule": "Never substitute forward or absorbed RF/microwave power at a non-load plane, or Hall discharge power alone, for P_bus (Governance.md bus_power_boundary_v1 definition). Reflected power is used only to form net load-plane power.",
+      "rule": "Never substitute forward or absorbed RF/microwave power at a non-load plane, or Hall discharge power alone, for P_bus (governance.md bus_power_boundary_v1 definition). Reflected power is used only to form net load-plane power.",
       "open_reconciliation": "lane_06_experiment_protocol books rf_source / ecr_source at the generator DC input (rf_generator_input / microwave_source_input); lane_25_min_decisive_experiment and the lane_11_bus_boundary contract book them at the load plane plus ledger efficiency. This package follows the contract (load plane); the reconciliation is recorded in fo_experiment_package (docs/architecture_comparison/experiment_package/), which this package defers to."
     },
     {
@@ -408,14 +408,14 @@
       {
         "id": "R3",
         "metric": "ignition_threshold_shift",
-        "requirement": "Flow and feed-pressure resolution finer than the gap between the Hall-only threshold and the lowest feed state the Vyovrinda intake/compressor can deliver in the RFP altitude range (180-230 km, Governance.md RFP envelope).",
+        "requirement": "Flow and feed-pressure resolution finer than the gap between the Hall-only threshold and the lowest feed state the Vyovrinda intake/compressor can deliver in the RFP altitude range (180-230 km, governance.md RFP envelope).",
         "value": "TBD - requires the lane_16_feed_envelope delivered feed envelope and upstream ICD IF-A5",
         "status": "PROPOSED"
       },
       {
         "id": "R4",
         "metric": "I_d, T (for transport-closure testing on our hardware)",
-        "requirement": "Measurement uncertainty smaller than the spread of predictions across the transport closures being discriminated, and no worse than the literature uncertainties that already limited P5 (P5-N2: thrust sigma 2.6 mN, I_d from P_d at 3 significant figures with no stated I_d uncertainty; blind I_d criterion 15 % was missed at Xe2 by -15.56 %). Sources: hallthruster_bridge/identification/p5_n2_measurement_audit_findings_v1.json; Governance.md next-work item 1.",
+        "requirement": "Measurement uncertainty smaller than the spread of predictions across the transport closures being discriminated, and no worse than the literature uncertainties that already limited P5 (P5-N2: thrust sigma 2.6 mN, I_d from P_d at 3 significant figures with no stated I_d uncertainty; blind I_d criterion 15 % was missed at Xe2 by -15.56 %). Sources: hallthruster_bridge/identification/p5_n2_measurement_audit_findings_v1.json; governance.md next-work item 1.",
         "value": "spread across closures on our geometry: TBD - requires an admitted credible set (currently empty) or an owner-approved non-design sensitivity study; screening candidates never produce design Hall maps",
         "status": "PROPOSED"
       },
@@ -530,7 +530,7 @@
       {
         "id": "T1",
         "measurement": "B(z) measured (not FEMM) at the operating coil currents, with coil currents recorded per point and axis origin tied to the anode and exit plane",
-        "gap": "P5: coil currents and N2 field shape unpublished; registration L38-hist / L32-anode / L32-exit and coil shape 1.6/3.0 kW carried as layer-1 hypotheses (p5_n2_measurement_audit_findings_v1.json F6; Governance.md item 1). ECHT: measured B only at 2 A; '130 G' is FEMM at 3 A (echt_n2/README.md)"
+        "gap": "P5: coil currents and N2 field shape unpublished; registration L38-hist / L32-anode / L32-exit and coil shape 1.6/3.0 kW carried as layer-1 hypotheses (p5_n2_measurement_audit_findings_v1.json F6; governance.md item 1). ECHT: measured B only at 2 A; '130 G' is FEMM at 3 A (echt_n2/README.md)"
       },
       {
         "id": "T2",
@@ -570,13 +570,13 @@
       {
         "id": "T9",
         "measurement": "near-channel T_e (if a non-perturbing diagnostic is available)",
-        "gap": "relevant to whether T_e > 30 eV occurs in reality (v1 OOD driver); evidence for the physics lane only, not a basis for extending rate-table limits (Governance.md: extension needs independent published evidence and a new v2 pre-registration)"
+        "gap": "relevant to whether T_e > 30 eV occurs in reality (v1 OOD driver); evidence for the physics lane only, not a basis for extending rate-table limits (governance.md: extension needs independent published evidence and a new v2 pre-registration)"
       }
     ],
     "use_rule": "If these data are used to test transport closures, (1) audit measurements and uncertainties, (2) pre-register acceptance criteria, (3) then simulate; never retune; validation modes (vacuum / facility) are never crossed."
   },
   "cannot_yet_be_claimed": [
-    "Any absolute Hall result from the 0-D closure (v1.2-v1.6): ABEP thrust, 2.5 kW closure, 110-120 kg, ECR+Hall P(success) 0.77 vs 0.63 - WITHDRAWN (Governance.md).",
+    "Any absolute Hall result from the 0-D closure (v1.2-v1.6): ABEP thrust, 2.5 kW closure, 110-120 kg, ECR+Hall P(success) 0.77 vs 0.63 - WITHDRAWN (governance.md).",
     "Historical sweep statements such as 'ECR+Hall closes on physics' / '12 ABEP-closed' / 'P(closed) 3-5 %' (docs/HISTORY.md v0.2.1, v0.3) - superseded 0-D closure; not quotable.",
     "v1.3 Hall hysteresis / low-mode collapse - numerical artefact.",
     "Any admitted Hall transport closure: credible set is empty; no design Hall maps exist.",
@@ -588,9 +588,9 @@
     "Model-derived P5-N2 quantities Phi_m,n, eta_SP,n, xi_N as measurements."
   ],
   "can_be_stated_as_probably_robust": [
-    "Grids are life-limited by CEX plus the perveance window (mechanism-level, Governance.md).",
-    "Magnetic nozzles are excluded by energy per particle even at the energy bound (mechanism-level, Governance.md).",
-    "RF/helicon pre-ionisers add nothing (mechanism-level model finding, Governance.md) - this is hypothesis H0, which E1 tests on hardware."
+    "Grids are life-limited by CEX plus the perveance window (mechanism-level, governance.md).",
+    "Magnetic nozzles are excluded by energy per particle even at the energy bound (mechanism-level, governance.md).",
+    "RF/helicon pre-ionisers add nothing (mechanism-level model finding, governance.md) - this is hypothesis H0, which E1 tests on hardware."
   ],
   "links_to_lanes": {
     "note": "Machine ids from docs/orchestration/lane_registry_v1.json (built at e15f66f, re-checked at integrated branch d07249b). Paths are referenced read-only; nothing here imports or depends on them.",
@@ -613,7 +613,7 @@
     "lane_29_exb_physics": "E x B / species-acceleration forensics (docs/forensics/p5_n2_v1/exb_physics/): consumer of H5 / D10 data, non-gating"
   },
   "mandatory_field_mapping": {
-    "source": "Governance.md admissibility rule (bus_power_boundary_v1 mandatory fields)",
+    "source": "governance.md admissibility rule (bus_power_boundary_v1 mandatory fields)",
     "mdot_s": "m_feed",
     "P_feed": "m_feed",
     "T_feed": "m_feed",
@@ -627,7 +627,7 @@
     "startup": "m_ignition",
     "eta_u": "derived eta_u",
     "stability": "m_stability",
-    "admissibility_note": "Per Governance.md, a comparison is admissible only if every mandatory field is populated or explicitly unavailable. E1 alone leaves P_bus partial (compressor), m lab-only and life unavailable; these are stated explicitly, not filled."
+    "admissibility_note": "Per governance.md, a comparison is admissible only if every mandatory field is populated or explicitly unavailable. E1 alone leaves P_bus partial (compressor), m lab-only and life unavailable; these are stated explicitly, not filled."
   },
   "questions_for_iist_discussion": [
     "Facility: pumping speed and background pressure at N2 flows of interest; gauge locations; RGA availability.",
@@ -640,7 +640,7 @@
     "Data-sharing terms so that raw traces and per-point data can be published or archived with provenance."
   ],
   "sources_in_repository": [
-    "Governance.md",
+    "governance.md",
     "docs/EVIDENCE.md",
     "docs/HISTORY.md (calibration anchors, v0.2.1, v0.3 - superseded results cited only as non-claims)",
     "abep_sim/archengine.py",
@@ -668,7 +668,7 @@
     },
     "B_physics_backed_selection": {
       "supports": "Transport-independent source data (load-plane source power, interstage delivered current, species) and Hall identifiability data on the tested hardware (measured B(z) with coil currents, as-built geometry, I_d traces, per-point divergence, species fractions).",
-      "blocked_by": "No admitted Hall transport closure (credible set empty, gate 3 FAIL); O/O2 chemistry not done (Governance.md next work 4); any use of E1 data as promotion evidence needs its own audit and pre-registration before measurement; the second lens required for single-lens-v1 lanes."
+      "blocked_by": "No admitted Hall transport closure (credible set empty, gate 3 FAIL); O/O2 chemistry not done (governance.md next work 4); any use of E1 data as promotion evidence needs its own audit and pre-registration before measurement; the second lens required for single-lens-v1 lanes."
     },
     "C_proposal_PDR_freeze": {
       "supports": "Measured load-plane power per consumer, lab source-chain efficiency as ledger evidence, component temperatures (Q_reject estimate), ignition statistics.",

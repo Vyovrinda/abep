@@ -15,42 +15,42 @@
    "path": "docs/chemistry/n2_domain_extension/domain_extension_audit.json",
    "lane": "lane_01_n2_domain_extension",
    "commit": "0636634ae7adf8790b0dc42ccb26138909bad92e",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-2",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-2",
    "sha256": "7c7af7128f63a7cc6e26f78cd7e14b1994e4c0e17fda0383f588eff42ec8d87b"
   },
   {
    "path": "docs/chemistry/n2_domain_extension/domain_extension_requirements.json",
    "lane": "lane_01_n2_domain_extension",
    "commit": "0636634ae7adf8790b0dc42ccb26138909bad92e",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-2",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-2",
    "sha256": "d8aa8d04a4071e513a80ff53d7350919a927eabf85280be69c5e7f11bc907a58"
   },
   {
    "path": "docs/chemistry/n2_domain_extension/N2_DOMAIN_EXTENSION_AUDIT.md",
    "lane": "lane_01_n2_domain_extension",
    "commit": "0636634ae7adf8790b0dc42ccb26138909bad92e",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-2",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-2",
    "sha256": "ffe2c5cbc407aa9fd08a99928bd66c9c6c4af000a4516372dbbee6dd3717f1cb"
   },
   {
    "path": "docs/chemistry/n2_domain_extension/drafts/p5_n2_validation_v2_prereg_OUTLINE_DRAFT.md",
    "lane": "lane_01_n2_domain_extension",
    "commit": "0636634ae7adf8790b0dc42ccb26138909bad92e",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-2",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-2",
    "sha256": "e41c43ec24a08b2ae4c0838bb4f6b94d0cc33c00f44bcd892dedd94126f76ce9"
   },
   {
    "path": "docs/forensics/p5_n2_v1/ood_attribution/ood_attribution.json",
    "lane": "lane_02_ood_attribution",
    "commit": "5e5c8a7bee07da0148a8076497958b2372604418",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-1",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-1",
    "sha256": "5c69fe1b4507566b11a69ab442c68362d5d2f52adda2bddd85ae11a2b8592660"
   },
   {
    "path": "docs/forensics/p5_n2_v1/ood_attribution/OOD_ATTRIBUTION.md",
    "lane": "lane_02_ood_attribution",
    "commit": "5e5c8a7bee07da0148a8076497958b2372604418",
-   "worktree_at_authoring": "/home/user/abep/.Governance/worktrees/wf_17c9b0e6-1cb-1",
+   "worktree_at_authoring": "/home/user/abep/.governance/worktrees/wf_17c9b0e6-1cb-1",
    "sha256": "6fcc8ba0829571664de8905765926299a2a750c128e8450a25fa905bf24d7379"
   },
   {
@@ -73,13 +73,13 @@
   "verbatim_lane_task_source": "lane fo_v2_domain_question_a task text (workflow harness, trigger T_V2_QUESTION_A)",
   "verbatim_operating_model": "* **Question A** (`fo_v2_domain_question_a`): does the source evidence justify expanding the admissible energy domain (fixes OOD)?",
   "verbatim_operating_model_source": "docs/orchestration/OPERATING_MODEL.md section 4",
-  "verbatim_Governance_md": "Question A (is a wider domain source-supported?)",
-  "verbatim_Governance_md_source": "Governance.md, Next work item 3 ('v2 chemistry')",
+  "verbatim_governance_md": "Question A (is a wider domain source-supported?)",
+  "verbatim_governance_md_source": "governance.md, Next work item 3 ('v2 chemistry')",
   "scope_boundary": [
    "Question B (which electronic-excitation representation is supportable) is separate and conditional on Question A; this brief does not address it.",
    "Johnson-low (n2_n_exc_johnsonlow.toml) remains a sensitivity; this brief does not change that.",
    "The P5-N2 v1 outcome stays INCONCLUSIVE permanently; nothing here re-scores or re-labels a v1 run.",
-   "A validity limit is never extended because the solver reached a higher T_e; only independent published evidence and a new v2 pre-registration can support an extension (Governance.md, critical path after v1)."
+   "A validity limit is never extended because the solver reached a higher T_e; only independent published evidence and a new v2 pre-registration can support an extension (governance.md, critical path after v1)."
   ]
  },
  "table_families": {
@@ -10376,7 +10376,7 @@
    ],
    "admission_and_milestone_B": [
     "A scoreable minimal v2 can exist (it can re-score at most 36 runs), but under the derived_bounds assumptions it cannot produce a PROMOTABLE candidate; the credible set stays empty.",
-    "Admission remains gated on the O4 dispositions (Governance.md; hall_ensemble._check_o4) regardless.",
+    "Admission remains gated on the O4 dispositions (governance.md; hall_ensemble._check_o4) regardless.",
     "Milestone B stays blocked on an admitted Hall transport closure; Milestone A is unaffected (an admitted closure stays an explicit condition)."
    ]
   },
@@ -12528,7 +12528,7 @@
   {
    "id": "QA-3",
    "kind": "wording difference to be settled by the owner",
-   "text": "Lane 02 states that any extension 'would be a model change with its own reruns'; the lane-01 outline treats a limit-only change with byte-identical tables as a minimal v2 that becomes a model change only on a table rebuild, an addition or a re-audit promotion. Both require reruns (the frozen records hold f_out only at 45 eV). Whether a limit-only change is logged as a model change (Governance.md rule 2 / docs/HISTORY.md) is for the owner.",
+   "text": "Lane 02 states that any extension 'would be a model change with its own reruns'; the lane-01 outline treats a limit-only change with byte-identical tables as a minimal v2 that becomes a model change only on a table rebuild, an addition or a re-audit promotion. Both require reruns (the frozen records hold f_out only at 45 eV). Whether a limit-only change is logged as a model change (governance.md rule 2 / docs/HISTORY.md) is for the owner.",
    "refs": [
     {
      "name": "what_it_does_not_imply",
@@ -12586,10 +12586,10 @@
   {
    "id": "QA-5",
    "kind": "open question for the owner (not in the lane files)",
-   "text": "The promotion rule (Governance.md) admits a candidate only after it predicts new evidence not used to select it. A v2 scored on the same P5-N2 measurements after the v1 scores are known would need the owner to state whether it still counts as such a test; the lane-01 outline requires a hash-locked pre-registration before any v2 run.",
+   "text": "The promotion rule (governance.md) admits a candidate only after it predicts new evidence not used to select it. A v2 scored on the same P5-N2 measurements after the v1 scores are known would need the owner to state whether it still counts as such a test; the lane-01 outline requires a hash-locked pre-registration before any v2 run.",
    "refs": [
     {
-     "file": "Governance.md",
+     "file": "governance.md",
      "field": "Next work 1, Promotion rule"
     },
     {

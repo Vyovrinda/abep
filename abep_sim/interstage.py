@@ -14,13 +14,13 @@ What it computes (steady, quasi-1-D plug flow along the duct, then a junction sp
   * charge-state fraction evolution, ion transport efficiency ``eta_transport`` (= ion current delivered into the Hall
     channel / ion current leaving the source), neutral delivery / leakage, plume leakage of uncaptured ions;
   * an energy ledger (electron heat drawn from the source to hold T_e, wall heat, reaction heat, junction outflows);
-  * element (particle), charge, mass and energy conservation residuals, gated (Governance.md rule 4). Under the isothermal
+  * element (particle), charge, mass and energy conservation residuals, gated (governance.md rule 4). Under the isothermal
     electron closure the energy residual is a bookkeeping-consistency check only (the conducted source heat closes the
     electron energy balance by construction); the element, charge and mass gates are independent checks;
   * process completeness: every required process class (recombination, ionization, charge transfer, electron-impact
     excitation / dissociation / elastic loss, wall atom recombination) is modelled or explicitly excluded per species.
 
-Rules this module follows (Governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md):
+Rules this module follows (governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md):
   * No default physical, efficiency or numerical values. Every numeric input is a ``Sourced`` record (value, unit,
     source, evidence class, uncertainty) or an explicit ``TBD`` naming what it requires; a TBD anywhere in a case makes
     ``solve_interstage`` refuse (``InterstageTBDError``). Missing inputs raise; nothing is silently filled.
@@ -1600,7 +1600,7 @@ def solve_interstage(case: InterstageCase) -> dict:
         return _null_result(c, "MODEL_ERROR", f"step-doubling change {step_change:.3e} > convergence_rtol "
                                               f"{c.nm.convergence_rtol:g} (increase numerics.n_steps)", diagnostics)
     if not cons["passed"]:
-        return _null_result(c, "MODEL_ERROR", "conservation gate failed (Governance.md rule 4)", diagnostics)
+        return _null_result(c, "MODEL_ERROR", "conservation gate failed (governance.md rule 4)", diagnostics)
     if not boundary_ok:
         return _null_result(c, "INFEASIBLE", "supplied source-exit neutral densities are inconsistent with the "
                                              "interstage + junction flow path at the supplied neutral flows "

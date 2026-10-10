@@ -3,7 +3,7 @@
 Authority (immutable owner records; cite path + json sha256 + question id):
 
 * A9.13 S6.14 / OQ-F4-05 -- ``docs/decisions/OD_2026_10_01_A9_13_s6_upstream_architecture_owner_decisions.json``
-  (sha256 9afaca459efe27556033d836814f71bd03203711627899f3ffc494567d763b23): authorises a Governance.md rule-1 versioned,
+  (sha256 9afaca459efe27556033d836814f71bd03203711627899f3ffc494567d763b23): authorises a governance.md rule-1 versioned,
   orbit-resolved frozen atmosphere dataset; the orbit-averaged ``atmosphere_msis21_v1.*`` stays unchanged; "do not invent
   an arbitrary density-modulation amplitude when an orbit-resolved producer can supply the physical variation".
 * A9.14 S9.7 / OD2 and S9.8 / OD3 -- ``docs/decisions/OD_2026_10_01_A9_14_s7_s10_owner_decisions.json``
@@ -587,7 +587,7 @@ def _authority() -> dict:
             "A9.14 S9.8 OD3": {"path": A9_14_JSON, "sha256": A9_14_SHA256},
             "A9.17 DATA_SIZE": {"path": A9_17_JSON, "sha256": A9_17_SHA256},
             "A9.17 ORBIT": {"path": A9_17_JSON, "sha256": A9_17_SHA256},
-            "Governance.md rule 1": "versioned rebuild; atmosphere_msis21_v1.* unchanged"}
+            "governance.md rule 1": "versioned rebuild; atmosphere_msis21_v1.* unchanged"}
 
 
 def _pymsis_version():
@@ -1096,7 +1096,7 @@ def design_states_v2() -> dict:
                             "real_orbit": "TBD from DRDO / spacecraft ICD / PDR mission definition; once supplied, a new "
                                           "dataset / design-state version narrows the envelope"},
             "supersedes": {"file": os.path.basename(DESIGN_PATH), "sha256": v1_sha,
-                           "relation": "v1 is kept immutable (Governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its "
+                           "relation": "v1 is kept immutable (governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its "
                                        "candidate pool is bounded at |lat| <= reachable_lat_max_deg() (~83.75 deg) of "
                                        "the CODE_DEFAULT SSO family, so it does not cover inclinations between ~83.75 "
                                        "and ~96.25 deg or polar orbits; v2 is the broad-envelope set for new use"},
@@ -1165,14 +1165,14 @@ def _design_v2_compare(frozen, fresh) -> dict:
 
 def write_design_states_v2() -> dict:
     """Write the v2 design-state file and record it in the manifest. Deterministic and idempotent; refuses to overwrite
-    an existing v2 file whose content differs (that is a new version, Governance.md rule 1). The dataset is not touched."""
+    an existing v2 file whose content differs (that is a new version, governance.md rule 1). The dataset is not touched."""
     meta = json.load(open(JSON_PATH))
     read_csv_bytes(meta)                                    # hash-verified dataset (fail closed)
     text = _design_states_v2_text()
     if os.path.exists(DESIGN_V2_PATH):
         if open(DESIGN_V2_PATH, "rb").read() != text.encode():
             raise RuntimeError(f"{DESIGN_V2_PATH} exists with different content; a changed design-state set is a new "
-                               "version, not an overwrite (Governance.md rule 1)")
+                               "version, not an overwrite (governance.md rule 1)")
     else:
         with open(DESIGN_V2_PATH, "w", newline="\n") as f:
             f.write(text)

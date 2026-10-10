@@ -17,7 +17,7 @@ pip install --quiet -r requirements-lock.txt
 pip install --quiet --no-deps -e .
 if [ "$#" -eq 0 ]; then set -- tests; fi
 python -m pytest -q "$@"
-# abep_sim.golden prints "OK" or the list of deviations and exits 0 either way, so gate on its output (Governance.md rule 2).
+# abep_sim.golden prints "OK" or the list of deviations and exits 0 either way, so gate on its output (governance.md rule 2).
 out="$(python -m abep_sim.golden check)"
 printf '%s\n' "$out"
-[ "$(printf '%s\n' "$out" | tail -n 1)" = "OK" ] || { echo "golden benchmarks moved (Governance.md rule 2)" >&2; exit 1; }
+[ "$(printf '%s\n' "$out" | tail -n 1)" = "OK" ] || { echo "golden benchmarks moved (governance.md rule 2)" >&2; exit 1; }

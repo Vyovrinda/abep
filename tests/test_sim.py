@@ -65,7 +65,8 @@ def test_passive_floor_on_outlet_pressure():
 
 def test_hard_gate_includes_12mN_on_air():
     r = evaluate(Config("hall_1stage", 230, "low", IntakeParams(area_m2=0.5), CompressorParams(ratio=500)))
-    assert r["chk_thrust_air_ge_req"] is False and r["rfp_compliant"] is False
+    assert r["chk_thrust_air_ge_sustained_min"] is False and r["rfp_compliant"] is False   # A9.24 item 3
+    assert r["chk_thrust_air_ge_req"] is r["chk_thrust_air_ge_operating_target"] is False   # T_req = 12 mN here
 
 
 def test_classification_hierarchy():
@@ -288,6 +289,8 @@ def test_full_engineering_chain_bom_consistent():
     assert abs(sum(c for _, c, _, _, _ in r["eng_bom"]) - r["eng_m_cbe_kg"]) < 0.05   # table rounded to 2 dp
     assert r["eng_m_mev_kg"] > r["eng_m_cbe_kg"] and r["eng_P_bus_peak_W"] >= r["eng_P_bus_steady_W"]
     assert 0 < r["eng_R_26000h"] < 1
+    # A9.22 G1: mission reliability at the 26,280 h basis; R(26,280 h) <= R(26,000 h) (monotone in t)
+    assert r["eng_R_mission_h"] == 26280.0 and 0 < r["eng_R_mission"] <= r["eng_R_26000h"]
 
 
 def test_phase5_environment_models():
@@ -312,7 +315,7 @@ def test_phase5_mission_runs_fast_and_reports():
                CompressorParams(ratio=2000), vd_V=275, gaspath_physics=True, plasma_physics=True, engineering_physics=True,
                hall_L_m=0.20, hall_shielding=0.03, hall_wall_mm=6.0, blade_coating_um=50, xe_aug_hours=500)
     r = run_phase5(c, Spacecraft(bus_frontal_m2=0.10, array_area_m2=3.5, pointing_sigma_deg=0.5), hours=1000, dt_h=6.0)
-    assert set(["mission_closed", "limiting", "tid_krad", "R_26000h", "D_intake_frac"]) <= set(r)
+    assert set(["mission_closed", "limiting", "tid_krad", "R_mission", "R_26280h", "R_15000h", "D_intake_frac"]) <= set(r)
     assert 0.3 < r["D_intake_frac"] < 1.0 and r["tid_krad"] > 0
 
 
@@ -373,7 +376,8 @@ def test_archengine_v2_interfaces_and_cathode_closure():
 
 @_SUPERSEDED
 def test_archengine_v2_nested_optimisation_hall():
-    from abep_sim.archengine import enumerate_architectures, close_architecture, make_gas_fn, DesignConstraints, arch_name
+    from abep_sim.archengine import enumerate_architectures, make_gas_fn, DesignConstraints, arch_name
+    from abep_sim.programme.closure import close_architecture       # A9.22: record incl. the closure constraint flags
     from abep_sim.mission_env import Spacecraft
     gf = make_gas_fn()
     a = [x for x in enumerate_architectures() if arch_name(x) == "hall_internal+hall+lab6_xe"][0]
@@ -465,7 +469,7 @@ def test_v131_plasma_source_and_interstage_conserve_mass():
 
 
 def test_v131_modular_uq_runs():
-    from abep_sim.uq_modular import run_uq
+    from abep_sim.programme.uq_modular import run_uq
     df, s = run_uq("hall_internal+hall+lab6_xe", {"Vd": 300.0, "L_ch": 0.20}, 1.0, 0.05, 6.0, 1500.0, n=6)
     assert len(df) == 6 and 0 <= s["P_close"] <= 1 and "alpha_anom" in df
 

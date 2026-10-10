@@ -125,7 +125,7 @@ SRC_RFP_FIRING = ("RFP '> 15,000 h firing' used as the minimum (abep_sim/constan
                   "A5 xe_mass_allocation.reference_arithmetic_15000h)")
 MASS_REFERENCES = [
     {"id": "RFP_40kg", "value_kg": 40.0, "kind": "requirement",
-     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; Governance.md; A5 "
+     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; governance.md; A5 "
                "allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"},
     {"id": "A5_alloc_36kg", "value_kg": 36.0, "kind": "allocation",
      "source": f"{A5_REL} allocations_and_requirements 'system mass design allocation <= 34-36 kg' (upper end)"},

@@ -133,7 +133,7 @@ EVIDENCE_CLASSES = ("measured", "digitized", "inferred", "reconstructed", "model
 MASS_CLASSES = ("dry", "propellant")
 # Bases on which the hard-gate matrix (G3_mass, fail_sufficient_bases) accepts a FAIL-side lower bound.
 G3_FAIL_BASES = ("hard_physical_bound", "measurement_vyovrinda", "measurement_same_hardware", "model_closure_independent")
-# P5 calibration nuisance (Governance.md, layer 1) is never a design variable: any such key in a BOM item is rejected.
+# P5 calibration nuisance (governance.md, layer 1) is never a design variable: any such key in a BOM item is rejected.
 CALIBRATION_NUISANCE_KEYS = frozenset({
     "p5_registration", "registration", "coil_shape", "historical_coil_shape", "divergence_reading",
     "beam_efficiency_reading", "facility_interpretation", "facility_ingestion_interpretation"})
@@ -157,7 +157,7 @@ MASS_BOM_SOURCES = {
     },
     "RFP_MASS_AS_RECORDED": {
         "citation": "abep_sim/constants.py RFPConstraints.mass_max_kg (docstring 'Hard limits from Part III Para 2 of "
-                    "the RFP'); Governance.md '< 40 kg'; docs/HISTORY.md v0.1 table '< 40 kg total incl. intake, "
+                    "the RFP'); governance.md '< 40 kg'; docs/HISTORY.md v0.1 table '< 40 kg total incl. intake, "
                     "compressor, PSE, Xe + tank, structure, 10 % margin'",
         "kind": "requirement as recorded in this repository",
         "verify": "verify against the RFP document (DTDF/06/13516/DSP/ABEP/X/L/M/01)",
@@ -257,7 +257,7 @@ def _item(iid, name, scope, rfp_block, gate_element, boundary, cbe_requires, lb_
 
 
 _HALL_NOTE = ("Hall-related: the mass of a given head design is closure-independent. No unadmitted closure (the nine "
-              "sgb-screen candidates or any other) may size or scale it; the credible set is empty (Governance.md). The "
+              "sgb-screen candidates or any other) may size or scale it; the credible set is empty (governance.md). The "
               "legacy hall_channel_mass()/hall_magnetic_circuit() defaults above are unsourced and not used.")
 _PREION_NOTE = ("Includes its own mounting, harness and thermal-control increments (PROPOSED accounting convention, so "
                 "that common items keep identical definitions).")
@@ -832,7 +832,7 @@ def build_document() -> dict:
         "system_margin": SYSTEM_MARGIN,
         "hall_closure_policy": "Mass is closure-independent (hard-gate G3). No Hall mass comes from any transport "
                                "closure; closure-derived inputs are rejected by check_item(). The credible set is empty "
-                               "(Governance.md), so no Hall map feeds this BOM.",
+                               "(governance.md), so no Hall map feeds this BOM.",
         "items": bom_catalog(),
         "architectures": {a: {"item_ids": [it["id"] for it in per_arch[a]],
                               "common_item_ids": [it["id"] for it in per_arch[a] if it["scope"] == "common"],

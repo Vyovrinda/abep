@@ -19,13 +19,18 @@ Refusals (a HarnessError is raised; there is never a fallback):
   * zero admitted members — the state on 2026-09-26 (credible set = empty set, gate 3 FAIL);
   * any screening-candidate or unknown member id, a map filed under another member's id, a facility (non-flight) map;
   * a missing ledger module / wrong boundary version / ledger output that breaks the contract;
-  * an energy-ledger residual >= 2 % of the bus power (Governance.md rule 4), reported or independently recomputed;
+  * an energy-ledger residual >= 2 % of the bus power (governance.md rule 4), reported or independently recomputed;
   * any layer-1 calibration-nuisance name used as a Hall-map axis, operating-point key, feed or upstream quantity;
   * a Hall output name used as an upstream/feed quantity (Hall-closure uncertainty must never leak upstream).
 
 Output: per-member, per-architecture results; per-architecture min/max envelopes over the members (unweighted scenario
 set: no mean, no probability, no weighting); min/max envelopes of paired per-member differences between architectures.
 There is deliberately no field that names a single preferred architecture.
+
+A9.22 layer separation: this module computes the comparison (``compare_architectures_unassessed``); the
+evaluation-only band / cap flags (``rfp_flags``), their per-architecture ``constraint_robustness`` and the
+``rfp_limits`` block are attached by the programme layer, ``abep_sim.programme.arch_compare.compare_architectures``
+(the full comparison record, identical to the pre-move output). The ``run`` CLI command calls the programme layer.
 """
 from __future__ import annotations
 
@@ -43,7 +48,6 @@ from numbers import Real
 from types import MappingProxyType
 
 from . import hall_ensemble, hall_map
-from .constants import RFP
 
 HARNESS_VERSION = "arch_compare_v1"
 ARCHITECTURES = ("hall_only", "rf_hall", "ecr_hall")
@@ -52,8 +56,8 @@ LEDGER_MODULE = "abep_sim.arch_boundary"
 LEDGER_FUNCTION = "bus_power_ledger"
 LEDGER_PARAMETERS = ("arch", "loads", "efficiencies")
 LEDGER_KEYS = ("boundary_version", "architecture", "P_bus_W", "items", "residual_W")
-LEDGER_RESIDUAL_MAX_FRAC = 0.02          # Governance.md rule 4: architecture energy-ledger residual < 2 %
-MASS_CLOSURE_REL_TOL = 1e-9              # Governance.md rule 4: source mass balance closes exactly (float rounding only)
+LEDGER_RESIDUAL_MAX_FRAC = 0.02          # governance.md rule 4: architecture energy-ledger residual < 2 %
+MASS_CLOSURE_REL_TOL = 1e-9              # governance.md rule 4: source mass balance closes exactly (float rounding only)
 HALL_MAP_INDEX_SCHEMA = "arch_compare_hall_map_index_v1"
 SPECS_SCHEMA = "arch_compare_specs_v1"
 UPSTREAM_SCHEMA = "arch_compare_upstream_v1"
@@ -94,7 +98,7 @@ class LedgerContractError(HarnessError):
 
 
 class LedgerResidualError(LedgerContractError):
-    """Energy-ledger residual >= 2 % of the bus power (Governance.md rule 4)."""
+    """Energy-ledger residual >= 2 % of the bus power (governance.md rule 4)."""
 
 
 class ScopeViolationError(HarnessError):
@@ -352,7 +356,7 @@ def resolve_ensemble(ensemble: Mapping | None = None) -> tuple[Mapping, dict]:
         e = ensemble
         info = {"origin": "injected", "path": None, "sha256": None}
     if e.get("weighting") != "unweighted":
-        raise HarnessError("the transport ensemble must be an unweighted scenario set (Governance.md next-work 1)")
+        raise HarnessError("the transport ensemble must be an unweighted scenario set (governance.md next-work 1)")
     return e, info
 
 
@@ -481,7 +485,7 @@ def _mass_closure(spec: ArchitectureSpec, upstream: UpstreamState, query: dict) 
     scale = max(abs(supply), abs(consumed))
     if scale <= 0.0 or abs(resid) > MASS_CLOSURE_REL_TOL * scale:
         raise SpecError(f"{spec.arch}: mass closure fails: supply {supply!r} vs Hall axes + other sinks {consumed!r} "
-                        f"(residual {resid!r}; Governance.md rule 4)")
+                        f"(residual {resid!r}; governance.md rule 4)")
     return {"declared": True, "supply": supply, "consumed": consumed, "residual": resid,
             "names": _plain(spec.mass_closure)}
 
@@ -600,7 +604,7 @@ def _run_ledger(fn, arch: str, loads: dict, efficiencies: dict, expected_version
     if not (abs(frac) < LEDGER_RESIDUAL_MAX_FRAC and abs(frac_re) < LEDGER_RESIDUAL_MAX_FRAC):
         raise LedgerResidualError(
             f"{arch} (member {mid!r}): energy-ledger residual {frac:+.3%} reported, {frac_re:+.3%} recomputed from the "
-            f"items; the gate is < {LEDGER_RESIDUAL_MAX_FRAC:.0%} of P_bus (Governance.md rule 4)")
+            f"items; the gate is < {LEDGER_RESIDUAL_MAX_FRAC:.0%} of P_bus (governance.md rule 4)")
     return {"ledger": _plain(out), "P_bus_W": P_bus, "residual_W": resid, "residual_frac": frac,
             "residual_recomputed_W": resid_re, "residual_recomputed_frac": frac_re, "components": sorted(items),
             "residual_gate_frac": LEDGER_RESIDUAL_MAX_FRAC}
@@ -639,15 +643,13 @@ def _evaluate(mid: str, spec: ArchitectureSpec, hm, prov: dict, query: dict, ups
     metrics = {"thrust_mN": T * 1e3, "discharge_power_W": Pd, "discharge_current_A": out["discharge_current_A"],
                "anode_eff": eta_a, "anode_jet_power_W": eta_a * Pd, "P_bus_W": P_bus,
                "thrust_per_P_bus_mN_per_kW": T * 1e3 / (P_bus / 1e3), "bus_to_anode_jet_efficiency": eta_a * Pd / P_bus}
-    flags = {"thrust_within_rfp_range": RFP.thrust_min_mN <= T * 1e3 <= RFP.thrust_max_mN,
-             "P_bus_within_rfp_cap": P_bus <= RFP.power_max_W}
+    # evaluation-only band / cap flags (rfp_flags): added by the programme layer (A9.22)
     if upstream.drag_N is not None:
         metrics["thrust_minus_drag_mN"] = (T - upstream.drag_N) * 1e3
         metrics["thrust_to_drag"] = T / upstream.drag_N
-        flags["thrust_exceeds_drag"] = T > upstream.drag_N
     res.update(status=STATUS_OK, hall={k: v for k, v in out.items()}, member_independent_loads_W=_plain(
         {**spec.fixed_loads_W, **upstream_loads}), hall_loads_W=hall_loads, efficiencies=dict(spec.efficiencies),
-        bus_ledger=led, metrics=metrics, rfp_flags=flags)
+        bus_ledger=led, metrics=metrics)
     return res
 
 
@@ -659,16 +661,12 @@ def _envelope(arch: str, ids: list, results: dict) -> dict:
     not_ok = {mid: r["status"] for mid, r in rows.items() if r["status"] != STATUS_OK}
     env = {"n_members": len(ids), "status_counts": counts, "not_ok_members": not_ok}
     if not_ok:
-        env.update(status="INCOMPLETE", metrics=None, constraint_robustness=None,
+        env.update(status="INCOMPLETE", metrics=None,
                    note="at least one admitted member has no OK result: no envelope is reported over a subset")
         return env
     keys = set.intersection(*(set(r["metrics"]) for r in rows.values()))
     env["metrics"] = {k: {"min": min(r["metrics"][k] for r in rows.values()),
                           "max": max(r["metrics"][k] for r in rows.values())} for k in sorted(keys)}
-    flags = set.intersection(*(set(r["rfp_flags"]) for r in rows.values()))
-    env["constraint_robustness"] = {
-        f: {"n_true": sum(bool(r["rfp_flags"][f]) for r in rows.values()), "n_members": len(ids),
-            "holds_for_all_members": all(bool(r["rfp_flags"][f]) for r in rows.values())} for f in sorted(flags)}
     env["status"] = "COMPLETE"
     return env
 
@@ -691,10 +689,11 @@ def _paired(archs: list, ids: list, results: dict, envelopes: dict) -> dict:
     return out
 
 
-def compare_architectures(specs, upstream: UpstreamState, hall_maps: Mapping, *, ledger=None,
-                          ensemble: Mapping | None = None,
-                          expected_boundary_version: str = EXPECTED_BOUNDARY_VERSION) -> dict:
-    """Evaluate every spec'd architecture for EVERY admitted member on the common bus boundary.
+def compare_architectures_unassessed(specs, upstream: UpstreamState, hall_maps: Mapping, *, ledger=None,
+                                     ensemble: Mapping | None = None,
+                                     expected_boundary_version: str = EXPECTED_BOUNDARY_VERSION) -> dict:
+    """Evaluate every spec'd architecture for EVERY admitted member on the common bus boundary (no evaluation-only
+    flags: abep_sim.programme.arch_compare.compare_architectures adds rfp_flags, constraint_robustness, rfp_limits).
 
     specs      ArchitectureSpec per architecture (subset of ARCHITECTURES, no repeats)
     upstream   UpstreamState, identical for all members and architectures
@@ -779,8 +778,6 @@ def compare_architectures(specs, upstream: UpstreamState, hall_maps: Mapping, *,
         "mass_closure": _plain(closures),
         "maps_not_used": {mid: v for mid, v in unused.items() if v},
         "ledger_residual_gate_frac": LEDGER_RESIDUAL_MAX_FRAC,
-        "rfp_limits": {"thrust_min_mN": RFP.thrust_min_mN, "thrust_max_mN": RFP.thrust_max_mN,
-                       "power_max_W": RFP.power_max_W, "source": "abep_sim.constants.RFP"},
         "results": results,
         "envelopes": envelopes,
         "paired_differences": _paired(archs, ids, results, envelopes),
@@ -877,6 +874,8 @@ def main(argv=None) -> int:
             _write_new(a.out, {"schema": UPSTREAM_SCHEMA, **u.to_dict()})
             print(f"wrote {a.out} (fingerprint {u.fingerprint()})")
         else:
+            # the full comparison record (with the evaluation-only flags) is the programme layer's (A9.22)
+            from .programme.arch_compare import compare_architectures
             res = compare_architectures(load_specs(a.specs), load_upstream(a.upstream), load_hall_map_index(a.maps))
             _write_new(a.out, res)
             print(f"wrote {a.out}: {len(res['members'])} members x {len(res['architectures'])} architectures; "

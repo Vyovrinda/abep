@@ -1658,7 +1658,7 @@
      "compressor": {
       "class": "COMMON_MODE",
       "formula": "0",
-      "reason": "the flow is fixed by the common feed state; pre-ionizer and Hall-closure uncertainty never leak upstream into the intake/compressor/gas chambers/valves (Governance.md scope)",
+      "reason": "the flow is fixed by the common feed state; pre-ionizer and Hall-closure uncertainty never leak upstream into the intake/compressor/gas chambers/valves (governance.md scope)",
       "value": "0 W"
      },
      "ecr_magnet": {
@@ -1741,7 +1741,7 @@
      "compressor": {
       "class": "COMMON_MODE",
       "formula": "0",
-      "reason": "the flow is fixed by the common feed state; pre-ionizer and Hall-closure uncertainty never leak upstream into the intake/compressor/gas chambers/valves (Governance.md scope)",
+      "reason": "the flow is fixed by the common feed state; pre-ionizer and Hall-closure uncertainty never leak upstream into the intake/compressor/gas chambers/valves (governance.md scope)",
       "value": "0 W"
      },
      "flow_control": {

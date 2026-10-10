@@ -309,7 +309,7 @@ def test_markdown_matches_json(doc):
 def test_builder_source_hygiene():
     src = SCRIPT.read_text(encoding="utf-8")
     assert "import abep_sim" not in src and "from abep_sim" not in src
-    assert ".Governance/worktrees" not in src
+    assert ".governance/worktrees" not in src
     assert "xe" + "_ledger" not in src
     assert "archengine" not in src.replace("not wired into archengine", "")
     for bad in ("hall_map", "hall_ensemble", "import plasma", "sgb-screen", "plasma_devices import"):

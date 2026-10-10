@@ -49,7 +49,7 @@ A TBD in a prerequisite stays TBD here: nothing is filled from code defaults or 
 ### 1. Feed mode (`feed_mode`): PROPOSED, evidence class assumed
 
 Source: the lane-23 task definition (Xe start, mixed, atmosphere-dominant) for the RFP's air + Xe dual feed
-(Governance.md "What this is"; the RFP architecture, in which the atmospheric path and the Xe path both feed the
+(governance.md "What this is"; the RFP architecture, in which the atmospheric path and the Xe path both feed the
 ionization/discharge block). The mode names are cross-referenced (names only, no values) to the dual-feed control-logic
 draft `schemas/controls/dual_feed_state_machine_v1.json`. That draft belongs to another lane and was uncommitted when
 it was read on 2026-09-26 (file sha256 `f556f7dcd45c2c8a37a6258c4634e4a074c5e89fc9cb0c969d2aff950518bb52`). The

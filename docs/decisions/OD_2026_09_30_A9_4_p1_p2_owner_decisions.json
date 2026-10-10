@@ -79,7 +79,7 @@
  "recorder_flags": [
   "P1Q-10 'Define:' formula is incomplete in the verbatim text; recorder reading given in decisions.P1Q-10.definition_recorder_reading.",
   "The ECSS high-voltage guidance (Level-2-style ~3x nominal qualification, ~2x lower-level) is owner-stated; the specific ECSS standard and clause are not identified in the record (verify before citing as a source).",
-  "RFQ dispatch: A9.3 OQ-RFQ-07 keeps commercial dispatch with P9E/Vyovrinda under Praveen's authorization; Governance does not contact suppliers. This authorization lets the owner/procurement send the P1_NEEDED packages."
+  "RFQ dispatch: A9.3 OQ-RFQ-07 keeps commercial dispatch with P9E/Vyovrinda under Praveen's authorization; governance does not contact suppliers. This authorization lets the owner/procurement send the P1_NEEDED packages."
  ],
  "immutability": "never edited after commit; later owner amendments are new addendum files"
 }

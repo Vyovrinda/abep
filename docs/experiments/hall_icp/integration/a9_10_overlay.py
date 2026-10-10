@@ -14,7 +14,7 @@ OQ-INT-xx or an A9-10 self-reference) and an operation on a pointer of the deliv
 
 Pointers: ``/key``, ``[index]``, ``[field=value]`` (first list element whose ``field`` equals ``value``) and ``[*]``
 (every element). A pointer that does not resolve, an ``old`` value that does not match, or an op that changes nothing
-raises: the overlay never silently skips (Governance.md rule 3). Each builder calls ``apply(<deliverable>, doc)`` at the
+raises: the overlay never silently skips (governance.md rule 3). Each builder calls ``apply(<deliverable>, doc)`` at the
 end of its build and ``md_section(doc)`` at the end of its Markdown, so the JSON, the companion document and the
 A9-10 reconciliation record (docs/experiments/hall_icp/integration/a9_10_reconciliation_v1.json) all derive from the
 same records. Pure module: standard library only, reads only the pinned A9.1 decision file; not wired into archengine.

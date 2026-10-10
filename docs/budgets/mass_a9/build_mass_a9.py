@@ -29,7 +29,7 @@ Rules implemented here
   * parallel A9 lanes (A9-07, A9-08, A9-09) are written 'PENDING <lane path>' and never read;
   * no Hall transport closure, screening candidate, superseded 0-D Hall model or withdrawn number is read; nothing here
     predicts thrust, efficiency, discharge current, neutralizer electron current or plasma state;
-  * missing inputs raise (Governance.md rule 3); analog masses are masses of OTHER hardware, not predictions or bounds.
+  * missing inputs raise (governance.md rule 3); analog masses are masses of OTHER hardware, not predictions or bounds.
 
 Usage
   python docs/budgets/mass_a9/build_mass_a9.py          # write both files

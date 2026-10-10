@@ -98,9 +98,9 @@ so, for any design, the delivered flow follows the ρV values of section 3 throu
 
 ## 6. Xe path (ICD IF-X2) and extremes
 
-Status DESIGN_INPUTS_MISSING; altitude- and architecture-independent. x_Xe = w_Xe = 1 is **assumed** (definition of the Xe path; purity specification TBD). Anode and cathode Xe flow, feed pressure and temperature are TBD: no Xe storage/regulator/valve model exists (ICD G-12). Mixed air + Xe feed: TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind Governance.md Next work 1-3 (Next work 4).
+Status DESIGN_INPUTS_MISSING; altitude- and architecture-independent. x_Xe = w_Xe = 1 is **assumed** (definition of the Xe path; purity specification TBD). Anode and cathode Xe flow, feed pressure and temperature are TBD: no Xe storage/regulator/valve model exists (ICD G-12). Mixed air + Xe feed: TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind governance.md Next work 1-3 (Next work 4).
 
-Orbit-averaged vs extremes: orbit-averaged states only (averaging = 'orbit_averaged' in every case). Extremes: TBD - requires a frozen orbit-resolved NRLMSIS dataset (built under Governance.md rule 1). The frozen dataset is orbit-averaged by construction; abep_sim/orbit_atm.orbit_atmosphere computes along-track min/max only with live pymsis, which the frozen chain does not use (Governance.md rule 3).
+Orbit-averaged vs extremes: orbit-averaged states only (averaging = 'orbit_averaged' in every case). Extremes: TBD - requires a frozen orbit-resolved NRLMSIS dataset (built under governance.md rule 1). The frozen dataset is orbit-averaged by construction; abep_sim/orbit_atm.orbit_atmosphere computes along-track min/max only with live pymsis, which the frozen chain does not use (governance.md rule 3).
 
 ## 7. Uncertainty the modules expose
 
@@ -171,7 +171,7 @@ Supply every input below in a `feed_design_inputs_v1` file (`{format, label, inp
 
 Repository values seen but not adopted:
 
-- `intake.area_m2` = 0.7 m^2 (docs/HISTORY.md): v0.2 mission-transient finding (transient.py with the thruster-card model; drag against the 25 mN cap), later the reference design '0.7 m² / 20 cm / 275 V' of Phases 4-6, whose Hall performance comes from the 0-D Hall model now marked superseded (Governance.md: plasma_devices.py '0-D Hall - superseded'; 'Superseded / withdrawn'); a study result, not a design baseline with provenance.
+- `intake.area_m2` = 0.7 m^2 (docs/HISTORY.md): v0.2 mission-transient finding (transient.py with the thruster-card model; drag against the 25 mN cap), later the reference design '0.7 m² / 20 cm / 275 V' of Phases 4-6, whose Hall performance comes from the 0-D Hall model now marked superseded (governance.md: plasma_devices.py '0-D Hall - superseded'; 'Superseded / withdrawn'); a study result, not a design baseline with provenance.
 - `valve.p_feed_setpoint_Pa` = 0.05 Pa (docs/HISTORY.md): v1.0 'reference gas state' of the architecture trade; HISTORY records no derivation or source for it as a design input. On the chain a chamber target comes from a thruster-card minimum pressure x margin (system.evaluate, archengine.make_gas_fn), which is architecture-dependent and a card prior (thruster.py), not an architecture-neutral feed setpoint.
 - `feed_state.mdot_total_kgps` = 9.8e-07 kg s^-1 (docs/HISTORY.md): output of the historical chain at the non-adopted inputs above (0.98 mg/s as printed); not reproduced here and not a feed-envelope value.
 - `all design inputs` (abep_sim/*.py): dataclass / argument defaults of IntakeParams, CompressorParams, DragCompressor, Reservoir, system.Config and archengine.gas_path_state carry no cited source (listed per input under design_input_contract[*].code_defaults with adopted=false); two different defaults exist for the intake area, L/d and accommodation, so none is a single documented baseline.
@@ -185,7 +185,7 @@ To reach **B** (physics-backed selection):
 - a documented Vyovrinda design baseline with provenance for every design input in design_input_contract, so the valve-outlet feed state (mdot, p, T, x_s) is evaluated instead of TBD
 - upstream convergence reporting in the modules (ICD G-03, G-04, G-05); this script only checks residuals from outside
 - a decision on the collected-flow composition convention (ICD G-02) and on gas-temperature propagation (ICD G-07)
-- an NRLMSIS 2.1 error characterisation (no uncertainty is exposed today) and orbit-resolved extremes from a frozen orbit-resolved dataset (rebuild under Governance.md rule 1)
+- an NRLMSIS 2.1 error characterisation (no uncertainty is exposed today) and orbit-resolved extremes from a frozen orbit-resolved dataset (rebuild under governance.md rule 1)
 - on the Hall side (other track): an admitted Hall transport closure; the feed state here is what its design Hall maps would be queried with
 
 To reach **C** (proposal/PDR freeze):
@@ -203,7 +203,7 @@ To reach **C** (proposal/PDR freeze):
 | FE-03 | G-05 | `abep_sim/reservoir.py:size_orifice_for_pressure` | returns the bracket end [1e-8, 3e-2] m^2 without a flag when the setpoint is unreachable | bracket hit is detected and reported; status MODEL_ERROR |
 | FE-04 | G-03, G-04 | `abep_sim/compressor.py:DragCompressor.run; abep_sim/reservoir.py:Reservoir.steady_state` | no convergence flags | the script recomputes the recirculation fixed-point residual and the chamber mass-balance residual against each module's own stopping tolerance; failure gives MODEL_ERROR |
 | FE-05 | G-02 | `abep_sim/system.py:evaluate (md_in)` | the collected flow is split by free-stream mass fractions although the frozen surface is species-resolved | both conventions are evaluated; the chain convention is primary, the species-resolved one is carried as a scenario in every feed-state uncertainty |
-| FE-06 | — | `abep_sim/atmosphere.py:atmosphere (_MSIS_CACHE)` | the cache key omits the ABEP_ALLOW_TABLE_ATMOSPHERE environment switch (ABEP_ATMOSPHERE enters only through the resolved use_msis flag), so a table-fallback state cached with the switch set is returned later without it, and vice versa (Governance.md rule 5: caches must be pure functions of their keys) | every call's returned `source` is checked against the frozen dataset hash and the value against the CSV grid node; anything else raises FrozenAtmosphereRequired |
+| FE-06 | — | `abep_sim/atmosphere.py:atmosphere (_MSIS_CACHE)` | the cache key omits the ABEP_ALLOW_TABLE_ATMOSPHERE environment switch (ABEP_ATMOSPHERE enters only through the resolved use_msis flag), so a table-fallback state cached with the switch set is returned later without it, and vice versa (governance.md rule 5: caches must be pure functions of their keys) | every call's returned `source` is checked against the frozen dataset hash and the value against the CSV grid node; anything else raises FrozenAtmosphereRequired |
 | FE-07 | G-07 | `abep_sim/intake.py:compress; abep_sim/intake_tpmc.py` | two unrelated temperatures: plenum T_out_K for p_passive and the TPMC wall temperature of the frozen surface build for CR_passive (not recorded in the surface metadata: verify) | plenum.T_gas_K is an explicit design input; the inconsistency is listed, not resolved |
 | FE-08 | — | `abep_sim/intake.py:_tpmc_surface (docstring)` | the frozen TPMC surface was built at 200 km / F10.7 150 only; the docstring says eta_c, C_D and K_back depend on the speed ratio through sqrt(T/m), 'which varies < 10 % across 180-230 km and the solar cycle' (no cited source). The frozen free-stream states of this envelope give a larger spread of sqrt(T/m_mean) relative to the build point (exposed_uncertainty, computed here) | recorded under exposed_uncertainty with the computed spread; the effect on eta_c is not quantified or propagated (TBD - requires TPMC surfaces at the other atmospheric states) |
 
@@ -212,7 +212,7 @@ To reach **C** (proposal/PDR freeze):
 1. Design baseline: which intake area and geometry (L/d, phi), surface-state value, plenum temperature, compressor design (fixed or sized), chamber and valve setting should be the documented baseline, and from which sources? Until supplied, the valve-outlet feed state stays TBD.
 2. Common feed pressure: one architecture-neutral valve setpoint for all three architectures, or a common feed state with each architecture's ionizer pressure window checked downstream? (The thruster.py stage cards carry different minimum-pressure priors; those cards are not adopted.)
 3. Composition convention (ICD G-02): keep the system.evaluate free-stream split as primary, or switch to the species-resolved frozen surface (a model change for the chain; goldens may move)?
-4. Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (Governance.md rule 1 rebuild) so along-track density/composition extremes can be added; which geomagnetic levels beyond ap 15?
+4. Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (governance.md rule 1 rebuild) so along-track density/composition extremes can be added; which geomagnetic levels beyond ap 15?
 5. Atmosphere levels: confirm low/mean/high = F10.7 = F10.7A 70/150/230 at ap 15 (repository convention atmosphere._SOLAR_F107) against the mission's solar-cycle specification.
 6. Species scope: the frozen dataset drops He, H, Ar and N; is O/N2/O2 sufficient for the feed definition?
 7. Composition basis at the Hall boundary (ICD open question 3): mass or mole fraction for a composition axis?

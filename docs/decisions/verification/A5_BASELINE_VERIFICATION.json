@@ -8,7 +8,7 @@
   "od_hardware_pivot_sha256": "5a5adb8116eecee418992977c239f198a88835c739f357f13a8bddd51778c2ac",
   "run_utc": "2026-09-27T10:40Z",
   "results": {
-    "pytest": {"command": "python -m pytest -q tests", "outcome": "1617 passed, 5 skipped, 1 xfailed", "rc": 0, "expected": "all pass, 5 skipped, 1 strict xfail (Governance.md rule 9)"},
+    "pytest": {"command": "python -m pytest -q tests", "outcome": "1617 passed, 5 skipped, 1 xfailed", "rc": 0, "expected": "all pass, 5 skipped, 1 strict xfail (governance.md rule 9)"},
     "golden": {"command": "python -m abep_sim.golden check", "outcome": "OK", "rc": 0},
     "integrity": {"command": "python scripts/ci_checks.py", "outcome": "10/10 passed (parse, prereg_lock, audit_manifest, hallthruster_pin, rate_validity_coverage, variant_configs, p5_n2_cases, launch_manifests, multiply_charged_tables, ensemble_gate)", "rc": 0}
   },

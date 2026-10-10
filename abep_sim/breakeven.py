@@ -1,7 +1,7 @@
 """Architecture break-even relations: can a pre-ionizer (rf_hall, ecr_hall) pay for itself against hall_only?
 
 Pure functions, no absolute Hall prediction. Every physical/efficiency input is explicit; nothing has a default value;
-missing, non-finite or out-of-domain inputs raise ``BreakevenInputError`` (Governance.md rule 3). Not wired into
+missing, non-finite or out-of-domain inputs raise ``BreakevenInputError`` (governance.md rule 3). Not wired into
 ``archengine`` (wiring would be a model change; the goldens must not move).
 
 Derivation, sources and assumptions: docs/architecture_comparison/breakeven/BREAKEVEN_DERIVATION.md. Surfaces over

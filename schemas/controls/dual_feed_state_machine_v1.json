@@ -7,7 +7,7 @@
  "documentation": "docs/controls/DUAL_FEED_STATES.md",
  "tests": "tests/test_dual_feed_state_machine.py",
  "rfp_context": {
-  "reference": "DRDO TDF RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 as summarised in Governance.md and abep_sim/constants.py (the RFP text is not in the repository: verify clause references)",
+  "reference": "DRDO TDF RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 as summarised in governance.md and abep_sim/constants.py (the RFP text is not in the repository: verify clause references)",
   "requirement_summary": "air + Xe propellants; Hall preferred; thrust, power, mass and life limits as in abep_sim.constants:RFPConstraints",
   "note": "The state list is a Vyovrinda control-design proposal; the RFP does not enumerate these states (verify)."
  },
@@ -24,7 +24,7 @@
    "Xe valves (xe_cathode, xe_anode)"
   ],
   "shared_block": "ionization/discharge -> acceleration/thrust (Hall)",
-  "scope_rule": "Hall transport-ensemble uncertainty belongs to the discharge/thrust block only and never enters upstream guard quantities (intake, compressor, gas chambers, valves). Layer-1 calibration-nuisance variables are never guard quantities or parameters (Governance.md next-work item 1).",
+  "scope_rule": "Hall transport-ensemble uncertainty belongs to the discharge/thrust block only and never enters upstream guard quantities (intake, compressor, gas chambers, valves). Layer-1 calibration-nuisance variables are never guard quantities or parameters (governance.md next-work item 1).",
   "architectures": [
    "hall_only",
    "rf_hall",
@@ -5828,13 +5828,13 @@
      "ref": "abep_sim.hall_map:HallMap.__call__",
      "output": "discharge_current_A",
      "status": "gated",
-     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (Governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
+     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
     },
     {
      "ref": "abep_sim.plasma_devices:hall_run_coupled",
      "output": "0-D discharge current",
      "status": "superseded_do_not_use",
-     "note": "0-D Hall closure (v1.2-v1.6) superseded; absolute Hall results withdrawn (Governance.md 'Superseded / withdrawn'); v1.3 hysteresis was a numerical artefact"
+     "note": "0-D Hall closure (v1.2-v1.6) superseded; absolute Hall results withdrawn (governance.md 'Superseded / withdrawn'); v1.3 hysteresis was a numerical artefact"
     }
    ],
    "simulator_gap": "TBD \u2014 requires an admitted transport-ensemble member with design-specific Hall maps and, for atmospheric or mixed feeds, O/O2 chemistry and Xe + atmosphere mixture support; ultimately a thruster test"
@@ -5857,7 +5857,7 @@
      "ref": "abep_sim.hall_map:HallMap.__call__",
      "output": "Id_rms_rel",
      "status": "gated",
-     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (Governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
+     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
     }
    ],
    "simulator_gap": "TBD \u2014 requires thruster test (oscillation behaviour on mixed and atmospheric feed is not modelled)"
@@ -6173,7 +6173,7 @@
      "ref": "abep_sim.hall_map:HallMap.__call__",
      "output": "thrust_N",
      "status": "gated",
-     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (Governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
+     "note": "HallMap loads admitted transport-ensemble members only; the credible set is empty (governance.md gate 3), so no design Hall map exists. HallThruster.jl reaction sets cover Xe and N2/N only: no O/O2 chemistry and no Xe + atmosphere mixture"
     }
    ],
    "simulator_gap": "TBD \u2014 requires an on-board thrust estimator validated by thruster test on atmospheric feed"

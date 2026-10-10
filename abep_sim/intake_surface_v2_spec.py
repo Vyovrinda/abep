@@ -60,7 +60,7 @@ _AXES = {
         "requirement": "the altitude/atmosphere envelope used by the production model (RFP 180-230 km and the solar "
                        "activity range); each state taken from the frozen atmosphere dataset (use_msis=False) and "
                        "recorded with its m_mean (IntakeSurface needs it per state)",
-        "source": "A9.9 S2.2; RFP envelope as recorded in Governance.md",
+        "source": "A9.9 S2.2; RFP envelope as recorded in governance.md",
     },
     "L_over_d": {
         "role": "channel length / diameter",

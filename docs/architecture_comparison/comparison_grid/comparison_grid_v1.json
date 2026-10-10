@@ -1040,7 +1040,7 @@
    },
    "mixed_air_xe_feed": {
     "status": "TBD",
-    "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind Governance.md Next work 1-3 (Next work 4)",
+    "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind governance.md Next work 1-3 (Next work 4)",
     "source_pointer": "docs/architecture_comparison/feed_envelope/feed_envelope_v1.json#/xe_path/mixed_air_xe_feed"
    }
   },
@@ -1105,9 +1105,9 @@
     "evidence_class": "assumed",
     "source_ids": [
      "SRC-CONSTANTS",
-     "SRC-Governance"
+     "SRC-governance"
     ],
-    "locator": "abep_sim/constants.py RFPConstraints power_max_W; Governance.md 'What this is'",
+    "locator": "abep_sim/constants.py RFPConstraints power_max_W; governance.md 'What this is'",
     "source_pointer": "docs/architecture_comparison/hall_reference/hall_reference_v1.json#/discharge_voltage_interface/requirements/power_max_W"
    },
    "bus_power_boundary": {
@@ -1150,7 +1150,7 @@
   "feed_mode": {
    "status": "PROPOSED",
    "evidence_class": "assumed",
-   "source": "lane-23 task definition (Xe start, mixed, atmosphere-dominant) for the RFP air + Xe dual feed (Governance.md 'What this is': air + Xe; RFP architecture: atmospheric path and Xe path both feed the ionization/discharge block); mode names referenced to the dual-feed control-logic draft schemas/controls/dual_feed_state_machine_v1.json (other lane; uncommitted at authoring; names only, no value taken)",
+   "source": "lane-23 task definition (Xe start, mixed, atmosphere-dominant) for the RFP air + Xe dual feed (governance.md 'What this is': air + Xe; RFP architecture: atmospheric path and Xe path both feed the ionization/discharge block); mode names referenced to the dual-feed control-logic draft schemas/controls/dual_feed_state_machine_v1.json (other lane; uncommitted at authoring; names only, no value taken)",
    "rationale": "The dual-feed concept needs the Xe-only start and the transition through mixed feed as well as the atmospheric operating mode; a pre-ionizer may matter most at start or transition, so all three modes are compared on the same footing.",
    "levels": [
     {
@@ -1197,7 +1197,7 @@
       "status": "PROPOSED",
       "evidence_class": "assumed",
       "source": "this grid (lane 23): the atmosphere-dominant node is placed at zero Xe anode trim so that it is not a function of the TBD trim limit",
-      "rationale": "RFP air + Xe concept (Governance.md 'What this is'); the long-duration mode is the atmospheric anode feed. Placing the node at zero trim keeps it free of the TBD Xe trim limit; trims are covered by the mixed levels. Owner may move the node (open question GQ-3)."
+      "rationale": "RFP air + Xe concept (governance.md 'What this is'); the long-duration mode is the atmospheric anode feed. Placing the node at zero trim keeps it free of the TBD Xe trim limit; trims are covered by the mixed levels. Owner may move the node (open question GQ-3)."
      },
      "dual_feed_state_reference": [
       "AIR_ONLY_ANODE_XE_CATHODE",
@@ -2505,9 +2505,9 @@
      "evidence_class": "assumed",
      "source_ids": [
       "SRC-CONSTANTS",
-      "SRC-Governance"
+      "SRC-governance"
      ],
-     "locator": "abep_sim/constants.py RFPConstraints power_max_W; Governance.md 'What this is'",
+     "locator": "abep_sim/constants.py RFPConstraints power_max_W; governance.md 'What this is'",
      "source_pointer": "docs/architecture_comparison/hall_reference/hall_reference_v1.json#/discharge_voltage_interface/requirements/power_max_W"
     },
     "applies_if": "the RFP ceiling is taken at the bus_power_boundary_v1 boundary (GQ-7)"

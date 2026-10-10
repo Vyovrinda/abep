@@ -7,8 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from abep_sim import bus_boundary_a9 as bb
+from abep_sim import bus_boundary_a9_v2 as bb
 from abep_sim.design import a9_19_architecture as a919
+from abep_sim.assessment import design_gates as dg  # A9.22: assessment layer
+from abep_sim.programme import design_synthesis as ds  # A9.22: programme layer (F7/F8 runners)
 from abep_sim.design import architecture_optimizer as ao
 from abep_sim.design import upstream_a9_13 as u13
 
@@ -52,7 +54,7 @@ def test_hall_c1_reference_refused_as_flight_configuration():
     with pytest.raises(a919.ArchitectureRuleError, match="not a flight configuration"):
         a919.require_flight_configuration("hall_c1_reference")
     with pytest.raises(ao.OptimizerError, match="not a flight configuration"):
-        ao.evaluate_system(None, "hall_c1_reference")
+        ds.evaluate_system(None, "hall_c1_reference")
     with pytest.raises(a919.ArchitectureRuleError):
         ao.flight_configuration_elements("hall_c1_reference")
     gr = a919.ground_reference("hall_c1_reference", "C1-vs-ICP bench control")
@@ -66,7 +68,7 @@ def test_hall_c1_reference_refused_as_flight_configuration():
 def test_no_hollow_cathode_element_in_flight_configuration():
     els = ao.flight_configuration_elements("hall_icp_neutralizer")
     assert a919.refuse_hollow_cathode_elements("hall_icp_neutralizer", els)["hollow_cathode_elements"] == []
-    ev = ao.evaluate_system(None, "hall_icp_neutralizer")
+    ev = ds.evaluate_system(None, "hall_icp_neutralizer")
     rec = a919.refuse_hollow_cathode_elements("hall_icp_neutralizer", els)
     assert ev["hollow_cathode_check"] == rec["check"]
     assert ev["hollow_cathode_check"] == (a919.CHECK_FLAGGED if ev["c1_provisions_flagged"] else a919.CHECK_CLEAN)
@@ -76,14 +78,15 @@ def test_no_hollow_cathode_element_in_flight_configuration():
         with pytest.raises(a919.ArchitectureRuleError, match="hollow-cathode"):
             a919.refuse_hollow_cathode_elements("hall_icp_neutralizer", els + [bad])
     # the C1 configuration's own slots are all caught
-    hits = a919.hollow_cathode_elements(bb.installed_slots("hall_c1_reference"))
+    # A9.22 G8: v2 refuses C1 as a configuration; its v1 slot list is ground-reference metadata
+    hits = a919.hollow_cathode_elements(bb.GROUND_REFERENCE_TEST_METADATA["hall_c1_reference"]["base_slots_as_in_v1"])
     assert set(hits) >= {"c1_heater", "c1_keeper", "c1_common_tie"}
     # no false positive on the ICP flight elements
     assert a919.hollow_cathode_elements(bb.installed_slots("hall_icp_neutralizer")) == []
 
 
 def test_hc10_separate_paths_xe_role_contingency_emergency():
-    ok = u13.propellant_paths_check(ao.MODELLED_PROPELLANT_PATHS)
+    ok = dg.propellant_paths_check(ao.MODELLED_PROPELLANT_PATHS)
     assert ok["path_roles"] == {"air": "PRIMARY", "xe": "CONTINGENCY_EMERGENCY"}
     assert ok["supply_modes"] == {"air": "AIR_PRIMARY", "xe": "XE_CONTINGENCY"}
     assert ok["status"] == u13.C_NOT_EVALUATED                     # capability still NOT_EVALUATED, never PASS
@@ -93,8 +96,8 @@ def test_hc10_separate_paths_xe_role_contingency_emergency():
                 {"air": list(u13.AIR_PATH), "xe": ["xe_tank", "c1_feed", "valve"]},
                 {"air": list(u13.AIR_PATH), "xe": ["xe_tank", "atmospheric_gas_chamber"]}):
         with pytest.raises(u13.A913RuleError):
-            u13.propellant_paths_check(bad)
-    hc10 = [c for c in ao.evaluate_constraints({}) if c["id"] == "HC-10"][0]
+            dg.propellant_paths_check(bad)
+    hc10 = [c for c in dg.evaluate_constraints({}) if c["id"] == "HC-10"][0]
     assert hc10["status"] == ao.C_NOT_EVALUATED
 
 
@@ -132,7 +135,7 @@ def test_applied_row_cites_decision_hashes():
 def test_rv19_11_elements_read_mass_power_v3_content():
     """RV19-11: the refusal reads the current mass/power v3 package (not the immutable v2 history) and sees line
     content (floor constituents, c1_branch, the C1 branch embedded in the AL-08 floor), not line names only."""
-    assert ao.MP_V3_REL == "docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json"
+    assert ao.MP_V3_REL == "docs/budgets/mass_power_a9_v5/mass_power_a9_v5.json"   # A9.26 (v5 = current)
     els = ao.flight_configuration_elements("hall_icp_neutralizer")
     srcs = {e.get("source", "").split(" ")[0] for e in els if e.get("kind") != "power_slot"}
     assert srcs == {ao.MP_V3_REL}
@@ -141,7 +144,8 @@ def test_rv19_11_elements_read_mass_power_v3_content():
     assert {e["id"] for e in els if e["kind"] == "mass_line"} == {ln["line"] for ln in lines}
     n_fc = sum(len(ln.get("floor_constituents") or []) for ln in lines)
     assert sum(e["kind"] == "floor_constituent" for e in els) == n_fc
-    assert sum(e["kind"] == "c1_branch" for e in els) == sum("c1_branch" in ln for ln in lines)
+    assert sum(e["kind"] == "c1_branch" and not e["id"].endswith(".embedded_c1_cathode_xe_branch")
+               for e in els) == sum("c1_branch" in ln for ln in lines)
     # any embedded C1 branch is quoted from the ground reference's own text (kg present there, never invented)
     gtxt = json.dumps([ls for _, ls in ao.ground_reference_lines(mp, "hall_c1_reference")])
     for e in els:
@@ -154,6 +158,20 @@ def test_rv19_11_elements_read_mass_power_v3_content():
         if e["booking"] == a919.C1_BOOKING_CONDITIONAL and e["kind"] != "c1_branch":
             assert a919.is_conditional_c1_text(e["name"])
     assert rec["check"] != "PASS"
+
+
+def test_a9_25_al08_embedded_c1_branch_resolved():
+    """A9.25 message 8 (AFI-01-S1): the re-based flight AL-08 states that no C1 hardware remains in its floor, so the
+    historical ground-reference text ('C1 cathode Xe branch 0.285 kg ... inside the AL-08 floor') is reported as an
+    absence statement, not a flagged provision; without that statement the embedded flag would still stand."""
+    els = ao.flight_configuration_elements("hall_icp_neutralizer")
+    rec = a919.refuse_hollow_cathode_elements("hall_icp_neutralizer", els)
+    assert rec["check"] == a919.CHECK_CLEAN and rec["c1_provisions_flagged"] == []
+    emb = [e for e in rec["c1_absence_statements"] if e["id"] == "AL-08.embedded_c1_cathode_xe_branch"]
+    assert len(emb) == 1 and emb[0]["state"].startswith("NO_C1_HARDWARE_IN_FLIGHT_FLOOR (NONE")
+    assert emb[0]["kg_history"] == 0.285 and emb[0]["in_line"] is False
+    assert ao._floor_c1_resolution({"line": "AL-08"}) is None
+    assert ao._floor_c1_resolution({"c1_hardware_in_flight_al08": "0.285 kg C1 branch"}) is None
 
 
 def test_rv19_11_booked_c1_content_refused():
@@ -197,6 +215,6 @@ def test_c1_absence_statements_not_refused_but_booked_c1_still_refused():
     forged = {"id": "X", "name": "C1 heater", "kind": "mass_line", "booking": a919.C1_DECLARED_ABSENT}
     with pytest.raises(a919.ArchitectureRuleError, match="hollow-cathode"):
         a919.refuse_hollow_cathode_elements("hall_icp_neutralizer", [forged])
-    ev = ao.evaluate_system(None, "hall_icp_neutralizer")
+    ev = ds.evaluate_system(None, "hall_icp_neutralizer")
     els = ao.flight_configuration_elements("hall_icp_neutralizer")
     assert ev["c1_absence_statements"] == [e["id"] for e in els if e.get("booking") == a919.C1_DECLARED_ABSENT]

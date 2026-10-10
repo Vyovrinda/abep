@@ -1,7 +1,7 @@
 #!/bin/bash
 # Pre-registered O4 escalation of n2_n_exc_johnsonlow.toml (its first-stage trigger FIRED, scored 2026-09-26T12:38:54Z,
 # scores sha256 ee55fce1...). Pinned launch manifests only; commands exactly as in the manifests (4 shards).
-S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 cd $W
 for M in escalation_n2_n_exc_johnsonlow_di_lower escalation_n2_n_exc_johnsonlow_nel_wang escalation_n2_n_exc_johnsonlow_di_lower_nel_wang; do

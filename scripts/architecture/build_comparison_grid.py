@@ -347,7 +347,7 @@ FEED_MODES = [
                                    "evidence_class": "assumed",
                                    "source": "this grid (lane 23): the atmosphere-dominant node is placed at zero Xe "
                                              "anode trim so that it is not a function of the TBD trim limit",
-                                   "rationale": "RFP air + Xe concept (Governance.md 'What this is'); the long-duration "
+                                   "rationale": "RFP air + Xe concept (governance.md 'What this is'); the long-duration "
                                                 "mode is the atmospheric anode feed. Placing the node at zero trim "
                                                 "keeps it free of the TBD Xe trim limit; trims are covered by the "
                                                 "mixed levels. Owner may move the node (open question GQ-3)."},
@@ -359,7 +359,7 @@ FEED_MODE_AXIS = {
     "status": "PROPOSED",
     "evidence_class": "assumed",
     "source": "lane-23 task definition (Xe start, mixed, atmosphere-dominant) for the RFP air + Xe dual feed "
-              "(Governance.md 'What this is': air + Xe; RFP architecture: atmospheric path and Xe path both feed the "
+              "(governance.md 'What this is': air + Xe; RFP architecture: atmospheric path and Xe path both feed the "
               "ionization/discharge block); mode names referenced to the dual-feed control-logic draft "
               "schemas/controls/dual_feed_state_machine_v1.json (other lane; uncommitted at authoring; names only, "
               "no value taken)",

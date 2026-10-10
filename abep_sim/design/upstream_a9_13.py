@@ -11,6 +11,11 @@ Owner decisions implemented here (immutable records; the verbatim .md governs; c
     S6.11 / OQ-F4-02   higher-pressure compression = primary design direction; <= 0.1 Pa high-conductance branch =
                        labelled sensitivity / fallback
     S6.12 / OQ-F4-03   F4 transient metrics provisional (pre-LOCK-2); a measured H-1 tolerance governs when tighter
+    S6.13 / OQ-F4-04   flow gap, NO_REQUIREMENT_RELAXATION: (1) performance-derived H-1 feed requirement (S6.21,
+                       PENDING_EVIDENCE: measured H-1 thrust / feed map), (2) capture / collection, (3) compressor /
+                       feed efficiency, (4) scheduled setpoint (S6.10); 0.38 mg/s = ground characterization only;
+                       dense-state-only operation = sensitivity, never baseline while S6.15 is not met
+                       (``flow_gap_record`` / ``refuse_feed_requirement_lowering`` / ``state_coverage``)
     S6.15 / OQ-F78-01  AG-13 / HC-08: T_available(state) - D_spacecraft(state) >= 0 at EVERY required state
                        (statewise, worst-state and orbit-averaged margins; the average never hides a deficit)
     S6.16 / OQ-F78-02  robustness over EVERY admitted Maxwell / CLL / accommodation scenario until DI-1.3 narrows them
@@ -72,6 +77,21 @@ DECISIONS = {
               "json_sha256": "9fd77c95c2f3142bb3e2faf68145e1225a29b307d22f86bf93a8cd562914c3ad",
               "ids": ["RFP (registration of the official RFP as the requirement source)"]},
 }
+# Decisions applied by the design-state / F1Q-02 / flow-gap step (kept out of DECISIONS so the citation records that
+# other builders already pin through cite() do not change; checked by verify_state_set_decision_records)
+STATE_SET_DECISIONS = {
+    "A9.13": {"json": DECISIONS["A9.13"]["json"], "json_sha256": DECISIONS["A9.13"]["json_sha256"],
+              "ids": ["S6.1 / F1Q-02", "S6.13 / OQ-F4-04", "S6.14 / OQ-F4-05", "S6.15 / OQ-F78-01",
+                      "S6.21 / F9-OQ-02"]},
+    "A9.14": {"json": DECISIONS["A9.14"]["json"], "json_sha256": DECISIONS["A9.14"]["json_sha256"],
+              "ids": ["S9.8 / OD3"]},
+    "A9.17": {"json": DECISIONS["A9.17"]["json"], "json_sha256": DECISIONS["A9.17"]["json_sha256"],
+              "ids": ["ORBIT (inclination / LTAN TBD from the official mission ICD; broad design-state envelope)"]},
+    "A9.21": {"md": "docs/decisions/OD_2026_10_02_A9_21_OPEN_ITEMS_AND_HARDWARE_PROGRAMME_OWNER_DECISIONS.md",
+              "json": "docs/decisions/OD_2026_10_02_A9_21_open_items_and_hardware_programme_owner_decisions.json",
+              "json_sha256": "78766d3adaaa6d38730ce82607a1cd0a03ae34186c911d4189e2fd9251db6549",
+              "ids": ["EXTERNAL_INPUTS (inclination / LTAN not specified: no code default as mission truth)"]},
+}
 RFP_REGISTRATION = "docs/requirements/rfp_official/rfp_registration_v1.json"
 # RFP clauses this module cites (verbatim text in the registration; tests check that every id exists there)
 RFP_CLAUSES = {
@@ -95,6 +115,11 @@ def _sha256(path: Path) -> str:
 def verify_decision_records(repo: Path = REPO) -> dict:
     """Re-hash every cited decision JSON (immutable records); returns {decision: True/False}."""
     return {k: _sha256(Path(repo) / d["json"]) == d["json_sha256"] for k, d in DECISIONS.items()}
+
+
+def verify_state_set_decision_records(repo: Path = REPO) -> dict:
+    """Re-hash the decision JSONs behind STATE_SET_DECISIONS; returns {decision: True/False}."""
+    return {k: _sha256(Path(repo) / d["json"]) == d["json_sha256"] for k, d in STATE_SET_DECISIONS.items()}
 
 
 def cite(*keys: str) -> list[dict]:
@@ -431,23 +456,7 @@ def governing_band(quantity: str, f4_provisional_frac: float, h1: H1Tolerance | 
             "h1_source": h1.source}
 
 
-def ripple_feed_quality(ripple_frac: float | None, ripple_status: str, h1: H1Tolerance | None) -> dict:
-    """S6.17: compressor / plenum ripple as a HARD feed-quality constraint against a measured H-1 tolerance (never an
-    objective). NOT_EVALUATED while the tolerance is TBD or the ripple is not evaluated."""
-    if h1 is not None and h1.quantity != "ripple":
-        raise A913RuleError("ripple must be compared with the H-1 ripple tolerance")
-    if h1 is None or h1.status == VALUE_TBD or ripple_frac is None or ripple_status == VALUE_TBD:
-        return {"constraint": "FEED_QUALITY_RIPPLE", "status": C_NOT_EVALUATED, "ripple_frac": ripple_frac,
-                "ripple_status": ripple_status, "tolerance_frac": None if h1 is None else h1.value_frac,
-                "reason": "measured H-1 ripple tolerance TBD" if (h1 is None or h1.status == VALUE_TBD)
-                else "ripple not evaluated", "role": "HARD_CONSTRAINT_NOT_OBJECTIVE"}
-    if not _finite(ripple_frac) or ripple_frac < 0:
-        return {"constraint": "FEED_QUALITY_RIPPLE", "status": C_NOT_EVALUATED, "ripple_frac": None,
-                "reason": "ripple not finite", "role": "HARD_CONSTRAINT_NOT_OBJECTIVE"}
-    vs = combine_value_status([ripple_status, h1.status])
-    ok = ripple_frac <= h1.value_frac
-    return {"constraint": "FEED_QUALITY_RIPPLE", "status": constraint_status(ok, vs), "ripple_frac": float(ripple_frac),
-            "tolerance_frac": h1.value_frac, "value_status": vs, "role": "HARD_CONSTRAINT_NOT_OBJECTIVE"}
+# A9.22: ripple_feed_quality moved to abep_sim/assessment/design_gates.py
 
 
 # ================================================================================================= statewise quantifier
@@ -499,51 +508,7 @@ def _rec_value(rec: Mapping, what: str) -> tuple[float, str]:
     return float(v), st
 
 
-def statewise_drag_compensation(states: Sequence[Mapping], thrust_fn: Callable[[Mapping], Mapping],
-                                drag_fn: Callable[[Mapping], Mapping], hall_admitted: bool) -> dict:
-    """AG-13 / HC-08 (A9.13 S6.15): T_available(state) - D_spacecraft(state) >= 0 at EVERY required state, thrust and
-    drag evaluated at the same state.
-
-    ``thrust_fn(state)`` / ``drag_fn(state)`` return {value_N, status, source, state_id}. Thrust from a Hall
-    prediction counts only with an admitted Hall transport member (``hall_admitted``); otherwise every thrust record
-    except a synthetic test record is refused and the constraint is NOT_EVALUATED. A REFERENCE_PARAMETRIC drag (S6.18)
-    never closes AG-13: its statewise margins are reported as a reference indication only."""
-    states = list(states)
-    if not states:
-        raise A913RuleError("AG-13 needs the required state set (an empty set satisfies nothing)")
-    recs, statuses, refused = {}, [], []
-    for st in states:
-        sid = st.get("state_id")
-        t, d = thrust_fn(st), drag_fn(st)
-        for nm, r in (("thrust", t), ("drag", d)):
-            if r.get("state_id") != sid:
-                raise A913RuleError(f"{nm} record for state {sid!r} was evaluated at {r.get('state_id')!r}: thrust and "
-                                    "drag must be paired at the same state (S6.15)")
-        tv, ts = _rec_value(t, "thrust")
-        dv, ds = _rec_value(d, "drag")
-        if ts not in (VALUE_SYNTHETIC, VALUE_TBD) and not hall_admitted:
-            refused.append(sid)
-            ts = VALUE_TBD
-        recs[sid] = (tv, ts, dv, ds)
-        statuses += [ts, ds]
-    vs = combine_value_status(statuses)
-    out = {"constraint": "HC-08 / AG-13", "rule": "T_available(state) - D_spacecraft(state) >= 0 at every required "
-           "state (statewise hard constraint)", "rfp_clauses": [RFP_CLAUSES["altitude"], RFP_CLAUSES["thrust"]],
-           "authority": cite("A9.13", "A9.14"), "value_status": vs, "n_required_states": len(states),
-           "thrust_refused_no_admitted_hall_member": refused}
-    if vs == VALUE_TBD:
-        out.update({"status": C_NOT_EVALUATED, "statewise": None,
-                    "reason": "thrust and / or spacecraft drag not evaluated at every required state (no admitted "
-                              "Hall member / host-spacecraft ICD); NOT_EVALUATED, never counted as satisfied"})
-        return out
-    q = statewise_envelope("AG-13", states, lambda s: recs[s["state_id"]][0] - recs[s["state_id"]][2], vs)
-    out.update({"status": q["status"], "statewise": q["per_state"], "worst_state": q["worst_state"],
-                "orbit_average_margin_N": q["orbit_average_margin"],
-                "average_hides_violation": q["average_hides_violation"]})
-    if vs == VALUE_REFERENCE:
-        out["note"] = ("reference spacecraft drag (REFERENCE/PARAMETRIC, S6.18): an indication only; AG-13 closure needs "
-                       "the host-spacecraft ICD")
-    return out
+# A9.22: statewise_drag_compensation (AG-13 / HC-08) moved to abep_sim/assessment/design_gates.py
 
 
 def reference_drag_fn(case_id: str, *, intake_projected_area_m2: float, intake_cd: float, intake_source: str,
@@ -593,66 +558,112 @@ def refuse_fixed_mass_flow_gate(gate) -> None:
 H1_MAP_VALIDATED = "VALIDATED"
 
 
-def feed_state_sufficiency(states: Sequence[Mapping], offered_fn: Callable[[Mapping], Mapping],
-                           required_thrust_fn: Callable[[Mapping], Mapping] | None, h1_map=None,
-                           fixed_mass_flow_gate=None) -> dict:
-    """AG-12 (A9.13 S6.21) statewise feed-state sufficiency.
+# A9.22: feed_state_sufficiency (AG-12 / HC-11) moved to abep_sim/assessment/design_gates.py
 
-    Per required state: required thrust (from the registered spacecraft drag basis, ``required_thrust_fn``) -> the
-    minimum feed state from a VALIDATED H-1 map for the actual composition (``h1_map.min_feed_state(state, thrust_N,
-    offered)`` returning {mdot_kgps, P_Pa, T_range_K, x_domain_ok, ripple_tolerance_frac} or None outside its domain)
-    -> the offered feed state (``offered_fn``: {mdot_kgps, P_Pa, T_K, x_mole, ripple_frac, status}) must meet it in
-    every field. NOT_EVALUATED until a validated H-1 map exists (a synthetic map is labelled synthetic)."""
-    refuse_fixed_mass_flow_gate(fixed_mass_flow_gate)
-    base = {"gate": "AG-12", "rule": "statewise feed-state sufficiency (mass flow, pressure, temperature, composition, "
-            "ripple quality) against the requirement derived from the required thrust and a validated H-1 map",
-            "fixed_mass_flow_gate": "REMOVED (0.38-3.2 mg/s = characterization coverage only)",
-            "rfp_clauses": [RFP_CLAUSES["thrust"], RFP_CLAUSES["altitude"], RFP_CLAUSES["intake_sizing"]],
-            "authority": cite("A9.13", "A9.14")}
-    map_status = None if h1_map is None else getattr(h1_map, "status", None)
-    if h1_map is None or map_status not in (H1_MAP_VALIDATED, SYNTHETIC):
-        base.update({"status": C_NOT_EVALUATED, "h1_map_status": map_status or "NONE",
-                     "reason": "no validated H-1 thrust-versus-feed map exists (AG-12 NOT_EVALUATED until it does)"})
-        return base
-    if required_thrust_fn is None:
-        base.update({"status": C_NOT_EVALUATED, "h1_map_status": map_status,
-                     "reason": "required drag-compensation thrust per state not supplied (registered drag basis)"})
-        return base
-    rows, statuses = {}, []
-    for st in states:
-        sid = st.get("state_id")
-        off = offered_fn(st)
-        missing = [k for k in FEED_STATE_FIELDS if off.get(k) is None]
-        tr = required_thrust_fn(st)
-        if tr.get("state_id") != sid:
-            raise A913RuleError("required thrust must be evaluated at the same state")
-        tv, ts = _rec_value(tr, "required thrust")
-        os_ = off.get("status", VALUE_TBD)
-        statuses += [ts, os_]
-        if missing or ts == VALUE_TBD or os_ == VALUE_TBD:
-            rows[sid] = {"margin": float("nan"), "missing": missing}
-            continue
-        req = h1_map.min_feed_state(st, tv, off)
-        if req is None:
-            rows[sid] = {"margin": -1.0, "reason": "offered feed / required thrust outside the H-1 map domain"}
-            continue
-        m = [off["mdot_kgps"] / req["mdot_kgps"] - 1.0, off["P_Pa"] / req["P_Pa"] - 1.0]
-        tlo, thi = req["T_range_K"]
-        m.append(0.0 if tlo <= off["T_K"] <= thi else -1.0)
-        m.append(0.0 if req["x_domain_ok"] else -1.0)
-        m.append(req["ripple_tolerance_frac"] / max(off["ripple_frac"], 1e-300) - 1.0 if off["ripple_frac"] > 0 else 0.0)
-        rows[sid] = {"margin": min(m), "field_margins": dict(zip(("mdot", "P", "T", "composition", "ripple"), m)),
-                     "required": req}
-    vs = combine_value_status(statuses + ([VALUE_SYNTHETIC] if map_status == SYNTHETIC else []))
-    if any(not math.isfinite(r["margin"]) for r in rows.values()):
-        base.update({"status": C_NOT_EVALUATED, "h1_map_status": map_status, "per_state": rows,
-                     "reason": "feed-state record or required thrust not evaluated at every state"})
-        return base
-    q = statewise_envelope("AG-12", list(states), lambda s: rows[s["state_id"]]["margin"], vs)
-    base.update({"status": q["status"], "h1_map_status": map_status, "value_status": vs, "per_state": q["per_state"],
-                 "field_margins": {k: v.get("field_margins") for k, v in rows.items()},
-                 "worst_state": q["worst_state"], "average_hides_violation": q["average_hides_violation"]})
-    return base
+
+# ================================================================================================= S6.13 OQ-F4-04 flow gap
+# A9.13 S6.13 / OQ-F4-04, owner answer NO_REQUIREMENT_RELAXATION: the order in which the upstream flow gap is worked.
+# The feed requirement is never lowered to what a chain happens to deliver; 0.38 mg/s is ground characterization only.
+FLOW_GAP_AUTHORITY = "A9.13 S6.13 / OQ-F4-04 (NO_REQUIREMENT_RELAXATION)"
+GROUND_CHARACTERIZATION_ONLY_MGPS = 0.38
+FLOW_GAP_ORDER = (
+    {"rank": 1, "lever": "PERFORMANCE_DERIVED_H1_FEED_REQUIREMENT", "authority": "A9.13 S6.21 / F9-OQ-02",
+     "what": "derive the minimum feed state from the required drag-compensation thrust at every required state "
+             "through the measured / validated H-1 thrust-versus-feed map (AG-12)",
+     "status": "PENDING_EVIDENCE", "needs": "measured / validated H-1 thrust-versus-feed map (none exists)"},
+    {"rank": 2, "lever": "CAPTURE_COLLECTION", "authority": "A9.13 S6.13",
+     "what": "raise capture / collection within the drag (S6.15 statewise), mass and pointing constraints",
+     "status": "OPEN"},
+    {"rank": 3, "lever": "COMPRESSOR_DOMAIN_PUMPING_FEED_EFFICIENCY", "authority": "A9.13 S6.13",
+     "what": "compressor domain, pumping and feed efficiency", "status": "OPEN"},
+    {"rank": 4, "lever": "SCHEDULED_SETPOINT", "authority": "A9.13 S6.10 / OQ-F4-01",
+     "what": "orbit-state-scheduled plenum setpoint (baseline control mode, not frozen)", "status": "OPEN"},
+)
+DENSE_STATE_ONLY_ROLE = "SENSITIVITY_ONLY_NOT_BASELINE"
+FULL_STATE_SET = "FULL_REQUIRED_STATE_SET"
+STATE_SUBSET = "STATE_SUBSET_SENSITIVITY_ONLY"
+# bases a flight feed requirement may never be set from (fail closed)
+FORBIDDEN_FEED_REQUIREMENT_BASES = ("GROUND_CHARACTERIZATION", "CHARACTERIZATION_COVERAGE", "DELIVERABLE_FRONTIER",
+                                    "DENSE_STATE_ONLY", "STATE_SUBSET", "FIXED_MASS_FLOW_GATE")
+PERFORMANCE_DERIVED_BASIS = "PERFORMANCE_DERIVED_VALIDATED_H1_MAP"
+
+
+def flow_gap_record() -> dict:
+    """The owner-ordered handling of the upstream flow gap (S6.13), carried in F4 / F7 outputs."""
+    return {"authority": FLOW_GAP_AUTHORITY, "decision_record": {"json": STATE_SET_DECISIONS["A9.13"]["json"],
+                                                                 "json_sha256": STATE_SET_DECISIONS["A9.13"]["json_sha256"],
+                                                                 "id": "S6.13 / OQ-F4-04"},
+            "order": [dict(x) for x in FLOW_GAP_ORDER],
+            "rule": "no requirement relaxation: the flight feed requirement is performance-derived (rank 1, S6.21) "
+                    "and is PENDING_EVIDENCE until a measured / validated H-1 thrust-versus-feed map exists; it is never "
+                    "lowered to a deliverable frontier, a state subset or a characterization value",
+            "ground_characterization_mgps": GROUND_CHARACTERIZATION_ONLY_MGPS,
+            "ground_characterization_role": "GROUND_CHARACTERIZATION_ONLY_NEVER_A_FLIGHT_REQUIREMENT",
+            "dense_state_only_operation": {"role": DENSE_STATE_ONLY_ROLE,
+                                           "rule": "operation restricted to higher-density states is a sensitivity; it "
+                                                   "cannot be baseline while it violates S6.15 (T - D >= 0 at EVERY "
+                                                   "required state); S6.15 is NOT_EVALUATED today, so it is never "
+                                                   "baseline-admissible"},
+            "flight_feed_requirement": flight_feed_requirement()}
+
+
+def flight_feed_requirement(h1_map=None) -> dict:
+    """The flight feed requirement: performance-derived only (S6.21, rank 1 of S6.13). PENDING_EVIDENCE (no value)
+    until a VALIDATED H-1 thrust-versus-feed map exists; a synthetic map never produces a flight requirement."""
+    st = None if h1_map is None else getattr(h1_map, "status", None)
+    if st != H1_MAP_VALIDATED:
+        return {"status": "PENDING_EVIDENCE", "value": None, "basis": PERFORMANCE_DERIVED_BASIS,
+                "needs": FLOW_GAP_ORDER[0]["needs"], "authority": [FLOW_GAP_AUTHORITY, "A9.13 S6.21 / F9-OQ-02"]}
+    return {"status": "DERIVE_PER_STATE_FROM_VALIDATED_MAP", "value": None, "basis": PERFORMANCE_DERIVED_BASIS,
+            "rule": "per required state via feed_state_sufficiency (AG-12); never a single number"}
+
+
+def refuse_feed_requirement_lowering(basis: str, value_mgps=None) -> None:
+    """S6.13 fail-closed guard: a flight feed requirement may only come from the performance-derived basis (S6.21).
+    Any attempt to set it from the ground characterization value, the characterization coverage, a deliverable
+    frontier, a dense-state-only / state-subset frontier or a fixed mg/s gate is refused."""
+    if basis == PERFORMANCE_DERIVED_BASIS:
+        return
+    if basis in FORBIDDEN_FEED_REQUIREMENT_BASES or (value_mgps is not None and _finite(value_mgps)
+                                                     and math.isclose(float(value_mgps),
+                                                                      GROUND_CHARACTERIZATION_ONLY_MGPS)):
+        raise A913RuleError(f"{FLOW_GAP_AUTHORITY}: a flight feed requirement is never set from {basis!r}"
+                            + (f" ({value_mgps} mg/s)" if value_mgps is not None else "")
+                            + "; it is performance-derived (S6.21) and PENDING_EVIDENCE until a validated H-1 map "
+                              "exists; 0.38 mg/s is ground characterization only")
+    raise A913RuleError(f"{FLOW_GAP_AUTHORITY}: unknown feed-requirement basis {basis!r} (only "
+                        f"{PERFORMANCE_DERIVED_BASIS})")
+
+
+def state_coverage(used_state_ids: Sequence[str], required_state_ids: Sequence[str]) -> dict:
+    """S6.13 / S6.15: a result over a subset of the required states (e.g. the higher-density states only) is a
+    sensitivity, never baseline; a result over the full required set is eligible (its own gates still apply)."""
+    used, req = list(dict.fromkeys(used_state_ids)), list(dict.fromkeys(required_state_ids))
+    if not req:
+        raise A913RuleError("the required state set is empty")
+    missing = [s for s in req if s not in set(used)]
+    if not missing:
+        return {"coverage": FULL_STATE_SET, "baseline_admissible_by_coverage": True, "n_required": len(req),
+                "n_used_required": len(req), "missing": []}
+    return {"coverage": STATE_SUBSET, "role": DENSE_STATE_ONLY_ROLE, "baseline_admissible_by_coverage": False,
+            "n_required": len(req), "n_used_required": len(req) - len(missing), "missing_count": len(missing),
+            "rule": f"{FLOW_GAP_AUTHORITY}: operation on a state subset is a sensitivity; it cannot be baseline while "
+                    "S6.15 statewise drag compensation is violated or NOT_EVALUATED at any required state"}
+
+
+def dense_state_only_operation(used_state_ids: Sequence[str], required_state_ids: Sequence[str],
+                               s615_record: Mapping | None = None) -> dict:
+    """Classify an operation restricted to a state subset (S6.13): baseline only if it covers every required state
+    AND S6.15 is MET at every required state on determining evidence; otherwise SENSITIVITY_ONLY_NOT_BASELINE."""
+    cov = state_coverage(used_state_ids, required_state_ids)
+    s615 = (s615_record or {}).get("status", C_NOT_EVALUATED)
+    if cov["coverage"] != FULL_STATE_SET:
+        role = DENSE_STATE_ONLY_ROLE
+    elif s615 == C_MET:
+        role = "BASELINE_ELIGIBLE"
+    else:
+        role = "BASELINE_BLOCKED_S6_15_NOT_MET"
+    return {**cov, "s6_15_status": s615, "role": role, "authority": FLOW_GAP_AUTHORITY}
 
 
 # ================================================================================================= S6.16 surface scenarios
@@ -716,36 +727,7 @@ def _dominates(a, b, senses) -> bool:
     return better
 
 
-def pareto_s6_17(rows: Sequence[Mapping], objectives=PARETO_OBJECTIVES_S6_17, weights=None) -> dict:
-    """S6.17 system comparison: hard constraints first (a row with any VIOLATED constraint is excluded; NOT_EVALUATED
-    constraints make the set CONDITIONAL), then a Pareto filter over the declared objectives. No weighted scalar:
-    passing ``weights`` is refused. A row whose objective is missing / non-finite never enters dominance."""
-    if weights is not None:
-        raise A913RuleError("A9.13 S6.17: no arbitrary weighted scalar score; system comparison is Pareto-based")
-    keys = [o[0] for o in objectives]
-    senses = [o[1] for o in objectives]
-    excluded, cand, conditional, incomplete = [], [], set(), []
-    for r in rows:
-        cons = r.get("constraints", {})
-        viol = sorted(k for k, v in cons.items() if v in (C_VIOLATED,))
-        if viol:
-            excluded.append({"id": r["id"], "violated": viol})
-            continue
-        ne = sorted(k for k, v in cons.items() if v != C_MET)
-        if ne:
-            conditional.update(ne)
-        vals = [r.get("objectives", {}).get(k) for k in keys]
-        if any(not _finite(v) for v in vals):
-            incomplete.append({"id": r["id"], "objectives_not_evaluated":
-                               [k for k, v in zip(keys, vals) if not _finite(v)]})
-            continue
-        cand.append((r["id"], [float(v) for v in vals]))
-    members = sorted(i for i, v in cand if not any(_dominates(w, v, senses) for j, w in cand if j != i))
-    return {"objectives": [{"key": k, "sense": s, "definition": d} for k, s, d in objectives],
-            "hard_constraints_first": list(HARD_CONSTRAINTS_FIRST), "members": members,
-            "status": ("CONDITIONAL_ON_NOT_EVALUATED_CONSTRAINTS" if conditional else "CONSTRAINTS_MET_ON_SUPPLIED_VALUES")
-            if members else "EMPTY", "conditional_on": sorted(conditional), "excluded_violating": excluded,
-            "not_ranked_incomplete_objectives": incomplete, "weighted_scalar": "REFUSED (S6.17)"}
+# A9.22: pareto_s6_17 (S6.17 system comparison) moved to abep_sim/assessment/design_gates.py
 
 
 REGENERATION_TRIGGERS = (
@@ -825,42 +807,12 @@ PROPELLANT_POLICY = {
 }
 
 
-def propellant_paths_check(paths: Mapping[str, Sequence[str]] | None) -> dict:
-    """Structural check of a modelled architecture's propellant paths against A9.15 / RFP-P18-08. Refuses a model with
-    a single shared tank or a missing path. The CAPABILITY itself (Xe operation, air operation) stays NOT_EVALUATED
-    until demonstrated: a declared path is not determining evidence."""
-    if paths is None:
-        return {"constraint": "HC-10 dual propellant capability", "structure": "NOT_MODELLED",
-                "status": C_NOT_EVALUATED, "reason": "the architecture model declares no propellant paths",
-                "policy": PROPELLANT_POLICY, "authority": cite("A9.15", "A9.17")}
-    air, xe = list(paths.get("air", ())), list(paths.get("xe", ()))
-    problems = []
-    if not air:
-        problems.append("no ambient-air path")
-    if not xe:
-        problems.append("no Xe path (Xe capability is RFP-required, A9.15)")
-    if air and air[0] != "intake":
-        problems.append("air path must start at the intake")
-    if xe and not xe[0].startswith("xe_tank"):
-        problems.append("Xe path must start at a dedicated Xe tank")
-    tanks_air = {n for n in air if "tank" in n or "chamber" in n}
-    tanks_xe = {n for n in xe if "tank" in n or "chamber" in n}
-    if tanks_air & tanks_xe:
-        problems.append(f"shared tank(s) {sorted(tanks_air & tanks_xe)}: RFP-P18-08 requires two separate tanks")
-    if "filter" in air and not ("intake" in air and "compressor" in air
-                                and air.index("intake") < air.index("filter") < air.index("compressor")):
-        problems.append("filter must sit between the intake and the compressor (S6.6 / S6.19)")
-    if "filter" not in air and air:
-        problems.append("air path lacks the filter element (RFP-P16-02 chain; FC-00 is a reference bound only)")
-    if any(n == "c1" or n.startswith(("c1_", "hollow_cathode", "cathode_")) for n in xe):
-        problems.append("Xe path feeds a hollow-cathode / C1 branch: no hollow cathode in flight (A9.19; C1 ground-only "
-                        "A9.20)")
-    if problems:
-        raise A913RuleError("; ".join(problems))
-    roles = a919.propellant_path_roles({"air": air, "xe": xe})
-    return {"constraint": "HC-10 dual propellant capability", "structure": "TWO_SEPARATE_PATHS_DECLARED",
-            "status": C_NOT_EVALUATED, "reason": "air and Xe operating capability not yet demonstrated (a declared "
-            "path is not determining evidence, S6.22)", "air_path": air, "xe_path": xe,
-            "supply_modes": {"air": roles["air"]["supply_mode"], "xe": roles["xe"]["supply_mode"]},
-            "path_roles": {"air": roles["air"]["role"], "xe": roles["xe"]["role"]},
-            "policy": PROPELLANT_POLICY, "authority": cite("A9.15", "A9.17") + a919.cite("A9.19")}
+# A9.22: propellant_paths_check (HC-10 structural check) moved to abep_sim/assessment/design_gates.py
+
+
+# ================================================================================================= A9.22 moves
+# These assessments live in abep_sim/assessment/design_gates.py (A9.22 layer separation). The deprecated import shims
+# that re-exported them from this module were removed with the programme-layer split (callers import design_gates /
+# abep_sim.programme.design_synthesis); the names are kept here as the record of what moved.
+MOVED_TO_ASSESSMENT = ("ripple_feed_quality", "statewise_drag_compensation", "feed_state_sufficiency", "pareto_s6_17",
+                       "propellant_paths_check")

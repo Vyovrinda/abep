@@ -264,7 +264,7 @@
    "path": "docs/decisions/OD_2026_10_01_A9_17_data_artifact_owner_decisions.json",
    "sha256": "9fd77c95c2f3142bb3e2faf68145e1225a29b307d22f86bf93a8cd562914c3ad"
   },
-  "Governance.md rule 1": "versioned rebuild; atmosphere_msis21_v1.* unchanged"
+  "governance.md rule 1": "versioned rebuild; atmosphere_msis21_v1.* unchanged"
  },
  "evidence": {
   "evidence_level": 4,

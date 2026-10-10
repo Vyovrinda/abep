@@ -84,7 +84,7 @@
     "repo 'X/L/M'"
    ],
    "ambiguous": true,
-   "repo_transcription": "DTDF/06/13516/DSP/ABEP/X/L/M/01 (Governance.md, rtm_v1.json rfp_id)",
+   "repo_transcription": "DTDF/06/13516/DSP/ABEP/X/L/M/01 (governance.md, rtm_v1.json rfp_id)",
    "discrepancy": "Suffix differs ('XI/LM' vs 'X/L/M'); either may be a transcription error; verify against the RFP cover page."
   },
   {

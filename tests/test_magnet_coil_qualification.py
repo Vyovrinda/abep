@@ -273,7 +273,7 @@ def test_repository_references_exist(doc):
         assert ref["present_in_base"] is True
         assert (ROOT / ref["path"]).exists(), ref["path"]
     for p in doc["planned_paths_referenced_only"]:
-        assert ".Governance/worktrees" not in p["path"]
+        assert ".governance/worktrees" not in p["path"]
 
 
 # ------------------------------------------------------------------------------------------- derived

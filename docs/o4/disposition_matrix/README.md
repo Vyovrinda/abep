@@ -54,7 +54,7 @@ admission record that cites the dispositions file.
 
 Supports **Milestone B** (physics-backed selection): admission of a Hall transport closure, and therefore design Hall maps
 and absolute Hall performance in the architecture comparison, is gated on the O4 dispositions (`hall_ensemble._check_o4`;
-Governance.md *admission/Hall maps stay gated until the O4 dispositions are complete*). It is **not** needed for
+governance.md *admission/Hall maps stay gated until the O4 dispositions are complete*). It is **not** needed for
 **Milestone A** (conditional selection), which does not require Physics Baseline 1.0, and it never delays hardware
 preparation (`docs/decisions/OD_HARDWARE_PIVOT_2026_09_27.json`, W6). Indirectly it feeds Milestone C only through B.
 To contribute to B it still needs: the owner's dispositions recorded (with the decision hash bound then); the ledger

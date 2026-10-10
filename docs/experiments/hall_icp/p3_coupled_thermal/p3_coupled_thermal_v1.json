@@ -160,7 +160,7 @@
    "key": "EVID",
    "path": "docs/EVIDENCE.md",
    "sha256": "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-   "role": "evidence rules (Governance.md rule 10)"
+   "role": "evidence rules (governance.md rule 10)"
   }
  ],
  "referenced_not_pinned": {
@@ -1113,7 +1113,7 @@
    "value": "TBD_AFTER_EVIDENCE - requires Phase-1 Faraday-probe data (no Hall-closure or 0-D prediction may be used: credible Hall set EMPTY)",
    "units": "A",
    "basis": "pending",
-   "source": "Governance.md gate 3; A9 evidence_sequence",
+   "source": "governance.md gate 3; A9 evidence_sequence",
    "evidence_class": null,
    "status": "TBD_AFTER_EVIDENCE",
    "freeze_point": "after-evidence",

@@ -9,7 +9,7 @@ Deterministic, standard library only, no Julia, well under a second.
 What it does
   * verifies the sha256 of every pinned immutable input (owner decisions A4..A7, A9, the 147 answers + verbatim pack,
     A9.1, A9.2, A9.3 + their verbatim records, and the verified A9 deliverables it reads) and refuses to run on any
-    mismatch (no fallback, Governance.md rule 3);
+    mismatch (no fallback, governance.md rule 3);
   * cross-checks every id it cites (UB-RF-xx, ICP-xx, A9H-xx, RFQ-04-Rxx, VI-RF-xx, TK-xx, RF-matrix entries, M16 v3
     rows, owner-question ids, owner rows) against the pinned inputs and copies analog values from them (never typed);
   * writes p2_impedance_prep_v1.json (the package), P2_IMPEDANCE_PREP.md (generated from the JSON) and
@@ -90,6 +90,8 @@ _a19spec.loader.exec_module(APP19)
 _rspec = importlib.util.spec_from_file_location("p2_a9_16_rules", str(HERE / "p2_a9_16_rules.py"))
 RULES = importlib.util.module_from_spec(_rspec)
 _rspec.loader.exec_module(RULES)
+sys.path.insert(0, str(REPO / "docs" / "experiments" / "hall_icp" / "programme"))
+import hw_programme_a9_21 as PROG  # noqa: E402  (A9.21 HW_PROGRAMME order, item 9)
 
 # ------------------------------------------------------------------------------------------------ pinned inputs
 DECISIONS = {
@@ -162,10 +164,11 @@ DELIVERABLES = {
             "7c6d37b00f38a44cded73d92d4366739eacbf013e73e98a7bfbc3fa5a5470d96", "W4 instrumentation definition"),
     "MS": ("docs/experiments/instrumentation/metrology_spec/metrology_measurement_spec_v1.json",
            "55c11dc2d22fd92d95b498f72d60f2cdc0c62a45940da2446514049bd5130865", "metrology measurement spec"),
-    "BUS": ("docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json",
-            "9f6e074cc2cdd1e2445d00a14eec04b4cc33f239655f8619a789e7ae863c43e6", "A9-02 bus power boundary"),
+    "BUS": ("docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json",
+            "de346f86f77ae08c2e0cc4a5b945c21c9626bc5ad0f32f904acd4a929a08f980",
+            "A9-02 bus power boundary, v2 (A9.22 G8 stage 2: hall_icp_neutralizer only)"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (Governance.md rule 10)"),
+             "evidence rules (governance.md rule 10)"),
 }
 NEVER_PINNED = ["docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
                 "docs/orchestration/fired_triggers.jsonl", "docs/orchestration/trigger_ledger_v2.jsonl",
@@ -198,6 +201,11 @@ RFQ_V2_LINES = {
 }
 _LINE_RE = r"\b(?:RF|GAS|VAC|HE|ME|TH)-[LO]\d\d\b"
 
+
+# A9.24 item 13 (owner messages 2026-10-04): current C1 status; the A9.2 CONTROL_FALLBACK is a labelled quote only
+C1_GROUND_REFERENCE_ONLY = ("GROUND_REFERENCE_ONLY (A9.20 ground-only laboratory reference; A9.19 / A9.24 item 13: "
+           "no C1 flight fallback; "
+           "never in flight architecture, mass, power, Xe or thermal closure)")
 
 def rfq_coverage_check(rfq2):
     """XL-12: the RFQ v2 lines cited per P2 instrument equal the RFQ v2 instrument_coverage lines of that id."""
@@ -1135,7 +1143,7 @@ def build():
              "NOW"),
         item("HM-R12", "analysis frozen before data", "reducer version, calibration-set ids and the rules above are "
              "frozen (sha256) before the first HOT_MAP record; no re-analysis choice after seeing data", "-",
-             "Governance.md rule 10 (no tuning to force agreement)", ["docs/EVIDENCE.md"], "assumed", "PROPOSED", "LOCK-1"),
+             "governance.md rule 10 (no tuning to force agreement)", ["docs/EVIDENCE.md"], "assumed", "PROPOSED", "LOCK-1"),
         item("HM-R13", "RF-on prerequisites for every powered step (S-05, S-07, S-08, S-09, S-11)",
              "(i) before any RF power into a non-50-ohm load (antenna simulator, cold antenna, ICP) the local match is "
              "pre-tuned at low level with the VNA into that load and the tuning state logged (CAL-P2-03), so the "
@@ -1656,6 +1664,8 @@ def build():
         "status": "PREPARATION_ONLY_NOT_RUN (plasma impedance map waits for the P1 stable region; A9.3)",
         "a9_status": "OWNER_AUTHORIZED_INVESTIGATION_HYPOTHESIS_NOT_FLIGHT_BASELINE",
         "a9_2_statuses_carried": a910,
+        "a9_2_statuses_label": "HISTORICAL_QUOTE (A9.2 / A9-10 table, verbatim); the current statuses are current_statuses (A9.24 item 13)",
+        "current_statuses": {k: (C1_GROUND_REFERENCE_ONLY if v == "CONTROL_FALLBACK" else v) for k, v in a910.items()},
         "generated_by": SCRIPT_REL, "companion_document": f"{LANE_REL}/{MD_NAME}", "test": TEST_REL,
         "what_this_is_not": ["the plasma impedance map (not run, not predicted)",
                              "a prediction of impedance, thrust, efficiency, discharge or electron current or plasma "
@@ -1709,6 +1719,8 @@ def build():
     doc["a9_16_incorporation"] = APP.incorporation(RED, FW, RULES, a9_16_selfcheck())
     doc["owner_answers_applied"] = doc["owner_answers_applied"] + APP19.owner_answer_rows()
     doc["a9_19_incorporation"] = APP19.incorporation(RED)
+    # A9.21 HW_PROGRAMME item 9: P2 map only after the in-house V/I calibration and its uncertainty budget are frozen
+    doc["a9_21_programme"] = PROG.artifact_view("P2")
     return doc
 
 
@@ -2491,6 +2503,7 @@ def render_md(doc):
           f"`{i5['decision']['path']}` (sha256 `{i5['decision']['sha256']}`), verbatim `{i5['verbatim']['path']}` "
           f"(sha256 `{i5['verbatim']['sha256']}`). Changes: " + "; ".join(i5["changes"]) +
           f". P1Q-15 / P1Q-16: {i5['p1q15_p1q16']}. M16: {i5['m16_impact_change']}.", ""]
+    L += PROG.render_view_md(doc["a9_21_programme"])
     return "\n".join(L)
 
 

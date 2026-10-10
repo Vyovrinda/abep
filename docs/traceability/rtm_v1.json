@@ -4,7 +4,7 @@
  "status": "DRAFT_PENDING_OWNER",
  "status_note": "Requirement categorisation (which rows count as RFP rows, which are inferred from repository text or project-derived), the reading of each statement and the hard-gate mapping are PROPOSED for owner review. No threshold here is new: every limit is transcribed from in-repo text.",
  "rfp_id": "DTDF/06/13516/DSP/ABEP/X/L/M/01",
- "rfp_id_source": "Governance.md 'What this is'",
+ "rfp_id_source": "governance.md 'What this is'",
  "matrix_date": "2026-09-27",
  "base_commit": "d07249bef0f9d415cad1a33c5a427cfc105f7835",
  "architectures": [
@@ -38,7 +38,7 @@
  },
  "rfp_document_in_repository": false,
  "source_policy": "The RFP document is not in the repository. Every requirement cites the in-repo text it was taken from and carries page_ref 'verify against RFP document' (or states it is project-derived). No RFP clauses, page numbers or values were invented. Rows marked rfp_inferred_from_repo_text come from code docstrings, docs/HISTORY.md text or the lane-24 hard-gate matrix that claim or infer an RFP origin; that origin is unverified. rfp_record_refs use the lane-24 record ids R1-R7 (hard_gate_matrix_v1.json rfp.recorded_in).",
- "searched": "grep -ri 'rfp|drdo' over Governance.md, README.md, docs/, abep_sim/, pyproject.toml, tests/; the lane-24 hard-gate matrix record list R1-R7 was used as a cross-check (at the base commit)",
+ "searched": "grep -ri 'rfp|drdo' over governance.md, README.md, docs/, abep_sim/, pyproject.toml, tests/; the lane-24 hard-gate matrix record list R1-R7 was used as a cross-check (at the base commit)",
  "status_vocabulary": {
   "modeled": "a model exists and its integrity checks are reported passing; says nothing about hardware compliance",
   "partial": "some of the needed quantities are modeled; others are missing or gated",
@@ -51,9 +51,9 @@
   "demonstration",
   "inspection"
  ],
- "hall_status": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. The P5-N2 v1 vacuum outcome is INCONCLUSIVE / NOT ELIGIBLE for all nine screening candidates (permanent for v1). O4 first-stage and escalation score files are committed (Johnson-low trigger fired); no O4 disposition file and no facility score file is present at the base commit (a facility attempt is recorded under hallthruster_bridge/validation/interrupted/), so no admission is possible.",
+ "hall_status": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. The P5-N2 v1 vacuum outcome is INCONCLUSIVE / NOT ELIGIBLE for all nine screening candidates (permanent for v1). O4 first-stage and escalation score files are committed (Johnson-low trigger fired); no O4 disposition file and no facility score file is present at the base commit (a facility attempt is recorded under hallthruster_bridge/validation/interrupted/), so no admission is possible.",
  "gate_status_snapshot": {
-  "source": "Governance.md gate table (as of the base commit)",
+  "source": "governance.md gate table (as of the base commit)",
   "1": "pass",
   "2": "pass",
   "3": "FAIL",
@@ -91,12 +91,12 @@
     "quantity": "altitude",
     "limit": "180-230",
     "unit": "km",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (alt_min_km, alt_max_km)",
@@ -145,12 +145,12 @@
      "note": "frozen atmosphere provenance (rule 1)"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gate table: gate 1 clean-install reproducibility = pass (frozen atmosphere)"
     },
     {
      "ref": "abep_sim/data/golden_v1.json",
-     "note": "golden case_atmosphere; gate 6 = pass per Governance.md gate table (not re-run in this lane)"
+     "note": "golden case_atmosphere; gate 6 = pass per governance.md gate table (not re-run in this lane)"
     },
     {
      "ref": "docs/architecture_comparison/hard_gates/hard_gate_matrix_v1.json",
@@ -174,12 +174,12 @@
     "quantity": "thrust",
     "limit": ">= 12",
     "unit": "mN",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (thrust_min_mN)",
@@ -237,7 +237,7 @@
      "note": "hard-gate status: UNDETERMINED for hall_only, rf_hall and ecr_hall (evidence register empty); nothing eliminated"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gate 3 FAIL; gate 4 conditional on gate 3; absolute Hall numbers withdrawn"
     }
    ],
@@ -248,7 +248,7 @@
     "test"
    ],
    "verification_status": "not_verified",
-   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Needs an admitted closure, Vyovrinda-specific Hall maps, then a thruster test (or a Milestone-A hard bound or hardware measurement under the lane-24 evidence policy)."
+   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Needs an admitted closure, Vyovrinda-specific Hall maps, then a thruster test (or a Milestone-A hard bound or hardware measurement under the lane-24 evidence policy)."
   },
   {
    "id": "RFP-THR-MAX",
@@ -259,12 +259,12 @@
     "quantity": "thrust",
     "limit": "25 mN edge: '<= 25' as a cap (reading i) or '>= 25' as a peak capability with Xe (reading ii); OD1 open",
     "unit": "mN",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (thrust_max_mN)",
@@ -318,7 +318,7 @@
      "note": "OD1 open: G1.thrust_ceiling (reading i) and G1.peak_capability_25mN (reading ii) count toward PASS only; neither can FAIL G1 until the owner decides"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gate 3 FAIL"
     }
    ],
@@ -329,7 +329,7 @@
     "test"
    ],
    "verification_status": "not_verified",
-   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. The reading of '25 mN' (cap vs peak capability with Xe) is an open owner decision (OD1); the RFP text is needed to settle it."
+   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. The reading of '25 mN' (cap vs peak capability with Xe) is an open owner decision (OD1); the RFP text is needed to settle it."
   },
   {
    "id": "RFP-PWR",
@@ -340,12 +340,12 @@
     "quantity": "power",
     "limit": "< 1.5",
     "unit": "kW",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (power_max_W)"
@@ -406,7 +406,7 @@
     },
     {
      "ref": "abep_sim/data/golden_v1.json",
-     "note": "energy-ledger residual golden (gate 6 pass per Governance.md)"
+     "note": "energy-ledger residual golden (gate 6 pass per governance.md)"
     }
    ],
    "status": "blocked_by_gate_3",
@@ -427,12 +427,12 @@
     "quantity": "mass",
     "limit": "< 40",
     "unit": "kg",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (mass_max_kg)"
@@ -492,7 +492,7 @@
      "note": "hard-gate status: UNDETERMINED for hall_only, rf_hall and ecr_hall (evidence register empty); nothing eliminated"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "earlier absolute mass closures are listed as withdrawn ('Superseded / withdrawn')"
     }
    ],
@@ -514,12 +514,12 @@
     "quantity": "mission duration",
     "limit": "26000",
     "unit": "h",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (mission_hours; code comment '3 years')",
@@ -560,7 +560,7 @@
    ],
    "current_evidence": [
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gate 5 numerical convergence = pass; gate 4 mission UQ conditional on gate 3"
     },
     {
@@ -584,17 +584,17 @@
    "id": "RFP-FIRING",
    "category": "rfp_envelope",
    "title": "Firing (ignition) life",
-   "statement": "Cumulative firing time above 15,000 h ('> 15,000 h firing' in Governance.md; '>15,000 h ignition' in docs/HISTORY.md and abep_sim/transient.py; wording is lane 24 OD13).",
+   "statement": "Cumulative firing time above 15,000 h ('> 15,000 h firing' in governance.md; '>15,000 h ignition' in docs/HISTORY.md and abep_sim/transient.py; wording is lane 24 OD13).",
    "value": {
     "quantity": "firing time",
     "limit": "> 15000",
     "unit": "h",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "requirement limit transcribed from an in-repo summary, not read from the RFP document; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (ignition_hours)"
@@ -670,7 +670,7 @@
      "note": "hard-gate status: UNDETERMINED for hall_only, rf_hall and ecr_hall (evidence register empty); nothing eliminated"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "mechanism-level (probably robust): grids are life-limited by CEX + perveance window; gate 2 = pass"
     }
    ],
@@ -690,7 +690,7 @@
    "statement": "Hall-effect thruster preferred as the accelerator.",
    "value": null,
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; that clause reference is itself unverified in-repo text) (hall_preferred)",
@@ -756,11 +756,11 @@
    "statement": "Atmospheric air (intake-collected) and xenon as propellants, via the RFP architecture recorded in the repository (atmospheric path intake -> filter -> compressor -> atmospheric gas chamber -> valve; Xe path Xe chamber -> valve; both feed ionization/discharge -> acceleration/thrust).",
    "value": null,
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "docs/HISTORY.md constraint table (N2 + nascent O; Xe as propellant)",
-     "Governance.md next-work item 1 'Scope' (RFP architecture)"
+     "governance.md next-work item 1 'Scope' (RFP architecture)"
     ]
    },
    "rfp_record_refs": [
@@ -811,7 +811,7 @@
      "note": "N2/N reaction set abep-n2n-0.11, COMPLETE_FOR_P5_N2_VALIDATION (domain-limited, not a general completeness claim)"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "O2/O chemistry and intake-delivered mixtures only after next-work items 1-3 succeed"
     },
     {
@@ -835,11 +835,11 @@
    "statement": "Steady operation on the Xe feed within the power limit; whether 'air + Xe' also means feed switching without extinction or simultaneous mixed feed is open (lane 24 OD6). Verify against the RFP wording.",
    "value": null,
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
      "docs/HISTORY.md constraint table (Xe as propellant; 25 mN peak with Xe topping)",
-     "Governance.md next-work item 1 'Scope' (Xe path Xe chamber -> valve)"
+     "governance.md next-work item 1 'Scope' (Xe path Xe chamber -> valve)"
     ]
    },
    "rfp_record_refs": [
@@ -906,20 +906,20 @@
     "demonstration"
    ],
    "verification_status": "not_verified",
-   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Feed switching and mixed-feed operation need a demonstration; no Vyovrinda hardware data exist."
+   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Feed switching and mixed-feed operation need a demonstration; no Vyovrinda hardware data exist."
   },
   {
    "id": "RFP-IGN-SUST",
    "category": "rfp_inferred_from_repo_text",
    "title": "Ignition and sustainment on atmospheric propellant",
-   "statement": "A discharge is sustained on the delivered atmospheric composition, and ignites from the off state. No ignition or restart clause is recorded in the repository: lane 24 carries G6 with status RFP but records the EXISTENCE of G6.ignition as INFERRED (from 'air + Xe' and the RFP architecture), owner decision OD14. Also the mandatory comparison field 'startup' (Governance.md admissibility rule). Verify against the RFP document.",
+   "statement": "A discharge is sustained on the delivered atmospheric composition, and ignites from the off state. No ignition or restart clause is recorded in the repository: lane 24 carries G6 with status RFP but records the EXISTENCE of G6.ignition as INFERRED (from 'air + Xe' and the RFP architecture), owner decision OD14. Also the mandatory comparison field 'startup' (governance.md admissibility rule). Verify against the RFP document.",
    "value": null,
    "source": {
     "where": "docs/architecture_comparison/hard_gates/hard_gate_matrix_v1.json, gate G6_ignition_sustainment (rfp_source: inferred from R1 'air + Xe', R3/R6 'N2 + nascent O', R4 RFP architecture)",
     "page_ref": "verify against RFP document",
     "corroborating_in_repo": [
-     "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
-     "Governance.md admissibility rule (mandatory field 'startup')"
+     "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+     "governance.md admissibility rule (mandatory field 'startup')"
     ]
    },
    "rfp_record_refs": [
@@ -1033,7 +1033,7 @@
      "note": "rfp_requirements_recorded_not_gated: carried through the definition of 'atmospheric propellant' in G1 and G6; whether it needs its own gate is OD12"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "next-work item 4: O2/O chemistry only after items 1-3 succeed (not started)"
     }
    ],
@@ -1105,7 +1105,7 @@
     "inspection"
    ],
    "verification_status": "not_verified",
-   "open_gap": "Not in the Governance.md envelope summary; the clause, exact definition and subsystem thresholds must be checked against the RFP. Component IC values are assumed priors; needs a supplier-backed BoM."
+   "open_gap": "Not in the governance.md envelope summary; the clause, exact definition and subsystem thresholds must be checked against the RFP. Component IC values are assumed priors; needs a supplier-backed BoM."
   },
   {
    "id": "RFP-REDUND",
@@ -1220,12 +1220,12 @@
     "quantity": "bid close date",
     "limit": "2026-10-05",
     "unit": "date",
-    "value_source": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "value_source": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "evidence_class": "assumed",
     "evidence_note": "transcribed from an in-repo summary; verify"
    },
    "source": {
-    "where": "Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
+    "where": "governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; the RFP document is not in the repository)",
     "page_ref": "verify against RFP document"
    },
    "rfp_record_refs": [
@@ -1278,7 +1278,7 @@
    ],
    "current_evidence": [
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gate 3 FAIL"
     },
     {
@@ -1292,7 +1292,7 @@
     "analysis"
    ],
    "verification_status": "not_verified",
-   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Spacecraft ram area is a DRDO input not in the repository."
+   "open_gap": "All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall performance number may be used as evidence of compliance. Spacecraft ram area is a DRDO input not in the repository."
   },
   {
    "id": "DER-HALL-CLOSURE",
@@ -1301,7 +1301,7 @@
    "statement": "Absolute Hall performance may be used only from admitted ensemble members (promotion rule; O4 dispositions).",
    "value": null,
    "source": {
-    "where": "Governance.md next-work item 1 (promotion rule) and item 3 (O4 gating)",
+    "where": "governance.md next-work item 1 (promotion rule) and item 3 (O4 gating)",
     "page_ref": "not an RFP clause (project-derived)"
    },
    "rfp_record_refs": [],
@@ -1378,10 +1378,10 @@
    "id": "DER-THERMAL",
    "category": "derived_project",
    "title": "Heat rejection (Q_reject)",
-   "statement": "Waste heat is rejected within the thermal design (mandatory comparison field Q_reject in Governance.md).",
+   "statement": "Waste heat is rejected within the thermal design (mandatory comparison field Q_reject in governance.md).",
    "value": null,
    "source": {
-    "where": "Governance.md admissibility rule (mandatory fields)",
+    "where": "governance.md admissibility rule (mandatory fields)",
     "page_ref": "not an RFP clause (project-derived); check the RFP for thermal requirements"
    },
    "rfp_record_refs": [],
@@ -1435,17 +1435,17 @@
    "id": "DER-MODEL-INTEGRITY",
    "category": "derived_project",
    "title": "Simulator integrity gates",
-   "statement": "Frozen data reproduce, golden benchmarks pass, source balances close, energy-ledger residual < 2 %, numerical convergence (Governance.md rules 1-5).",
+   "statement": "Frozen data reproduce, golden benchmarks pass, source balances close, energy-ledger residual < 2 %, numerical convergence (governance.md rules 1-5).",
    "value": {
     "quantity": "energy-ledger residual",
     "limit": "< 2",
     "unit": "%",
-    "value_source": "Governance.md rule 4",
+    "value_source": "governance.md rule 4",
     "evidence_class": "assumed",
     "evidence_note": "project rule, not an RFP clause"
    },
    "source": {
-    "where": "Governance.md rules 1-5 and gate table",
+    "where": "governance.md rules 1-5 and gate table",
     "page_ref": "not an RFP clause (project-derived)"
    },
    "rfp_record_refs": [],
@@ -1471,7 +1471,7 @@
      "note": "golden reference"
     },
     {
-     "ref": "Governance.md",
+     "ref": "governance.md",
      "note": "gates 1, 2, 5, 6 = pass (not re-run in this lane)"
     }
    ],
@@ -1480,7 +1480,7 @@
    "verification_method": [
     "test"
    ],
-   "verification_status": "reported_pass_in_Governance.md_gate_table_not_rerun_here",
+   "verification_status": "reported_pass_in_governance.md_gate_table_not_rerun_here",
    "open_gap": "None for integrity itself; integrity does not imply Hall validity."
   }
  ],
@@ -1622,7 +1622,7 @@
    "requirement_id": "DER-MODEL-INTEGRITY",
    "design_feature": "Frozen datasets, golden benchmarks, convergence checks",
    "verification": "Test (golden check, pytest)",
-   "evidence": "Gates 1, 2, 5, 6 pass per Governance.md",
+   "evidence": "Gates 1, 2, 5, 6 pass per governance.md",
    "hard_gate": "not a hard gate"
   }
  ]

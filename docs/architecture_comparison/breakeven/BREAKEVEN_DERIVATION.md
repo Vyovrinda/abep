@@ -11,7 +11,7 @@ missing or invalid input. It is not wired into `archengine`, so the goldens do n
 
 **Status.** These are analysis relations. They are not predictions and they do not rank the architectures. They name
 **no winner**. No Hall transport closure is used, and neither is any screening candidate (`sgb-screen-*`) or any
-withdrawn 0-D Hall number (Governance.md "Superseded"). The credible closure set is empty (gate 3 FAIL), so every
+withdrawn 0-D Hall number (governance.md "Superseded"). The credible closure set is empty (gate 3 FAIL), so every
 Hall-only efficiency component below is an **analysis parameter**, not a value.
 
 ## 0. Milestone support
@@ -37,7 +37,7 @@ Hall-only efficiency component below is an **analysis parameter**, not a value.
 * **Feed state is an input.** ṁ reaches the Hall through the common feed. On the air path that is intake → filter →
   compressor → gas chamber → valve. For an arm, the flow also passes through the source. ṁ is **never** changed by the
   break-even analysis. Hall-closure uncertainty stays inside the ionization/acceleration block and does not leak
-  upstream (Governance.md, "Scope").
+  upstream (governance.md, "Scope").
 * **Hall-closure calibration nuisance** (P5 registration, coil shape, divergence reading, facility interpretation) is
   not an input, an axis or a design variable here.
 
@@ -275,7 +275,7 @@ evidence (evidence lanes `docs/evidence/rf_source/`, `docs/evidence/ecr_source/`
 It refuses a source mechanism that duplicates a Hall-only one and a qualification factor below 1. All values are TBD,
 so no life surface is produced.
 
-## 9. No-default and refusal behaviour (Governance.md rule 3)
+## 9. No-default and refusal behaviour (governance.md rule 3)
 
 * No public function or dataclass field in `breakeven.py` has a default (`test_no_defaults_anywhere`).
 * The following inputs raise an error:

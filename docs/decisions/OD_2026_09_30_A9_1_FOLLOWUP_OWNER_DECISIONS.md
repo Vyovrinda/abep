@@ -467,4 +467,4 @@ Passing ICP-45 alone does not retire C1.
 
 The single most important decision in this set is HIQ-06 = G-REUSE. It keeps Professor Umesh/Takahashi's architecture scientifically clean: atmospheric gas enters the Hall stage, the downstream ICP uses that exhaust, and the ICP does not get a hidden separate propellant stream simply to make the architecture work. The published Takahashi proof-of-principle likewise used a single Ar feed through the Hall anode and reused the ejected gas in the ICP.
 
-I would therefore tell Governance to record these owner decisions, perform the short A9-01…05 integration repair immediately, then launch A9-06 through A9-09 in parallel. A9-10 closes the integration, after which the branch can go through the checkpoint PR into main.
+I would therefore tell governance to record these owner decisions, perform the short A9-01…05 integration repair immediately, then launch A9-06 through A9-09 in parallel. A9-10 closes the integration, after which the branch can go through the checkpoint PR into main.

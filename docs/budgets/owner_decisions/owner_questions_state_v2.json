@@ -208,7 +208,7 @@
    "no": 9,
    "id": "REPO-1",
    "source": "v1 consolidated list row 9 (A. RFP / access / repo)",
-   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on Governance/nifty-ramanujan-w68f9z) into main via a new PR?",
+   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on governance/nifty-ramanujan-w68f9z) into main via a new PR?",
    "status": "ANSWERED",
    "answer_pointer": "docs/decisions/OD_2026_09_29_owner_answers_147.json row 9",
    "answer_sha256": "8cddacc5e4c20fe2cbf941a6d55b0d6a4349e996273e8025963a9d8cd87244cc",

@@ -53,7 +53,7 @@
   "operating_model_questions": {
    "i_conditional_selection_now": "none; this lane ranks nothing",
    "ii_blocks_physics_backed_selection": "credible set empty; this pre-registration not yet locked; H-1 geometry and registration inputs do not exist; solver inflow gap for rf_hall/ecr_hall; no O/O2 chemistry",
-   "iii_could_overturn": "(a) chemistry-domain exits (v1: 66 % of run-readings OUT_OF_DOMAIN, Governance.md gate 3) could make every candidate INCONCLUSIVE again; (b) the channel-length-unit transfer hypothesis of ScaledGaussianBohm to H-1 could fail outright (FAIL_VALIDATION); (c) a facility effect larger than the pre-registered admissibility bound would make targets non-admissible"
+   "iii_could_overturn": "(a) chemistry-domain exits (v1: 66 % of run-readings OUT_OF_DOMAIN, governance.md gate 3) could make every candidate INCONCLUSIVE again; (b) the channel-length-unit transfer hypothesis of ScaledGaussianBohm to H-1 could fail outright (FAIL_VALIDATION); (c) a facility effect larger than the pre-registered admissibility bound would make targets non-admissible"
   }
  },
  "relation_to_p5_n2_v1": {
@@ -288,7 +288,7 @@
   "note": "no run is performed by this draft; CPU budget and scheduling are a later lane's concern"
  },
  "forecast_risk": {
-  "chemistry_domain": "In P5-N2 v1, 66 % of run-readings were OUT_OF_DOMAIN (chemistry T_e > 30 eV; Governance.md gate 3). If H-1 discharges reach similar electron temperatures, every candidate may again be INCONCLUSIVE regardless of data. A data-free blind state envelope run before LOCK-H1 on the W3 design geometry and design (computed) B(z), not on released S1a inputs (not PF-1, not score-bearing), reveals this before any data exist.",
+  "chemistry_domain": "In P5-N2 v1, 66 % of run-readings were OUT_OF_DOMAIN (chemistry T_e > 30 eV; governance.md gate 3). If H-1 discharges reach similar electron temperatures, every candidate may again be INCONCLUSIVE regardless of data. A data-free blind state envelope run before LOCK-H1 on the W3 design geometry and design (computed) B(z), not on released S1a inputs (not PF-1, not score-bearing), reveals this before any data exist.",
   "legitimate_response": "PROPOSED (VP-09): the owner may, BEFORE LOCK-H1 and without any data, add held-out conditions chosen from the blind state envelope of the candidates (e.g. conditions where the pre-data blind runs stay inside the domain). Choosing conditions from data-free model output is experimental design, not tuning. Relaxing f_out or the 45 eV cap is not a legitimate response."
  },
  "owner_decisions": [
@@ -314,9 +314,9 @@
   {"id": "VP-20", "question": "u_reg perturbation modes for profile inputs (B(z), geometry)", "PROPOSED": "registration_inputs.u_reg_perturbation_modes: scalars separately; B(z) uniform amplitude scale and rigid axial shift as two modes; no pointwise envelope; any other mapping fixed by a LOCK-H1 addendum before S1a release"}
  ],
  "thresholds": [
-  {"id": "TH-RFP-T-MIN", "value": 12, "unit": "mN", "status": "RFP", "source": "Governance.md RFP envelope 12-25 mN", "role": "context only (absolute gate belongs to W2/lane 25, not to this validation)"},
-  {"id": "TH-RFP-T-CAP", "value": 25, "unit": "mN", "status": "RFP", "source": "Governance.md RFP envelope 12-25 mN", "role": "context only"},
-  {"id": "TH-RFP-PBUS", "value": 1.5, "unit": "kW", "status": "RFP", "source": "Governance.md RFP envelope < 1.5 kW", "role": "context only"},
+  {"id": "TH-RFP-T-MIN", "value": 12, "unit": "mN", "status": "RFP", "source": "governance.md RFP envelope 12-25 mN", "role": "context only (absolute gate belongs to W2/lane 25, not to this validation)"},
+  {"id": "TH-RFP-T-CAP", "value": 25, "unit": "mN", "status": "RFP", "source": "governance.md RFP envelope 12-25 mN", "role": "context only"},
+  {"id": "TH-RFP-PBUS", "value": 1.5, "unit": "kW", "status": "RFP", "source": "governance.md RFP envelope < 1.5 kW", "role": "context only"},
   {"id": "TH-FOUT", "value": 1e-12, "unit": "fraction", "status": "PRE_REGISTERED_PROJECT_RULE", "source": "hallthruster_bridge/prereg/p5_n2_run_status_rule_v1.json chemistry_trust_rule", "role": "chemistry domain; not relaxed"},
   {"id": "TH-DOMAIN", "value": 45, "unit": "eV mean energy (T_e 30 eV)", "status": "PRE_REGISTERED_PROJECT_RULE", "source": "PINNED.toml [reaction_set].domain; QUESTION_A_DISPOSITION A-NO", "role": "chemistry domain; not widened"},
   {"id": "TH-PRIOR-A", "value": 0.0625, "unit": "anom_scale (1/16)", "status": "PRE_REGISTERED_PROJECT_RULE", "source": "transport_ensemble_v0.json admission_rule", "role": "physical prior"},
@@ -331,8 +331,8 @@
  ],
  "numbers_used": [
   {"value": "9 screening candidates", "source": "transport_ensemble_v0.json screening_candidates", "class": "project record"},
-  {"value": "66 % of run-readings OUT_OF_DOMAIN in P5-N2 v1", "source": "Governance.md gate status (gate 3)", "class": "project record (context only, not evidence here)"},
-  {"value": "1080 vacuum runs in P5-N2 v1", "source": "Governance.md gate status", "class": "project record (context only)"},
+  {"value": "66 % of run-readings OUT_OF_DOMAIN in P5-N2 v1", "source": "governance.md gate status (gate 3)", "class": "project record (context only, not evidence here)"},
+  {"value": "1080 vacuum runs in P5-N2 v1", "source": "governance.md gate status", "class": "project record (context only)"},
   {"value": "0.15 (eps_Id option, VP-02)", "source": "hallthruster_bridge/ensemble/transport_ensemble_v0.json admission_rule: pre-registered 15 % blind I_d criterion", "class": "project record (convention option only, not evidence)"},
   {"value": "5 knee-scan levels", "source": "lane 25 T-KNEE-LEVELS (PROPOSED there)", "class": "assumed (proposed design value)"},
   {"value": "sha256 digests", "source": "pin_inputs.py (deterministic)", "class": "model-derived (computed)"}

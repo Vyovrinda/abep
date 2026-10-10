@@ -61,7 +61,7 @@ Cases where 12 mN at the self-consistent flow already exceeds 1.5 kW (efficiency
 | HG-3 | atomic-oxygen compatibility | wetted rotor/stator/channel materials must not recede beyond the PROPOSED 0.1 mm allowance over 26,000 h at the per-case AO number flow; ram-energy yields (EV-16) bound the thermal-gas case from above (EV-17) | RFP mission duration; allowance PROPOSED |
 | HG-4 | compression ratio 2.4-142 incl. atomic O | the concept's compression ratio for the least-compressed species (atomic O, EV-02) covers the W1 self-consistent requirement at each of the 36 candidate-cases | W1 feed-state closure (FC-01: required active CR 2.37-142; PROPOSED setpoint ladder) |
 | HG-5 | backflow | (a) inlet pumping speed S >= S_required(b) so that the plenum backflow fraction b stays at the target (W1 FC-01 model; b targets PROPOSED); (b) no uncontrolled back-streaming on rotor stop (isolation valve) | W1 FC-01; EV-01, EV-04 |
-| HG-6 | common feed boundary | the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept whose compression depends on the pre-ionizer is out of DI-1.4 scope | owner operating model (RF/ECR change only the pre-ionization method; Governance.md scope rule) |
+| HG-6 | common feed boundary | the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept whose compression depends on the pre-ionizer is out of DI-1.4 scope | owner operating model (RF/ECR change only the pre-ionization method; governance.md scope rule) |
 
 ## 3. Down-selection matrix
 
@@ -392,7 +392,7 @@ Status: **PROPOSED for owner review (not a design freeze, not an architecture ra
 - decision `docs/decisions/OD_HARDWARE_PIVOT_2026_09_27_A1_controls.json` sha256 `04c5a6f46ed2cb3e3fb174bcc7305d129e15ef53af2349d2a8abc4f6d8975992`
 - decision `docs/decisions/OD_HARDWARE_PIVOT_2026_09_27_A2_execution_directive.json` sha256 `f82fb78cc0f608c03fd37d9ecbede6aab4ec525eecf5f8a47619eca35e1e73b6`
 - decision `docs/decisions/OD_HARDWARE_PIVOT_2026_09_27_A3_s1a_and_instrumentation.json` sha256 `10d79026f1a65e0c2a9fa9e1f9a5f9abc9d162692711857bd43575f3095c8d4e`
-- input `docs/architecture_comparison/feed_state_closure/feed_state_closure_v2.json` sha256 `be5c7f97d755d9c67678e5a017db9c27fe86c21155c5e512acf1a9501f4a6db8`
+- input `docs/architecture_comparison/feed_state_closure/feed_state_closure_v2.json` sha256 `d48e64d81b119cb30561591fc1dca339d6565003839ea92ab8f32d120d9445f1`
 - input `scripts/architecture/build_feed_envelope.py` sha256 `32f96ba06ed01efaed3e827e09b66c8d794073fc53ebef474b7dff512d39d99e`
 - input `abep_sim/compressor.py` sha256 `7a8dfe5b64d269474863410f6e42a886c6d3f57015c05491880d65251dfafc75`
 - input `abep_sim/intake.py` sha256 `d46c23af40d413094babbe9d2121238c7b6f768341ffb3789d3d50c1d0f66687`

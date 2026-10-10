@@ -6,7 +6,7 @@ Writes ``h2_2_cathode_integration_v1.json`` next to this file from the explicit,
 evaluation grids in ``GRIDS``. Standard library only; nothing is imported from ``abep_sim`` (the test cross-checks the
 relations shared with ``abep_sim/cathode_integration.py`` and the constants in ``abep_sim/constants.py``).
 
-Rules this script follows (Governance.md rules 3, 6, 10; docs/EVIDENCE.md):
+Rules this script follows (governance.md rules 3, 6, 10; docs/EVIDENCE.md):
   * every number used in a computation lives in ``INPUTS`` (with source, locator and evidence class) or in ``GRIDS``
     (explicit evaluation grids, labelled as such, never a design value or a device claim);
   * every relation takes its inputs as arguments; a missing, non-finite or out-of-range input raises
@@ -147,7 +147,7 @@ SOURCES = {
                "path": "docs/decisions/OD_HARDWARE_PIVOT_2026_09_27_A7_execution_model.json",
                "access": "repo_pinned"},
     "SRC-RFP": {"citation": "DRDO TDF RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 as recorded in abep_sim/constants.py "
-                            "RFPConstraints ('Part III Para 2') and Governance.md",
+                            "RFPConstraints ('Part III Para 2') and governance.md",
                 "path": "abep_sim/constants.py", "access": "repo_frozen"},
     "SRC-SI": {"citation": "SI defining constants (exact since 2019): k_B = 1.380649e-23 J/K, h = 6.62607015e-34 J s, "
                            "c = 299792458 m/s, N_A = 6.02214076e23 /mol (SI Brochure, 9th ed.; k_B identical to "

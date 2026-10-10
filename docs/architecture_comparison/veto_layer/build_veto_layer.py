@@ -87,7 +87,7 @@ _L08 = ("lane_08_ecr_evidence", "a85fd592618cb15a02f14123659a0698db90df19")
 _L32 = ("lane_32_wall_life", "f3c924a791a01f69e1a9165a74b88c1446e203d3")
 _L10 = ("lane_10_cathode_dossier", "1b6fc10ab11798dce1e5ed3079cae1210fbb8d2d")
 _L33 = ("lane_33_upstream_icd", "ced4aa08c4f19455a7b0c70b50a47d1f8e7727fe")
-_REPO = ("repository (not a lane; Governance.md next-work 1)", BASE_COMMIT)
+_REPO = ("repository (not a lane; governance.md next-work 1)", BASE_COMMIT)
 
 PINS: tuple = (
     ("abep_sim/mass_bom.py", "c785aeb14b789b20a20a796ab86d8acd354760b52ac30827b395a623430e4a39", _L21,

@@ -17,7 +17,7 @@ seeded workloads of the existing simulator entry points, unmodified:
                                  builder's verification resolution RES_VERIFY
 
 Nothing here is physics evidence. Timings are software-runtime measurements on the recorded machine; several workloads
-drive the superseded 0-D Hall closure, whose absolute results are withdrawn (Governance.md) - they are timed, never quoted.
+drive the superseded 0-D Hall closure, whose absolute results are withdrawn (governance.md) - they are timed, never quoted.
 
 Usage
   python scripts/perf/profile_baseline.py                 # full baseline (< 20 min), writes docs/performance/*_98fbbb9.*
@@ -66,7 +66,9 @@ DRIFT_REL = "docs/performance/dedicated_baseline_2026_10_01/DRIFT_AFTER_A9_9.jso
 # Later drift records, applied in order after DRIFT_REL (each entry chains old_sha256 -> new_sha256 from the previous
 # record's new_sha256). The current bytes of every drifted file must equal the last recorded new_sha256 (SW-05: a
 # recorded drift is never an allowance for any later change).
-DRIFT_ADDENDA_REL = ("docs/performance/dedicated_baseline_2026_10_01/DRIFT_AFTER_A9_18_REPAIR.json",)
+DRIFT_ADDENDA_REL = ("docs/performance/dedicated_baseline_2026_10_01/DRIFT_AFTER_A9_18_REPAIR.json",
+                     "docs/performance/dedicated_baseline_2026_10_01/DRIFT_AFTER_A9_22.json",
+                     "docs/performance/dedicated_baseline_2026_10_01/DRIFT_AFTER_A9_22_PROGRAMME_LAYER.json")
 TEST_REL = "tests/test_perf_baseline.py"
 P3_LIB_REL = "docs/experiments/hall_icp/p3_coupled_thermal/p3_thermal_lib.py"
 P3_BUILDER_REL = "docs/experiments/hall_icp/p3_coupled_thermal/build_p3_coupled_thermal.py"
@@ -107,7 +109,7 @@ A9_7_RUST_ORDER = [("TPMC particle-tracing kernel", "tpmc_particle_tracing"),
                    ("P3 ray/view-factor sampling", "p3_view_factor")]
 
 SUPERSEDED_NOTE = ("drives the superseded 0-D Hall closure (plasma_devices / archengine Hall branch); absolute Hall "
-                   "results are withdrawn (Governance.md 'Superseded / withdrawn') - timed only, outputs never quoted")
+                   "results are withdrawn (governance.md 'Superseded / withdrawn') - timed only, outputs never quoted")
 
 
 def _load_path_module(name, rel):
@@ -130,7 +132,7 @@ def p3_resolutions():
 
 
 def _clear_solver_caches():
-    """archengine solver caches are pure functions of their keys (Governance.md rule 5); clearing them changes timing only."""
+    """archengine solver caches are pure functions of their keys (governance.md rule 5); clearing them changes timing only."""
     from abep_sim import archengine as AE
     AE._ION_CACHE.clear(); AE._NEUT_CACHE.clear(); AE._GAS_CACHE.clear()
 
@@ -236,7 +238,8 @@ def _golden_compressor_args():
     if "comp_args" in _SHARED:
         return _SHARED["comp_args"]
     from abep_sim import compressor as C
-    from abep_sim.system import Config, evaluate
+    from abep_sim.system import Config
+    from abep_sim.programme.closure import evaluate   # A9.22: the recorded entry point system.evaluate delegates here
     from abep_sim.intake import IntakeParams, CompressorParams
     orig = C.DragCompressor.size_for
     cap = {}
@@ -283,7 +286,8 @@ def w_compressor_run(p):
 
 
 def w_system_evaluate(p):
-    from abep_sim.system import Config, evaluate
+    from abep_sim.system import Config
+    from abep_sim.programme.closure import evaluate   # A9.22: the recorded entry point system.evaluate delegates here
     from abep_sim.intake import IntakeParams, CompressorParams
 
     def run():
@@ -304,7 +308,7 @@ def w_close_architecture(p):
 
 
 def w_uq_modular(p):
-    from abep_sim.uq_modular import run_uq
+    from abep_sim.programme.uq_modular import run_uq     # A9.22: moved from abep_sim.uq_modular (programme layer)
 
     def run():
         df, s = run_uq("hall_internal+hall+lab6_xe", {"Vd": 300.0, "L_ch": 0.20}, 1.0, 0.05, 6.0, 1500.0,
@@ -427,7 +431,7 @@ def workload_specs(mode):
          "params": {}, "unit_of_work": "closures", "covered_by": None, "physics_note": SUPERSEDED_NOTE,
          "reference": {"id": "golden_check", "units_of_work": 2,
                        "basis": "abep_sim/golden.py: case_architecture_closure and case_mission each run this closure "
-                                "once per python -m abep_sim.golden check (Governance.md rule 2 gate)",
+                                "once per python -m abep_sim.golden check (governance.md rule 2 gate)",
                        "method": "EXTRAPOLATED: median seconds x 2 (the second call shares no cache in a cold process "
                                  "only if caches are cleared; in practice it is warm, so this is an upper bound)"}},
         {"id": "uq_modular_run_uq", "category": "uq_monte_carlo", "fn": w_uq_modular,
@@ -1017,7 +1021,7 @@ def basis_correction_lines(doc):
                  f"{_f(r['reference_workload_s'])} | {_f(round(r['reference_workload_s'] * iw, 2))} |")
     L += [""] + [rust_speedup_example(by_id)]
     L += ["", "F0-02: the 'usage' of the TPMC PORT_CANDIDATE is the frozen_intake_surface_build reference workload, which "
-          "Governance.md rule 1 and RUST-ID-06 forbid running with the Rust backend, and no current consumer opts in to the "
+          "governance.md rule 1 and RUST-ID-06 forbid running with the Rust backend, and no current consumer opts in to the "
           "Rust backend (F1 calls intake_tpmc.intake_response directly, RUST-ID-03 OPEN; F7 / F8 run no TPMC). The "
           "admitted kernels therefore have no consumer today; the F1 synthesis search (the real use) is not quantified "
           "here. A re-based judgement needs the F1 / F7 search point counts x the measured per-point cost.", "",
@@ -1229,13 +1233,16 @@ def source_drift(doc=None):
             continue
         d = {"status": "HISTORICAL_SOURCE_DRIFT", "path": s["path"], "old_sha256": s["sha256"], "new_sha256": cur}
         r = rec.get(s["path"])
-        if r is None:
+        # a file unchanged at DRIFT_REL may be first recorded by a later addendum: its chain then starts at the
+        # baseline's own sha256 (the first addendum entry must carry it as old_sha256)
+        first_in_addendum = r is None and any(s["path"] in arec for _, arec in addenda)
+        if r is None and not first_in_addendum:
             d["error"] = (f"profiled source changed since the baseline and the drift is not recorded in {DRIFT_REL}: "
                           f"{s['path']} (old {s['sha256']}, new {cur})")
-        elif r.get("old_sha256_a9_7") != s["sha256"]:
+        elif r is not None and r.get("old_sha256_a9_7") != s["sha256"]:
             d["error"] = f"drift record {DRIFT_REL} has a wrong old sha256 for {s['path']}"
         else:
-            expected, where = r.get("new_sha256"), DRIFT_REL
+            expected, where = (s["sha256"], JSON_REL) if r is None else (r.get("new_sha256"), DRIFT_REL)
             for rel, arec in addenda:
                 a = arec.get(s["path"])
                 if a is None:

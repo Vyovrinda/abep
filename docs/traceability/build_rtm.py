@@ -4,7 +4,7 @@ Single source of truth for the RTM. Run from the repository root:
     python docs/traceability/build_rtm.py          # (re)write both files
     python docs/traceability/build_rtm.py --check  # exit 1 if the committed files are stale
 
-Evidence discipline (Governance.md rules 6 and 10, docs/EVIDENCE.md): the RFP document is NOT in the repository. Every
+Evidence discipline (governance.md rules 6 and 10, docs/EVIDENCE.md): the RFP document is NOT in the repository. Every
 requirement cites the in-repo text it came from and carries page_ref "verify against RFP document" (or says it is
 project-derived). No clause numbers, page numbers or values are invented here. This matrix claims no compliance.
 
@@ -33,11 +33,11 @@ BUNDLE1 = "docs/milestones/bundle1/bundle1_v3.json"
 PINNED_XREFS = (HG_MATRIX, HG_STATUS, HG_REGISTER, BUNDLE1)
 
 PAGE = "verify against RFP document"
-ENV = ("Governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; "
+ENV = ("governance.md, 'What this is' section: RFP envelope summary (secondary in-repo transcription; "
        "the RFP document is not in the repository)")
 CONST = ("abep_sim/constants.py, class RFPConstraints (docstring says 'Hard limits from Part III Para 2 of the RFP'; "
          "that clause reference is itself unverified in-repo text)")
-H3 = ("All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (Governance.md 'Superseded / "
+H3 = ("All absolute Hall results from the superseded 0-D closure (v1.2-v1.6) are withdrawn (governance.md 'Superseded / "
       "withdrawn'); gate 3 (multi-point Hall validation) is FAIL and the credible transport set is empty, so no Hall "
       "performance number may be used as evidence of compliance.")
 NOT_RFP = "not an RFP clause (project-derived)"
@@ -94,8 +94,8 @@ REQUIREMENTS = [
           _mq("abep_sim/mission_env.py::propagate", "altitude history under thrust and drag"),
           _mq("abep_sim/constants.py::RFPConstraints", "alt_min_km / alt_max_km")],
          [_ev("abep_sim/data/atmosphere_msis21_v1.json", "frozen atmosphere provenance (rule 1)"),
-          _ev("Governance.md", "gate table: gate 1 clean-install reproducibility = pass (frozen atmosphere)"),
-          _ev("abep_sim/data/golden_v1.json", "golden case_atmosphere; gate 6 = pass per Governance.md gate table (not re-run in this lane)"),
+          _ev("governance.md", "gate table: gate 1 clean-install reproducibility = pass (frozen atmosphere)"),
+          _ev("abep_sim/data/golden_v1.json", "golden case_atmosphere; gate 6 = pass per governance.md gate table (not re-run in this lane)"),
           _ev(HG_MATRIX, "altitude is an envelope dimension (coverage_dimensions.altitude_km) of G1, G2 and G6, not a gate of its own; OD2 (envelope quantifier) and OD3 (atmosphere states) open")],
          "partial", True, ["analysis"],
          "Environment definition is modeled. Holding an altitude inside the band needs thrust >= drag, which depends on "
@@ -116,7 +116,7 @@ REQUIREMENTS = [
           _mq("abep_sim/hall_map.py::HallMap", "intended source of Hall thrust (loads admitted ensemble members only; none exist)"),
           _mq("abep_sim/system.py::evaluate", "legacy check 'thrust_air_ge_req' (0-D Hall; results withdrawn)")],
          [EV_ENS, EV_V1, EV_HGS,
-          _ev("Governance.md", "gate 3 FAIL; gate 4 conditional on gate 3; absolute Hall numbers withdrawn")],
+          _ev("governance.md", "gate 3 FAIL; gate 4 conditional on gate 3; absolute Hall numbers withdrawn")],
          "blocked_by_gate_3", True, ["analysis", "test"],
          H3 + " Needs an admitted closure, Vyovrinda-specific Hall maps, then a thruster test (or a Milestone-A hard bound "
          "or hardware measurement under the lane-24 evidence policy).",
@@ -137,7 +137,7 @@ REQUIREMENTS = [
           _mq("abep_sim/hall_map.py::HallMap", "intended Hall thrust source (no admitted members)")],
          [EV_ENS, EV_HGS,
           _ev(HG_MATRIX, "OD1 open: G1.thrust_ceiling (reading i) and G1.peak_capability_25mN (reading ii) count toward PASS only; neither can FAIL G1 until the owner decides"),
-          _ev("Governance.md", "gate 3 FAIL")],
+          _ev("governance.md", "gate 3 FAIL")],
          "blocked_by_gate_3", True, ["analysis", "test"],
          H3 + " The reading of '25 mN' (cap vs peak capability with Xe) is an open owner decision (OD1); the RFP text is "
          "needed to settle it.",
@@ -160,7 +160,7 @@ REQUIREMENTS = [
          [_ev("docs/architecture_comparison/power_boundary/BUS_POWER_BOUNDARY.md", "bus_power_boundary_v1 definition; section 5 rule 6: whether the RFP '< 1.5 kW' refers to this boundary is TBD; archengine applies it at the PPU bus input"),
           _ev("schemas/architecture_comparison/bus_power_boundary_v1.json", "machine-readable boundary (common and pre-ionizer components)"),
           EV_HGS,
-          _ev("abep_sim/data/golden_v1.json", "energy-ledger residual golden (gate 6 pass per Governance.md)")],
+          _ev("abep_sim/data/golden_v1.json", "energy-ledger residual golden (gate 6 pass per governance.md)")],
          "blocked_by_gate_3", True, ["analysis", "test"],
          "Non-Hall bus terms (PPU losses, compressor, magnets, heater/keeper) are modeled, and the common boundary is "
          "defined. The dominant Hall discharge power at the required thrust is not available (gate 3); every boundary "
@@ -181,7 +181,7 @@ REQUIREMENTS = [
           _mq("abep_sim/thermal.py::size_radiator", "radiator sizing")],
          [_ev("docs/architecture_comparison/mass_bom/mass_bom_v1.json", "architecture mass BOM skeleton: no item has a sourced CBE or lower bound; strict roll-up refused for all three; screen LOWER_BOUNDS_UNAVAILABLE"),
           EV_HGS,
-          _ev("Governance.md", "earlier absolute mass closures are listed as withdrawn ('Superseded / withdrawn')")],
+          _ev("governance.md", "earlier absolute mass closures are listed as withdrawn ('Superseded / withdrawn')")],
          "partial", True, ["analysis", "inspection"],
          "Mass accounting exists, but no item has a sourced CBE; Vyovrinda's own Hall geometry and B(z) are not defined, "
          "and the Xe load and radiator size depend on Hall performance (gate 3). Final verification needs a weighed BoM "
@@ -195,7 +195,7 @@ REQUIREMENTS = [
          [_mq("abep_sim/mission_env.py::propagate", "J2 propagator with eclipse"),
           _mq("abep_sim/mission5.py::run_mission_generic", "mission ROM over RFP.mission_hours"),
           _mq("abep_sim/transient.py::run_mission", "legacy transient (duty cycle from density vs thrust)")],
-         [_ev("Governance.md", "gate 5 numerical convergence = pass; gate 4 mission UQ conditional on gate 3"),
+         [_ev("governance.md", "gate 5 numerical convergence = pass; gate 4 mission UQ conditional on gate 3"),
           _ev("abep_sim/data/golden_v1.json", "golden case_mission"),
           EV_HGS],
          "partial", True, ["analysis"],
@@ -204,7 +204,7 @@ REQUIREMENTS = [
          _hg(["G5_mission"], ["G5.mission_capability"], "counts for PASS and FAIL", ["OD10"]),
          ["R1", "R2", "R3", "R5"]),
     _req("RFP-FIRING", "rfp_envelope", "Firing (ignition) life",
-         "Cumulative firing time above 15,000 h ('> 15,000 h firing' in Governance.md; '>15,000 h ignition' in docs/HISTORY.md "
+         "Cumulative firing time above 15,000 h ('> 15,000 h firing' in governance.md; '>15,000 h ignition' in docs/HISTORY.md "
          "and abep_sim/transient.py; wording is lane 24 OD13).",
          _val("firing time", "> 15000", "h", ENV),
          _src(ENV, [CONST + " (ignition_hours)"]),
@@ -219,7 +219,7 @@ REQUIREMENTS = [
           _ev("docs/evidence/wall_life/WALL_LIFE_EVIDENCE.md", "sputter/erosion yield evidence; the solver wall ion flux is not a validated erosion prediction"),
           _ev("docs/evidence/cathode/CATHODE_DOSSIER.md", "cathode evidence; air-fed cathode operation unresolved; no life test of the demonstrated air-fed plasma cathodes"),
           EV_HGS,
-          _ev("Governance.md", "mechanism-level (probably robust): grids are life-limited by CEX + perveance window; gate 2 = pass")],
+          _ev("governance.md", "mechanism-level (probably robust): grids are life-limited by CEX + perveance window; gate 2 = pass")],
          "blocked_by_gate_3", True, ["analysis", "test"],
          "Hall channel erosion needs wall ion flux from an admitted, wall_life_trustworthy Hall map (none exist). "
          "Demonstrating life needs a wear test; no test data are in the repository.",
@@ -249,7 +249,7 @@ REQUIREMENTS = [
          "both feed ionization/discharge -> acceleration/thrust).",
          None,
          _src(ENV, ["docs/HISTORY.md constraint table (N2 + nascent O; Xe as propellant)",
-                    "Governance.md next-work item 1 'Scope' (RFP architecture)"]),
+                    "governance.md next-work item 1 'Scope' (RFP architecture)"]),
          [_mq("abep_sim/intake_tpmc.py::IntakeSurface", "frozen TPMC intake response surface"),
           _mq("abep_sim/compressor.py::DragCompressor", "compression of collected air"),
           _mq("abep_sim/reservoir.py::Reservoir", "atmospheric gas chamber"),
@@ -257,7 +257,7 @@ REQUIREMENTS = [
           _mq("abep_sim/mass_bom.py::xe_tank", "Xe storage")],
          [_ev("abep_sim/data/intake_surface_v1.json", "frozen intake surface provenance"),
           _ev("hallthruster_bridge/audit/n2_closure_verdicts_v1.json", "N2/N reaction set abep-n2n-0.11, COMPLETE_FOR_P5_N2_VALIDATION (domain-limited, not a general completeness claim)"),
-          _ev("Governance.md", "O2/O chemistry and intake-delivered mixtures only after next-work items 1-3 succeed"),
+          _ev("governance.md", "O2/O chemistry and intake-delivered mixtures only after next-work items 1-3 succeed"),
           EV_HGS],
          "partial", True, ["analysis", "test"],
          "Gas path is modeled. Hall-discharge chemistry exists only for N2/N (validation domain T_e 2-30 eV); O/O2 is not "
@@ -271,7 +271,7 @@ REQUIREMENTS = [
          "extinction or simultaneous mixed feed is open (lane 24 OD6). Verify against the RFP wording.",
          None,
          _src(ENV, ["docs/HISTORY.md constraint table (Xe as propellant; 25 mN peak with Xe topping)",
-                    "Governance.md next-work item 1 'Scope' (Xe path Xe chamber -> valve)"]),
+                    "governance.md next-work item 1 'Scope' (Xe path Xe chamber -> valve)"]),
          [_mq("abep_sim/mass_bom.py::xe_tank", "Xe storage"),
           _mq("abep_sim/ppu.py::load_modes", "peak mode (Xe augmentation) electrical loads"),
           _mq("abep_sim/hall_map.py::HallMap", "intended Hall performance source on Xe (no admitted members)")],
@@ -288,11 +288,11 @@ REQUIREMENTS = [
          "A discharge is sustained on the delivered atmospheric composition, and ignites from the off state. No ignition "
          "or restart clause is recorded in the repository: lane 24 carries G6 with status RFP but records the EXISTENCE "
          "of G6.ignition as INFERRED (from 'air + Xe' and the RFP architecture), owner decision OD14. Also the mandatory "
-         "comparison field 'startup' (Governance.md admissibility rule). Verify against the RFP document.",
+         "comparison field 'startup' (governance.md admissibility rule). Verify against the RFP document.",
          None,
          _src("docs/architecture_comparison/hard_gates/hard_gate_matrix_v1.json, gate G6_ignition_sustainment "
               "(rfp_source: inferred from R1 'air + Xe', R3/R6 'N2 + nascent O', R4 RFP architecture)",
-              [ENV, "Governance.md admissibility rule (mandatory field 'startup')"]),
+              [ENV, "governance.md admissibility rule (mandatory field 'startup')"]),
          [_mq("abep_sim/reservoir.py::startup_transient", "gas-chamber fill to ignition pressure"),
           _mq("abep_sim/cathode_integration.py::startup_transient", "cathode start-up phases (explicit inputs, no Hall prediction)"),
           _mq("abep_sim/ppu.py::load_modes", "startup electrical mode")],
@@ -319,7 +319,7 @@ REQUIREMENTS = [
          [_mq("abep_sim/aochem.py::recombination_fraction", "wall recombination (gamma): how much atomic O reaches the thruster"),
           _mq("abep_sim/aochem.py::inlet_composition", "thruster inlet composition (N2 / O2 / O)")],
          [_ev(HG_MATRIX, "rfp_requirements_recorded_not_gated: carried through the definition of 'atmospheric propellant' in G1 and G6; whether it needs its own gate is OD12"),
-          _ev("Governance.md", "next-work item 4: O2/O chemistry only after items 1-3 succeed (not started)")],
+          _ev("governance.md", "next-work item 4: O2/O chemistry only after items 1-3 succeed (not started)")],
          "open", True, ["analysis", "test"],
          "Wall recombination (how much O arrives) is modeled with literature-class priors; O/O2 Hall-discharge chemistry "
          "does not exist in the validated chain, so ionisation of O is not modeled. Clause and meaning must be checked "
@@ -338,7 +338,7 @@ REQUIREMENTS = [
          [_ev("docs/HISTORY.md", "component IC values are priors (e.g. the microwave-source IC prior); a supply-chain finding, not physics"),
           _ev(HG_MATRIX, "rfp_requirements_recorded_not_gated (programmatic; OD12)")],
          "partial", False, ["inspection"],
-         "Not in the Governance.md envelope summary; the clause, exact definition and subsystem thresholds must be checked "
+         "Not in the governance.md envelope summary; the clause, exact definition and subsystem thresholds must be checked "
          "against the RFP. Component IC values are assumed priors; needs a supplier-backed BoM.",
          _hg([], [], "recorded, not gated (rfp_requirements_recorded_not_gated)", ["OD12"]),
          ["R2", "R3"]),
@@ -381,7 +381,7 @@ REQUIREMENTS = [
          {"where": "docs/HISTORY.md ('abep_closed' definition: the RFP does not state it)", "page_ref": NOT_RFP},
          [_mq("abep_sim/mission_env.py::spacecraft_drag", "drag"),
           _mq("abep_sim/archengine.py::close_architecture", "T/D")],
-         [_ev("Governance.md", "gate 3 FAIL"),
+         [_ev("governance.md", "gate 3 FAIL"),
           _ev(HG_MATRIX, "not_gates: not an RFP requirement as recorded; can enter only as an owner-PROPOSED gate")],
          "blocked_by_gate_3", True, ["analysis"],
          H3 + " Spacecraft ram area is a DRDO input not in the repository.",
@@ -389,7 +389,7 @@ REQUIREMENTS = [
     _req("DER-HALL-CLOSURE", "derived_project", "Admitted Hall transport closure",
          "Absolute Hall performance may be used only from admitted ensemble members (promotion rule; O4 dispositions).",
          None,
-         {"where": "Governance.md next-work item 1 (promotion rule) and item 3 (O4 gating)", "page_ref": NOT_RFP},
+         {"where": "governance.md next-work item 1 (promotion rule) and item 3 (O4 gating)", "page_ref": NOT_RFP},
          [_mq("abep_sim/hall_ensemble.py::require_admitted", "rejects non-members"),
           _mq("abep_sim/hall_ensemble.py::_check_o4", "admission needs O4 dispositions"),
           _mq("abep_sim/hall_map.py::HallMap", "loads admitted members only")],
@@ -409,9 +409,9 @@ REQUIREMENTS = [
              "screening candidates never are. Enters G1, G2, G4, G5, G6, G7 as the Milestone-B model route", ["OD11"]),
          []),
     _req("DER-THERMAL", "derived_project", "Heat rejection (Q_reject)",
-         "Waste heat is rejected within the thermal design (mandatory comparison field Q_reject in Governance.md).",
+         "Waste heat is rejected within the thermal design (mandatory comparison field Q_reject in governance.md).",
          None,
-         {"where": "Governance.md admissibility rule (mandatory fields)", "page_ref": NOT_RFP + "; check the RFP for thermal requirements"},
+         {"where": "governance.md admissibility rule (mandatory fields)", "page_ref": NOT_RFP + "; check the RFP for thermal requirements"},
          [_mq("abep_sim/thermal.py::solve_network", "node temperatures"),
           _mq("abep_sim/thermal.py::size_radiator", "radiator sizing"),
           _mq("abep_sim/thermal_life.py::solve_node_temperature", "lumped steady-state node temperature (framework; not wired)")],
@@ -423,18 +423,18 @@ REQUIREMENTS = [
          []),
     _req("DER-MODEL-INTEGRITY", "derived_project", "Simulator integrity gates",
          "Frozen data reproduce, golden benchmarks pass, source balances close, energy-ledger residual < 2 %, numerical "
-         "convergence (Governance.md rules 1-5).",
-         {"quantity": "energy-ledger residual", "limit": "< 2", "unit": "%", "value_source": "Governance.md rule 4",
+         "convergence (governance.md rules 1-5).",
+         {"quantity": "energy-ledger residual", "limit": "< 2", "unit": "%", "value_source": "governance.md rule 4",
           "evidence_class": "assumed", "evidence_note": "project rule, not an RFP clause"},
-         {"where": "Governance.md rules 1-5 and gate table", "page_ref": NOT_RFP},
+         {"where": "governance.md rules 1-5 and gate table", "page_ref": NOT_RFP},
          [_mq("abep_sim/golden.py::check", "golden reproduction"),
           _mq("abep_sim/convergence.py::run_all", "convergence checks")],
          [_ev("abep_sim/data/golden_v1.json", "golden reference"),
-          _ev("Governance.md", "gates 1, 2, 5, 6 = pass (not re-run in this lane)")],
+          _ev("governance.md", "gates 1, 2, 5, 6 = pass (not re-run in this lane)")],
          "modeled", False, ["test"],
          "None for integrity itself; integrity does not imply Hall validity.",
          _hg([], [], "not a hard gate"), [],
-         verification_status="reported_pass_in_Governance.md_gate_table_not_rerun_here"),
+         verification_status="reported_pass_in_governance.md_gate_table_not_rerun_here"),
 ]
 
 # requirement, design feature, verification, evidence (hard-gate link is taken from the row)
@@ -481,7 +481,7 @@ CHAINS = [
     ("DER-THERMAL", "Radiator and conductive straps", "Analysis + thermal-vacuum test",
      "Network model and framework only; P1 PROPOSED"),
     ("DER-MODEL-INTEGRITY", "Frozen datasets, golden benchmarks, convergence checks", "Test (golden check, pytest)",
-     "Gates 1, 2, 5, 6 pass per Governance.md"),
+     "Gates 1, 2, 5, 6 pass per governance.md"),
 ]
 
 STATUS_VOCAB = {
@@ -542,7 +542,7 @@ def build() -> dict:
                         "or project-derived), the reading of each statement and the hard-gate mapping are PROPOSED for "
                         "owner review. No threshold here is new: every limit is transcribed from in-repo text."),
         "rfp_id": "DTDF/06/13516/DSP/ABEP/X/L/M/01",
-        "rfp_id_source": "Governance.md 'What this is'",
+        "rfp_id_source": "governance.md 'What this is'",
         "matrix_date": "2026-09-27",
         "base_commit": BASE_COMMIT,
         "architectures": ["hall_only", "rf_hall", "ecr_hall"],
@@ -557,7 +557,7 @@ def build() -> dict:
             "or values were invented. Rows marked rfp_inferred_from_repo_text come from code docstrings, docs/HISTORY.md "
             "text or the lane-24 hard-gate matrix that claim or infer an RFP origin; that origin is unverified. "
             "rfp_record_refs use the lane-24 record ids R1-R7 (hard_gate_matrix_v1.json rfp.recorded_in)."),
-        "searched": ("grep -ri 'rfp|drdo' over Governance.md, README.md, docs/, abep_sim/, pyproject.toml, tests/; the lane-24 "
+        "searched": ("grep -ri 'rfp|drdo' over governance.md, README.md, docs/, abep_sim/, pyproject.toml, tests/; the lane-24 "
                      "hard-gate matrix record list R1-R7 was used as a cross-check (at the base commit)"),
         "status_vocabulary": STATUS_VOCAB,
         "verification_methods": ["analysis", "test", "demonstration", "inspection"],
@@ -566,7 +566,7 @@ def build() -> dict:
             "v1). O4 first-stage and escalation score files are committed (Johnson-low trigger fired); no O4 disposition "
             "file and no facility score file is present at the base commit (a facility attempt is recorded under "
             "hallthruster_bridge/validation/interrupted/), so no admission is possible."),
-        "gate_status_snapshot": {"source": "Governance.md gate table (as of the base commit)",
+        "gate_status_snapshot": {"source": "governance.md gate table (as of the base commit)",
                                  "1": "pass", "2": "pass", "3": "FAIL", "4": "done, conditional on gate 3",
                                  "5": "pass", "6": "pass"},
         "hard_gate_link": {

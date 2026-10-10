@@ -18,7 +18,7 @@ Rules implemented here
   * values owned by the parallel A9 lanes (A9-01, A9-02, A9-04, A9-05) are written "PENDING <lane path>" and never filled;
   * no Hall transport closure, screening candidate, superseded 0-D Hall model or withdrawn number is read; nothing here
     predicts thrust, efficiency, discharge current, neutralizer electron current or plasma state;
-  * missing inputs raise (Governance.md rule 3: no silent fallback).
+  * missing inputs raise (governance.md rule 3: no silent fallback).
 
 Usage
   python docs/interfaces/icp_neutralizer/build_icp_neutralizer_icd.py          # write both files

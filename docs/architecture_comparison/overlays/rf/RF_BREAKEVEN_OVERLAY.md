@@ -44,7 +44,7 @@ compressor, gas chambers or valves. The script is pure and is not wired into `ar
 The script looks for each file by its repository path: first in this checkout, then under `--input-root` (or
 `ABEP_OVERLAY_INPUT_ROOTS`), then in the sibling git worktrees. It accepts a file only if its sha256 equals the pin, so
 the result does not depend on where the file was found. A missing or different file raises `OverlayInputError` with the
-places searched (no silent fallback, Governance.md rule 3). After the input lanes merge, the files are found in this
+places searched (no silent fallback, governance.md rule 3). After the input lanes merge, the files are found in this
 checkout. Moving to a newer input means changing its pin deliberately and regenerating.
 
 This lane accessed no external source itself. Every source below is cited as recorded, with its access label, by the

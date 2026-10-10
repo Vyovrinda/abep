@@ -207,7 +207,7 @@ Current status: NOT_EVALUATED - no Hall->ICP data exist; this framework evaluate
 | DR-19 | installed MFC zero check per block and a declared MFC body-temperature band | row 97 |
 | DR-20 | facility radiative sink temperature measured per run | row 131 |
 | DR-21 | no score-bearing data before LOCK-2; score-bearing data taken before LOCK-2 are excluded | historical locks.rule (phase1_prereg_framework_v1.json#locks) |
-| DR-22 | no performance prediction from any Hall-transport closure (none admitted), the superseded 0-D Hall model or the withdrawn v1.2-v1.6 numbers; published analogs only with page / figure / table provenance and evidence class | Governance.md gate 3 and superseded list; A9 evidence_anchor |
+| DR-22 | no performance prediction from any Hall-transport closure (none admitted), the superseded 0-D Hall model or the withdrawn v1.2-v1.6 numbers; published analogs only with page / figure / table provenance and evidence class | governance.md gate 3 and superseded list; A9 evidence_anchor |
 | DR-23 | no hypothesis surfaces from manufactured ASSUMED_SCREENING_VALUE inputs | row 146 |
 
 ### Execution design

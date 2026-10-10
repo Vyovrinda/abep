@@ -12,7 +12,7 @@ three candidate thrust architectures ('hall_only', 'rf_hall', 'ecr_hall') are co
 The RF/ECR arms only change the pre-ionization method, which sits downstream of IF-A5, so no quantity in this file
 depends on the architecture id.
 
-Rules this script follows (Governance.md rules 1, 3, 5, 6, 10; docs/EVIDENCE.md):
+Rules this script follows (governance.md rules 1, 3, 5, 6, 10; docs/EVIDENCE.md):
   * Only the existing frozen chain is used: abep_sim.atmosphere (frozen NRLMSIS 2.1 scenario dataset, forced with
     use_msis=False and checked through the returned `source`), abep_sim.intake / intake_tpmc (frozen TPMC surface),
     abep_sim.compressor, abep_sim.reservoir. archengine.py / system.py are only read (their chaining is mirrored, see
@@ -999,7 +999,7 @@ def milestones() -> dict:
             "a decision on the collected-flow composition convention (ICD G-02) and on gas-temperature propagation "
             "(ICD G-07)",
             "an NRLMSIS 2.1 error characterisation (no uncertainty is exposed today) and orbit-resolved extremes from "
-            "a frozen orbit-resolved dataset (rebuild under Governance.md rule 1)",
+            "a frozen orbit-resolved dataset (rebuild under governance.md rule 1)",
             "on the Hall side (other track): an admitted Hall transport closure; the feed state here is what its "
             "design Hall maps would be queried with",
         ],
@@ -1018,7 +1018,7 @@ def not_adopted() -> list[dict]:
          "evidence_token": "with **0.7 m²** it holds all 26,000 h", "evidence_class": "model-derived",
          "reason": "v0.2 mission-transient finding (transient.py with the thruster-card model; drag against the 25 mN "
                    "cap), later the reference design '0.7 m² / 20 cm / 275 V' of Phases 4-6, whose Hall performance "
-                   "comes from the 0-D Hall model now marked superseded (Governance.md: plasma_devices.py '0-D Hall - "
+                   "comes from the 0-D Hall model now marked superseded (governance.md: plasma_devices.py '0-D Hall - "
                    "superseded'; 'Superseded / withdrawn'); a study result, not a design baseline with provenance"},
         {"quantity": "valve.p_feed_setpoint_Pa", "value": 0.05, "unit": "Pa", "file": "docs/HISTORY.md",
          "evidence_token": "reference gas state (200 km, 0.7 m², CFRP turbo, 0.05 Pa, 0.98 mg/s",
@@ -1067,7 +1067,7 @@ def chain_findings() -> list[dict]:
         {"id": "FE-06", "icd_gap": None, "where": "abep_sim/atmosphere.py:atmosphere (_MSIS_CACHE)",
          "finding": "the cache key omits the ABEP_ALLOW_TABLE_ATMOSPHERE environment switch (ABEP_ATMOSPHERE enters "
                     "only through the resolved use_msis flag), so a table-fallback state cached with the switch set is "
-                    "returned later without it, and vice versa (Governance.md rule 5: caches must be pure functions of "
+                    "returned later without it, and vice versa (governance.md rule 5: caches must be pure functions of "
                     "their keys)",
          "handling": "every call's returned `source` is checked against the frozen dataset hash and the value against "
                      "the CSV grid node; anything else raises FrozenAtmosphereRequired"},
@@ -1136,7 +1136,7 @@ def xe_path() -> dict:
     pure = {"Xe": 1.0}
     kw = dict(evidence_class="assumed", uncertainty=uncertainty_tbd(
         "nominal pure-xenon feed; TBD - requires a propellant purity specification (ICD IF-X1 xe_purity gap)"),
-        source="definition of the Xe path (Governance.md RFP architecture: Xe chamber -> valve)",
+        source="definition of the Xe path (governance.md RFP architecture: Xe chamber -> valve)",
         validity_domain="D-XE-TBD", in_domain=None,
         producer={"call": "none", "derivation": "definition (single-species path)"})
     return {
@@ -1155,7 +1155,7 @@ def xe_path() -> dict:
         },
         "mixed_air_xe_feed": {"status": "TBD",
                               "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are "
-                                          "gated behind Governance.md Next work 1-3 (Next work 4)"},
+                                          "gated behind governance.md Next work 1-3 (Next work 4)"},
     }
 
 
@@ -1169,7 +1169,7 @@ def open_questions() -> list[str]:
         "carry different minimum-pressure priors; those cards are not adopted.)",
         "Composition convention (ICD G-02): keep the system.evaluate free-stream split as primary, or switch to the "
         "species-resolved frozen surface (a model change for the chain; goldens may move)?",
-        "Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (Governance.md rule 1 rebuild) so along-track "
+        "Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (governance.md rule 1 rebuild) so along-track "
         "density/composition extremes can be added; which geomagnetic levels beyond ap 15?",
         "Atmosphere levels: confirm low/mean/high = F10.7 = F10.7A 70/150/230 at ap 15 (repository convention "
         "atmosphere._SOLAR_F107) against the mission's solar-cycle specification.",
@@ -1261,10 +1261,10 @@ def build_document(design_doc: dict | None = None, altitudes=ALTITUDES_KM, level
         },
         "extremes": {
             "status": "TBD",
-            "requires": ("TBD - requires a frozen orbit-resolved NRLMSIS dataset (built under Governance.md rule 1). The "
+            "requires": ("TBD - requires a frozen orbit-resolved NRLMSIS dataset (built under governance.md rule 1). The "
                          "frozen dataset is orbit-averaged by construction; abep_sim/orbit_atm.orbit_atmosphere "
                          "computes along-track min/max only with live pymsis, which the frozen chain does not use "
-                         "(Governance.md rule 3)"),
+                         "(governance.md rule 3)"),
             "covered_here": "orbit-averaged states only (averaging = 'orbit_averaged' in every case)",
         },
         "design_inputs": ({"supplied": False, "label": None, "entries": {},

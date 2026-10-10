@@ -5,15 +5,17 @@ PENDING_STEP_2_MODEL_CHANGE):
   A9.13 F9-OQ-03 (S6.22)  AG-01 .. AG-15 approved with the determining-evidence closure standard (gate_closes);
                           AG-03 via a separately preregistered successor held-out validation (P5-N2 v1 stays INCONCLUSIVE);
                           AG-12 = statewise feed-state sufficiency (S6.21); AG-13 = statewise T - D >= 0 (S6.15);
-                          AG-15 = official RFP registered with immutable provenance / hash + RVM re-based (BLOCKED: the RFP
-                          document is not in the repository)
+                          AG-15 = official RFP registered with immutable provenance / hash + RVM re-based (status
+                          derived by ag15_f9.assess from the registration record and the RVM re-base; F9 lane F9)
   A9.13 F9-OQ-02 (S6.21)  no fixed flight mass-flow gate: 0.38 mg/s and ~1.3 mg/s are not requirements; 0.38-3.2 mg/s is
                           characterization coverage only; AG-12 NOT_EVALUATED until the validated H-1 thrust-vs-feed map
   A9.13 F9-OQ-01 (S6.20)  the robust Pareto set is carried to LOCK-1; no representative is selected
   A9.13 / A9.14 / A9.12 / A9.8 / A9.15 answers that settle F9 rows (filter placement, setpoint policy, delta_B_acc,
                           isolation class, redundancy, mass lines, Xe cases, start sequence, Xe capability)
   A9.9 F1Q-01 / UPSTREAM_ICD-Q7 / F9-OQ-04  model-change candidates MCC-01..07 owner-authorised, PENDING_STEP_2
-No PASS; no representative; RFP-cited facts are OWNER_STATED_PENDING_RFP_REGISTRATION (AG-15).
+No PASS; no representative; the step-1 label OWNER_STATED_PENDING_RFP_REGISTRATION set here is re-based afterwards onto
+the registered clause ids by rfp_citations_f9 (kept there as rfp_citation_status_as_applied; AG-15 itself is evaluated
+from the registered RFP, ag15_f9).
 """
 from __future__ import annotations
 
@@ -111,7 +113,7 @@ def ag13_statewise(states: list, spacecraft_icd_registered: bool) -> dict:
             "per_state_margin_N": m, "rule": "hard statewise constraint; the orbit average is reported only"}
 
 
-def apply_gates(gates: list, ref) -> list:
+def apply_gates(gates: list, ref, upstream_frontier_mg_s: float) -> list:
     by = {g["id"]: g for g in gates}
     for g in gates:
         g["owner_approved"] = {"decision": L.cite("F9-OQ-03"),
@@ -139,9 +141,9 @@ def apply_gates(gates: list, ref) -> list:
         "removed": "the 0.38 mg/s (and ~1.3 mg/s) fixed-number gate: not flight requirements",
         "characterization_coverage_mg_s": list(CHARACTERIZATION_COVERAGE_MG_S),
         "characterization_coverage_role": "CHARACTERIZATION_COVERAGE_ONLY_NOT_A_PASS_FAIL_REQUIREMENT",
-        "engineering_warning": "the parametric upstream frontier (0.09832423 mg/s all-state, single setpoint) is low "
-                               "relative to the ground-characterization envelope: an engineering warning, not a "
-                               "demonstrated requirement failure (A9.13 owner_statements.flight_flow_requirement)",
+        "engineering_warning": f"the parametric upstream frontier ({upstream_frontier_mg_s} mg/s all-state, single "
+                               "setpoint; read from the current F7 outputs by the F9 builder) is low relative to the "
+                               "ground-characterization envelope: an engineering warning, not a demonstrated requirement failure (A9.13 owner_statements.flight_flow_requirement)",
         "evaluator": "a9_16_f9.ag12_feed_state_sufficiency (fail closed; refuses a fixed mg/s gate)",
         "rfp_citation_status": L.RFP_PENDING}
     g["sources"] = g["sources"] + [dsrc("F9-OQ-02"), dsrc("OQ-F4-04")]
@@ -158,14 +160,22 @@ def apply_gates(gates: list, ref) -> list:
         "evaluator": "a9_16_f9.ag13_statewise (fail closed)"}
     g["sources"] = g["sources"] + [dsrc("OQ-F78-01"), dsrc("OQ-F78-04")]
     g = by["AG-15"]
-    g["current_status"] = "BLOCKED_RFP_NOT_REGISTERED (owner states the RFP is available to the project; not in the repository)"
-    g["blocking_evidence"] = ("register the official RFP in the repository evidence system with immutable provenance / "
-                              "sha256 and re-base the RVM requirements against it; secondary transcriptions are not "
-                              "enough (A9.13 F9-OQ-03 AG-15 clarification); until then every RFP-cited owner statement "
-                              "is OWNER_STATED_PENDING_RFP_REGISTRATION")
+    # status and blocking evidence come from the registered RFP + RVM re-base (build_gates -> ag15_f9.assess); the
+    # A9.13 clarification is recorded with the gate, never overriding the derived status
+    if not isinstance(g["blocking_evidence"], dict) or "assessment" not in g["blocking_evidence"]:
+        raise SystemExit("REFUSED: AG-15 carries no registration assessment (ag15_f9)")
+    g["blocking_evidence"]["a9_13_clarification"] = (
+        "register the official RFP in the repository evidence system with immutable provenance / sha256 and re-base "
+        "the RVM requirements against it; secondary transcriptions are not enough (A9.13 F9-OQ-03 AG-15 clarification)")
     g["sources"] = g["sources"] + [dsrc("F9-OQ-03")]
+    a15 = g["blocking_evidence"]["assessment"]
     for gg in gates:
-        assert gg["evidence_sufficient_for_freeze"] is False
+        if gg["id"] == "AG-15" and gg["evidence_sufficient_for_freeze"]:
+            # only on the owner closure record (A9.22 G3; ag15_f9 fail-closed check) and determining evidence
+            assert a15["closes"] and a15["determining_evidence"]["closes"], "AG-15"
+            assert "owner_closure_recorded" in a15["evidence_parts"], "AG-15"
+            continue
+        assert gg["evidence_sufficient_for_freeze"] is False, gg["id"]
     return gates
 
 
@@ -282,36 +292,51 @@ def apply_rows(rows: list, ref, get) -> list:
     note(r, ["RVMQ-01", "OD12"], rfp_citation_status=L.RFP_PENDING)
 
     mp3_lines = {"AFC-SY-MASS-AL-04": (3, "MQ-03", 4.2048), "AFC-SY-MASS-AL-07": (6, "MQ-04", 6.0),
-                 "AFC-SY-MASS-AL-08": (7, "MQ-05", 6.0528)}
+                 "AFC-SY-MASS-AL-08": (7, "MQ-05", 5.9148)}      # A9.24 AFI-01 re-base (v4; unchanged in mass / power v5)
     for rid, (idx, qid, floor) in mp3_lines.items():
         r = by[rid]
-        line = get("MP3", f"/lines/hall_icp_neutralizer/{idx}")
+        line = get("MP5", f"/lines/hall_icp_neutralizer/{idx}")
         assert line["line"] == rid.split("-", 3)[-1], rid
-        part = [x for x in get("MP3", "/rollups/0/parts") if x["line"] == line["line"]][0]
+        part = [x for x in get("MP5", "/rollups/0/parts") if x["line"] == line["line"]][0]
         assert part["used"] == "MEV_PLANNING_FLOOR" and math.isclose(part["kg"], floor), (rid, part)
         _set(r, value=floor, units="kg (MEV planning floor)", tolerance="n/a (planning floor, not a CBE)",
              evidence_class="owner-allocation", value_label="ALLOCATION",
              basis=f"A9.14 {qid}: MEV planning floor (owner-stated); replaced by 1.20 x the actual CBE when it exists "
-                   "(mass / power v3)",
+                   "(mass / power v5" + ("; A9.24 AFI-01: cathode-feed PFCV removed from the 6.0528 kg owner floor, "
+                                         "second series latch kept (AFI-01-S1 OWNER_DECIDED_KEEP_SECOND_SERIES_LATCH, "
+                                         "A9.25 message 8)" if qid == "MQ-05" else "") + ")",
              freeze_status="OPEN", evidence_to_advance=["CBE (then weighed article) for the line"])
-        r["source"] = r["source"] + [ref("MP3", f"/lines/hall_icp_neutralizer/{idx}"), dsrc(qid)]
+        r["source"] = r["source"] + [ref("MP5", f"/lines/hall_icp_neutralizer/{idx}"), dsrc(qid)]
         note(r, [qid, "MQ-01"])
 
     r = by["AFC-SY-MASS-ROLL"]
-    roll = get("MP3", "/rollups/0")
+    roll = get("MP5", "/rollups/0")
+    mstat = get("MP5", "/mass_status")
     _set(r, value={"reading": roll["reading"], "dry_known_kg": roll["dry_known_kg"],
                    "system_margin_kg": roll["system_margin_kg"], "reserve_kg": roll["reserve_kg"],
+                   "system_margin_fraction": roll["system_margin_fraction"],
                    "lines_without_value": roll["lines_without_value"],
                    "wet_vs_40kg": {str(w["xe_case_kg"]): w["state"] for w in roll["wet"]
-                                   if w["reference"] == "HARD_40_WET"}},
-         basis="mass / power v3 single MEV reading (A9.14 MQ-01 / MQ-02 / MQ-10): 20 % system margin replaces the 4 kg "
-               "reserve; mass closure by redesign, never by margin relaxation",
-         note="evidence-based wet mass does not close against 40 kg at 2 / 5 / 10 kg loaded Xe (MQ-10: reduce actual "
-              "CBE; no margin relaxation)",
+                                   if w["reference"] == "HARD_40_WET"},
+                   "mass_status": mstat["status"]},
+         basis="mass / power v5 (v4 + A9.26 bid mass policy) single MEV reading (A9.14 MQ-01 / MQ-10; A9.26 message 2): "
+               "10 % system margin on the current pre-margin nominal dry for the proposal / bid basis (the A9.14 MQ-02 "
+               "20 % reading kept as historical / conservative sensitivity), no reserve; 20 % line uplift kept on "
+               "AL-04 / AL-07 / AL-08; AL-09 1.0 kg PROVISIONAL_OWNER_ALLOCATION (MPV3Q-01 OWNER_DECIDED A9.26); mass "
+               "closure by CBE / quotation / design re-base, never by requirement relaxation",
+         note="current provisional planning / evidence roll-up does not close against 40 kg wet at 2 / 5 / 10 kg loaded "
+              "Xe (2 kg planning / reference case ~0.35 kg above); MASS INCOMPLETE_EVIDENCE / NOT_YET_CLOSED (A9.26; "
+              "MQ-10: reduce actual CBE)",
          freeze_status="TBD_AFTER_EVIDENCE",
-         evidence_to_advance=["CBE for every BOM line", "controls line AL-09 allocation (MPV3Q-01, TBD_OWNER)"])
-    r["source"] = r["source"] + [ref("MP3", "/rollups/0"), dsrc("MQ-02"), dsrc("MQ-10")]
-    note(r, ["MQ-01", "MQ-02", "MQ-10"])
+         evidence_to_advance=["CBE for every BOM line", "AL-07 cathodeless PPU CBE / requote",
+                              "AL-08 quote / design re-base", "AL-04 completed Hall-head CBE",
+                              "AL-09 design-derived CBE (replaces the A9.26 1.0 kg provisional owner allocation)",
+                              "routed harness", "subsystem integration / structural optimisation"])
+    r["source"] = r["source"] + [ref("MP5", "/rollups/0"), ref("MP5", "/mass_status"), dsrc("MQ-02"), dsrc("MQ-10"),
+                                 ref("A926", "/owner_decision_summary")]
+    note(r, ["MQ-01", "MQ-02", "MQ-10"], a9_26="A9.26 message 2 (OD_2026_10_05_A9_26): 10 % system margin for the "
+                                                "proposal / bid basis supersedes the MQ-02 20 % reading for the bid "
+                                                "baseline only; AL-09 = 1.0 kg; MPV3Q-01 closed")
 
     r = by["AFC-SY-CTL-01"]
     _set(r, value=["establish gas / plenum / feed state", "set H-1 magnet state", "ignite / stabilize ICP",
@@ -369,11 +394,18 @@ def apply_rows(rows: list, ref, get) -> list:
     note(r, ["XA9Q-06", "OQ-RFQ-09"])
 
     r = by["AFC-SY-XE-08"]
-    _set(r, value={"AL-08_MEV_planning_floor_kg": 6.0528, "evidence_floor_cbe_kg": 5.044},
+    al08 = get("MP5", "/lines/hall_icp_neutralizer/7")
+    assert al08["line"] == "AL-08" and math.isclose(al08["value"]["value_kg"], 5.9148), al08["value"]
+    _set(r, value={"AL-08_MEV_planning_floor_kg": al08["value"]["value_kg"],
+                   "evidence_floor_cbe_kg": al08["evidence_floor_cbe_kg"]},
          basis="A9.14 MQ-05: AL-08 = complete Xe storage / flow hardware (tank, regulator, valves, plumbing, mounting, "
-               "thermal); planning floor replaced by quotations / design",
+               "thermal); planning floor replaced by quotations / design; A9.24 AFI-01 (mass / power v4, unchanged in v5): the C1 "
+               "cathode-feed PFCV removed from the v3 6.0528 / 5.044 kg floor; valves 0.455 kg = latch #1 0.170 + "
+               "latch #2 0.170 (SECOND SERIES FLIGHT XE ISOLATION VALVE, row 55 dual series isolation; AFI-01-S1 "
+               "OWNER_DECIDED_KEEP_SECOND_SERIES_LATCH, A9.25 message 8) + PFCV 0.115; no conventional "
+               "hollow-cathode hardware remains in flight AL-08; PROVISIONAL_PLANNING_FLOOR_NOT_FROZEN",
          freeze_status="OPEN", evidence_to_advance=["quotations / design CBE for the complete Xe hardware"])
-    r["source"] = r["source"] + [ref("MP3", "/lines/hall_icp_neutralizer/7"), dsrc("MQ-05")]
+    r["source"] = r["source"] + [ref("MP5", "/lines/hall_icp_neutralizer/7"), dsrc("MQ-05")]
     note(r, ["MQ-05"])
 
     # A9.16 repair F8: the Xe rows are re-pointed to the current Xe accounting v3 / mass-power v3 (the v2 / state-v4
@@ -390,10 +422,10 @@ def apply_rows(rows: list, ref, get) -> list:
                 "AFC-SY-XE-05": [_find("XE3", "/items", "id", "XV2-25")],
                 "AFC-SY-XE-06": [_find("XE3", "/items", "id", "XV2-28"), _find("XE3", "/items", "id", "XV2-29")],
                 "AFC-SY-XE-07": [_find("XE3", "/items", "id", "XV2-39")],
-                "AFC-SY-XE-08": [_find("MP3", "/lines/hall_icp_neutralizer", "line", "AL-08")]}
+                "AFC-SY-XE-08": [_find("MP5", "/lines/hall_icp_neutralizer", "line", "AL-08")]}
     for rid, ptrs in xe3_ptrs.items():
         r = by[rid]
-        key = "MP3" if rid == "AFC-SY-XE-08" else "XE3"
+        key = "MP5" if rid == "AFC-SY-XE-08" else "XE3"
         hist = []
         for x in r["source"]:
             if isinstance(x, dict) and x.get("path", "").endswith(("xe_accounting_a9_v2.json",
@@ -411,8 +443,8 @@ def apply_rows(rows: list, ref, get) -> list:
         r["source"] = r["source"] + cur
         r["current_sources"] = [c["path"] + c["pointer"] for c in cur]
         r.setdefault("a9_16", {})["current_source_rule"] = (
-            "xe_accounting_a9_v3 / mass_power_a9_v3 / state v5 govern; the v2 / v4 sources are history (A9.16 "
-            "repair F8)")
+            "xe_accounting_a9_v3 / mass_power_a9_v5 / state v5 govern; the v2 / v4 sources are history (A9.16 "
+            "repair F8; mass / power v4 since A9.24 AFI-01, v5 since A9.26)")
         if rid not in touched:
             touched.append(rid)
     return touched
@@ -489,6 +521,8 @@ def rollup_v5(rollup: dict, v5: dict, v5_ref) -> dict:
 
 def owner_answers_applied() -> list:
     A = ARTIFACT
+    # how_applied texts are the A9.16 step-1 application record (history, consumed verbatim by the A9.16 application
+    # matrix); the current AG-15 status is derived in build_gates from the registered RFP (ag15_f9)
     rows = [L.applied_row("F9-OQ-03", A, ["architecture_gates[*].owner_approved", "AG-03", "AG-12", "AG-13", "AG-15"],
                           "AG-01..AG-15 approved with the determining-evidence standard (gate_closes, fail closed); "
                           "AG-03 successor held-out validation; AG-15 BLOCKED_RFP_NOT_REGISTERED", [TEST]),

@@ -66,7 +66,7 @@ measurement paper. The standing rules still apply: published sources only, no co
 bypass.
 
 ## Owner follow-up (outside this change)
-- `Governance.md` "Next work" item 3 still lists ECHT on N2 (`cases/echt_n2.json`) as a discrimination run.
+- `governance.md` "Next work" item 3 still lists ECHT on N2 (`cases/echt_n2.json`) as a discrimination run.
 - Add a `docs/HISTORY.md` entry for this disposition.
 - The COUPLED_* calibration comment in `abep_sim/plasma_devices.py` refers to the same 250 V anchor (left unchanged).
 - The `ECHT` dict in `abep_sim/hall1d.py` (r_in 0.040, r_out 0.050) is reading A of A1. It is a sanity model only and

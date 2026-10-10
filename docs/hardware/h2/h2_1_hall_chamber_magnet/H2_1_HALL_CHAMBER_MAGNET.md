@@ -87,7 +87,7 @@ One fixed channel cannot hold the xenon-analog density band across the delivered
 
 | analog | B | source | class |
 |---|---|---|---|
-| AN-ECHT | 85.3 (centreline plateau at 2 A coil current only, digitized; the thesis '130 G' is a FEMM value, model-derived) | hall_sustainment_matrix.json entries[E03] (REPO_ECHT_AUDIT, MARCHIONI2020); Governance.md (86 mm long, 10 mm wide, 100 mm OD); d/h 9 per scaling_similarity.json echt_groups (r_in/r_out 40/50 mm reading A, inferred, verify) | measured (design dimensions); digitized (B) |
+| AN-ECHT | 85.3 (centreline plateau at 2 A coil current only, digitized; the thesis '130 G' is a FEMM value, model-derived) | hall_sustainment_matrix.json entries[E03] (REPO_ECHT_AUDIT, MARCHIONI2020); governance.md (86 mm long, 10 mm wide, 100 mm OD); d/h 9 per scaling_similarity.json echt_groups (r_in/r_out 40/50 mm reading A, inferred, verify) | measured (design dimensions); digitized (B) |
 | AN-CAMILA | N2 needed 1.48x the Xe/Kr field (ratio, measured); absolute N2 B not legible | hall_sustainment_matrix.json entries[E10] (MOSKOVITZ2026 Table 3 p. 6, abstract/p. 13) | measured |
 | AN-Z70 | 135 (exit centreline, Xe/N2); 135-160 (Xe/air) | hall_sustainment_matrix.json entries[E13] and [E14] (GURCIULLO2020 p. 148, p. 201) | measured |
 | AN-MASMI | ~218 max on centreline (magnetic-circuit model prediction), 213 G required for r_Le <= 0.1 h at 20 eV | SRC-MASMI pp. 5, 7, 8-9, 11, 13, 18 | measured (dimensions, coil currents/power, temperatures); model-derived (218 G) |

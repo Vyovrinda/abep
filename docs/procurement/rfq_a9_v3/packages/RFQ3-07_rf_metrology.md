@@ -2,7 +2,7 @@
 
 > **DO NOT PURCHASE - QUOTATION / SPECIFICATION ONLY. Purchase orders, advance payments and binding commitments are NOT authorized by this package (owner row 8; A9.1 A9-09 procurement restriction; A9.3, A9.4, A9.6 unchanged; A9.8 OQ-RFQV2-05 and A9.10 OQ-RFQV2-10: quotation / specification only).**
 >
-> Prepared by the technical team (A9.3 OQ-RFQ-07). Commercial dispatch authority remains with P9E/Vyovrinda under Praveen's authorization. No automatic supplier contact: neither this repository nor Governance contacts any supplier; dispatch, if any, is an owner/procurement act.
+> Prepared by the technical team (A9.3 OQ-RFQ-07). Commercial dispatch authority remains with P9E/Vyovrinda under Praveen's authorization. No automatic supplier contact: neither this repository nor governance contacts any supplier; dispatch, if any, is an owner/procurement act.
 > Compatibility: this is one of eight supplier-speciality packages (the six owner families of A9.3 OQ-RFQ-07 + the RF-metrology package of A9.8 P2Q-02 + the H-1 build-to-print package of A9.10 OQ-RFQV2-10) kept compatible by the common top-level interface document RFQ3-CIF (packages/RFQ3-00_common_interface.md). No architecture meaning is inferred from a package boundary (A9.8 OQ-RFQV2-04).
 > No prices are recorded; no supplier is named, ranked or selected; catalogue data appear only as REFERENCE with the citation/URL and access record of the web track.
 > A9 status OWNER_AUTHORIZED_INVESTIGATION_HYPOTHESIS_NOT_FLIGHT_BASELINE: no configuration is a winner; no thrust, efficiency, discharge current, ICP electron current, impedance or plasma state is predicted. Never PASS: RF component ratings TBD_AFTER_IMPEDANCE_MAP; ICP_COUPLED_THERMAL UNRESOLVED; anode material OPEN; ICP electron-current capacity PENDING_ICP45 (ICP45 NOT_EVALUATED until I_d,max,H1 is registered).
@@ -222,6 +222,39 @@ RFQ2-RF-N06, RFQ2-RF-N13 (full text in the owning package; values are copied int
 ## Common-interface ids touched
 
 X-01, X-02, X-03, X-04, X-05, X-16, X-19
+
+## Dispatch readiness checklist (A9.21 item 15)
+
+NOW subset: **READY_FOR_OWNER_DISPATCH**; LATER subset: -. Dispatched by the repository: False; purchase authorized: False. Common interface cited: RFQ3-CIF v3 (`docs/procurement/rfq_a9_v3/packages/RFQ3-00_common_interface.md`, rendered sha256 `e4b2f647151fa40b0a8a6b90b9068cb8b08690c106d1e1d8a616e08e7e76d311`). Owner action: owner / procurement sends the request for quotation outside the repository and keeps the dispatch record outside it (A9.21 item 15); no purchase order.
+
+- [x] banner states DO NOT PURCHASE - quotation / specification only
+- [x] cites the common interface document RFQ3-CIF (docs/procurement/rfq_a9_v3/packages/RFQ3-00_common_interface.md)
+- [x] has NOW lines (P1_NEEDED or indicative quotation now)
+- [x] every P1_NEEDED line has a complete quote sheet (spec, acceptance, calibration, documentation)
+- [x] every NOW line is in an owner-authorised send state with no unmet send precondition
+- [x] no NOW line has a blocking open item
+- [x] no price, supplier name, ranking or purchase authorization (compliance record)
+
+## Owner dispatch authorization (A9.24 item 10)
+
+Authorization: **AUTHORIZED_FOR_QUOTATION_ONLY**; dispatch status: **AUTHORIZED_PENDING_OWNER_SEND**. AUTHORIZED_FOR_QUOTATION_ONLY by the owner (A9.24 item 10); the owner / procurement sends it outside the repository; nothing has been sent from here.
+
+Permits: quotation; technical clarification; datasheets; capability information; mass/power information; lead time. NOT authorized: purchase order; advance payment; supplier selection; binding commitment.
+
+Cover note: `docs/procurement/rfq_a9_v3/dispatch/RFQ3-RFMET_COVER.md`. Scope: NOW subset lines (A9.21 READY_FOR_OWNER_DISPATCH); LATER-tagged lines stay with the later campaign set unless the owner adds them (RF3-FLAG-07).
+
+
+| line | set | readiness | supplier answers | deferred to gate | blocking | reason | send state |
+|---|---|---|---|---|---|---|---|
+| RF-L12 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L13 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L14 | NOW | READY_FOR_OWNER_DISPATCH | - | quantity | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L15 | NOW | READY_FOR_OWNER_DISPATCH | - | quantity | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L16 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L17 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-L18 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RF-O01 | NOW | READY_FOR_OWNER_DISPATCH | - | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
+| RFM-L01 | NOW | READY_FOR_OWNER_DISPATCH | quantity | - | - | owner-authorised send state; no blocking open item | READY_TO_SEND_FOR_QUOTATION (owner / procurement; A9.4); purchase order NOT authorized |
 
 ## Open specification items
 

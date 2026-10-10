@@ -21,14 +21,14 @@ with m_tank from an explicit tank model (``TANK_FORMS``).
 What this module is not: a Xe allocation, a prediction, or a Hall model. It is pure (standard library, no I/O) and is
 NOT wired into ``archengine`` (wiring would be a model change; the goldens must not move).
 
-No hidden defaults (Governance.md rule 3). No physical, efficiency, duration, count or hardware value lives in this module.
+No hidden defaults (governance.md rule 3). No physical, efficiency, duration, count or hardware value lives in this module.
 Every input is an explicit :class:`Quantity` (value, unit, source, evidence class) or a :class:`TBD` record that names
 what closes it. Evaluation refuses with :class:`LedgerIncomplete` and lists every TBD or missing input, unless the
 caller explicitly asks for a partial evaluation. A partial evaluation returns ``None`` for every total it cannot close.
 The only constants here are exact unit definitions (mg -> kg, g -> kg, h -> s) and the allowed vocabularies.
 
 The Xe path is upstream of the discharge. Hall-transport closures, ensemble members, screening candidates and P5
-calibration-nuisance variables never enter it (Governance.md two-layer Hall uncertainty, Scope): inputs carrying such keys
+calibration-nuisance variables never enter it (governance.md two-layer Hall uncertainty, Scope): inputs carrying such keys
 are rejected.
 """
 from __future__ import annotations

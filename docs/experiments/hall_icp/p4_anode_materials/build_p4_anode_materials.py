@@ -5,7 +5,7 @@ owner directive A9.6 sec. 10; owner A9.2 sec. 3-4; owner rows 86, 87, 106, 132, 
 Deterministic, standard library only, no Julia, no network, well under a second.
 
 What it does
-  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (no fallback, Governance.md
+  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (no fallback, governance.md
     rule 3);
   * copies owner-answer texts, A9.2 / A9.6 fixed statuses, R8 evidence rows and source entries, Takahashi analog rows
     (TK-xx), AO-register ids, M16 v3 rows and the H2 A9 anode sensitivity number FROM the pinned inputs (never typed)
@@ -67,6 +67,11 @@ SCR = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(SCR)
 
 
+# A9.24 item 13 (owner messages 2026-10-04): current C1 status; the A9.2 CONTROL_FALLBACK is a labelled quote only
+C1_GROUND_REFERENCE_ONLY = ("GROUND_REFERENCE_ONLY (A9.20 ground-only laboratory reference; A9.19 / A9.24 item 13: "
+           "no C1 flight fallback; "
+           "never in flight architecture, mass, power, Xe or thermal closure)")
+
 def _load_local(name, fname):
     sp = importlib.util.spec_from_file_location(name, str(HERE / fname))
     m = importlib.util.module_from_spec(sp)
@@ -77,6 +82,10 @@ def _load_local(name, fname):
 
 RULES = _load_local("p4_a9_16_rules", "p4_a9_16_rules.py")
 APP = _load_local("p4_a9_16_application", "a9_16_application.py")
+_pp = importlib.util.spec_from_file_location("hw_programme_a9_21",
+                                             str(REPO / "docs/experiments/hall_icp/programme/hw_programme_a9_21.py"))
+PROG = importlib.util.module_from_spec(_pp)       # A9.21 HW_PROGRAMME order (item 10)
+_pp.loader.exec_module(PROG)
 A916_DATE = "2026-10-01"
 
 # ------------------------------------------------------------------------------------------------ pinned inputs
@@ -110,7 +119,7 @@ PINS = {
     "M16V3": ("docs/experiments/hall_icp/integration/m16_v3/subsystem_maturity_v3.json",
               "636cbd3318831f6f56e9833813c4d8c259aef7db3de1c6e503cccce14dade7e2", "M16 subsystem maturity v3"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (Governance.md rule 10)"),
+             "evidence rules (governance.md rule 10)"),
 }
 PINS.update(APP.decision_pins())  # A9.16 step 1: A9.12, A9.13, A9.15 (json + verbatim md)
 NEVER_PINNED = ("docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
@@ -1496,7 +1505,9 @@ def build_doc(pins):
                              "a procurement or purchase", "an owner decision (the A9.12 / A9.13 decisions are "
                              "applied as fail-closed rules; every deferred number stays a registration slot)"],
         "fixed_statuses": fixed,
-        "a9_status": pins["A92"]["decisions"]["a9_10_statuses"],
+        "a9_status": {k: (C1_GROUND_REFERENCE_ONLY if v == "CONTROL_FALLBACK" else v) for k, v in pins["A92"]["decisions"]["a9_10_statuses"].items()},
+        "a9_2_statuses_historical_quote": {"label": "HISTORICAL_QUOTE (A9.2 / A9-10 table, verbatim); the current statuses are current_statuses (A9.24 item 13)",
+                                           "statuses": pins["A92"]["decisions"]["a9_10_statuses"]},
         "pins": {k: {"path": v[0], "sha256": v[1], "role": v[2]} for k, v in sorted(PINS.items())},
         "never_pinned": list(NEVER_PINNED), "merged_cross_lane": xlane_report(None),
         "vocabulary": {"gate_outcomes": list(SCR.GATE_OUTCOMES),
@@ -1555,6 +1566,17 @@ def build_doc(pins):
             "registration slot that refuses today",
         ],
     }
+    # A9.21 HW_PROGRAMME item 10: coupled H-1 + ICP -> P3 thermal -> P4; acceptance thresholds frozen (LOCK-2) before
+    # any acceptance-bearing coupon exposure. Fail closed: while the LOCK-2 freeze refuses on the registered inputs,
+    # the P4 acceptance-exposure step can never report a registered entry.
+    view = PROG.artifact_view("P4")
+    p4_entry = PROG.entry_status("P4-ACCEPTANCE-EXPOSURE")["status"]
+    lock2_now = doc["a9_16_owner_rules"]["lock2"]["registered_freeze"]["status"]
+    if lock2_now != PROG.LOCK2_STATUS and p4_entry == PROG.ENTRY_REGISTERED:
+        raise BuildError("P4 acceptance-bearing exposure entry registered while LOCK-2 is not frozen (A9.21 item 10)")
+    view["p4_acceptance_exposure_entry_now"] = p4_entry
+    view["lock2_registered_freeze_now"] = lock2_now
+    doc["a9_21_programme"] = view
     SCR.assert_no_forbidden_status(doc)
     return doc
 
@@ -1713,6 +1735,9 @@ def render_md(doc):
     for s in doc["source_register"]["reused_from_r8"]:
         L.append(f"- **{s['id']}** (via R8, {s['accessed']}): {s['cite']}. {s['url']} ({s['access']})")
     L += ["", "## Findings", ""] + [f"- {f}" for f in doc["findings"]] + [""]
+    L += PROG.render_view_md(doc["a9_21_programme"])
+    L += [f"P4 acceptance-bearing exposure entry now: {doc['a9_21_programme']['p4_acceptance_exposure_entry_now']}; "
+          f"LOCK-2 registered freeze now: {doc['a9_21_programme']['lock2_registered_freeze_now']}.", ""]
     return "\n".join(L)
 
 

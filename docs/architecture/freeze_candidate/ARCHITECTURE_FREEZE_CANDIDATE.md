@@ -14,28 +14,28 @@ Flight configuration: `hall_icp_neutralizer` (one Hall + one RF/ICP neutralizer,
 - lane interface statuses quoted from F1..F7 are the lanes' own records after the A9.7 integration pass (counterparts resolved to merged paths and record ids); F9-ID-01..08 record what F9 consumed
 - no Hall performance number: credible Hall set empty, P5-N2 v1 INCONCLUSIVE; withdrawn 0-D results unused
 - no PASS, no winner; no owner question answered
-- no existing module, frozen dataset, decision, Governance.md or HISTORY modified; not wired into archengine
+- no existing module, frozen dataset, decision, governance.md or HISTORY modified; not wired into archengine
 
-## A9.2 statuses (verbatim)
+## Current statuses (A9.2 values as a labelled historical quote)
 
-| item | status |
-|---|---|
-| Hall->ICP architecture | INVESTIGATION_HYPOTHESIS |
-| ICP electron-current capacity | PENDING_ICP45 |
-| ICP RF power closure | PENDING_HARDWARE |
-| RF matching architecture | LOCAL_MATCH_SELECTED_FOR_DEVELOPMENT |
-| RF component ratings | TBD_AFTER_IMPEDANCE_MAP |
-| 316L flight anode | REJECTED_AS_CURRENT_BASELINE |
-| final anode material | OPEN |
-| anode thermal closure | UNRESOLVED |
-| coupled H-1/ICP thermal closure | UNRESOLVED |
-| C1 conventional reference | CONTROL_FALLBACK |
+| item | current status | A9.2 historical quote |
+|---|---|---|
+| Hall->ICP architecture | INVESTIGATION_HYPOTHESIS | INVESTIGATION_HYPOTHESIS |
+| ICP electron-current capacity | PENDING_ICP45 | PENDING_ICP45 |
+| ICP RF power closure | PENDING_HARDWARE | PENDING_HARDWARE |
+| RF matching architecture | LOCAL_MATCH_SELECTED_FOR_DEVELOPMENT | LOCAL_MATCH_SELECTED_FOR_DEVELOPMENT |
+| RF component ratings | TBD_AFTER_IMPEDANCE_MAP | TBD_AFTER_IMPEDANCE_MAP |
+| 316L flight anode | REJECTED_AS_CURRENT_BASELINE | REJECTED_AS_CURRENT_BASELINE |
+| final anode material | OPEN | OPEN |
+| anode thermal closure | UNRESOLVED | UNRESOLVED |
+| coupled H-1/ICP thermal closure | UNRESOLVED | UNRESOLVED |
+| C1 conventional reference | GROUND_REFERENCE_ONLY (A9.20 ground-only laboratory reference; A9.19 / A9.24 item 13: no C1 flight fallback; never in flight architecture, mass, power, Xe or thermal closure) | CONTROL_FALLBACK (historical A9.2 status; superseded by A9.19 / A9.20: C1 is GROUND_ONLY_LAB_EQUIPMENT (ground reference only), not a flight control / fallback configuration) |
 
 ## Architecture-level gates
 
 | id | gate | current status | sufficient | evidence steps |
 |---|---|---|---|---|
-| AG-01 | RVM rows (30 system requirements; flight configuration hall_icp_neutralizer, C1 column if any = ground reference) | hall_icp_neutralizer: NOT_EVALUATED 27, INCOMPLETE_EVIDENCE 3; hall_c1_reference: NOT_EVALUATED 29, INCOMPLETE_EVIDEN... | false | EP-01, EP-02, EP-03, EP-10, EP-11, EP-12, EP-13 |
+| AG-01 | RVM rows (30 system requirements; flight configuration hall_icp_neutralizer only) | hall_icp_neutralizer: NOT_EVALUATED 27, INCOMPLETE_EVIDENCE 3 | false | EP-01, EP-02, EP-03, EP-10, EP-11, EP-12, EP-13 |
 | AG-02 | Hall credible transport set (admitted members) | EMPTY (members = []) | false | EP-02, EP-10, EP-11 |
 | AG-03 | Hall-transport validation (successor held-out predictive validation; P5-N2 v1 unchanged) | INCONCLUSIVE (permanent; promotable = []) | false | EP-10 |
 | AG-04 | ICP-45 electron-current capacity (I_e,cap vs I_d,max,H1) | PENDING_ICP45; ICP45 NOT_EVALUATED | false | EP-02, EP-03 |
@@ -49,15 +49,15 @@ Flight configuration: `hall_icp_neutralizer` (one Hall + one RF/ICP neutralizer,
 | AG-12 | statewise feed-state sufficiency (performance-derived; A9.13 F9-OQ-02) | NOT_EVALUATED (validated H-1 thrust-versus-feed map does not exist) | false | EP-08, EP-09, EP-14 |
 | AG-13 | statewise drag compensation T_available(state) - D_spacecraft(state) >= 0 (A9.13 OQ-F78-01) | NOT_EVALUATED | false | EP-11, EP-15 |
 | AG-14 | H-1 engineering article | NOT_FROZEN (OPEN / TBD items remain; FREEZE_CANDIDATE items are candidates only) | false | EP-05, EP-06, EP-07 |
-| AG-15 | requirement basis (official RFP document) | BLOCKED_RFP_NOT_REGISTERED (owner states the RFP is available to the project; not in the repository) | false | EP-01 |
+| AG-15 | requirement basis (official RFP registered + RVM re-based; A9.13 S6.22) | DETERMINING_EVIDENCE_PRESENT_NO_REMAINING_CONDITION | true | EP-01 |
 
 Blocking evidence per gate:
 
-- **AG-01**: no row is PASS (hall_icp_neutralizer: NOT_EVALUATED 27, INCOMPLETE_EVIDENCE 3; hall_c1_reference: NOT_EVALUATED 29, INCOMPLETE_EVIDENCE 1); requirements frozen: 6 of 30 (official RFP not in the repository)
+- **AG-01**: no row is PASS (hall_icp_neutralizer: NOT_EVALUATED 27, INCOMPLETE_EVIDENCE 3); requirements frozen: 28 of 30 (22 of 22 RFP_CLAUSE rows: the official RFP is registered by hash and the RVM re-based on it; the owner closed AG-15 (A9.22 G3), freezing the requirement basis only - no row status changes)
 - **AG-02**: no admitted Hall transport closure: no design-specific Hall map exists, so thrust T, T - D, I_d,max, Hall discharge power and wall life are NOT_EVALUATED for every design vector
 - **AG-03**: P5-N2 v1 stays INCONCLUSIVE and is never rewritten; closure needs a separately preregistered successor held-out predictive validation that admits a Hall-transport member (A9.13 F9-OQ-03 AG-03 clarification)
 - **AG-04**: I_d,max,H1 not registered (needs measured H-1 operation); no P1 data (P1 plan ENGINEERING_TEST_PLAN_DRAFT_NOT_SCORE_BEARING)
-- **AG-05**: P3 framework inputs TBD: ICP geometry P3-G-01..08, emittances, conductances, Q_RF/match and Q_collector from P1 / P2, Q_plume from Phase-1; no thermal PASS from a negligible-coupling calculation (A9.2)
+- **AG-05**: P3 framework inputs TBD: ICP geometry P3-G-01..08, emittances, conductances, Q_RF/match and Q_collector from P1 / P2, Q_plume from Phase-1; no thermal PASS from a negligible-coupling calculation (A9.2); P3 v2 inherits the H2-5 C-1 cathode-body node CB and Q_cath 9-101 W (H25-10): a ground-article C1 term, NOT_USABLE_FOR_FLIGHT_THERMAL_CLOSURE (A9.24 AFI-03; hall_icp_neutralizer has no cathode; ...
 - **AG-06**: anode heat-removal path design (A9.2 sec. 4 investigation list) and the measured deposited discharge-power fraction
 - **AG-07**: P4: no candidate has gate-admissible evidence (all gate cells INCOMPLETE_EVIDENCE); 316L REJECTED_AS_CURRENT_BASELINE
 - **AG-08**: P2 impedance map not run (PREPARATION_ONLY_NOT_RUN; waits for the P1 stable region)
@@ -67,66 +67,97 @@ Blocking evidence per gate:
 - **AG-12**: NOT_EVALUATED until the validated H-1 thrust-versus-feed map exists; statewise feed-state sufficiency replaces the fixed 0.38 mg/s gate (0.38-3.2 mg/s = characterization coverage only)
 - **AG-13**: statewise T - D >= 0 at every required state; NOT_EVALUATED (no admitted thrust, no host-spacecraft ICD for D_spacecraft)
 - **AG-14**: channel design point (H1F-CH-11 TBD_OWNER), FEMM of MC-1, B(z) evidence, anode closure
-- **AG-15**: register the official RFP in the repository evidence system with immutable provenance / sha256 and re-base the RVM requirements against it; secondary transcriptions are not enough (A9.13 F9-OQ-03 AG-15 clarification); until then every RFP-cited owner statement is OWNER_STATED_PENDING_RFP_REGISTRATION
+- **AG-15**: registration (pdf sha256 a128a419414b571983d46be9b27f7bf2c4279693408399e0b92148f598e5dd00, 40 pages, 37 clauses) and RVM re-base (every registered clause mapped to an RVM row or recorded as programmatic) are present; owner closure recorded (A9.22 G3, docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json sha256 245307aca27b8151d0ef31a6e92f932a95920e604847694481cba6731835dc49; ...
 
-RVM rows (AG-01; C1 column = GROUND_REFERENCE, not a flight candidate):
+AG-15 (A9.13 S6.22, verbatim: 'The official RFP is now available to the project, but before this gate closes it must be placed/registered in the repository evidence system with immutable provenance/hash and the RVM requirements re-based against it. The repository may not continue relying only on secondary transcriptions.'): **DETERMINING_EVIDENCE_PRESENT_NO_REMAINING_CONDITION**.
 
-| row | title | hall_icp_neutralizer (flight) | C1 ground reference | frozen |
+- official_rfp_registered_with_immutable_provenance_hash: EVIDENCE_PRESENT (docs/requirements/rfp_official/rfp_registration_v1.json#/document)
+- rvm_requirements_rebased_against_it: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rfp_rebase/clause_coverage)
+- not_relying_only_on_secondary_transcriptions: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rows)
+- owner_closure_recorded: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rfp_rebase/ag15_closure)
+- recorded open item AG15-OI-02 (RVM re-base discrepancies recorded against the RFP): [{"id": "DISC-01", "topic": "bid due / closing date", "disposition": "UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; governance.md is not edited here"}, {"id": "DISC-02", "topic": "mass wet / dry", "disposition"...
+
+## Owner-approved pre-LOCK-1 gates (own ids; not AG-01 .. AG-15)
+
+| id | gate | placement | status | criteria | sufficient |
+|---|---|---|---|---|---|
+| GNG-ICP-01 | ICP go / no-go (mandatory, before LOCK-1) for the single Hall + RF/ICP neutralizer flight architecture (A9.19: no hol... | BEFORE_LOCK-1 (mandatory) | NOT_EVALUATED | PENDING_OWNER_ACCEPTANCE | false |
+
+- **GNG-ICP-01**: no owner-accepted GO / NO-GO criterion (criteria PENDING_OWNER_ACCEPTANCE); fail closed (A9.21). Owner approval: ICP_GO_NO_GO_REQUIRED_BEFORE_LOCK1 (EXISTENCE_AND_PLACEMENT_ONLY (no numerical criterion approved)). own id; not one of AG-01 .. AG-15 (their owner approval A9.13 S6.22 F9-OQ-03 covers only those 15 gates); approved by A9.21 ICP_GATE.
+- Proposed criteria for owner review (RP-A919-01, NOT_APPROVED_PRESERVED_FOR_OWNER_REVIEW; never evaluated): "ICP go / no-go before LOCK-1 for the single Hall + RF/ICP flight architecture (no hollow-cathode fallback exists after A9.19): (a) measured ICP electron-current capacity I_e,cap >= I_d,max with a pre-registered margin; (b) RF power per extracted ampere (W/A) within the power budget; (c) repeatable ignition on N2 and on Xe."
+- LOCK-1 release reportable: **false** (LOCK-1 cannot be reported released while any mandatory pre-LOCK-1 gate is not GO (A9.21 ICP_GATE: fail closed; missing evidence -> NOT_EVALUATED, never GO)).
+
+RFP citations of F9 records (F9 records whose owner answer cites the RFP carry the registered clause ids of the RVM row(s) the RVM re-base maps for the corresponding requirement (rfp_citations_f9.CORRESPONDENCE, each correspondence verified against the artifacts); the step-1 label is kept as rfp_citation_status_as_applied; a record without a registered correspondence is UNMAPPED_NO_RVM_MAPPED_CLAUSE with its reason; AG-15 closed by the owner (A9.22 G3)):
+
+| record | status | registered clauses | RVM rows | correspondence |
 |---|---|---|---|---|
-| RVM-01 | Altitude envelope 180-230 km | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-02 | >= 12 mN minimum sustained thrust on atmospheric propellant | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-03 | 25 mN demonstrated system capability inside P_bus < 1.5 kW | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-04 | < 1.5 kW full bus power (A9-02 boundary, steady and start-up, 1 ms window) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-05 | Internal ~1.35 kW design allocation (row 109) | NOT_EVALUATED | NOT_EVALUATED | true |
-| RVM-06 | < 40 kg wet (incl. Xe + tank) | INCOMPLETE_EVIDENCE | NOT_EVALUATED | false |
-| RVM-07 | Internal 34 kg and 36 kg design allocations (row 53) | INCOMPLETE_EVIDENCE | NOT_EVALUATED | true |
-| RVM-08 | Atmospheric propellant (air: N2 / O2 path; NO_ATOMIC_O labels) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-09 | Ionise N2 and nascent (atomic) O in the same thruster (RFP-P17-05, RFP-P17-02) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-10 | Xe capability (air + Xe; bounded functional Xe mode) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-11 | Hall-effect thruster preferred | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-12 | 'Ignition Time: More than 15000 hrs' (RFP-P19-01, literal); design basis >= 15,000 h cumulative energized operation | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-13 | Mission-life basis >= 26,280 h | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-14 | Start-up / restart (ignition, Hall ignition with the electron source, restart, transients) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-15 | Beam neutralization / electron-current capacity (ICP-45 or C1) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-16 | Atomic-oxygen / material compatibility (AO-beam test; anode, collector, keeper, gas path) | INCOMPLETE_EVIDENCE | INCOMPLETE_EVIDENCE | false |
-| RVM-17 | Thermal closure (>= 50 K below validated limits, 20 % heat-load margin) | NOT_EVALUATED | NOT_EVALUATED | true |
-| RVM-18 | Indigenous content: >= 75 % project, thruster > 80 %, intake > 80 %, compressor / storage > 60 %, PSE > 70 % (RFP-P19-05; > 60 % statement RFP-P18-03 recorded) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-19 | Electronics: cater to single-point failure (RFP-P18-09); redundancy at electronics and sensor level (RFP-P18-02) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-20 | MIL-1553B interface with the satellite onboard computer + discrete thruster interface + hardware drivers inside the propulsion system | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-21 | Environmental qualification (ENTEST): launch vibration / shock (PSLV / SSLV or DRDO-decided LV), AO erosion, radiation, thermal, ThermoVac, 3-year VLEO life | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-22 | RFP test approach 4.1 a-d (AO-beam coating tests; rarefied-gas intake erosion; EM / QM force, Isp, efficiency; expert-committee-approved test plan) and ground demonstration | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-23 | ISO certification; acceptance / qualification per ATP (finalized after DDR / CDR); testing to MIL / ASTM / BIS / ESS standards | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-24 | Exit criterion: EM of the ABEP system + qualified electric thruster with O and N2 as propellant at milestone 4 (partial success) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-25 | Milestone schedule and deliverables M1-M5 (T0+9 / +12 / +20 / +24 / +36 months) and the EM -> QM processing flow | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-26 | Micro-newton-level thrust measurement system; UHV test facility and low-thrust measurement setup (Part IV(B), no waivers) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-27 | Steady heat conducted into the spacecraft mounting interface <= 50 W (A9.12 S5.4 provisional owner allocation; 100 W contingency, 25 W stretch) | NOT_EVALUATED | NOT_EVALUATED | true |
-| RVM-28 | Flight thruster architecture: one Hall accelerator + one RF/ICP electron-source/neutralizer for both atmospheric gases and Xe; no conventional hollow cathode (A9.19) | NOT_EVALUATED | NOT_EVALUATED | true |
-| RVM-29 | Two propellant supply modes with separate tanks / paths: ambient atmospheric propellant (primary) and Xe (contingency / emergency supply mode) (RFP-P18-08, RFP-P17-05; A9.19) | NOT_EVALUATED | NOT_EVALUATED | false |
-| RVM-30 | C1 (heated Xe-fed LaB6) is a ground-only laboratory reference: never flight hardware, never in the flight mass / power / Xe budgets (A9.20) | NOT_EVALUATED | NOT_EVALUATED | true |
+| parameters[id=AFC-SY-PPU-07].a9_16 | REGISTERED_CLAUSE | RFP-P18-09, RFP-P18-02 | RVM-19 | RVM_REBASE_DECISION |
+| parameters[id=AFC-SY-PWR-01].rfp_citation | REGISTERED_CLAUSE | RFP-P18-10, RFP-P18-01 | RVM-04 | PARAMETER_FACT |
+| parameters[id=AFC-SY-MASS-WET].rfp_citation | REGISTERED_CLAUSE | RFP-P18-11 | RVM-06 | F9_SOURCE_POINTER |
+| parameters[id=AFC-SY-XE-01].a9_16 | REGISTERED_CLAUSE | RFP-P18-08, RFP-P17-05, RFP-P16-02 | RVM-10 | RVM_A9_15_APPLIED, RVM_A9_16_DECISION |
+| architecture_gates[id=AG-12].blocking_evidence | REGISTERED_CLAUSE | RFP-P18-04, RFP-P18-05, RFP-P18-06 | RVM-01, RVM-02 | VERBATIM_FACT |
+| open_owner_questions[id=F9-OQ-02] | REGISTERED_CLAUSE | RFP-P18-04, RFP-P18-05, RFP-P18-06 | RVM-01, RVM-02 | VERBATIM_FACT |
+| a9_16_owner_answers_applied[question_id=F9-OQ-02] | REGISTERED_CLAUSE | RFP-P18-04, RFP-P18-05, RFP-P18-06 | RVM-01, RVM-02 | VERBATIM_FACT |
+| a9_16_owner_answers_applied[question_id=F2-OQ-01] | REGISTERED_CLAUSE | RFP-P17-05, RFP-P17-02 | RVM-09 | VERBATIM_FACT |
+| a9_16_owner_answers_applied[question_id=F2-OQ-03] | REGISTERED_CLAUSE | RFP-P18-08, RFP-P16-02, RFP-P17-03, RFP-P17-04, RFP-P19-03 | RVM-08 | VERBATIM_FACT |
+| a9_16_owner_answers_applied[question_id=RVMQ-01] | REGISTERED_CLAUSE | RFP-P18-09, RFP-P18-02 | RVM-19 | RVM_REBASE_DECISION |
+| a9_16_owner_answers_applied[question_id=OD12] | REGISTERED_CLAUSE | RFP-P18-09, RFP-P18-02 | RVM-19 | RVM_REBASE_DECISION |
+| a9_16_owner_answers_applied[question_id=XA9Q-07] | REGISTERED_CLAUSE | RFP-P18-08, RFP-P17-05, RFP-P16-02 | RVM-10 | RVM_A9_16_DECISION |
+| a9_16_owner_answers_applied[question_id=OD6] | REGISTERED_CLAUSE | RFP-P18-08, RFP-P17-05, RFP-P16-02 | RVM-10 | RVM_A9_16_DECISION |
+| a9_16_owner_answers_applied[question_id=A9.15 governing_rule] | REGISTERED_CLAUSE | RFP-P18-08, RFP-P17-05, RFP-P16-02 | RVM-10 | RVM_A9_15_APPLIED |
+
+RVM rows (AG-01; flight configuration `hall_icp_neutralizer` only):
+
+| row | title | origin | hall_icp_neutralizer (flight) | frozen |
+|---|---|---|---|---|
+| RVM-01 | Altitude envelope 180-230 km | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-02 | >= 12 mN minimum sustained thrust on atmospheric propellant | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-03 | 25 mN demonstrated system capability inside P_bus < 1.5 kW | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-04 | < 1.5 kW full bus power (A9-02 boundary, steady and start-up, 1 ms window) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-05 | Internal ~1.35 kW design allocation (row 109) | OWNER_ALLOCATION | NOT_EVALUATED | true |
+| RVM-06 | < 40 kg wet (incl. Xe + tank) | RFP_CLAUSE | INCOMPLETE_EVIDENCE | true |
+| RVM-07 | Internal 34 kg and 36 kg design allocations (row 53) | OWNER_ALLOCATION | INCOMPLETE_EVIDENCE | true |
+| RVM-08 | Atmospheric propellant (air: N2 / O2 path; NO_ATOMIC_O labels) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-09 | Ionise N2 and nascent (atomic) O in the same thruster (RFP-P17-05, RFP-P17-02) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-10 | Xe capability (air + Xe; bounded functional Xe mode) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-11 | Hall-effect thruster preferred | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-12 | 'Ignition Time: More than 15000 hrs' (RFP-P19-01, literal); design basis >= 15,000 h cumulative energized operation | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-13 | Mission-life basis >= 26,280 h | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-14 | Start-up / restart (ignition, Hall ignition with the electron source, restart, transients) | DERIVED_PROJECT_REQUIREMENT | NOT_EVALUATED | false |
+| RVM-15 | Beam neutralization / electron-current capacity (ICP-45 or C1) | DERIVED_PROJECT_REQUIREMENT | NOT_EVALUATED | false |
+| RVM-16 | Atomic-oxygen / material compatibility (AO-beam test; anode, collector, keeper, gas path) | RFP_CLAUSE | INCOMPLETE_EVIDENCE | true |
+| RVM-17 | Thermal closure (>= 50 K below validated limits, 20 % heat-load margin) | DERIVED_PROJECT_REQUIREMENT | NOT_EVALUATED | true |
+| RVM-18 | Indigenous content: >= 75 % project, thruster > 80 %, intake > 80 %, compressor / storage > 60 %, PSE > 70 % (RFP-P19-05; > 60 % statement RFP-P18-03 recorded) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-19 | Electronics: cater to single-point failure (RFP-P18-09); redundancy at electronics and sensor level (RFP-P18-02) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-20 | MIL-1553B interface with the satellite onboard computer + discrete thruster interface + hardware drivers inside the propulsion system | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-21 | Environmental qualification (ENTEST): launch vibration / shock (PSLV / SSLV or DRDO-decided LV), AO erosion, radiation, thermal, ThermoVac, 3-year VLEO life | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-22 | RFP test approach 4.1 a-d (AO-beam coating tests; rarefied-gas intake erosion; EM / QM force, Isp, efficiency; expert-committee-approved test plan) and ground demonstration | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-23 | ISO certification; acceptance / qualification per ATP (finalized after DDR / CDR); testing to MIL / ASTM / BIS / ESS standards | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-24 | Exit criterion: EM of the ABEP system + qualified electric thruster with O and N2 as propellant at milestone 4 (partial success) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-25 | Milestone schedule and deliverables M1-M5 (T0+9 / +12 / +20 / +24 / +36 months) and the EM -> QM processing flow | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-26 | Micro-newton-level thrust measurement system; UHV test facility and low-thrust measurement setup (Part IV(B), no waivers) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-27 | Steady heat conducted into the spacecraft mounting interface <= 50 W (A9.12 S5.4 provisional owner allocation; 100 W contingency, 25 W stretch) | OWNER_ALLOCATION | NOT_EVALUATED | true |
+| RVM-28 | Flight thruster architecture: one Hall accelerator + one RF/ICP electron-source/neutralizer for both atmospheric gases and Xe; no conventional hollow cathode (A9.19) | OWNER_ALLOCATION | NOT_EVALUATED | true |
+| RVM-29 | Two propellant supply modes with separate tanks / paths: ambient atmospheric propellant (primary) and Xe (contingency / emergency supply mode) (RFP-P18-08, RFP-P17-05; A9.19) | RFP_CLAUSE | NOT_EVALUATED | true |
+| RVM-30 | C1 (heated Xe-fed LaB6) is a ground-only laboratory reference: never flight hardware, never in the flight mass / power / Xe budgets (A9.20) | OWNER_ALLOCATION | NOT_EVALUATED | true |
 
 ## Upstream Pareto sets (PARAMETRIC_SENSITIVITY)
 
-Robust set (8 members; rule: candidates nominally feasible in EVERY surface scenario (fail closed), compared on worst-case objectives over the scenario set plus the minimum TPMC P_feasible; per set pressure; a set, never a winner; evidence-gate statuses unchanged (gate_snapshot before == after)). Representative: DEFERRED_BY_OWNER (F9-OQ-01); none selected.
+Robust set **EMPTY_ROBUST_SET_NOT_EVALUATED** (0 members; rule: candidates nominally feasible in EVERY surface scenario (fail closed), compared on worst-case objectives over the scenario set plus the minimum TPMC P_feasible; per set pressure; a set, never a winner; evidence-gate statuses unchanged (gate_snapshot before == after)). Representative: DEFERRED_BY_OWNER (F9-OQ-01); none selected.
+
+EMPTY_ROBUST_SET_NOT_EVALUATED: F8 robust Pareto set has 0 members (90 F7 nominal-context survivors, all-10-scenario feasible 0, at most 6 of 10 scenarios feasible); F7 feasible vectors 4647, Pareto members 1279; F1 envelope-feasible intakes per scenario 24 of 144 (intake-face drag binding at ECSS_ST_HIGH 180 km in 1200 of 1200 infeasible records); F4 all-state frontier 0.01296 mg/s single / 0.02644 mg/s scheduled, flow binding at ds2:ECSS_LT_LOW:alt230:lat-84.0000:lst0:lon60:doy184 in 9 of 13 cells; transient basis: 0 of 7 chains pass the orbit check (0 simulated), offered_to_h1 records 0.
 
 | design id | worst-case delivered flow [mg/s] | intake drag [mN] | P_compressor [W] | m_compressor [kg] | V [m^3] | ripple transfer |
 |---|---|---|---|---|---|---|
-| `A0.25_Ld3_phi0.8 / F4-FIL-NONE / T6-A0-U2-D0-Ti6Al4V-H0.75 / V0.001 / P0.01` | 0.007101 | 10.44 | 9.229 | 7.488 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.8 / F4-FIL-NONE / T6-A1-U2-D0-Ti6Al4V-H0.25 / V0.001 / P0.01` | 0.008755 | 10.44 | 9.594 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.8 / F4-FIL-NONE / T6-A1-U2-D0-Ti6Al4V-H0.5 / V0.001 / P0.01` | 0.01096 | 10.44 | 9.628 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.8 / F4-FIL-NONE / T6-A2-U2-D0-Ti6Al4V-H0.75 / V0.001 / P0.01` | 0.0072 | 10.44 | 9.235 | 7.525 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.9 / F4-FIL-NONE / T6-A1-U1-D0-Ti6Al4V-H0.75 / V0.001 / P0.01` | 0.002933 | 10.4 | 9.331 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.9 / F4-FIL-NONE / T6-A1-U2-D0-Ti6Al4V-H0.25 / V0.001 / P0.01` | 0.009046 | 10.4 | 9.641 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld3_phi0.9 / F4-FIL-NONE / T6-A1-U2-D0-Ti6Al4V-H0.5 / V0.001 / P0.01` | 0.01134 | 10.4 | 9.678 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
-| `A0.25_Ld5_phi0.9 / F4-FIL-NONE / T6-A1-U2-D0-Ti6Al4V-H0.5 / V0.001 / P0.01` | 0.01134 | 10.48 | 9.803 | 10.91 | 0.001 | not carried (reported constraint, not an objective; A9.16 step 3) |
 
-Nominal-context Pareto union: 843 members (equals the F8 survivor set (f8_robust_candidates_v1 rows)):
+Nominal-context Pareto union: 90 members (equals the F8 survivor set (f8_robust_candidates_v1 rows)):
 
-- area_m2: 0.25, 0.5
+- area_m2: 0.25
 - L_over_d: 3.0, 5.0, 10.0, 20.0
 - phi: 0.8, 0.9
-- compressor: T2-A1-U1-D0-Ti6Al4V-H0.5, T2-A1-U1-D0-Ti6Al4V-H0.75, T2-A1-U2-D0-Ti6Al4V-H0.5, T3-A0-U2-D0-Ti6Al4V-H0.5, T3-A0-U2-D0-Ti6Al4V-H0.75, T3-A1-U1-D0-Ti6Al4V-H0.25, T3-A1-U1-D0-Ti6Al4V-H0.5, T3-A1-U1-D0-Ti6Al4V-H0.75, T3-A1-U2-D0-Ti6Al4V-H0.25, T3-A1-U2-D0-Ti6Al4V-H0.5, T3-A2-U2-D0-Ti6Al4V-H0.5, T3-A2-U2-D0-Ti6Al4V-H0.75, T4-A0-U2-D0-Ti6Al4V-H0.75, T4-A1-U0-D0-Ti6Al4V-H0.75, T4-A1-U1-D0-Ti6Al4V-H0.25, T4-A1-U1-D0-Ti6Al4V-H0.5, T4-A1-U1-D0-Ti6Al4V-H0.75, T4-A1-U2-D0-Ti6Al4V-H0.25, T4-A1-U2-D0-Ti6Al4V-H0.5, T4-A2-U2-D0-Ti6Al4V-H0.5, T4-A2-U2-D0-Ti6Al4V-H0.75, T5-A0-U2-D0-Ti6Al4V-H0.75, T5-A1-U0-D0-Ti6Al4V-H0.75, T5-A1-U1-D0-Ti6Al4V-H0.25, T5-A1-U1-D0-Ti6Al4V-H0.5, T5-A1-U1-D0-Ti6Al4V-H0.75, T5-A1-U2-D0-Ti6Al4V-H0.25, T5-A1-U2-D0-Ti6Al4V-H0.5, T5-A2-U2-D0-Ti6Al4V-H0.25, T5-A2-U2-D0-Ti6Al4V-H0.75, T6-A0-U2-D0-Ti6Al4V-H0.25, T6-A0-U2-D0-Ti6Al4V-H0.5, T6-A0-U2-D0-Ti6Al4V-H0.75, T6-A1-U0-D0-Ti6Al4V-H0.75, T6-A1-U1-D0-Ti6Al4V-H0.25, T6-A1-U1-D0-Ti6Al4V-H0.5, T6-A1-U1-D0-Ti6Al4V-H0.75, T6-A1-U2-D0-Ti6Al4V-H0.25, T6-A1-U2-D0-Ti6Al4V-H0.5, T6-A2-U2-D0-Ti6Al4V-H0.25, T6-A2-U2-D0-Ti6Al4V-H0.5, T6-A2-U2-D0-Ti6Al4V-H0.75
+- compressor: T4-A0-U2-D0-Ti6Al4V-H0.75, T4-A2-U2-D0-Ti6Al4V-H0.75, T5-A0-U2-D0-Ti6Al4V-H0.75, T5-A1-U1-D0-Ti6Al4V-H0.75, T5-A1-U2-D0-Ti6Al4V-H0.25, T5-A1-U2-D0-Ti6Al4V-H0.5, T5-A2-U2-D0-Ti6Al4V-H0.75, T6-A0-U2-D0-Ti6Al4V-H0.25, T6-A0-U2-D0-Ti6Al4V-H0.5, T6-A0-U2-D0-Ti6Al4V-H0.75, T6-A1-U0-D0-Ti6Al4V-H0.75, T6-A1-U1-D0-Ti6Al4V-H0.25, T6-A1-U1-D0-Ti6Al4V-H0.5, T6-A1-U1-D0-Ti6Al4V-H0.75, T6-A1-U2-D0-Ti6Al4V-H0.25, T6-A1-U2-D0-Ti6Al4V-H0.5, T6-A2-U2-D0-Ti6Al4V-H0.5, T6-A2-U2-D0-Ti6Al4V-H0.75
 - V_m3: 0.001
-- P_set_Pa: 0.005, 0.01, 0.02, 0.05, 0.1
+- P_set_Pa: 0.01, 0.02
 
 ## Candidate definition
 
@@ -138,16 +169,16 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
-| AFC-UP-IN-01 | intake frontal (ram) area A | {"kind": "PARETO_SET", "robust_set_values": [0.25], "nominal_pareto_union_values": [0.25, 0.5]} m^2 | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
-| AFC-UP-IN-02 | channel aspect ratio L/d | {"kind": "PARETO_SET", "robust_set_values": [3.0, 5.0], "nominal_pareto_union_values": [3.0, 5.0, 10.0, 20.0]} - | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
-| AFC-UP-IN-03 | open-area fraction phi | {"kind": "PARETO_SET", "robust_set_values": [0.8, 0.9], "nominal_pareto_union_values": [0.8, 0.9]} - | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
-| AFC-UP-IN-04 | channel diameter d | [5.0, 10.0, 20.0] mm | n/a (objective-invariant at fixed L/d, F1-02) | model-derived | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/findings/1/finding; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/design_vector... | OPEN |
-| AFC-UP-IN-05 | honeycomb structure: wall thickness, AO coating (thickness, density), support fraction,... | TBD - sourced / buildable intake structural definition required before LOCK-1; until then wall material / thickness, AO coating and support fractio... mm; um; kg m^-3; - | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/1; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/4; docs/design_synth... | TBD_AFTER_EVIDENCE |
-| AFC-UP-IN-06 | gas-surface accommodation alpha and kernel (Maxwell / CLL) | TBD - carried as 10 scenarios (alpha 0, 0.2, 0.5, 0.8, 1 x Maxwell / CLL), never optimised - | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/6; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/7; docs/design_synth... | TBD_AFTER_EVIDENCE |
-| AFC-UP-IN-07 | pointing budget theta (intake axis vs relative wind) | TBD - spacecraft / AOCS relative-wind pointing envelope (interface requirement); 0 / 2 / 5 deg are a sensitivity set only, 5 deg is not a validated... deg | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/8; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/open_owner_questions/2/que... | TBD_AFTER_EVIDENCE |
-| AFC-UP-IN-08 | channel wall / plenum gas temperature T_wall | 350.0 K | n/a (code default) | assumed | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/items/5 | OPEN |
-| AFC-UP-IN-09 | intake-face drag of the robust set (max over orbit states) | {"kind": "PARETO_SET", "robust_set_range_N": [0.0104033, 0.0104758], "hard_constraint": "HC-09 intake-face drag <= 25 mN (necessary, not sufficient... N | TPMC statistical SE ~1e-4 relative (F8-02); the... | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/... | OPEN |
-| AFC-UP-IN-10 | intake mass m_intake | TBD - structural inputs TBD; the wall area 2 phi A L/d is the mass proxy in F7 / F8 kg | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json#/findings/9/finding; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutrali... | TBD_AFTER_EVIDENCE |
+| AFC-UP-IN-01 | intake frontal (ram) area A | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_values": [], "nominal_pareto_union_values": [0.25]} m^2 | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-IN-02 | channel aspect ratio L/d | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_values": [], "nominal_pareto_union_values": [3.0, 5.0, 10... - | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-IN-03 | open-area fraction phi | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_values": [], "nominal_pareto_union_values": [0.8, 0.9]} - | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-IN-04 | channel diameter d | [5.0, 10.0, 20.0] mm | n/a (objective-invariant at fixed L/d, F1-02) | model-derived | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/findings/1/finding; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/design_v... | OPEN |
+| AFC-UP-IN-05 | honeycomb structure: wall thickness, AO coating (thickness, density), support fraction,... | TBD - sourced / buildable intake structural definition required before LOCK-1; until then wall material / thickness, AO coating and support fractio... mm; um; kg m^-3; - | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/1; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/4; docs/de... | TBD_AFTER_EVIDENCE |
+| AFC-UP-IN-06 | gas-surface accommodation alpha and kernel (Maxwell / CLL) | TBD - carried as 10 scenarios (alpha 0, 0.2, 0.5, 0.8, 1 x Maxwell / CLL), never optimised - | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/6; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/7; docs/de... | TBD_AFTER_EVIDENCE |
+| AFC-UP-IN-07 | pointing budget theta (intake axis vs relative wind) | TBD - spacecraft / AOCS relative-wind pointing envelope (interface requirement); 0 / 2 / 5 deg are a sensitivity set only, 5 deg is not a validated... deg | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/8; docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/open_owner_quest... | TBD_AFTER_EVIDENCE |
+| AFC-UP-IN-08 | channel wall / plenum gas temperature T_wall | 350.0 K | n/a (code default) | assumed | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/items/5 | OPEN |
+| AFC-UP-IN-09 | intake-face drag of the robust set (max over orbit states) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_range_N": null, "binding_drag_state_group_counts_F1_envel... N | TPMC statistical SE ~1e-4 relative (F8-02); the... | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/... | OPEN |
+| AFC-UP-IN-10 | intake mass m_intake | TBD - structural inputs TBD; the wall area 2 phi A L/d is the mass proxy in F7 / F8 kg | TBD | - | docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json#/findings/9/finding; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neu... | TBD_AFTER_EVIDENCE |
 
 #### filter
 
@@ -165,28 +196,28 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
-| AFC-UP-CO-01 | compressor topology | {"kind": "PARETO_SET", "robust_set": "turbo-molecular rows only (N_drag = 0)", "nominal_pareto_union_all_turbo_only": true, "drag_stage_designs_fea... - | n/a (Pareto set; no member selected) | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/findings/0/finding; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/co... | OPEN |
-| AFC-UP-CO-02 | compressor design set (F3 design ids) | {"kind": "PARETO_SET", "robust_set": {"T6-A0-U2-D0-Ti6Al4V-H0.75": {"N_turbo": 6, "A_turbo_m2": 0.1128299365, "R_turbo_m": 0.2865155563, "u_tip_tur... -; m^2; m; m/s; rpm | n/a (Pareto set; no member selected) | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-CO-01 | compressor topology | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set": null, "nominal_pareto_union_all_turbo_only": true, "dra... - | n/a (Pareto set; no member selected) | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/findings/0/finding; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/co... | OPEN |
+| AFC-UP-CO-02 | compressor design set (F3 design ids) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set": {}, "nominal_pareto_union_ids": ["T4-A0-U2-D0-Ti6Al4V-H... -; m^2; m; m/s; rpm | n/a (Pareto set; no member selected) | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
 | AFC-UP-CO-03 | rotor material | Ti-6Al-4V (only material with a cited allowable in F3; Al alloys and CFRP excluded until a cited allowable and an AO disposition exist) - | n/a (decision / rule) | inferred | docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/materials_excluded; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#... | OPEN |
 | AFC-UP-CO-04 | rotor allowable and stress safety factor | {"Fty_A_basis_MPa": 827, "safety_factor": "TBD (module default 2.0 is uncited)", "tip_speed_cap_mps_at_SF2": 305.5} MPa; -; m/s | n/a (decision / rule) | inferred | docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/findings/1/finding; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#... | TBD_AFTER_EVIDENCE |
-| AFC-UP-CO-05 | compressor electrical power (robust set, max over states) | {"kind": "PARETO_SET", "robust_set_range_W": [9.22923, 9.80257], "nominal_pareto_range_W": [8.439032, 14.69768]} W | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.... | OPEN |
-| AFC-UP-CO-06 | compressor mass (robust set) | {"kind": "PARETO_SET", "robust_set_range_kg": [7.48849, 10.9072], "nominal_pareto_range_kg": [4.189245, 10.90722], "AL-02_allocation_kg": 5.5} kg | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.... | OPEN |
+| AFC-UP-CO-05 | compressor electrical power (robust set, max over states) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_range_W": null, "nominal_pareto_range_W": [8.812819, 11.1... W | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.... | OPEN |
+| AFC-UP-CO-06 | compressor mass (robust set) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_range_kg": null, "nominal_pareto_range_kg": [5.288994, 10... kg | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.... | OPEN |
 | AFC-UP-CO-07 | compressor outlet / stage pressure domain | 0.1 Pa (upper bound) | n/a (decision / rule) | inferred | docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/parameters/0; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/open_... | OPEN |
-| AFC-UP-CO-08 | compressor lumped temperature (robust set) | {"kind": "PARETO_SET", "robust_set_range_K": [314.894, 317.129]} K | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/contexts; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/thermal_basis | OPEN |
-| AFC-UP-CO-09 | delivered-flow atomic-O mole fraction (robust set) | {"kind": "PARETO_SET", "robust_set_range": [0.411034, 0.67193]} - | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/contexts; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/findings/3/f... | OPEN |
+| AFC-UP-CO-08 | compressor lumped temperature (robust set) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_range_K": null} K | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/contexts; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/thermal_basis | OPEN |
+| AFC-UP-CO-09 | delivered-flow atomic-O mole fraction (robust set) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_range": null} - | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json#/contexts; docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json#/findings/3/f... | OPEN |
 
 #### plenum
 
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
-| AFC-UP-PL-01 | plenum volume V | {"kind": "PARETO_SET", "robust_set_values": [0.001], "nominal_pareto_union_values": [0.001]} m^3 | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
-| AFC-UP-PL-02 | plenum set pressure P_set | {"kind": "PARETO_SET", "robust_set_values": [0.01], "nominal_pareto_union_values": [0.005, 0.01, 0.02, 0.05, 0.1]} Pa | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-PL-01 | plenum volume V | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_values": [], "nominal_pareto_union_values": [0.001]} m^3 | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
+| AFC-UP-PL-02 | plenum set pressure P_set | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_values": [], "nominal_pareto_union_values": [0.01, 0.02]} Pa | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.jso... | OPEN |
 | AFC-UP-PL-03 | setpoint policy across orbit states (single vs scheduled) | orbit-state-scheduled plenum setpoint = baseline control architecture (schedule only on measurable / estimable flight states); fixed setpoint = rob... - | n/a (decision / rule) | owner-allocation (RULE) | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/open_owner_questions/0; docs/decisions/OD_2026_10_01_A9_13_s6_upstream_architecture_owner_decisions.j... | FREEZE_CANDIDATE |
 | AFC-UP-PL-04 | chain gas temperature (isothermal chain) | 350.0 K | n/a (code default) | assumed | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/0 | OPEN |
 | AFC-UP-PL-05 | plenum lining baseline | inert / low-recombination lining to preserve the representative atomic-O fraction as far as practical - | n/a (decision / rule) | owner-allocation (RULE) | docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/101/owner_answer_verbatim | FREEZE_CANDIDATE |
 | AFC-UP-PL-06 | plenum wall O recombination probability gamma | TBD - parametric cases WALL-G0 (0) and WALL-TI64-DB (uncited prior) only - | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/5; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/findings/10/finding | TBD_AFTER_EVIDENCE |
 | AFC-UP-PL-07 | plenum external leak area | TBD - code default 5e-8 m^2 is a parametric case m^2 | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/4 | TBD_AFTER_EVIDENCE |
-| AFC-UP-PL-08 | delivered total flow offered by the upstream chain (min over orbit states) | {"kind": "PARETO_SET", "robust_set_worst_case_range_mg_s": [0.00293326, 0.0113419], "all_state_single_setpoint_frontier_mg_s": 0.09832423, "all_sta... mg/s | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/... | OPEN |
+| AFC-UP-PL-08 | delivered total flow offered by the upstream chain (min over orbit states) | {"kind": "PARETO_SET", "robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_worst_case_range_mg_s": null, "all_state_single_setpoint_... mg/s | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/robust/robust_pareto_by_P_set; docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/... | OPEN |
 | AFC-UP-PL-09 | plenum mass | TBD - plenum geometry / wall design TBD (F4-P-16) kg | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/15; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/2 | TBD_AFTER_EVIDENCE |
 
 #### valves / feed
@@ -194,11 +225,11 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
 | AFC-UP-VF-01 | atmospheric metering-valve control law | {"law": "PI on plenum pressure (normalized gain Kp, integral time Ti)", "Kp_grid": [0.3, 3.0], "Ti_grid_s": [0.3, 3.0]} -; s | n/a (Pareto set; no member selected) | model-derived (PARETO_SET) | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/search_variables/1; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/pareto; docs/experiments/... | OPEN |
-| AFC-UP-VF-02 | metering-valve bandwidth | TBD - parametric 1 Hz; sensitivity 0.1-10 Hz changed no status (F4-09) Hz | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/7; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/findings/8/finding | TBD_AFTER_EVIDENCE |
-| AFC-UP-VF-03 | metering-valve authority | TBD - parametric 3 - | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/8 | TBD_AFTER_EVIDENCE |
+| AFC-UP-VF-02 | metering-valve bandwidth | TBD - parametric 1 Hz; sensitivity cases 0.1 / 1 / 10 Hz: not run - no F4 transient Pareto member exists to re-run (F4-09) Hz | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/7; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/sensitivity_valve_bandwidth; docs/de... | TBD_AFTER_EVIDENCE |
+| AFC-UP-VF-03 | metering-valve authority | TBD - parametric 3 - | TBD | - | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/8; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/findings/7/finding; docs/design_synt... | TBD_AFTER_EVIDENCE |
 | AFC-UP-VF-04 | downstream feed-path molecular conductance demand at a 0.1 Pa upstream pressure (valve ... | {"at_1.3_mg_s_N2_m3_s": 1.3511002, "orifice_equivalent_area_N2_m2": 0.010505226, "table": "steady.conductance_demand (0.03 / 0.38 / 1.3 / ... mg/s;... m^3/s; m^2 | n/a (necessary bound) | model-derived | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/steady/conductance_demand; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/findings/2/finding... | OPEN |
 | AFC-UP-VF-05 | required H-1 inlet state at HALL_INLET_Z0 / IF-A5 | TBD - requires the frozen channel and distributor (H1F-IN-04 / IN-05) Pa; mg/s; K; - | TBD | - | docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json#/parameters/68; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/items/9 | TBD_AFTER_EVIDENCE |
-| AFC-UP-VF-06 | feed-state records offered to H-1 (mdot_s, P, T, x_s, transient quality) | {"kind": "PARETO_SET", "n_records": 463, "P_range_Pa": [0.005, 0.05], "mdot_total_range_mg_s_design_state": [0.0702635, 0.467175], "T_K": [350.0], ... mg/s; Pa; K; - | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/offered_to_h1 | OPEN |
+| AFC-UP-VF-06 | feed-state records offered to H-1 (mdot_s, P, T, x_s, transient quality) | {"kind": "PARETO_SET", "status": "EMPTY_NO_OFFERED_FEED_RECORDS_NOT_EVALUATED", "n_records": 0, "P_range_Pa": null, "mdot_total_range_mg_s_design_s... mg/s; Pa; K; - | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/offered_to_h1; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/transient/contexts; docs/desig... | OPEN |
 | AFC-UP-VF-07 | Xe high-pressure path isolation | dual series isolation on the high-pressure Xe path plus critical sensing / FDIR redundancy; thruster, ICP neutralizer and full PPU not duplicated - | n/a (decision / rule) | owner-allocation (RULE) | docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/54/owner_answer_verbatim; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/bom/9 | FREEZE_CANDIDATE |
 
 ### PROPULSION
@@ -327,7 +358,7 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 | AFC-PR-RF-05 | RF component ratings (generator forward power, coupler, coax, connectors, matching elem... | TBD - TBD_AFTER_IMPEDANCE_MAP W; V | TBD | - | docs/decisions/OD_2026_09_30_A9_2_a907_followup_owner_decisions.json#/decisions/a9_10_statuses/RF component ratings; schemas/interfaces/icp_neutralizer_icd_v... | TBD_AFTER_EVIDENCE |
 | AFC-PR-RF-06 | RF measurement reference | forward / reflected power on the generator / 50-ohm side of the local match; P_delivered = P_forward - P_reflected - P_line/match,loss; never P_for... - | n/a (decision / rule) | owner-allocation (RULE) | docs/decisions/OD_2026_09_30_A9_2_a907_followup_owner_decisions.json#/decisions/rf_measurement_reference | FREEZE_CANDIDATE |
 | AFC-PR-RF-07 | RF protection and trip thresholds | TBD - reflected-power monitoring, mismatch / interlock threshold, arc detection, thermal monitoring and automatic reduction / shutdown are required... W; - | TBD | - | docs/decisions/OD_2026_09_30_A9_2_a907_followup_owner_decisions.json#/decisions/rf_protection; schemas/interfaces/icp_neutralizer_icd_v1.json#/items/15 | TBD_AFTER_EVIDENCE |
-| AFC-PR-RF-08 | flight RF source DC-input -> forward-power efficiency | TBD - requires a measured flight-representative DC-input RF source (A902-21) - | TBD | - | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/20; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/icp_rf_cha... | TBD_AFTER_EVIDENCE |
+| AFC-PR-RF-08 | flight RF source DC-input -> forward-power efficiency | TBD - requires a measured flight-representative DC-input RF source (A902-21) - | TBD | - | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/20; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/icp_rf_... | TBD_AFTER_EVIDENCE |
 | AFC-PR-RF-09 | ICP RF power closure | PENDING_HARDWARE - | n/a (decision / rule) | owner-allocation (RULE) | docs/decisions/OD_2026_09_30_A9_2_a907_followup_owner_decisions.json#/decisions/a9_10_statuses/ICP RF power closure; docs/architecture_comparison/power_bound... | TBD_AFTER_EVIDENCE |
 
 #### collector
@@ -352,25 +383,25 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
-| AFC-SY-PPU-01 | internal propulsion bus | 100.0 V (regulated) | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/10; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/110/owne... | FREEZE_CANDIDATE |
-| AFC-SY-PPU-02 | spacecraft-input front-end voltage and efficiency | TBD - front end kept configurable until the spacecraft bus is known (A902-12 / A902-13 OPEN) V; - | TBD | - | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/11; docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_... | TBD_AFTER_EVIDENCE |
+| AFC-SY-PPU-01 | internal propulsion bus | 100.0 V (regulated) | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/10; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/110/o... | FREEZE_CANDIDATE |
+| AFC-SY-PPU-02 | spacecraft-input front-end voltage and efficiency | TBD - front end kept configurable until the spacecraft bus is known (A902-12 / A902-13 OPEN) V; - | TBD | - | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/11; docs/architecture_comparison/power_boundary_a9_v2/bus_power_bounda... | TBD_AFTER_EVIDENCE |
 | AFC-SY-PPU-03 | installed power slots (hall_icp_neutralizer) | ["hall_discharge", "hall_magnet_inner", "hall_magnet_outer", "hall_magnet_trim", "icp_rf_source", "icp_matching_network", "icp_collector_bias", "fl... - | n/a (decision / rule) | owner-allocation (RULE) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/configurations/hall_icp_neutralizer/installed_slots; docs/architecture_comparison/power_boundary_a... | OPEN |
-| AFC-SY-PPU-04 | Hall magnet supplies | inner, outer, trim (3), current-controlled, current recorded per reading - | n/a (decision / rule) | assumed (RULE) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/30; docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json#/parame... | OPEN |
-| AFC-SY-PPU-05 | RF quantity crossing the bus boundary | generator DC input only - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/18; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/icp_rf_chain | FREEZE_CANDIDATE |
-| AFC-SY-PPU-06 | supply efficiencies per slot | TBD - one per slot (A902-35 OPEN) - | TBD | - | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/34 | TBD_AFTER_EVIDENCE |
+| AFC-SY-PPU-04 | Hall magnet supplies | inner, outer, trim (3), current-controlled, current recorded per reading - | n/a (decision / rule) | assumed (RULE) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/30; docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json#/par... | OPEN |
+| AFC-SY-PPU-05 | RF quantity crossing the bus boundary | generator DC input only - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/18; docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/icp_rf_... | FREEZE_CANDIDATE |
+| AFC-SY-PPU-06 | supply efficiencies per slot | TBD - one per slot (A902-35 OPEN) - | TBD | - | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/34 | TBD_AFTER_EVIDENCE |
 | AFC-SY-PPU-07 | electronics redundancy policy | TBD - redundant / independent critical control, power-switching, telemetry and sensor paths where an individual failure would defeat the mission / ... - | TBD | - | docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/54/owner_answer_verbatim; docs/requirements/rvm_a9/rvm_a9_v1.json#/open_owner_questions/0; docs/... | TBD_AFTER_EVIDENCE |
 
 #### power budget
 
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
-| AFC-SY-PWR-01 | RFP bus-power gate P_bus,1ms,max (steady and start-up) | 1500.0 W (strict <) | n/a (decision / rule) | requirement-as-recorded (REQUIREMENT_AS_RECORDED) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/0; docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v... | OPEN |
-| AFC-SY-PWR-02 | internal design allocation (ICP fits inside; 1350 -> 1500 W margin not consumed nominally) | 1350.0 W | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/3; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/108/owner... | FREEZE_CANDIDATE |
-| AFC-SY-PWR-03 | common allocation (compressor, flow control, thermal, housekeeping) incl. 50 W controls... | {"common_W": 300.0, "controls_thermal_W": 50.0} W | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/6; docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v... | FREEZE_CANDIDATE |
-| AFC-SY-PWR-04 | Hall + electron-source envelope at the common upper value | 1050.0 W | n/a (allocation, not a CBE) | model-derived (ALLOCATION) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/9; docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v... | OPEN |
+| AFC-SY-PWR-01 | RFP bus-power gate P_bus,1ms,max (steady and start-up) | 1500.0 W (strict <) | n/a (decision / rule) | requirement-as-recorded (REQUIREMENT_AS_RECORDED) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/0; docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundar... | OPEN |
+| AFC-SY-PWR-02 | internal design allocation (ICP fits inside; 1350 -> 1500 W margin not consumed nominally) | 1350.0 W | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/3; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/108/ow... | FREEZE_CANDIDATE |
+| AFC-SY-PWR-03 | common allocation (compressor, flow control, thermal, housekeeping) incl. 50 W controls... | {"common_W": 300.0, "controls_thermal_W": 50.0} W | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/6; docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundar... | FREEZE_CANDIDATE |
+| AFC-SY-PWR-04 | Hall + electron-source envelope at the common upper value | 1050.0 W | n/a (allocation, not a CBE) | model-derived (ALLOCATION) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/9; docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundar... | OPEN |
 | AFC-SY-PWR-05 | P_bus ledger (steady) | {"ledger_status": "PARTIAL_BOUNDARY", "P_bus_W": null, "P_bus_lower_bound_W": 0.0, "tbd_count": 22} W | TBD | model-derived | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/configurations/hall_icp_neutralizer/phases/steady; docs/requirements/rvm_a9/rvm_a9_v1.json#/rows/3... | TBD_AFTER_EVIDENCE |
-| AFC-SY-PWR-06 | compressor bus draw (parametric lower-bound booking) | {"kind": "PARETO_SET", "nominal_pareto_range_W": [8.439032, 14.69768], "official_ledger": "TBD"} W | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/system_evaluation/parametric_P_bus_lower_bound_W_range; docs/architecture_comparison/power_bou... | OPEN |
-| AFC-SY-PWR-07 | Hall discharge load | TBD - requires the registered H-1 envelope and a measured flight-representative discharge supply (row 113); no Hall closure or 0-D number is used W | TBD | - | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/31 | TBD_AFTER_EVIDENCE |
+| AFC-SY-PWR-06 | compressor bus draw (parametric lower-bound booking) | {"kind": "PARETO_SET", "nominal_pareto_range_W": [8.812819, 11.14411], "official_ledger": "TBD"} W | n/a (parametric-sensitivity range; no design to... | model-derived (PARAMETRIC_SENSITIVITY) | docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json#/system_evaluation/parametric_P_bus_lower_bound_W_range; docs/architecture_comparison/power_bou... | OPEN |
+| AFC-SY-PWR-07 | Hall discharge load | TBD - requires the registered H-1 envelope and a measured flight-representative discharge supply (row 113); no Hall closure or 0-D number is used W | TBD | - | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/31 | TBD_AFTER_EVIDENCE |
 
 #### mass budget
 
@@ -383,12 +414,12 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 | AFC-SY-MASS-AL-05 | dry allocation AL-05 ICP neutralizer | 2.0 kg | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/4; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
 | AFC-SY-MASS-AL-06 | dry allocation AL-06 RF generator/matching | 1.5 kg | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/5; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
 | AFC-SY-MASS-AL-07 | dry allocation AL-07 Hall PPU | 6.0 kg (MEV planning floor) | n/a (planning floor, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/6; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
-| AFC-SY-MASS-AL-08 | dry allocation AL-08 Xe hardware | 6.0528 kg (MEV planning floor) | n/a (planning floor, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/7; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
+| AFC-SY-MASS-AL-08 | dry allocation AL-08 Xe hardware | 5.9148 kg (MEV planning floor) | n/a (planning floor, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/7; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
 | AFC-SY-MASS-AL-09 | dry allocation AL-09 controls/harness | 1.0 kg | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/8; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
 | AFC-SY-MASS-AL-10 | dry allocation AL-10 structure/thermal | 2.5 kg | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/9; docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/53/owner_answ... | OPEN |
 | AFC-SY-MASS-WET | wet propulsion-system mass gate (incl. Xe + tank) | 40 kg (strict <) | n/a (decision / rule) | requirement-as-recorded (REQUIREMENT_AS_RECORDED) | docs/requirements/rvm_a9/rvm_a9_v1.json#/rows/5; docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json#/items/37 | OPEN |
 | AFC-SY-MASS-INT | internal design allocations | [34, 36] kg (wet) | n/a (allocation, not a CBE) | owner-allocation (ALLOCATION) | docs/decisions/OD_2026_09_29_owner_answers_147.json#/answers/52/owner_answer_verbatim; docs/requirements/rvm_a9/rvm_a9_v1.json#/rows/6 | FREEZE_CANDIDATE |
-| AFC-SY-MASS-ROLL | dry roll-ups (allocations / with evidence floors) under the open margin readings | {"reading": "MEV_LEVEL_EVIDENCE_BASED (the single owner reading)", "dry_known_kg": 40.7464421, "system_margin_kg": 6.791073684, "reserve_kg": 0.0, ... kg (dry, known part) | n/a (roll-up of allocations and floors; no CBE) | model-derived | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/rollups; docs/budgets/owner_decisions/owner_questions_state_v4.json#/rows/250/question; docs/budgets/mas... | TBD_AFTER_EVIDENCE |
+| AFC-SY-MASS-ROLL | dry roll-ups (allocations / with evidence floors) under the open margin readings | {"reading": "MEV_LEVEL_EVIDENCE_BASED (the single owner reading; A9.26: 10 % system margin, active proposal / bid basis)", "dry_known_kg": 38.34901... kg (dry, known part) | n/a (roll-up of allocations and floors; no CBE) | model-derived | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/rollups; docs/budgets/owner_decisions/owner_questions_state_v4.json#/rows/250/question; docs/budgets/mas... | TBD_AFTER_EVIDENCE |
 
 #### thermal interfaces
 
@@ -409,8 +440,8 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 | id | parameter | VALUE | TOLERANCE | EVIDENCE_CLASS | SOURCE | FREEZE_STATUS |
 |---|---|---|---|---|---|---|
 | AFC-SY-CTL-01 | start-up sequence (hall_icp_neutralizer) | ["establish gas / plenum / feed state", "set H-1 magnet state", "ignite / stabilize ICP", "verify electron-source / current condition", "apply Hall... - | n/a (decision / rule) | owner-allocation | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/power/configurations/hall_icp_neutralizer/phases/startup; docs/decisions/OD_2026_09_29_owner_answers_147... | OPEN |
-| AFC-SY-CTL-02 | enforced ordering (hall_icp_neutralizer) | [["icp_rf_ignition", "icp_collector_bias_on"], ["icp_rf_ignition", "hall_discharge_ignition"], ["magnet_ramp", "hall_discharge_ignition"]] - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/sequencing/enforced_order/hall_icp_neutralizer | FREEZE_CANDIDATE |
-| AFC-SY-CTL-03 | peak sequencing rule | at most one peak-class load commanded to rise per start-up step; steady loads may stay on - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json#/items/41 | FREEZE_CANDIDATE |
+| AFC-SY-CTL-02 | enforced ordering (hall_icp_neutralizer) | [["icp_rf_ignition", "icp_collector_bias_on"], ["icp_rf_ignition", "hall_discharge_ignition"], ["magnet_ramp", "hall_discharge_ignition"]] - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/sequencing/enforced_order/hall_icp_neutralizer | FREEZE_CANDIDATE |
+| AFC-SY-CTL-03 | peak sequencing rule | at most one peak-class load commanded to rise per start-up step; steady loads may stay on - | n/a (decision / rule) | owner-allocation (RULE) | docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json#/items/41 | FREEZE_CANDIDATE |
 | AFC-SY-CTL-04 | plenum pressure control and transient-quality metric basis | scheduled plenum setpoint baseline (fixed setpoint fallback); F4 transient metrics (2 % band, 60 s window, E0..E7, orbit-modulation cases) accepted... - | n/a (decision / rule) | owner-allocation (RULE) | docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/open_owner_questions/2; docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json#/metric_definitions; d... | OPEN |
 | AFC-SY-CTL-05 | ICP commands, states and start records | TBD - ICD ICP-35 (LOCK-1) - | TBD | - | schemas/interfaces/icp_neutralizer_icd_v1.json#/items/34 | TBD_AFTER_EVIDENCE |
 | AFC-SY-CTL-06 | ICP telemetry list | ["P_fwd", "P_refl", "rf_interlock_state", "V_coll", "I_coll", "V_body", "T_antenna", "T_dielectric", "T_collector", "T_matching", "T_rf_source", "p... - | n/a (decision / rule) | owner-allocation (RULE) | schemas/interfaces/icp_neutralizer_icd_v1.json#/items/33 | FREEZE_CANDIDATE |
@@ -426,7 +457,7 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 | AFC-SY-XE-05 | Xe storage temperature for tank sizing | 323.0 K | n/a (decision / rule) | owner-allocation (RULE) | docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json#/items/24; docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json#/items/24 | FREEZE_CANDIDATE |
 | AFC-SY-XE-06 | Xe tank MEOP and proof / burst factors | TBD - XV2-28 / XV2-29 MPa; - | TBD | - | docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json#/items/27; docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json#/items/28; docs/decisions/OD_2... | TBD_AFTER_EVIDENCE |
 | AFC-SY-XE-07 | stored-Xe subsystem screening cap (share of 40 kg) | 0.25 - | n/a (decision / rule) | owner-allocation (RULE) | docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json#/items/38; docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json#/items/38 | FREEZE_CANDIDATE |
-| AFC-SY-XE-08 | Xe hardware evidence floor vs AL-08 allocation | {"AL-08_MEV_planning_floor_kg": 6.0528, "evidence_floor_cbe_kg": 5.044} kg | n/a (allocation, not a CBE) | model-derived | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/7; docs/budgets/owner_decisions/owner_questions_state_v4.json#/rows/245/quest... | OPEN |
+| AFC-SY-XE-08 | Xe hardware evidence floor vs AL-08 allocation | {"AL-08_MEV_planning_floor_kg": 5.9148, "evidence_floor_cbe_kg": 4.929} kg | n/a (allocation, not a CBE) | model-derived | docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json#/lines/hall_icp_neutralizer/7; docs/budgets/owner_decisions/owner_questions_state_v4.json#/rows/245/quest... | OPEN |
 
 ## Model-change candidates (owner decision + HISTORY entry required; none implemented)
 
@@ -445,7 +476,7 @@ Freeze-status roll-up (205 parameters): {"FREEZE_CANDIDATE": 53, "OPEN": 71, "TB
 
 | step | evidence | gates | depends on | vehicle |
 |---|---|---|---|---|
-| EP-01 | register the official RFP (owner rows 1-2; A9.13 AG-15: immutable provenance / sha256 in the repository evidence system) and re-base the RVM requirement texts | AG-15, AG-01 | - | owner / legitimate portal route |
+| EP-01 | owner closure of AG-15 (A9.13 S6.22): accept the RVM re-base against the registered official RFP (docs/requirements/rfp_official/rfp_registration_v1.json, by sha256, PDF controlled externally per A9.17 RFP; registrati... | AG-15, AG-01 | - | owner (RVM re-base acceptance) (DONE_FOR AG-15 (owner closed AG-15, A9.22 G3; closure record docs/requirements/rvm_a9/rvm_a9_v1.json#/rfp_rebase/ag15_closure; the AG-01 part (RVM rows by determining evidence) stays open)) |
 | EP-02 | Phase-1 H-1 operation on N2 (hardware pivot): Hall-only sustainment knee; register I_d,max,H1, deposited anode power fraction and inlet conductance on the built article | AG-04, AG-06, AG-10, AG-01 | EP-05 | hardware pivot Phase 1 (OD 2026-09-27) |
 | EP-03 | P1 ICP bench: ICP-45A discharge-OFF capacity I_e,cap (Ar engineering, then N2), C_e and C_e,DC | AG-04, AG-08, AG-09, AG-05 | - | docs/experiments/hall_icp/p1_icp_bench/ |
 | EP-04 | P2 impedance map Z_antenna = f(P_RF, mdot, p, gas, plasma state) in the P1 stable region; RF ratings and flight matching implementation | AG-08, AG-09, AG-05 | EP-03 | docs/experiments/hall_icp/p2_impedance_map/ |
@@ -469,8 +500,8 @@ Current status: state v5 2 TBD_OWNER (MPV3Q-01, XV3Q-01); every other question b
 
 ### F9 questions (as raised)
 
-- **F9-OQ-01** (LOCK-1; status OWNER_DECIDED): Pareto representative rule for the upstream chain: carry the robust Pareto set (9 members at P_set 0.01 Pa: intake A 0.25 m^2, L/d 3-5, phi 0.8-0.9; compressor T6-A1-U2-D0-Ti6Al4V; V 0.001-0.1 m^3) to LOCK-1 as a set, or name a representative by an explicit rule (e.g. (a) maximum worst-case delivered flow, ties by minimum plenum volume; (b) minimum ripple transfer; (c) defer until T-1 / T-2 and DI-1.3 narrow the set)? No representative is selected by this lane.
-- **F9-OQ-02** (LOCK-1 (before any upstream freeze); status OWNER_DECIDED): Set the delivered-flow requirement at the H-1 inlet that the proposed architecture gate AG-12 (UG-FLOW) is scored against (owner row 73 gives a sizing flow ~1.3 mg/s and a characterization range 0.38-3.2 mg/s, neither a flight requirement): which value, at which orbit states / averaging?
+- **F9-OQ-01** (LOCK-1; status OWNER_DECIDED): Pareto representative rule for the upstream chain: carry the robust Pareto set (9 members at P_set 0.01 Pa: intake A 0.25 m^2, L/d 3-5, phi 0.8-0.9; compressor T6-A1-U2-D0-Ti6Al4V; V 0.001-0.1 m^3) to LOCK-1 as a set, or name a representative by an explicit rule (e.g. (a) maximum worst-case delivered flow, ties by minimum plenum volume; (b) minimum ripple transfer; (c) defer until T-1 / T-2 and DI-1.3 narrow the set)? No representative is selected by this lane. [upstream numbers in the question text are the values when the question was raised (before the design-state set v2 re-evaluation of F1-F8); history, not current; current: {"robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_members": 0, "robust_P_set_Pa": [], "all_state_frontier_mg_s_F7": 0.01296072, "all_state_scheduled_frontier_mg_s_F4": 0.02644028}]
+- **F9-OQ-02** (LOCK-1 (before any upstream freeze); status OWNER_DECIDED): Set the delivered-flow requirement at the H-1 inlet that the proposed architecture gate AG-12 (UG-FLOW) is scored against (owner row 73 gives a sizing flow ~1.3 mg/s and a characterization range 0.38-3.2 mg/s, neither a flight requirement): which value, at which orbit states / averaging? [upstream numbers in the question text are the values when the question was raised (before the design-state set v2 re-evaluation of F1-F8); history, not current; current: {"robust_set_status": "EMPTY_ROBUST_SET_NOT_EVALUATED", "robust_set_members": 0, "robust_P_set_Pa": [], "all_state_frontier_mg_s_F7": 0.01296072, "all_state_scheduled_frontier_mg_s_F4": 0.02644028}]
 - **F9-OQ-03** (before Milestone B; status OWNER_DECIDED): Approve the architecture-level gate list AG-01..AG-15 and the sufficiency criterion of each (e.g. RVM rows PASS by a DETERMINING measurement vs a weaker 'evidence sufficient for freeze') that moves the architecture from INVESTIGATION_HYPOTHESIS to FROZEN_REFERENCE_FLIGHT_ARCHITECTURE?
 - **F9-OQ-04** (next production-model revision; status OWNER_DECIDED): Model-change candidates MCC-02 (silent Gaede clipping), MCC-03 (uncited rotor allowable in rotor_ok) and MCC-05..MCC-07 (intake_tpmc reference: non-termination for max_hits < 1, silent Maxwell fallback for an unknown kernel, NaN / raise for CLL alpha outside [0, 1]): authorize each as a controlled model change (golden check, HISTORY entry), or keep the design-layer workarounds?
 
@@ -483,7 +514,7 @@ Current status: state v5 2 TBD_OWNER (MPV3Q-01, XV3Q-01); every other question b
 | F1 | F1Q-01 | ANSWERED_BY_A9_9 | IntakeSurface recombines species rows by mass fraction although its C_D rows are normalised by the mixture q and CR_passive needs mole weighting (finding F1-01). Authorise a controlled model change (goldens move, HISTORY entry), or keep the production conve... |
 | F1 | F1Q-02 | ANSWERED_BY_A9_13 | Structural basis for the honeycomb (wall material and thickness, AO coating and its density, support fraction): supply a sourced design, or authorise a labelled assumption for budgeting only? |
 | F1 | F1Q-03 | ANSWERED_BY_A9_13 | Pointing (theta) budget of the intake axis vs the relative wind: is the frozen surface's 0-5 deg range adequate, or must larger angles be evaluated (direct TPMC)? |
-| F1 | F1Q-04 | ANSWERED_BY_A9_9 | Authorise a frozen intake surface v2 at the envelope states (Governance.md rule 1 rebuild) to replace the bounded direct TPMC used here off the build state? |
+| F1 | F1Q-04 | ANSWERED_BY_A9_9 | Authorise a frozen intake surface v2 at the envelope states (governance.md rule 1 rebuild) to replace the bounded direct TPMC used here off the build state? |
 | F2 | F2-OQ-01 | ANSWERED_BY_A9_13 | Which protection functions must the RFP filter stage provide (particulates / debris, compressor wear products, atomic O to downstream surfaces, ambient charged particles, backflow limitation), and against which quantitative acceptance? |
 | F2 | F2-OQ-02 | ANSWERED_BY_A9_13 | Is a deliberately catalytic (O -> O2 converting) filter element admissible, given owner row 102 (inert / low-recombination lining baseline to preserve the representative atomic-O fraction)? |
 | F2 | F2-OQ-03 | ANSWERED_BY_A9_13 | May trade studies carry 'no filter' (FC-00) as an admissible architecture option, or only as a reference bound because the RFP chain names a filter stage? |
@@ -496,7 +527,7 @@ Current status: state v5 2 TBD_OWNER (MPV3Q-01, XV3Q-01); every other question b
 | F4 | OQ-F4-02 | ANSWERED_BY_A9_13 | The compressor's evidence domain caps the plenum at 0.1 Pa while the H2-3 analog feed path needs 5.7-1216 Pa at IF-A5. Either the downstream path (valve + line + isolator + distributor + H-1) is designed for a molecular conductance >= the conductance_demand... |
 | F4 | OQ-F4-03 | ANSWERED_BY_A9_13 | Confirm the F4 transient-quality metric definitions (2 % band, 60 s window, the E0..E7 event sequence, orbit-modulation amplitude cases) as the basis on which H-1 tolerances are set at LOCK-2 (F5 IFD-F4-05)? |
 | F4 | OQ-F4-04 | ANSWERED_BY_A9_13 | The all-state deliverable flow of every evaluated chain is below the lower end of the owner ground characterization range (0.38 mg/s, row 73). Which lever is to be studied: larger capture (F1 drag-limited at h180_f230), operation restricted to the higher-de... |
-| F4 | OQ-F4-05 | ANSWERED_BY_A9_13 | Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (Governance.md rule 1 rebuild)? |
+| F4 | OQ-F4-05 | ANSWERED_BY_A9_13 | Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (governance.md rule 1 rebuild)? |
 | F5 | F5-OQ-01 | ANSWERED_BY_A9_14 | Authorize FEMM-class axisymmetric magnetostatics of MC-1 at analysis points inside the H-1 windows (the RP-1 anchor plus the window corners that the solid-core inner-coil floor admits, x_hall_design_space.probe_evaluations) as ANALYSIS points, explicitly no... |
 | F5 | F5-OQ-02 | ANSWERED_BY_A9_14 | With no admitted Hall response map, should the H-1 channel design point be selected now on non-performance criteria only (FEMM magnetic feasibility, coupled thermal margins under row 86, mass against AL-04, packaging, manufacturability), leaving thrust capa... |
 | F5 | F5-OQ-03 | ANSWERED_BY_A9_14 | Iron Curie value for the necessary pole/core ceiling: H2-1 carries 770 degC (secondary source, 'verify'), A9-07 REV-06 carries 754 degC (EXT-NBS-ARMCO1967 resistivity hysteresis). Use the lower value as the necessary ceiling until a grade-specific sourced v... |
@@ -529,12 +560,12 @@ Other existing questions cited (as raised): UPSTREAM_ICD-Q7 [ANSWERED_BY_A9_9]: 
 | 243 | MQ-02 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Is the 4 kg dry development reserve (row 54) the row-52 20 % internal system margin, or additional to it? |
 | 244 | MQ-03 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | AL-04 Hall head+magnet 3.0 kg is below the verified MC-1 magnetic-parts floor 3.504 kg (gap 0.504 kg at CBE). Which re-allocation? |
 | 245 | MQ-04 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | AL-07 Hall PPU 2.5 kg is below every row-56-admissible measured PPU analog (lowest 5.0 kg; H2-4 6.1 kg). Which re-allocation? |
-| 246 | MQ-05 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | AL-08 Xe hardware 1.5 kg is below the H2-7 analog floor 5.044 kg (regulator + valves alone 1.544 kg). Which re-allocation, and does AL-08 include tank mounting/thermal and plumbing? |
+| 246 | MQ-05 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_21 | AL-08 Xe hardware 1.5 kg is below the H2-7 analog floor 5.044 kg (regulator + valves alone 1.544 kg). Which re-allocation, and does AL-08 include tank mounting/thermal and plumbing? |
 | 247 | MQ-06 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Row 60 harness (5 % of nominal dry) alone is 1.21-1.45 kg, above the whole 'controls/harness 1.0 kg' line. Split the line into controls and harness? |
 | 248 | MQ-07 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Map the A9 items that row 54 does not name: collector/bias electrode (AL-05?), collector/bias supply (AL-07?), RF feedthrough/coax (AL-06?), flight sensors and valve drivers (AL-09?), Xe tank mount... |
 | 250 | MQ-09 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Do the 2 / 5 / 10 kg Xe design cases (row 48) include the row-43 20 % reserve, with the row-45 residual on top? |
 | 251 | MQ-10 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Under the primary policy reading with the three evidence floors (R2E) the dry mass alone exceeds 40 kg. Accept that closure requires reducing the six evidence-free lines AL-01/02/03/05/06/10 (harne... |
-| 252 | OQ-A907-01 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Row 93 'cap each ignition dwell at 120 s and allow at most two retries': book 3 attempts (1 + 2 retries, literal) or 2 (the '120 s x 2' shorthand used in the A9 backlog) per start in the Xe ledger? |
+| 252 | OQ-A907-01 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_20 | Row 93 'cap each ignition dwell at 120 s and allow at most two retries': book 3 attempts (1 + 2 retries, literal) or 2 (the '120 s x 2' shorthand used in the A9 backlog) per start in the Xe ledger? |
 | 254 | OQ-A907-03 | ["BLOCKS_LOCK_1", "BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Is the >= 50 K rule tested at the bounding corner (all adverse analog inputs together, as done here) or at a nominal point plus a pre-registered uncertainty treatment? |
 | 255 | OQ-A907-04 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Ceramic-insulated coil conductor: plain copper or Ni-clad (Kulgrid)? The Ni-clad conductor raises I^2R by up to x1.33 at equal section and needs a measured magnetic perturbation (row 77) |
 | 256 | OQ-A907-05 | ["BLOCKS_LOCK_1", "BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Accept the supplier continuous ratings (BN 900 degC oxidizing guide value, ceramic wire 1000 F) as PROVISIONAL limits for the >= 50 K rule until qualification tests validate them? |
@@ -542,14 +573,14 @@ Other existing questions cited (as raised): UPSTREAM_ICD-Q7 [ANSWERED_BY_A9_9]: 
 | 258 | OQ-A907-08 | ["BLOCKS_LOCK_1", "BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Exterior coating temperature limit (row 84): the Z-93-class coating's temperature capability on the Hall body is not established (H2-5 v1 TBD). The coated PO/BP surfaces must withstand up to PO 442... |
 | 259 | OQ-A907-09 | ["BLOCKS_LOCK_1", "BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Row 86 '20% heat-load design margin': this lane scales only the DISSIPATED loads (discharge fractions, coil I^2R, cathode) by 1.2 and keeps the environmental solar/albedo/OLR inputs at their v1 hot... |
 | 260 | OQ-A907-10 | ["BLOCKS_LOCK_1", "BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | The thermal worst case is found by a local search plus a heuristic search allowance (not an upper bound). Within-limit results (for hall_icp_neutralizer: UNCOUPLED_SENSITIVITY_WITHIN_LIMIT, reporte... |
-| 262 | OQ-A907-07 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_15 | Develop a flight C1 integration (external mount on the flight article, two series valves, keeper supply) now for the fallback architecture hall_c1_reference, or defer until C1 is chosen for flight? |
+| 262 | OQ-A907-07 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_19 | Develop a flight C1 integration (external mount on the flight article, two series valves, keeper supply) now for the fallback architecture hall_c1_reference, or defer until C1 is chosen for flight? |
 | 263 | XA9Q-01 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Are the row-48 design cases (2 / 5 / 10 kg) LOADED Xe (usable + residual) or usable Xe? |
 | 264 | XA9Q-02 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Row 93 'at most two retries': is the per-start bound 3 dwells (1 + 2 retries, 360 s) or 2 dwells (240 s)? |
 | 265 | XA9Q-03 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Is the row-96 flow-class term booked additively (conservative) and inside the reserve base? |
 | 266 | XA9Q-04 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Ground-test Xe supply margin over the booked ground-test Xe? |
 | 267 | XA9Q-05 | ["NOTHING_IMMEDIATE"] | AMENDED_BY_A9_15 | Does a G-XE ICP feed need a filter/getter? |
 | 268 | XA9Q-06 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Retire H2-7 H27-34 (PROPOSED >= 75 bar MEOP, a 293.15 K check) in favour of a MEOP chosen from quotations against the 323 K volume table? |
-| 269 | XA9Q-07 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_15 | Does the row-6 functional Xe mode apply to the hall_icp_neutralizer flight configuration (so it also carries a Xe tank and Xe flow control)? |
+| 269 | XA9Q-07 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_19 | Does the row-6 functional Xe mode apply to the hall_icp_neutralizer flight configuration (so it also carries a Xe tank and Xe flow control)? |
 | 270 | OQ-RFQ-01 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Spare quantities (stand flexures, ICP dielectric/feedthrough spares, C1 sacrificial O-exposure unit)? |
 | 272 | OQ-RFQ-03 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Quote the Xe reference-path MFC now with its range TBD, or after A9-01 registers the Xe reference point? |
 | 273 | OQ-RFQ-04 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Is the 0.6-0.8 mg/s C1 start/diode flow retained (row 125 'if ... retained')? |
@@ -593,9 +624,9 @@ Other existing questions cited (as raised): UPSTREAM_ICD-Q7 [ANSWERED_BY_A9_9]: 
 | 330 | P4-OQ-03 | ["BLOCKS_P3_P4", "BLOCKS_LOCK_1"] | ANSWERED_BY_A9_12 | Pre-registered coupon acceptance: resistance-rise threshold, AO / sputter recession limits and exposure durations (before any exposure). |
 | 331 | P4-OQ-04 | ["BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Authorize lawful acquisition (library / ILL / purchase) of species-resolved (N+, N2+, O+, O2+) sputtering-yield data for alloy and coating candidates not covered by open elemental compilations? |
 | 332 | P4-OQ-05 | ["BLOCKS_P3_P4"] | ANSWERED_BY_A9_12 | Collector coupons: bias polarity (ion-collecting negative bias as the collector runs, in addition to or instead of the row-106 electron-collecting / floating pair)? |
-| 333 | MPQ-01 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_15 | Row 54 gives no allocation for the C1 electron-source hardware of the hall_c1_reference flight fallback configuration (cathode unit, shield/mount, filter/getter; supplies and cathode Xe branch poss... |
+| 333 | MPQ-01 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_19 | Row 54 gives no allocation for the C1 electron-source hardware of the hall_c1_reference flight fallback configuration (cathode unit, shield/mount, filter/getter; supplies and cathode Xe branch poss... |
 | 334 | MPQ-02 | ["BLOCKS_LOCK_1"] | ANSWERED_BY_A9_14 | Map the A9.2-A9.6 lines that neither row 54 nor MQ-07 names: ICP isolation hardware (MPV2-N01), RF protection/sensing electronics (MPV2-N02), anode heat-removal hardware (MPV2-N03), ICP open-frame ... |
-| 335 | XV2Q-01 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_15 | If XA9Q-07 is answered NO (the row-6 functional Xe mode does not apply to hall_icp_neutralizer), is that flight configuration Xe-free (no tank, no Xe flow control), or does it keep a Xe system for ... |
+| 335 | XV2Q-01 | ["BLOCKS_LOCK_1"] | AMENDED_BY_A9_19 | If XA9Q-07 is answered NO (the row-6 functional Xe mode does not apply to hall_icp_neutralizer), is that flight configuration Xe-free (no tank, no Xe flow control), or does it keep a Xe system for ... |
 | 336 | OQ-RFQV2-01 | ["BLOCKS_P1_START"] | ANSWERED_BY_A9_8 | Must the Ar MFC certificate be ISO/IEC 17025 / NABL-accredited, or is the maker's Ar calibration plus the in-house rate-of-rise/transfer verification sufficient (Ar is ENGINEERING_ONLY_NON_SCORING;... |
 | 337 | OQ-RFQV2-02 | ["BLOCKS_P1_START"] | ANSWERED_BY_A9_8 | Does the domestic engineering chamber for P1 (row 139) already provide pumping, or must RFQ2-VAC request pumping quotations? |
 | 338 | OQ-RFQV2-03 | ["BLOCKS_P1_START"] | ANSWERED_BY_A9_8 | May one calorimetric dummy load serve both the dummy-load and the calorimetric cross-check functions? |
@@ -609,20 +640,25 @@ Other existing questions cited (as raised): UPSTREAM_ICD-Q7 [ANSWERED_BY_A9_9]: 
 | 347 | P1-IT-55 | ["BLOCKS_P1_START"] | ANSWERED_BY_A9_8 | Register DWV leakage acceptance criterion (per insulation path) (A): TBD - requires the insulation-path / feedthrough ratings (P1-IT-44 note; not given by the owner). Until registered the P1-G0 sta... |
 | 354 | OD2 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Envelope quantifier over 180–230 km × atmosphere states |
 | 355 | OD3 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Atmosphere design states |
-| 356 | OD5 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Ignition start sequence and restart count |
-| 357 | OD6 | ["NOTHING_IMMEDIATE"] | AMENDED_BY_A9_15 | Meaning of 'air + Xe' |
+| 356 | OD5 | ["NOTHING_IMMEDIATE"] | AMENDED_BY_A9_19 | Ignition start sequence and restart count |
+| 357 | OD6 | ["NOTHING_IMMEDIATE"] | AMENDED_BY_A9_19 | Meaning of 'air + Xe' |
 | 358 | OD12 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | RFP requirements recorded but not gated (indigenous content, no single-point failure, 'ionise nascent O') |
 | 360 | OD14 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | Is ignition from the off state on atmospheric propellant an RFP requirement? (G6.ignition is inferred from 'air + Xe' and the RFP architecture; no ignition or restart clause is recorded in the repo... |
 | 361 | RVMQ-01 | ["NOTHING_IMMEDIATE"] | ANSWERED_BY_A9_14 | If the official RFP confirms 'no single-point failure in electronics' (recorded only in abep_sim/ppu.py, R7), does the row-55 limited-redundancy policy (no duplicated thruster, ICP neutralizer or f... |
 
 ## Findings
 
-- **F9-01** (inferred): architecture status INVESTIGATION_HYPOTHESIS: 15 of 15 architecture-level gates lack sufficient evidence (none has it)
-- **F9-02** (model-derived (PARAMETRIC_SENSITIVITY inputs)): upstream Pareto: robust set 8 members (all at P_set 0.01 Pa, filter context none, compressor T6-A0-U2-D0-Ti6Al4V-H0.75, T6-A1-U1-D0-Ti6Al4V-H0.75, T6-A1-U2-D0-Ti6Al4V-H0.25, T6-A1-U2-D0-Ti6Al4V-H0.5, T6-A2-U2-D0-Ti6Al4V-H0.75); nominal-context Pareto union 843 members; carried as sets, no representative selected (F9-OQ-01)
-- **F9-03** (model-derived (PARAMETRIC_SENSITIVITY inputs)): upstream flow gap: robust worst-case delivered flow [0.00293326, 0.0113419] mg/s and all-state frontier 0.09832 mg/s, low relative to the 0.38-3.2 mg/s ground-characterization coverage (row 73): an engineering warning, not a demonstrated requirement failure; 0.38 and ~1.3 mg/s are not flight requirements and AG-12 is the statewise feed-state sufficiency gate (A9.13 F9-OQ-02)
+- **F9-01** (inferred): architecture status INVESTIGATION_HYPOTHESIS: 14 of 15 architecture-level gates lack sufficient evidence (none has it)
+- **F9-02** (model-derived (PARAMETRIC_SENSITIVITY inputs)): upstream Pareto: robust set EMPTY_ROBUST_SET_NOT_EVALUATED (0 members; F8 all-scenario-feasible 0); nominal-context Pareto union 90 members carried as a set; no robust-set range is reported for any parameter (null + status, never fabricated); no representative selected (F9-OQ-01)
+- **F9-03** (model-derived (PARAMETRIC_SENSITIVITY inputs)): upstream flow gap: robust set EMPTY_ROBUST_SET_NOT_EVALUATED; all-state frontier 0.01296072 mg/s (F7, single setpoint; F4 scheduled 0.02644 mg/s), low relative to the 0.38-3.2 mg/s ground-characterization coverage (row 73): an engineering warning, not a demonstrated requirement failure; 0.38 and ~1.3 mg/s are not flight requirements and AG-12 is the statewise feed-state sufficiency gate (A9.13 F9-OQ-02)
 - **F9-04** (inferred): freeze-status roll-up over 205 parameters: {'FREEZE_CANDIDATE': 53, 'OPEN': 71, 'TBD_AFTER_EVIDENCE': 76, 'TBD_OWNER': 5}; every FREEZE_CANDIDATE is an owner decision, convention, rule or allocation; no computed performance value is a freeze candidate
 - **F9-05** (inferred): 7 production-model issues registered as model-change candidates (MCC-01..07); all owner-authorised (A9.9 F1Q-01 / UPSTREAM_ICD-Q7 / F9-OQ-04); none implemented here (PENDING_STEP_2_MODEL_CHANGE, each with a HISTORY entry)
 - **F9-06** (inferred): owner roll-up: 95 state v4 TBD_OWNER rows, 34 A9.7 lane questions (F0-F8, Rust), 4 new F9 questions; all answered by the owner (A9.8 .. A9.14, A9.15 amendments); state v5 TBD_OWNER: 2 (MPV3Q-01, XV3Q-01)
+- **F9-07** (model-derived (PARAMETRIC_SENSITIVITY inputs)): under the full registered design-state envelope (atmosphere_msis21_orbit_v1_design_states_v2, sha256 60073e214cf5edb92d7eacf70be1491ad29ff72f19db0ef3b96a4b30da6f4049, 196 required states, BROAD_ENVELOPE_ALL_INCLINATIONS_ALL_LTAN_NOT_MISSION_ICD) no robust upstream design survives. EMPTY_ROBUST_SET_NOT_EVALUATED: F8 robust Pareto set has 0 members (90 F7 nominal-context survivors, all-10-scenario feasible 0, at most 6 of 10 scenarios feasible); F7 feasible vectors 4647, Pareto members 1279; F1 envelope-feasible intakes per scenario 24 of 144 (intake-face drag binding at ECSS_ST_HIGH 180 km in 1200 of 1200 infeasible records); F4 all-state frontier 0.01296 mg/s single / 0.02644 mg/s scheduled, flow binding at ds2:ECSS_LT_LOW:alt230:lat-84.0000:lst0:lon60:doy184 in 9 of 13 cells; transient basis: 0 of 7 chains pass the orbit check (0 simulated), offered_to_h1 records 0. Binding reasons read from the lane outputs: intake-face drag at the dense ECSS_ST_HIGH 180 km states (F1 C-DRAG-RFP, 1200 records); all-state delivered flow at ds2:ECSS_LT_LOW:alt230:lat-84.0000:lst0:lon60:doy184 (F4, 9 of 13 cells); transient-basis orbit check failures {"amplitude 0.1: GAEDE_CHARACTERISTIC_OUTSIDE_K_1_TO_K0": 4, "amplitude 0.1: VALVE_SATURATED_SETPOINT_NOT_MAINTAINED": 7, "amplitude 0.2: GAEDE_CHARACTERISTIC_OUTSIDE_K_1_TO_K0": 4, "amplitude 0.2: VALVE_SATURATED_SETPOINT_NOT_MAINTAINED": 7} (F4). This is a design finding for the owner, not a demonstrated requirement failure and not a proposal to relax any requirement (A9.13 S6.13 / OQ-F4-04 (NO_REQUIREMENT_RELAXATION): no requirement relaxation: the flight feed requirement is performance-derived (rank 1, S6.21) and is PENDING_EVIDENCE until a measured / validated H-1 thrust-versus-feed map exists; it is never lowered to a deliverable frontier, a state subset or a characterization value). Owner flow-gap order (as recorded in F7): 1 PERFORMANCE_DERIVED_H1_FEED_REQUIREMENT (A9.13 S6.21 / F9-OQ-02; PENDING_EVIDENCE); 2 CAPTURE_COLLECTION (A9.13 S6.13; OPEN); 3 COMPRESSOR_DOMAIN_PUMPING_FEED_EFFICIENCY (A9.13 S6.13; OPEN); 4 SCHEDULED_SETPOINT (A9.13 S6.10 / OQ-F4-01; OPEN). Dense-state-only operation: SENSITIVITY_ONLY_NOT_BASELINE.
+
+## Design findings for the owner (open items; no requirement relaxation proposed)
+
+- **F9-DF-01** (EMPTY_ROBUST_SET_NOT_EVALUATED): under the full registered design-state envelope (atmosphere_msis21_orbit_v1_design_states_v2, sha256 60073e214cf5edb92d7eacf70be1491ad29ff72f19db0ef3b96a4b30da6f4049, 196 required states, BROAD_ENVELOPE_ALL_INCLINATIONS_ALL_LTAN_NOT_MISSION_ICD) no robust upstream design survives. EMPTY_ROBUST_SET_NOT_EVALUATED: F8 robust Pareto set has 0 members (90 F7 nominal-context survivors, all-10-scenario feasible 0, at most 6 of 10 scenarios feasible); F7 feasible vectors 4647, Pareto members 1279; F1 envelope-feasible intakes per scenario 24 of 144 (intake-face drag binding at ECSS_ST_HIGH 180 km in 1200 of 1200 infeasible records); F4 all-state frontier 0.01296 mg/s single / 0.02644 mg/s scheduled, flow binding at ds2:ECSS_LT_LOW:alt230:lat-84.0000:lst0:lon60:doy184 in 9 of 13 cells; transient basis: 0 of 7 chains pass the orbit check (0 simulated), offered_to_h1 records 0. Binding reasons read from the lane outputs: intake-face drag at the dense ECSS_ST_HIGH 180 km states (F1 C-DRAG-RFP, 1200 records); all-state delivered flow at ds2:ECSS_LT_LOW:alt230:lat-84.0000:lst0:lon60:doy184 (F4, 9 of 13 cells); transient-basis orbit check failures {"amplitude 0.1: GAEDE_CHARACTERISTIC_OUTSIDE_K_1_TO_K0": 4, "amplitude 0.1: VALVE_SATURATED_SETPOINT_NOT_MAINTAINED": 7, "amplitude 0.2: GAEDE_CHARACTERISTIC_OUTSIDE_K_1_TO_K0": 4, "amplitude 0.2: VALVE_SATURATED_SETPOINT_NOT_MAINTAINED": 7} (F4). This is a design finding for the owner, not a demonstrated requirement failure and not a proposal to relax any requirement (A9.13 S6.13 / OQ-F4-04 (NO_REQUIREMENT_RELAXATION): no requirement relaxation: the flight feed requirement is performance-derived (rank 1, S6.21) and is PENDING_EVIDENCE until a measured / validated H-1 thrust-versus-feed map exists; it is never lowered to a deliverable frontier, a state subset or a characterization value). Owner flow-gap order (as recorded in F7): 1 PERFORMANCE_DERIVED_H1_FEED_REQUIREMENT (A9.13 S6.21 / F9-OQ-02; PENDING_EVIDENCE); 2 CAPTURE_COLLECTION (A9.13 S6.13; OPEN); 3 COMPRESSOR_DOMAIN_PUMPING_FEED_EFFICIENCY (A9.13 S6.13; OPEN); 4 SCHEDULED_SETPOINT (A9.13 S6.10 / OQ-F4-01; OPEN). Dense-state-only operation: SENSITIVITY_ONLY_NOT_BASELINE.
 
 ## Interface demands
 
@@ -700,7 +736,17 @@ Evaluators: gate_closes: docs/architecture/freeze_candidate/a9_16_f9.py:gate_clo
 | A9.19 | architecture | configuration | flight configuration = hall_icp_neutralizer only (one Hall + one RF/ICP neutralizer, two supply modes AIR_PRIMARY / XE_CONTINGENCY, no conventional hollow cathode); control_fallback hall_c1_reference removed |
 | A9.19 | xenon_role | AFC-SY-XE-01 | Xe = XE_CONTINGENCY supply mode (contingency / emergency role; capability required by RFP-P17-05 / RFP-P18-08; separate tanks / paths); amends the A9.15 'not a contingency' wording on the ROLE of Xe only |
 | A9.19 | amends A9.14 S8.33 MPQ-01 / S8.17 OQ-A907-07 | AFC-SY-CTL-01 | no C1-selected flight start variant |
-| A9.20 | c1_role | configuration.ground_reference, AG-01 RVM rows, AFC-SY-CTL-01 | C1 = GROUND_ONLY_LAB_EQUIPMENT: hall_c1_reference carried only as the labelled GROUND_REFERENCE (I_d,max,H1,Ar characterization, A9.10 S3.5; C1-vs-ICP bench control); never flight hardware or in flight budgets |
+| A9.20 | c1_role | configuration.ground_reference, ground_reference_history, AG-01 RVM rows (fli... | C1 = GROUND_ONLY_LAB_EQUIPMENT: hall_c1_reference carried only as the labelled GROUND_REFERENCE (I_d,max,H1,Ar characterization, A9.10 S3.5; C1-vs-ICP bench control); never flight hardware or in flight budgets; its RV... |
+
+## A9.21 owner decision applied
+
+| decision | item | records | how applied |
+|---|---|---|---|
+| A9.21 | ICP_GATE | pre_lock1_gates[id=GNG-ICP-01], lock1_precondition, architecture_status | mandatory ICP go / no-go gate GNG-ICP-01 carried as a pre-LOCK-1 gate (own id; AG-01 .. AG-15 unchanged), re-evaluated from the RVM registration: NOT_EVALUATED, criteria PENDING_OWNER_ACCEPTANCE, recorder proposal RP-... |
+
+## Ground reference / retired flight configuration (history only; not evaluated for flight)
+
+Label GROUND_REFERENCE_AND_RETIRED_FLIGHT_CONFIGURATION_HISTORY: `hall_c1_reference` - RETIRED_AS_FLIGHT_CONFIGURATION (A9.19 one flight configuration; A9.20 C1 GROUND_ONLY_LAB_EQUIPMENT). Not in status counts, objectives or gates. RVM cells as carried by the RVM (docs/requirements/rvm_a9/rvm_a9_v1.json#/rows/*/configurations/hall_c1_reference): {"PASS": 0, "FAIL": 0, "NOT_EVALUATED": 29, "OUT_OF_DOMAIN": 0, "INCOMPLETE_EVIDENCE": 1, "NUMERICAL_FAILURE": 0}.
 
 ## Inputs
 
@@ -733,35 +779,42 @@ Pinned (immutable, sha256 verified):
 - `docs/decisions/OD_2026_10_01_A9_19_ARCHITECTURE_XE_CONTINGENCY_OWNER_DECISION.md` d3eae1d65f9b679a8538ce4a7c701a40a3f5d3b07d72baae944b685256931749
 - `docs/decisions/OD_2026_10_01_A9_20_c1_ground_only_owner_decision.json` 9b88e441b5c3454a20c4696897c525ef5818f0cfd9f32c7a3b4fa8e1a204dcc6
 - `docs/decisions/OD_2026_10_01_A9_20_C1_GROUND_ONLY_OWNER_DECISION.md` 2b90a7a7f851ac571791ea6ba2fbafac8cf69a086a4a3724e2f66196b6b4d60c
+- `docs/decisions/OD_2026_10_02_A9_21_open_items_and_hardware_programme_owner_decisions.json` 78766d3adaaa6d38730ce82607a1cd0a03ae34186c911d4189e2fd9251db6549
+- `docs/decisions/OD_2026_10_02_A9_21_OPEN_ITEMS_AND_HARDWARE_PROGRAMME_OWNER_DECISIONS.md` 01f7796aa2ae03d7bc0319b191f004e0a1ba0214c2c982f34554ca52cf531440
+- `docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json` 245307aca27b8151d0ef31a6e92f932a95920e604847694481cba6731835dc49
+- `docs/decisions/OD_2026_10_03_A9_22_LAYER_SEPARATION_OWNER_DECISIONS.md` 749999db6926a2cdda85c7aab7677410b290df11fe4a7bac903a8a8fd6fcfc77
+- `docs/decisions/OD_2026_10_05_A9_26_mass_budget_owner_decisions.json` 18dada24a90fb1a5d17e903bf8eb9f77af622106f9ddfc59ea1f182054b80b76
+- `docs/decisions/OD_2026_10_05_A9_26_MASS_BUDGET_OWNER_DECISIONS.md` 5f40294de9ab736cedd7a24a393b0333823c2624e3469f6b1f775250a85803e5
 
 Consumed (sha256 at build time; drift reported by `--check`):
 
 - `docs/performance/PERFORMANCE_BASELINE_98fbbb9.json` 93145d612f03fcd62da7ea7e0d61d8bfca767429dd6117203b417758a0d8c672
 - `docs/performance/abep_core/parity_report_v1.json` 09cf58a9dac3aea1aed2e3a343310d189c980a78ec699a75f7bc494c161418f8
-- `docs/design_synthesis/f1_intake/f1_intake_synthesis_v1.json` 85c79045047a6b09a10c8f199782b25defad2b5446386fa68496a16cf41c2ff2
-- `docs/design_synthesis/f2_filter/f2_filter_stage_v1.json` b67557f441b24c6665fae4df1f33bc8f0991b445b55d19e1bcd2c7f5880119a0
-- `docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json` ccd7da1e54368c67cbedc5bf495ecc035fc844e235c5b36725c522cbc74d4412
+- `docs/design_synthesis/f1_intake/f1_intake_synthesis_v1_core.json` d397cb9348d06eafbe2e7cc3ee9ca035f97e8f423d63df8f42286ce75bc20854
+- `docs/design_synthesis/f2_filter/f2_filter_stage_v1.json` abd5989e56fb49772e8d49a5f88afc7ab3165b485eff2f792fb598d77c89f1d2
+- `docs/design_synthesis/f3_compressor/f3_compressor_synthesis_v1.json` 6871975696f7b40dac897c52b529266eb053ecbf4ea7ab17cb3e3fbdac73a27b
 - `docs/design_synthesis/f3_compressor/f3_compressor_designs_v1.json` 74a52aa749e1d071f76957e4f9ef4929c9d8ab302b183da3c5a5d9ba8d6d6923
-- `docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json` 36f94251ccca4427715ad4395957b4700b6bcb9d8127a4e3feaa1f4865150590
-- `docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json` 67c3dcb650c104eb16093279a54c3482c2bb5821711916cc05811841a9e7b992
+- `docs/design_synthesis/f4_plenum/f4_plenum_feed_v1.json` fffb223023f944f166112acf017af277a50ede84695cb78f933dd5ca918fd3a9
+- `docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json` 36aca79c1e515f6828f120d4b90174815e888780f4070e08cd70dff31b9ab1a8
 - `docs/design_synthesis/f6_icp_geometry/f6_icp_geometry_v1.json` eace9c279f09ab25ba0d3c5c7f2d2c4e42da682a16e2f3bd474d7c3fef755450
-- `docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json` 04ce2f797b747829c62391017a93ee9ea3c0cd25f720b7ca3f01903136e98361
-- `docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json` 7a282dd217cd876999c5c65b3a445449175bfa3362a3b59bed74ed120a9bb0c9
-- `docs/design_synthesis/f7_f8_optimizer/f8_robust_candidates_v1.json` 43adc213f7f7b7f34fdda5e494033fcac52615ec7627777a010b1e2497d5927d
+- `docs/design_synthesis/f7_f8_optimizer/f7_f8_optimizer_v1.json` 39ae59e6a9fd1ea2c1a08daf24d9debd70ace536f252d06ae2b7e8887347fbb8
+- `docs/design_synthesis/f7_f8_optimizer/f7_upstream_pareto_v1.json` 423e74ded14e5d5df640a9cc5818c8d8478b194573270ec379b1eb9359c1c455
+- `docs/design_synthesis/f7_f8_optimizer/f8_robust_candidates_v1.json` 2ec7e059ebc55d9b83f4c8f0e3cd43e2cebcbe665933e7ce9ecf1a43451f4e8d
 - `docs/budgets/owner_decisions/owner_questions_state_v4.json` 6ba74803f9577cb63f3e719d176702eb47e05a55a3c054eba926649a5c23bf67
-- `docs/budgets/owner_decisions/owner_questions_state_v5.json` 19b4da540b1823c6d3bc1b93f4b673c798af3a519c75e4e055853dbe98c945da
-- `docs/budgets/mass_power_a9_v3/mass_power_a9_v3.json` 0d8413fec02ead4d0a21e9acbdad0b29569dfc0a7eb9a03bdd99d3c9fb504602
-- `docs/requirements/rvm_a9/rvm_a9_v1.json` a277bab2d29f0592f25c2a4c72be93561e84ed2e0fe06682e553260e2697dec6
+- `docs/budgets/owner_decisions/owner_questions_state_v5.json` 8a29c4180f4387afb6168986442ddb1c08b1f9a692ad85cdf0630799de3cd4fd
+- `docs/budgets/mass_power_a9_v5/mass_power_a9_v5.json` 3ff23429f5225a8a8363a784281b2f32b1df9ad69ec9934320306b080436b73a
+- `docs/requirements/rvm_a9/rvm_a9_v1.json` f91a00b40e24a66ceec8fd16dba3ad5ecb249ae186cc39bf717efe083223a5c4
+- `docs/requirements/rfp_official/rfp_registration_v1.json` c126be5eef7b9ec6340776ed035eeaa0ced1c4dd2ec585383f3d3a5977d174a0
 - `docs/budgets/mass_power_a9_v2/mass_power_a9_v2.json` c1a7875fdd0e27b3425cc02ba915ab61bcf9760ac032d294b69a887a91e78459
-- `docs/experiments/hall_icp/integration/m16_v4/subsystem_maturity_v4.json` 4d7ff17fc54fa5b686b1826c64f2df0662fb3c5fbd0f03bbe8c11f25486a8643
+- `docs/experiments/hall_icp/integration/m16_v4/subsystem_maturity_v4.json` fde0ddac723b62ab9bdc9789fa738c74198de23b8d150fd67b1b89d9e9d2d2ae
 - `docs/budgets/xe_accounting_a9_v2/xe_accounting_a9_v2.json` ad6102fc12df3ad6c4bcc85264c1893b8ab51857b0319b9881afecd8a6c4730a
-- `docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json` 95d0f5229f23c85d8a6520637c4bd4fed53a49fca0082da30da747735c2e0195
-- `docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json` 9f6e074cc2cdd1e2445d00a14eec04b4cc33f239655f8619a789e7ae863c43e6
+- `docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json` 8240f49dbdfe9eef3dc2a1ab854a276e27a8eb435ddb2f6c62e48be5e511e0fe
+- `docs/architecture_comparison/power_boundary_a9_v2/bus_power_boundary_a9_v2.json` de346f86f77ae08c2e0cc4a5b945c21c9626bc5ad0f32f904acd4a929a08f980
 - `schemas/interfaces/icp_neutralizer_icd_v1.json` 8ec092f284505e7a538d17f568c0d9d763155f9a2ce4541223ddd114169a452c
-- `docs/experiments/hall_icp/p1_icp_bench/p1_icp_bench_v1.json` e4a965cbf1c33295a0bec1407f01c26aa5df3e2807dfc0e70a0bf7a5e0c24180
-- `docs/experiments/hall_icp/p2_impedance_map/p2_impedance_prep_v1.json` 4a2789957ab42ca31562926910c15668be0b63e5b87608cfec5025883938ae94
-- `docs/experiments/hall_icp/p3_coupled_thermal/p3_coupled_thermal_v2.json` 26030a9fd7cdee2d7a9b0ef44b99b0fa843ef8b4560db17d7ad3d2e4f2c2cf20
-- `docs/experiments/hall_icp/p4_anode_materials/p4_anode_materials_v1.json` ac85981b0a212f33ef5a51e2a10c6a157abd32fa4b5129be1f19f444d1ea5412
+- `docs/experiments/hall_icp/p1_icp_bench/p1_icp_bench_v1.json` d0a696c597c839802a405d6607abe03a1dc5e5bb917cd11405a86aa3be9e4f08
+- `docs/experiments/hall_icp/p2_impedance_map/p2_impedance_prep_v1.json` cdd4b04d79fbee4e22d76d2734bb170ce5e8a8eab54b47e93c0b6e15dd8a0a87
+- `docs/experiments/hall_icp/p3_coupled_thermal/p3_coupled_thermal_v2.json` 1db2b13e82389fc824acc24f6b6b9aafb11b950b9c5546347cc8037b2bdb132a
+- `docs/experiments/hall_icp/p4_anode_materials/p4_anode_materials_v1.json` f0d8bbfa6d3ec59a30910ef2ae1fd61f96fc3f725e6859dc8c6617b1cf6dd96b
 - `hallthruster_bridge/ensemble/transport_ensemble_v0.json` 2d5069a3382ab667362befeeb5a737261f70a279d19cb89ee79cb61ae35ba08b
 - `hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json` 0a57a397883141be20196853b7d722404dc3cb20c72fba666121fd43507dc97c
 - `docs/interfaces/UPSTREAM_ICD.md` 4445031cbeb2710395298f2c1d12ca5893c17afd9f50d6b8ab9210ce4171180a

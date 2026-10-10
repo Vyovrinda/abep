@@ -122,7 +122,7 @@ Generated 2026-09-27 against repo commit 782f900. No lab or person was contacted
 - Accreditation: not found. Scope: not found. Certificate: not found.
 - Gas / O2 notes: Facility specs not read.
 - Needs confirmation: facility specs
-- Potential: **unknown**. Listed for heritage only; the repository already uses the ECHT geometry (Governance.md).
+- Potential: **unknown**. Listed for heritage only; the repository already uses the ECHT geometry (governance.md).
 - Access realism: Low (US; export control).
 
 ### IRS Stuttgart (ABEP IPT) and Chinese/Japanese/Russian ABEP groups (Stuttgart / Lanzhou / Japan / Russia, Germany / China / Japan / Russia)

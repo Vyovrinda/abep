@@ -18,7 +18,7 @@ Conventions (per component, see ``COMPONENT_DEFINITIONS`` and the boundary docum
     operating point (converter, generator, filter, harness, matching network, isolator, fixed overheads).
   * ``P_bus_W = P_load_W / efficiency`` and ``P_loss_W = P_bus_W - P_load_W`` per component.
   * Ledger ``P_bus_W`` is the destination-side total (delivered + converted-to-heat); ``residual_W`` is it minus the
-    source-side total (sum of the per-component bus draws). Conservation is a gate (Governance.md rule 4): a residual above
+    source-side total (sum of the per-component bus draws). Conservation is a gate (governance.md rule 4): a residual above
     a rounding-level tolerance raises instead of returning a ledger.
 """
 from __future__ import annotations

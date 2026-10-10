@@ -2302,7 +2302,7 @@
    "sha256": "dce2048233746ecc596866c1d561c8828f820c7960b9778db0d6d66a9c86d83c"
   },
   {
-   "lane": "repository (not a lane; Governance.md next-work 1)",
+   "lane": "repository (not a lane; governance.md next-work 1)",
    "lane_commit": "bad6ea0d6b94c343082dbbc5c0740310e0e7726d",
    "path": "abep_sim/thermal.py",
    "role": "legacy Phase-4 lumped thermal network with uncited dataclass defaults; NOT used as evidence",
@@ -2421,14 +2421,14 @@
    "sha256": "4a65dbeec34f16f048fa515ced3bb959c02a981113e25da89e8bb844337fec88"
   },
   {
-   "lane": "repository (not a lane; Governance.md next-work 1)",
+   "lane": "repository (not a lane; governance.md next-work 1)",
    "lane_commit": "bad6ea0d6b94c343082dbbc5c0740310e0e7726d",
    "path": "abep_sim/hall_ensemble.py",
    "role": "admitted-member lookup used by the lane-24 evaluator",
    "sha256": "218f890c8444af1f593396da5051e38d2d093bbb3cb0bc976cc44b01b67df704"
   },
   {
-   "lane": "repository (not a lane; Governance.md next-work 1)",
+   "lane": "repository (not a lane; governance.md next-work 1)",
    "lane_commit": "bad6ea0d6b94c343082dbbc5c0740310e0e7726d",
    "path": "hallthruster_bridge/ensemble/transport_ensemble_v0.json",
    "role": "transport ensemble (admitted members: none; read-only)",

@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pre-registered follow-on runs from the pinned worktree: O4 first-stage sensitivities (vacuum), then facility mandatory.
-S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 cd $W
 for M in staged_n2_n_exc_johnsonlow staged_n2_n_rot_off staged_n2_n_ndd_hmslow staged_n2_n_ndd_hmshigh staged_n2_n_n2dication facility_mandatory; do

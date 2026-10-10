@@ -96,10 +96,10 @@ def test_missing_inputs_are_unresolved_on_repository(repo_dossier):
 
 def test_synthetic_root_lists_everything_missing_as_unresolved(tmp_path):
     root = str(tmp_path)
-    _copy("Governance.md", root)
+    _copy("governance.md", root)
     d = dd.build(root, generated_at=TS)
     keys = {u["key"] for u in d["unresolved_inputs"]}
-    assert keys == {s["key"] for s in dd.INPUTS} - {"Governance_md"}
+    assert keys == {s["key"] for s in dd.INPUTS} - {"governance_md"}
     for u in d["unresolved_inputs"]:
         assert u["lane"] and u["missing"]
     assert d["hard_gate_logic"]["state"] == "UNRESOLVED"
@@ -107,7 +107,7 @@ def test_synthetic_root_lists_everything_missing_as_unresolved(tmp_path):
         assert a["eliminated"] is None and a["hard_gates"]["state"] == "UNRESOLVED"
         assert a["failure_tree"]["state"] == "UNRESOLVED"
     assert d["decision"]["selected_architecture"] is None
-    assert set(d["provenance"]["input_files_sha256"]) == {"Governance.md"}
+    assert set(d["provenance"]["input_files_sha256"]) == {"governance.md"}
     assert "UNRESOLVED" in dd.render_md(d)
 
 
@@ -138,7 +138,7 @@ def test_no_winner_output(repo_dossier):
 def test_owner_record_alone_never_selects(tmp_path):
     """A SYNTHETIC owner record without gate eliminations must not make the dossier name an architecture."""
     root = str(tmp_path)
-    for rel in ("Governance.md", dd.F["matrix"], dd.F["register"], dd.F["status"]):
+    for rel in ("governance.md", dd.F["matrix"], dd.F["register"], dd.F["status"]):
         _copy(rel, root)
     rec = os.path.join(root, dd.OWNER_DECISION_RECORD)
     os.makedirs(os.path.dirname(rec), exist_ok=True)

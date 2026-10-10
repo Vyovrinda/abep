@@ -248,7 +248,7 @@
  },
  "reopen_only_if": "Genuinely new published information becomes available legitimately: the S1 full text through library access or an openly licensed copy (radii, anode or cathode position, thrust uncertainty, any 250 V data), or a new open ECHT measurement paper. Standing rules: published sources only, no contact with authors or labs, no paywall bypass.",
  "owner_follow_up_outside_this_change": [
-  "Governance.md 'Next work' item 3 still lists ECHT on N2 (cases/echt_n2.json) as a discrimination run; the owner integrates the status change there",
+  "governance.md 'Next work' item 3 still lists ECHT on N2 (cases/echt_n2.json) as a discrimination run; the owner integrates the status change there",
   "docs/HISTORY.md entry for this disposition (owner integrates)",
   "abep_sim/plasma_devices.py: the COUPLED_* calibration comment refers to the same 250 V anchor (unchanged)",
   "abep_sim/hall1d.py ECHT dict (r_in 0.040, r_out 0.050) is reading A of forced assumption A1 (unchanged; sanity model only)"

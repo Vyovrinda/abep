@@ -13,7 +13,7 @@ P3_COUPLED_THERMAL_V2.md. The thermal library p3_thermal_lib.py is shared unchan
 Deterministic; numpy only (pinned); runs in a few seconds; no Julia.
 
 What it does
-  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (Governance.md rule 3);
+  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (governance.md rule 3);
   * registers every input the coupled thermal problem needs (items table: value or TBD, units, basis, source,
     evidence class, status, freeze point, who supplies it: P1 / P2 / hardware / Phase-1 Hall data / owner);
   * evaluates the four A9.2 heat terms (Q_RF/match, Q_collector, Q_plume, Q_Hall->ICP) and the coupled network on
@@ -78,6 +78,7 @@ def _load_module(name, rel):
 
 LIB = _load_module("p3_thermal_lib", LIB_REL)
 RULES = _load_module("p3_a9_16_rules", f"{LANE_REL}/p3_a9_16_rules.py")
+PROG = _load_module("hw_programme_a9_21", "docs/experiments/hall_icp/programme/hw_programme_a9_21.py")  # A9.21 item 10
 APP = _load_module("p3_a9_16_application", f"{LANE_REL}/a9_16_application.py")
 
 # ------------------------------------------------------------------------------------------------ pinned inputs
@@ -122,7 +123,7 @@ DELIVERABLES = {
     "M16": ("docs/experiments/hall_icp/integration/m16_v3/subsystem_maturity_v3.json",
             "636cbd3318831f6f56e9833813c4d8c259aef7db3de1c6e503cccce14dade7e2", "M16 v3 subsystem maturity"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (Governance.md rule 10)"),
+             "evidence rules (governance.md rule 10)"),
 }
 NEVER_PINNED = ["docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
                 "docs/orchestration/fired_triggers.jsonl", "docs/orchestration/trigger_ledger_v2.jsonl",
@@ -635,7 +636,7 @@ def build_items(h25pm, a92, ans):
     I += [
         item("P3-H-01", "Hall ion beam current I_beam", "TBD_AFTER_EVIDENCE - requires Phase-1 Faraday-probe data "
              "(no Hall-closure or 0-D prediction may be used: credible Hall set EMPTY)", "A", "pending",
-             "Governance.md gate 3; A9 evidence_sequence", None, "TBD_AFTER_EVIDENCE", "after-evidence", "phase1_hall",
+             "governance.md gate 3; A9 evidence_sequence", None, "TBD_AFTER_EVIDENCE", "after-evidence", "phase1_hall",
              ["Q_plume"], "I_beam_A"),
         item("P3-H-02", "mean ion energy per unit charge of the intercepted plume (beam-current-weighted, "
              "sum_i I_i E_i / (Z_i e) / I_beam; p3_thermal_lib.E_ION_MEAN_DEFINITION)", "TBD_AFTER_EVIDENCE - requires "
@@ -1211,6 +1212,14 @@ def build():
                                                 if it["status"].startswith("TBD") or it["status"] == "PENDING"),
         "governance_files_not_pinned": True, "archengine_untouched": True,
         "outputs_regenerable": f"python {SCRIPT_REL} --check"}
+    # A9.21 HW_PROGRAMME item 10: coupled H-1 + ICP -> P3 thermal -> P4. Fail closed: while P3-THERMAL has no
+    # registered entry (coupled H-1 + ICP operation completed) every closure status stays UNRESOLVED (never PASS)
+    doc["a9_21_programme"] = PROG.artifact_view("P3")
+    p3_entry = PROG.entry_status("P3-THERMAL")["status"]
+    if p3_entry != PROG.ENTRY_REGISTERED and doc["compliance"]["closure_statuses_unresolved"] is not True:
+        raise SystemExit(f"REFUSED: P3-THERMAL entry is {p3_entry} but a closure status is not UNRESOLVED "
+                         "(A9.21 item 10: coupled H-1 + ICP operation first)")
+    doc["a9_21_programme"]["p3_thermal_entry_now"] = p3_entry
     return doc
 
 
@@ -1614,6 +1623,7 @@ def render_md(doc):
             L.append(f"  - {v['url']} (sha256 `{v['sha256']}`); " + "; ".join(f"{a}: {b}" for a, b in
                                                                            v["locators"].items()))
     L.append("")
+    L += PROG.render_view_md(doc["a9_21_programme"])
     return "\n".join(L)
 
 

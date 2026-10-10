@@ -3,7 +3,7 @@
 # Fresh 1080-record run from record 0 in <scratchpad>/followon/facility_mandatory_attempt2; attempt 1 (36/1080) is preserved under
 # hallthruster_bridge/validation/interrupted/facility_mandatory_attempt1/ and never reused. Pinned manifest, 4 shards. Non-gating.
 # (4 shards per dataset, pinned manifests, pinned driver in wt_followon). Execution provenance is written before any run.
-S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 LOG=$S/followon/progress_facility_attempt2.log
 cd $W

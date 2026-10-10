@@ -16,6 +16,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "docs" / "decisions" / "application"))
 import a9_16_lib as L  # noqa: E402
+import a9_later_lib as X  # noqa: E402
 
 
 def _mod(rel, name):
@@ -129,13 +130,18 @@ def test_f9_gates_approved_with_determining_evidence_standard():
     assert len(gates) == 15 and F9DOC["architecture_status"] == "INVESTIGATION_HYPOTHESIS"
     for g in gates.values():
         assert g["owner_approved"]["decision_code"] == "AG_01_15_APPROVED_DETERMINING_EVIDENCE"
-        assert g["evidence_sufficient_for_freeze"] is False
+        # only AG-15 is sufficient: closed by the owner on the A9.22 G3 closure record (basis only)
+        assert g["evidence_sufficient_for_freeze"] is (g["id"] == "AG-15"), g["id"]
     assert gates["AG-12"]["current_status"].startswith("NOT_EVALUATED")
     be = gates["AG-12"]["blocking_evidence"]
     assert be["characterization_coverage_mg_s"] == [0.38, 3.2]
     assert be["characterization_coverage_role"] == "CHARACTERIZATION_COVERAGE_ONLY_NOT_A_PASS_FAIL_REQUIREMENT"
     assert "statewise" in gates["AG-13"]["gate"]
-    assert gates["AG-15"]["current_status"].startswith("BLOCKED_RFP_NOT_REGISTERED")
+    # A9.13 S6.22 + A9.17 RFP: the RFP is registered by hash and the RVM re-based on it; AG-15 now carries only the
+    # owner-closure condition, now met by the A9.22 G3 owner closure record (never BLOCKED_RFP_NOT_REGISTERED, never PASS)
+    assert gates["AG-15"]["current_status"] == "DETERMINING_EVIDENCE_PRESENT_NO_REMAINING_CONDITION"
+    assert "PASS" not in gates["AG-15"]["current_status"]
+    assert not gates["AG-15"]["current_status"].startswith("BLOCKED_RFP_NOT_REGISTERED")
     assert "successor held-out" in gates["AG-03"]["gate"]
 
 
@@ -181,7 +187,12 @@ def test_f9_records():
     assert m8["owner_authorisation"]["basis_verbatim"] in L.verbatim("A9.9", "F9-OQ-04")
     by = {r["id"]: r for r in F9DOC["parameters"]}
     assert by["AFC-SY-MASS-AL-04"]["value"] == 4.2048 and by["AFC-SY-MASS-AL-07"]["value"] == 6.0
-    assert by["AFC-SY-MASS-AL-08"]["value"] == 6.0528
+    assert by["AFC-SY-MASS-AL-08"]["value"] == 5.9148      # A9.24 AFI-01 (mass / power v4; v3 owner floor 6.0528)
+    # A9.26 (mass / power v5): 10 % system margin for the bid basis, AL-09 1.0 kg; the roll-up still does not close
+    roll = by["AFC-SY-MASS-ROLL"]["value"]
+    assert roll["system_margin_fraction"] == 0.1 and roll["lines_without_value"] == []
+    assert round(roll["dry_known_kg"], 4) == 38.349 and set(roll["wet_vs_40kg"].values()) == {"DOES_NOT_CLOSE"}
+    assert roll["mass_status"] == "MASS INCOMPLETE_EVIDENCE / NOT_YET_CLOSED"
     assert by["AFC-SY-XE-03"]["freeze_status"] == "FREEZE_CANDIDATE"
     # A9.15 'Xe is not a contingency' is superseded by A9.19 (xenon_role CONTINGENCY_EMERGENCY; the capability stays
     # RFP-required): the F9 value states the capability AND the A9.19 role, and never the superseded wording
@@ -204,11 +215,16 @@ def test_f9_repair_f8_rollup_status_and_current_xe_sources():
     assert "Owner-question roll-up (not answered here)" not in md and "### State v4 TBD_OWNER (" not in md
     assert "### Historical: state v4 TBD_OWNER as raised" in md and "| status (v5) |" in md
     row335 = [ln for ln in md.splitlines() if ln.startswith("| 335 | XV2Q-01 |")][0]
-    assert "AMENDED_BY_A9_15" in row335
+    # A9.15 amended XV2Q-01; A9.19 (xenon_role) amends it again in scope. State v5 shows the latest amendment and keeps
+    # the A9.15 status as its pre-A9.17 history (never dropped)
+    assert "AMENDED_BY_A9_19" in row335
+    v5 = json.loads((ROOT / "docs/budgets/owner_decisions/owner_questions_state_v5.json").read_text(encoding="utf-8"))
+    r335 = next(r for r in v5["rows"] if r["id"] == "XV2Q-01")
+    assert r335["pre_a9_17_status"] == "AMENDED_BY_A9_15" and r335["status"] == "AMENDED_BY_A9_19"
     by = {r["id"]: r for r in F9DOC["parameters"]}
     for rid in ("AFC-SY-XE-01", "AFC-SY-XE-03", "AFC-SY-XE-04", "AFC-SY-XE-06", "AFC-SY-XE-08"):
         cur = by[rid]["current_sources"]
-        assert cur and all(c.startswith(("docs/budgets/xe_accounting_a9_v3/", "docs/budgets/mass_power_a9_v3/",
+        assert cur and all(c.startswith(("docs/budgets/xe_accounting_a9_v3/", "docs/budgets/mass_power_a9_v5/",
                                          "docs/budgets/owner_decisions/owner_questions_state_v5.json")) for c in cur), rid
         for x in by[rid]["source"]:
             if isinstance(x, dict) and x["path"].endswith(("xe_accounting_a9_v2.json", "owner_questions_state_v4.json")):
@@ -279,7 +295,7 @@ def test_rvm_rows_rebased():
     assert a16["statewise_status"].startswith("NOT_EVALUATED")
     for r in RVMDOC["rows"]:
         if r["category"].startswith("rfp"):
-            assert r["requirement_frozen"] is False                       # AG-15 still open
+            assert r["requirement_frozen"] is True                        # AG-15 closed by the owner (A9.22 G3)
         for c in r["configurations"].values():
             assert c["status"] != "PASS"
     assert {g["id"] for g in RVMDOC["a9_16_compliance_gates"]} == {"CG-IC", "CG-SPF", "CG-N2-AO"}
@@ -329,10 +345,21 @@ def test_matrix_covers_every_decision_id_once():
     assert len(ids) == len(set(ids))
     want = {(k, q) for k in L.ORDER if k != "A9.15" for q in L.decision_ids(k)} | {("A9.15", "A9.15 governing_rule")}
     later = {("A9.17", q) for q in ("WINDS", "ORBIT", "DATA_SIZE", "SPUTTER", "RFP", "PERF")} | \
-        {("A9.18", q) for q in ("GOLDEN", "PERF_RERUN")}
+        {("A9.18", q) for q in ("GOLDEN", "PERF_RERUN")} | \
+        {("A9.19", q) for q in ("architecture", "xenon_role", "amends/A9.15",
+                                "amends/A9.14 S8.33 MPQ-01 / S8.17 OQ-A907-07", "amends/A9 C1 CONTROL_FALLBACK",
+                                "owner_request")} | \
+        {("A9.20", "answer")} | \
+        {("A9.21", q) for q in ("PERF_RERUN", "AL08", "H2_6", "ICP_GATE", "BID_CLOSE", "HW_PROGRAMME",
+                                "EXTERNAL_INPUTS", "RFQ_DISPATCH")} | \
+        {("A9.22", q) for q in ("G1_MISSION_LIFE", "G2_C_DRAG_RFP", "G3_REQUIREMENTS_SNAPSHOT",
+                                "G4_GOLDEN_ARCHITECTURE", "G5_ALTITUDE_BAND", "G6_IC_HALL_PREFERRED", "G7_DEAD_LOGIC",
+                                "G8_BUS_BOUNDARY", "G9_F1_OUTPUT")}
     assert set(MX.LATER_APPS) == later
+    for k in X.ORDER:                                   # every item of every later decision record is covered
+        assert {(k, q) for q in X.item_keys(k)} <= later
     want |= later
-    assert set(ids) == want and len(want) == 136 + 8
+    assert set(ids) == want and len(want) == 136 + 8 + 15 + 9
     for e in MXDOC["entries"]:
         assert e["status"] in MX.STATUSES
         for r in e["residual"]:
@@ -343,7 +370,7 @@ def test_matrix_covers_every_decision_id_once():
 def test_matrix_status_classes():
     """A9.16 finalize: step-2 (A9.9) and step-3 (A9.13) decisions are APPLIED only through a verified step-2 / step-3
     application; the ones no commit applies are BLOCKED / PARTIAL with a stated reason (never PENDING after the steps)."""
-    by = {e["question_id"]: e for e in MXDOC["entries"] if e["decision"] not in ("A9.17", "A9.18")}
+    by = {e["question_id"]: e for e in MXDOC["entries"] if e["decision"] not in X.ORDER}
     code_lanes = {"STEP2", "STEP3", "A9.13_DATA", "A9.17"}
     for q in L.decision_ids("A9.9"):
         e = by[q]
@@ -392,7 +419,8 @@ def test_matrix_applications_are_verifiable():
             commits.add(a["commit"])
             if a["status"] != "APPLIED" or a["lane"] == "INTEGRATION":
                 continue
-            if a["lane"] in ("STEP2", "STEP3", "A9.13_DATA", "A9.17", "A9.18"):
+            if a["lane"] in ("STEP2", "STEP3", "A9.13_DATA", "A9.17", "A9.18", "A9.19", "A9.20", "A9.21",
+                             "A9_17_21_RECORDS", "A9.22"):
                 text = (ROOT / a["artifact"]).read_text(encoding="utf-8")
                 assert a["record_locations"] and all(t in text for t in a["record_locations"]), (e["question_id"], a)
             elif e["decision"] != "A9.15":
@@ -400,6 +428,31 @@ def test_matrix_applications_are_verifiable():
     for c in commits:
         r = subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", c + "^{commit}"], capture_output=True)
         assert r.returncode == 0, c
+
+
+def test_matrix_cited_commits_touch_their_artifacts():
+    """Review 2026-10-03: a cited (commit, artifact) pair must be a commit that changed that artifact (git show), so
+    the matrix never points at a commit that does not contain the claimed change (A9.19 a9_19_architecture.py was
+    cited at 56e7327, which does not touch it; F0-OQ-02 REGISTRATION.json at 61373fd, likewise). Scope: every
+    application outside the A9.16 step-1 lane table MX.LANES."""
+    import subprocess
+    step1 = set(MX.LANES)
+    seen = set()
+    for e in MXDOC["entries"]:
+        for a in e["applications"]:
+            if a["lane"] in step1 or (a["commit"], a["artifact"]) in seen:
+                continue
+            seen.add((a["commit"], a["artifact"]))
+            if subprocess.run(["git", "-C", str(ROOT), "cat-file", "-e", a["commit"] + "^{commit}"],
+                              capture_output=True).returncode != 0:
+                pytest.skip("git history not available")
+            out = subprocess.run(["git", "-C", str(ROOT), "show", "--format=", "--name-only", a["commit"], "--",
+                                  a["artifact"]], capture_output=True, text=True).stdout.strip()
+            if not out:   # merge commit: compare with its first parent
+                out = subprocess.run(["git", "-C", str(ROOT), "diff", "--name-only", a["commit"] + "^1",
+                                      a["commit"], "--", a["artifact"]], capture_output=True, text=True).stdout.strip()
+            assert out, (e["decision"], e["question_id"], a["lane"], a["commit"][:7], a["artifact"])
+    assert seen
 
 
 def test_matrix_refuses_unverifiable_lane_result(monkeypatch):
@@ -440,9 +493,197 @@ def test_matrix_repair_lane_truthful_statuses():
 def test_od3_partial_until_design_layer_consumes_design_states():
     """A9.16 repair RVF-03: S9.8 is not APPLIED while the design-layer statewise evaluators still use the five
     orbit-averaged ENVELOPE_STATES; the residual names them (and S6.14 carries the same BLOCKED residual)."""
-    by = {e["question_id"]: e for e in MXDOC["entries"] if e["decision"] not in ("A9.17", "A9.18")}
+    by = {e["question_id"]: e for e in MXDOC["entries"] if e["decision"] not in X.ORDER}
     assert by["OD3"]["status"] == "PARTIAL"
     for q in ("OD3", "OQ-F4-05"):
         bl = [r for r in by[q]["residual"] if r["status"] == "BLOCKED"]
         assert bl and "ENVELOPE_STATES" in bl[0]["what"] and "architecture_optimizer" in bl[0]["what"], q
     assert any(r["status"] == "PENDING_FINALIZE_DESIGN_REGEN" for r in by["OQ-F4-05"]["residual"])
+
+
+
+# ------------------------------------------------------------------------------------------- A9.17 .. A9.21
+def _later(dk, item):
+    sel = [e for e in MXDOC["entries"] if (e["decision"], e["question_id"]) == (dk, item)]
+    assert len(sel) == 1, (dk, item)
+    return sel[0]
+
+
+def test_matrix_later_decisions_truthful_statuses():
+    for item in X.item_keys("A9.19"):
+        e = _later("A9.19", item)
+        assert e["status"] == "APPLIED", item
+        assert any(a["artifact"] != MX.V5_REL for a in e["applications"]), item      # a governing artifact
+        assert e["pointer"].startswith(X.LOADED["A9.19"]["json"] + "#/")
+    assert _later("A9.20", "answer")["status"] == "APPLIED"
+    want = {"PERF_RERUN": "BLOCKED", "AL08": "APPLIED", "H2_6": "APPLIED", "ICP_GATE": "APPLIED",
+            "BID_CLOSE": "NOT_APPLICABLE_TO_ARTIFACTS", "HW_PROGRAMME": "APPLIED", "EXTERNAL_INPUTS": "APPLIED",
+            "RFQ_DISPATCH": "NOT_APPLICABLE_TO_ARTIFACTS"}
+    for item, st in want.items():
+        e = _later("A9.21", item)
+        assert e["status"] == st, item
+        if st != "APPLIED":
+            assert e["status_reason"], item
+    gate = _later("A9.21", "ICP_GATE")
+    # registration APPLIED in the gate artifacts (RVM + F9, checked structurally); criteria stay with the owner
+    assert {r["status"] for r in gate["residual"]} == {"PENDING_OWNER_ACCEPTANCE"}
+    assert any("not approved" in r["what"] for r in gate["residual"])
+    locs = {a["artifact"]: a.get("record_pointer", "") for a in gate["applications"]}
+    assert locs[MX.RVM_REL].startswith("/owner_approved_gates/") and "GNG-ICP-01" in locs[MX.RVM_REL]
+    assert locs[MX.F9_REL].startswith("/pre_lock1_gates/") and "GNG-ICP-01" in locs[MX.F9_REL]
+    hw = _later("A9.21", "HW_PROGRAMME")
+    # the order is applied to the stage artifacts through one programme record; the hardware runs and the owner's
+    # acceptance of the recorder readings remain open (never closed by the record itself)
+    hw_arts = {a["artifact"] for a in hw["applications"]}
+    assert "docs/experiments/hall_icp/programme/hw_programme_a9_21_v1.json" in hw_arts
+    assert {"docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json",
+            "docs/experiments/hall_icp/p1_icp_bench/p1_icp_bench_v1.json",
+            "docs/experiments/hall_icp/p2_impedance_map/p2_impedance_prep_v1.json",
+            "docs/experiments/hall_icp/p3_coupled_thermal/p3_coupled_thermal_v2.json",
+            "docs/experiments/hall_icp/p4_anode_materials/p4_anode_materials_v1.json"} <= hw_arts
+    assert {r["status"] for r in hw["residual"]} == {"PENDING_OWNER_ACCEPTANCE", "PENDING_EVIDENCE"}
+    al08 = _later("A9.21", "AL08")
+    assert {r["status"] for r in al08["residual"]} == {"PENDING_EVIDENCE"}
+    locs = {a["artifact"]: a.get("record_pointer", "") for a in al08["applications"]}
+    assert locs[MX.MP3_REL].endswith("(line=AL-08)") and locs[MX.XE3_REL].endswith("(id=XV3-IF-02)")
+    assert any(r["status"] == "PENDING_EVIDENCE" for r in _later("A9.21", "EXTERNAL_INPUTS")["residual"])
+    assert any(r["status"] == "PENDING_EVIDENCE" and "quotations" in r["what"]
+               for r in _later("A9.21", "AL08")["residual"])
+    pins = {p["path"]: p["sha256"] for p in MXDOC["pins"]}
+    for k in X.ORDER:
+        assert pins[X.LOADED[k]["json"]] == L.sha256_file(X.LOADED[k]["json"])
+        assert pins[X.LOADED[k]["md"]] == L.sha256_file(X.LOADED[k]["md"])
+
+
+def test_matrix_earlier_entries_amended_or_superseded_by_later():
+    by = {e["question_id"]: e for e in MXDOC["entries"] if e["decision"] not in X.ORDER}
+    for q in ("OQ-A907-07", "MPQ-01"):                     # no C1 flight variant (A9.19 / A9.20)
+        e = by[q]
+        assert e["status"] == "SUPERSEDED_BY_LATER_DECISION" and e["status_reason"]
+        assert {x["decision"] for x in e["amended_by_later"]} == {"A9.19", "A9.20"}
+        assert not any("C1 selection" in r["what"] or "once C1 is selected" in r["what"] for r in e["residual"])
+    for q in ("XA9Q-07", "XV2Q-01", "OD6", "OD5", "OQ-A907-01", "MQ-05"):
+        e = by[q]
+        assert e["status"] == "APPLIED" and e["amended_by_later"], q
+        assert all(x["relation"] == "AMENDS" for x in e["amended_by_later"]), q
+    a15 = by["A9.15 governing_rule"]
+    assert {x["decision"] for x in a15["amended_by_later"]} == {"A9.19"}
+    rules = {r["id"]: r for r in MXDOC["rules"]}
+    assert "hall_icp_neutralizer" in rules["R-A919"]["rule"] and "GROUND_ONLY_LAB_REFERENCE" in rules["R-A919"]["rule"]
+
+
+def test_matrix_ag15_registration_rebase_and_owner_acceptance_applied(monkeypatch):
+    e = {x["question_id"]: x for x in MXDOC["entries"]}["F9-OQ-03"]
+    ag = e["ag_15"]
+    reg = _j("docs/requirements/rfp_official/rfp_registration_v1.json")
+    rvm = _j("docs/requirements/rvm_a9/rvm_a9_v1.json")
+    assert ag["registration"]["status"] == "APPLIED" and ag["rvm_rebase"]["status"] == "APPLIED"
+    assert ag["registration"]["pdf_sha256"] == reg["document"]["sha256"]
+    assert ag["registration"]["n_clauses"] == len(reg["clauses"]) == ag["rvm_rebase"]["clauses_covered"]
+    oa = ag["owner_acceptance"]                         # A9.22 G3: the owner closed AG-15 (basis only)
+    assert oa["status"] == "APPLIED" and oa["decision_json_sha256"] == X.LOADED["A9.22"]["json_sha256"]
+    assert sorted(oa["rfp_rows_requirement_frozen"]) == sorted(
+        r["id"] for r in rvm["rows"] if r["requirement_origin"] == "RFP_CLAUSE")
+    assert e["residual"] == [] and [r["status_before"] for r in e["resolved_residual"]] == ["PENDING_OWNER_ACCEPTANCE"]
+    for k in ("OD12",):
+        x = {y["question_id"]: y for y in MXDOC["entries"]}[k]
+        assert not any(r["status"] == "PENDING_OWNER_ACCEPTANCE" for r in x["residual"]) and x["resolved_residual"]
+    g3 = _later("A9.22", "G3_REQUIREMENTS_SNAPSHOT")
+    assert g3["status"] == "APPLIED" and g3["decision_code"] == "AG15_CLOSED_SNAPSHOT_FROZEN"
+    # G1, G2, G4 .. G9: applied by their own governed migration lanes, each with verified applications (tokens and,
+    # where a record exists, a structural record check); residuals: G2 Option 2 (separate approval), G9 upload
+    for k in ("G1_MISSION_LIFE", "G2_C_DRAG_RFP", "G4_GOLDEN_ARCHITECTURE", "G5_ALTITUDE_BAND",
+              "G6_IC_HALL_PREFERRED", "G7_DEAD_LOGIC", "G8_BUS_BOUNDARY", "G9_F1_OUTPUT"):
+        g = _later("A9.22", k)
+        assert g["status"] == "APPLIED" and g["applications"], k
+        assert all(a["status"] == "APPLIED" and a["record_locations"] for a in g["applications"]), k
+        assert all(r["status"] != "PENDING_GOVERNED_MIGRATION" for r in g["residual"]), k
+    for k in ("G1_MISSION_LIFE", "G4_GOLDEN_ARCHITECTURE", "G5_ALTITUDE_BAND", "G8_BUS_BOUNDARY", "G9_F1_OUTPUT"):
+        assert any(a.get("record_pointer") for a in _later("A9.22", k)["applications"]), k
+    assert [r["status"] for r in _later("A9.22", "G2_C_DRAG_RFP")["residual"]] == ["LATER_SEPARATE_OWNER_APPROVAL"]
+    assert [r["status"] for r in _later("A9.22", "G9_F1_OUTPUT")["residual"]] == ["PENDING_OWNER_UPLOAD"]
+    assert "REGISTERED" in {r["id"]: r for r in MXDOC["rules"]}["R-RFP"]["rule"].upper()
+    for x in MXDOC["entries"]:                          # AG-15 closure is never shown as BLOCKED on registration
+        for r in x["residual"]:
+            assert not (r["status"] == "BLOCKED" and "AG-15" in r["what"]), x["question_id"]
+    # fail closed: an unregistered RFP refuses the AG-15 record
+    real = MX.json.loads
+
+    def fake(text, *a, **k):
+        d = real(text, *a, **k)
+        if isinstance(d, dict) and d.get("schema") == "rfp_registration_v1":
+            d["status"] = "NOT_REGISTERED"
+        return d
+    monkeypatch.setattr(MX.json, "loads", fake)
+    with pytest.raises(SystemExit):
+        MX.ag_15_record()
+
+
+def test_matrix_structural_record_check_fails_closed():
+    """A9.21 AL08 / ICP_GATE applications are detected from the artifact records themselves (fail closed)."""
+    doc = {"lines": {"hall_icp_neutralizer": [{"line": "AL-08", "a9_21_status": "FROZEN"}]}}
+    rec = {"list": "/lines/hall_icp_neutralizer", "match": ("line", "AL-08"),
+           "checks": {"a9_21_status": ("startswith", MX.AL08_LABEL)}}
+    with pytest.raises(SystemExit):
+        MX._verify_record(doc, rec, "AL08", "x.json")
+    doc["lines"]["hall_icp_neutralizer"][0]["a9_21_status"] = MX.AL08_LABEL + " (A9.21)"
+    assert MX._verify_record(doc, rec, "AL08", "x.json") == "/lines/hall_icp_neutralizer/0 (line=AL-08)"
+    gate = {"owner_approved_gates": [{"id": MX.ICP_GATE_ID, "status": "GO", "criteria": MX.ICP_CRITERIA,
+                                      "placement": "BEFORE_LOCK-1", "mandatory": True,
+                                      "lock1_release_reportable": True}]}
+    rec = {"list": "/owner_approved_gates", "match": ("id", MX.ICP_GATE_ID), "checks": MX.ICP_GATE_CHECKS}
+    with pytest.raises(SystemExit):
+        MX._verify_record(gate, rec, "ICP_GATE", "x.json")
+    with pytest.raises(SystemExit):
+        MX._verify_record({"owner_approved_gates": []}, rec, "ICP_GATE", "x.json")
+
+
+def test_matrix_m16_v3_q_01_rederivation_applied_named_persons_pending():
+    """S9.4 / M16-V3-Q-01: the M16 v5 re-derivation residual is APPLIED (structural record check of the M16 v5
+    owner_answers_applied record); named persons stay PENDING_EVIDENCE (staffing ledger, owner)."""
+    e = [x for x in MXDOC["entries"] if x["question_id"] == "M16-V3-Q-01"]
+    assert len(e) == 1
+    e = e[0]
+    assert e["status"] == "APPLIED"
+    assert [(r["status"], r["where"]) for r in e["residual"]] == [("PENDING_EVIDENCE", "staffing ledger (owner)")]
+    assert not any("M16 v5" in r["what"] for r in e["residual"])
+    res = e["resolved_residual"]
+    assert len(res) == 1 and res[0]["status_before"] == "BLOCKED" and res[0]["status"] == "APPLIED"
+    assert res[0]["artifact"] == MX.M16V5_REL and res[0]["commit"] == MX.M16V5_COMMIT
+    assert res[0]["record_pointer"] == "/owner_answers_applied/0 (question_id=M16-V3-Q-01)"
+    apps = [a for a in e["applications"] if a["lane"] == "M16_V5"]
+    assert len(apps) == 1 and apps[0]["record_pointer"] == res[0]["record_pointer"]
+    m16v5 = _j(MX.M16V5_REL)
+    rec = m16v5["owner_answers_applied"][0]
+    assert rec["rederivation"] == "APPLIED" and rec["rows_covered"] == len(M16DOC["rows"])
+    assert rec["named_persons"].startswith("PENDING_EVIDENCE")
+    # structural check fails closed on a record that does not state the re-derivation
+    spec = MX.CODE_APPS["M16-V3-Q-01"][0]["record"]
+    bad = {"owner_answers_applied": [dict(rec, rederivation="BLOCKED")]}
+    with pytest.raises(SystemExit):
+        MX._verify_record(bad, spec, "M16-V3-Q-01", "x.json")
+    bad = {"owner_answers_applied": [dict(rec, named_persons="Some Engineer")]}
+    with pytest.raises(SystemExit):
+        MX._verify_record(bad, spec, "M16-V3-Q-01", "x.json")
+    assert MXDOC["residual_counts"]["BLOCKED"] == 19
+
+
+def test_record_check_unknown_op_and_programme_pins_fail_closed(monkeypatch):
+    """Review follow-up 2026-10-03: an unknown record-check op is refused (no fall-through to startswith); the
+    HW_PROGRAMME stage applications verify the programme-record sha256 pin, not only a filename token."""
+    doc = {"l": [{"id": "a", "f": "xyz"}]}
+    with pytest.raises(SystemExit):
+        MX._verify_record(doc, {"list": "/l", "match": ("id", "a"), "checks": {"f": ("contains", "x")}}, "q", "art")
+    hw = [a for a in next(e for e in MXDOC["entries"] if e["decision"] == "A9.21"
+                          and e["question_id"] == "HW_PROGRAMME")["applications"] if a.get("pin_pointer")]
+    assert len(hw) == 5
+    with pytest.raises(SystemExit):
+        MX._verify_pin({"a9_21_programme": {"programme_record_sha256": "0" * 64}},
+                       ("/a9_21_programme/programme_record_sha256", MX.HW_PROGRAMME_REL), "q", "art")
+    with pytest.raises(SystemExit):
+        MX._verify_pin({}, ("/a9_21_programme/programme_record_sha256", MX.HW_PROGRAMME_REL), "q", "art")
+
+
+def test_verbatim_refuses_empty_excerpt():
+    with pytest.raises(X.LaterDecisionError):
+        X.verbatim("A9.21", "   ")

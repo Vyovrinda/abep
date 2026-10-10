@@ -13,7 +13,7 @@
  ],
  "scope": {
   "statement": "ONE downstream Hall accelerator reference, identical in hall_only, rf_hall and ecr_hall, so that the RF/ECR comparison changes only the pre-ionization method upstream of the Hall inlet plane HALL_INLET_Z0.",
-  "block": "Ionization/discharge -> acceleration/thrust block of the RFP architecture (Governance.md 'Next work' 1, Scope). Nothing here reaches upstream into the intake, filter, compressor, gas chambers or valves; those deliver the feed state at IF-A5/IF-X2.",
+  "block": "Ionization/discharge -> acceleration/thrust block of the RFP architecture (governance.md 'Next work' 1, Scope). Nothing here reaches upstream into the intake, filter, compressor, gas chambers or valves; those deliver the feed state at IF-A5/IF-X2.",
   "own_thruster_not_p5": "This is the interface of Vyovrinda's own thruster. P5 (and ECHT) geometry, B(z) files and coil settings are evidence about other hardware and are never Vyovrinda design values (forbidden_value_sources).",
   "no_performance_claims": "No Hall performance number is predicted or implied. The credible transport set is empty (gate 3 FAIL); every value that would need an admitted closure or hardware is TBD.",
   "no_winner": "No architecture is ranked, preferred or eliminated here. Eliminations happen only in the comparison harness through explicit hard-gate logic with the evidence class that supports them.",
@@ -173,10 +173,10 @@
    "access": "repository"
   },
   {
-   "id": "SRC-Governance",
+   "id": "SRC-governance",
    "kind": "repository_file",
-   "citation": "Governance.md (RFP envelope summary, rules, gate status, RFP architecture scope).",
-   "path": "Governance.md",
+   "citation": "governance.md (RFP envelope summary, rules, gate status, RFP architecture scope).",
+   "path": "governance.md",
    "access": "repository"
   },
   {
@@ -1042,9 +1042,9 @@
     "evidence_class": "assumed",
     "source": [
      "SRC-CONSTANTS",
-     "SRC-Governance"
+     "SRC-governance"
     ],
-    "locator": "abep_sim/constants.py RFPConstraints thrust_min_mN / thrust_max_mN; Governance.md 'What this is'",
+    "locator": "abep_sim/constants.py RFPConstraints thrust_min_mN / thrust_max_mN; governance.md 'What this is'",
     "notes": "requirement, not a physical measurement; verify against the RFP text"
    },
    "power_max_W": {
@@ -1055,9 +1055,9 @@
     "evidence_class": "assumed",
     "source": [
      "SRC-CONSTANTS",
-     "SRC-Governance"
+     "SRC-governance"
     ],
-    "locator": "abep_sim/constants.py RFPConstraints power_max_W; Governance.md 'What this is'",
+    "locator": "abep_sim/constants.py RFPConstraints power_max_W; governance.md 'What this is'",
     "notes": "requirement; which loads it covers is defined by bus_power_boundary_v1 (bus-boundary lane); verify against the RFP text"
    }
   },
@@ -1359,7 +1359,7 @@
     "evidence_level": "5",
     "span_role": "recorded_excluded",
     "thrust_basis": "measured",
-    "exclusion_reason": "Fails VR-1 criterion (a): a cusped-field thruster is a different device family from the annular Hall channel this reference defines (the lane brief and Governance.md rule 8 fix the Hall accelerator; no new propulsion families). Considered because its reported 13.3 mN at 997 W discharge power (1000 V, N2) lies inside the RFP 12-25 mN band and under the 1.5 kW ceiling (discharge power only); it is not the only such light-propellant point in the source (e.g. PPS1350-TSD N2 at 305 V: 19-21 mN, about 1 kW, p. 23).",
+    "exclusion_reason": "Fails VR-1 criterion (a): a cusped-field thruster is a different device family from the annular Hall channel this reference defines (the lane brief and governance.md rule 8 fix the Hall accelerator; no new propulsion families). Considered because its reported 13.3 mN at 997 W discharge power (1000 V, N2) lies inside the RFP 12-25 mN band and under the 1.5 kW ceiling (discharge power only); it is not the only such light-propellant point in the source (e.g. PPS1350-TSD N2 at 305 V: 19-21 mN, about 1 kW, p. 23).",
     "notes": "Its 1000 V point shows light-propellant operation far above the proposed range; whether Vyovrinda's Hall channel should be evaluated above the proposed 305 V end is an owner question (Q1), not settled by a different device family."
    },
    {
@@ -2668,7 +2668,7 @@
     "status": "PROPOSED",
     "evidence_class": "assumed",
     "source": [
-     "SRC-Governance",
+     "SRC-governance",
      "SRC-PLASMADEV",
      "SRC-ARCHENGINE",
      "SRC-GK2008"
@@ -2685,11 +2685,11 @@
     "status": "PROPOSED",
     "evidence_class": "assumed",
     "source": [
-     "SRC-Governance",
+     "SRC-governance",
      "SRC-UPSTREAM-ICD",
      "SRC-AFG2022"
     ],
-    "rationale": "RFP context 'air + Xe' (Governance.md); the upstream ICD carries a Xe cathode flow at IF-X2. Published light-propellant Hall tests mostly fed the cathode with xenon (PPS1350-TSD campaign p. 23, Z-70 p. 26, Dukhopelnikov et al. p. 26, MCFT-2139 and HHT p. 27 of SRC-AFG2022), but not always: the shielded HT5k transitioned its HC20 cathode from xenon to pure N2 (p. 25) and the ECHT used an argon-fed cathode (p. 26; EV-C6). Xe is proposed from the RFP context, not because the literature is uniform.",
+    "rationale": "RFP context 'air + Xe' (governance.md); the upstream ICD carries a Xe cathode flow at IF-X2. Published light-propellant Hall tests mostly fed the cathode with xenon (PPS1350-TSD campaign p. 23, Z-70 p. 26, Dukhopelnikov et al. p. 26, MCFT-2139 and HHT p. 27 of SRC-AFG2022), but not always: the shielded HT5k transitioned its HC20 cathode from xenon to pure N2 (p. 25) and the ECHT used an argon-fed cathode (p. 26; EV-C6). Xe is proposed from the RFP context, not because the literature is uniform.",
     "maps_to": "IF-X2 mdot_xe_cathode_kgps",
     "evidence": [
      "EV-C6"
@@ -2796,9 +2796,9 @@
     "evidence_class": "assumed",
     "source": [
      "SRC-CONSTANTS",
-     "SRC-Governance"
+     "SRC-governance"
     ],
-    "locator": "abep_sim/constants.py RFPConstraints ignition_hours; Governance.md 'What this is'",
+    "locator": "abep_sim/constants.py RFPConstraints ignition_hours; governance.md 'What this is'",
     "notes": "requirement; verify against the RFP text"
    }
   },
@@ -2994,7 +2994,7 @@
     "evidence_class": "assumed",
     "source": [
      "SRC-CONSTANTS",
-     "SRC-Governance"
+     "SRC-governance"
     ],
     "locator": "abep_sim/constants.py RFPConstraints ignition_hours",
     "notes": "requirement; verify against the RFP text"
@@ -3236,9 +3236,9 @@
    }
   },
   "conservation_rules": [
-   "CR-1 element mass: for every element (N, O, Xe), the mass flow through HALL_INLET_Z0 (neutrals + ions) equals the anode flow delivered at IF-A5 / IF-X2 minus pre-ionizer losses that leave the system, each loss reported explicitly; the balance closes exactly (Governance.md rule 4).",
+   "CR-1 element mass: for every element (N, O, Xe), the mass flow through HALL_INLET_Z0 (neutrals + ions) equals the anode flow delivered at IF-A5 / IF-X2 minus pre-ionizer losses that leave the system, each loss reported explicitly; the balance closes exactly (governance.md rule 4).",
    "CR-2 charge: any net ion or electron current crossing HALL_INLET_Z0 appears in the circuit accounting of the pre-ionizer supply and the discharge supply (bus-boundary lane); injected charge is not free.",
-   "CR-3 energy: ionization, dissociation, excitation and heating carried across HALL_INLET_Z0 are paid by rf_source or ecr_source power in the bus ledger; the architecture energy-ledger residual stays below 2 % (Governance.md rule 4).",
+   "CR-3 energy: ionization, dissociation, excitation and heating carried across HALL_INLET_Z0 are paid by rf_source or ecr_source power in the bus ledger; the architecture energy-ledger residual stays below 2 % (governance.md rule 4).",
    "CR-4 the cathode flow (IF-X2 mdot_xe_cathode_kgps, or IF-A5 mdot_cathode_air_kgps if an air-fed cathode is ever chosen) never crosses HALL_INLET_Z0.",
    "CR-5 hall_only: the inlet state equals the delivered neutral feed; ion and electron fields are exactly zero."
   ],
@@ -3347,7 +3347,7 @@
     "value": null,
     "unit": "-",
     "status": "TBD",
-    "requires": "TBD — requires an owner decision on design-map chemistry: abep-n2n-0.11 (PINNED.toml) is COMPLETE_FOR_P5_N2_VALIDATION, scoped to P5-N2 validation over T_e 2-30 eV; O/O2 chemistry does not exist. A rate-table validity limit is never extended merely because a design run reaches a higher T_e: an extension needs independent published evidence and a new pre-registration (Governance.md, owner decision 2026-09-26)."
+    "requires": "TBD — requires an owner decision on design-map chemistry: abep-n2n-0.11 (PINNED.toml) is COMPLETE_FOR_P5_N2_VALIDATION, scoped to P5-N2 validation over T_e 2-30 eV; O/O2 chemistry does not exist. A rate-table validity limit is never extended merely because a design run reaches a higher T_e: an extension needs independent published evidence and a new pre-registration (governance.md, owner decision 2026-09-26)."
    },
    "rule": "Same reaction-set label and variant in every arm. Species produced by a pre-ionizer must be species of that set; a species outside it (e.g. O, O2, NO) blocks the arm and is never dropped. chemistry_trustworthy (f_out = 0) is not relaxed for any arm."
   },
@@ -3442,7 +3442,7 @@
     "facility_ingestion_interpretation"
    ],
    "source": "hallthruster_bridge/ensemble/transport_ensemble_v0.json calibration_nuisance",
-   "rule": "Layer-1 calibration nuisance describes what the P5 experiment was. It is never a Vyovrinda design variable, map axis, arm-specific setting or trade dimension (Governance.md 'Next work' 1)."
+   "rule": "Layer-1 calibration nuisance describes what the P5 experiment was. It is never a Vyovrinda design variable, map axis, arm-specific setting or trade dimension (governance.md 'Next work' 1)."
   }
  },
  "bus_power_boundary": {

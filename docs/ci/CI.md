@@ -1,6 +1,6 @@
 # Continuous integration: what it enforces and why
 
-CI turns the repository's evidence discipline (Governance.md rules, [docs/EVIDENCE.md](../EVIDENCE.md)) into checks that a
+CI turns the repository's evidence discipline (governance.md rules, [docs/EVIDENCE.md](../EVIDENCE.md)) into checks that a
 reviewer does not have to repeat by hand. It **verifies**. It never regenerates frozen data, never changes physics,
 thresholds or chemistry, never runs the Hall solver on a push or pull request, and never reads campaign records.
 
@@ -11,8 +11,9 @@ contexts required checks on `main` (exact names and procedure: `docs/ci/BRANCH_P
 
 | workflow | trigger | what it runs |
 |---|---|---|
-| `.github/workflows/ci.yml` | `pull_request`, `push` to `main` or to the pinned execution branch `Governance/nifty-ramanujan-w68f9z` | job **integrity**: `python scripts/ci_checks.py`; job **tests** (pymsis present / absent): `python -m pytest -q tests`, the rule-9 outcome check, `python -m abep_sim.golden check` |
+| `.github/workflows/ci.yml` | `pull_request`, `push` to `main` or to the pinned execution branch `governance/nifty-ramanujan-w68f9z` | job **integrity**: `python scripts/ci_checks.py`; job **tests** (pymsis present / absent): `python -m pytest -q tests`, the rule-9 outcome check, `python -m abep_sim.golden check` |
 | `.github/workflows/julia-smoke.yml` | `workflow_dispatch` only (manual, with a confirmation box) | pinned HallThruster.jl install and **one** `P5N2_SMOKE=1` construction job; never score-bearing |
+| `.github/workflows/rust-workspace.yml` | `pull_request`, `push` to `main` or `integration/simulation-complete`; full history; not required yet (CI_PLAN.md § 1 principle 4) | pinned rustc 1.94.1; abep_core sources == `parity_report_v2` sha256 (A9.30 sec. 6); `cargo fmt -- --check` (members only); clippy `-D warnings`; `cargo test --workspace --locked`; `abep-ci` bid-source-guard, test-register, groundtest-isolation |
 
 To make CI a merge gate, the repository owner has to mark the three status contexts (`Repository integrity
 (scripts/ci_checks.py)`, `Tests + golden benchmarks (pymsis present)`, `Tests + golden benchmarks (pymsis absent)`) as
@@ -43,7 +44,7 @@ never silent about its scope. The exit code is 1 if any check fails, and a check
 
 | check | what it verifies | rule it enforces |
 |---|---|---|
-| `parse_json_toml` | Every `*.json` and `*.toml` parses. A duplicate JSON key is an error, because Python would otherwise silently keep the last value. Every non-empty line of every `*.jsonl` evidence ledger (`docs/orchestration/fired_triggers.jsonl`, `trigger_ledger_v2.jsonl`, the audit record files) must be one JSON object. `*.jsonl` under `hallthruster_bridge/validation/` are campaign run records and are not read; the validation release pipeline binds them. Pruned: `.git`, `hallthruster_bridge/out` (raw run output), gitignored `results/`, and local environments and caches (`.venv`, `__pycache__`, `.Governance`, …). | integrity of every data file |
+| `parse_json_toml` | Every `*.json` and `*.toml` parses. A duplicate JSON key is an error, because Python would otherwise silently keep the last value. Every non-empty line of every `*.jsonl` evidence ledger (`docs/orchestration/fired_triggers.jsonl`, `trigger_ledger_v2.jsonl`, the audit record files) must be one JSON object. `*.jsonl` under `hallthruster_bridge/validation/` are campaign run records and are not read; the validation release pipeline binds them. Pruned: `.git`, `hallthruster_bridge/out` (raw run output), gitignored `results/`, and local environments and caches (`.venv`, `__pycache__`, `.governance`, …). | integrity of every data file |
 | `prereg_lock` | Every file listed in `prereg/p5_n2_prereg_lock_v1.json` matches its sha256. The inputs pinned by `p5_n2_validation_criteria_v1.json` (measurement audit, case set, transport candidates, all 22 chemistry configs) match theirs. These are the same refusal conditions the campaign driver applies at start-up, so CI fails wherever the driver would refuse. | pre-registration: "any change after this lock is a new, dated addendum, never an edit" |
 | `audit_manifest` | Each immutable audit snapshot in `audit/configs/` matches its sha256. The set of rate files it names equals the MANIFEST list, and every one of those rate tables matches its pinned sha256. The case-file snapshot also matches. | historical audits read immutable snapshots (PR #25 review) |
 | `hallthruster_pin` | The `PINNED.toml` commit, version and repository equal the `HallThruster` entry of `Manifest.toml` (repo-rev, version, repo-url). The `Project.toml` compat is `=<version>`. | rule 7 (pin; upgrade policy: never moved automatically) |
@@ -54,6 +55,7 @@ never silent about its scope. The exit code is 1 if any check fails, and a check
 | `multiply_charged_tables` | `scripts/build_multiply_charged_tables.py` reproduces every table it owns (`propellants/` and `audit/bound_tables/`) byte for byte, plus each `.source` provenance file. This is the comparison its `--check` mode makes, plus `.source`, without a temporary directory. | rule 6 (tables carry their source) |
 | `ensemble_gate` | `abep_sim.hall_ensemble.load_ensemble()` loads the transport ensemble. `require_admitted` refuses every screening candidate (with the SCREENING reason) and an unknown id, and no id is both admitted and screening. The admission-record verification lives in `load_ensemble` itself and is reused. | screening candidates never produce design Hall maps |
 | `h2_6_live_sources` | The H2-6 builder's `verify_sources()` reports no consumed value that differs from its live source (review finding SW-02). The builder is immutable H2 v1 history (byte-identical to the A9.10 reconciliation base), so this gate runs here rather than inside its `--check`. | a regenerated upstream never leaves a stale H2-6 transcription passing CI |
+| `bid_source_guard` | `docs/bid/**` equals the terminal package state `2de86ab` byte for byte (`docs/bid/bid_source_manifest_v1.json` is the only added path; gitignored `__pycache__/*.pyc` excepted), `config/mission/mission_scenario_v2.json` keeps sha256 `885b1f70…`, and the baseline still pins `5eee4b8`. With git history: the lineage `5eee4b8` → `b5849af` → `2de86ab` → HEAD, the recorded tree ids and every recorded file hash hold. In a shallow clone the history part is NOT_EVALUATED and the check fails. Primary implementation: Rust (`crates/abep-provenance/src/bid_guard.rs`); cases preregistered in `docs/rust_migration/contracts/BID_SOURCE_GUARD/acceptance_v1.json`. | A9.29 sec. 3: the frozen bid record changes only by a new explicit owner decision |
 
 **Fresh generation without writing.** Each generator runs through its own `__main__` write path with default arguments
 inside `WriteCapture`. There, `builtins.open` and `io.open` in a writing mode return in-memory buffers, directory creation
@@ -66,7 +68,7 @@ modification times are unchanged, and that append and remove are refused.
 the launch manifests. A reformatted file with identical content would still break the lock. The failure message tells the
 two cases apart: "parsed content equal: formatting only" or "content differs".
 
-Separate mode: `python scripts/ci_checks.py --pytest-junit <report.xml>` checks **Governance.md rule 9** against a pytest JUnit
+Separate mode: `python scripts/ci_checks.py --pytest-junit <report.xml>` checks **governance.md rule 9** against a pytest JUnit
 report. It requires no failure or error, exactly 5 skips whose reason starts with `SUPERSEDED` (the retired 0-D Hall
 calibration), and exactly one xfail, `test_v16_blind_validation_p5_nitrogen` (strict, so an unexpected pass is already a
 pytest failure). A new skip, for example a test silently disabled when a dependency is missing, fails CI. The expected
@@ -108,7 +110,7 @@ Other options: `--list` names the checks, and `--only a,b` runs a subset (exit c
 * **Clean tree.** After each job, `git status --porcelain` must be empty, so tests, goldens and checks must not rewrite
   committed files. Gitignored caches are allowed.
 * **Full history** (`fetch-depth: 0`) in both jobs, for the rule-9 reason above.
-* **Triggers.** `push` runs on `main` and on the pinned execution branch `Governance/nifty-ramanujan-w68f9z`, because Governance.md
+* **Triggers.** `push` runs on `main` and on the pinned execution branch `governance/nifty-ramanujan-w68f9z`, because governance.md
   says nobody executes from `main` until that branch merges. Other branches are checked through their pull requests.
 * `permissions: contents: read`. Superseded pull-request runs are cancelled.
 
@@ -175,6 +177,9 @@ the P5-N2 campaign is running, so their CI runtime is unknown (timeout 90 min).
   an offline-verifiable admission record (`hall_ensemble._check_admission`).
 * **`h2_6_live_sources`**: an upstream that H2-6 consumed (e.g. the W1 feed-state closure) was regenerated and H2-6 now
   carries a stale value. H2-6 is immutable history: record the drift for the owner; never edit the H2 v1 deliverables.
+* **`bid_source_guard`**: a frozen bid file, the mission scenario v2 or the recorded lineage changed. Restore it. A change
+  to the historical bid package needs a new explicit owner decision, named in the manifest's
+  `owner_change_authorizations`; never edit the manifest's records to make the guard pass.
 * **Rule-9 outcome**: a test was newly skipped, the strict xfail changed, or the skip reasons changed. Never "fix" the
   superseded tests by re-tuning.
 * **Golden**: a model change (rule 2), not something to regenerate so that CI passes.

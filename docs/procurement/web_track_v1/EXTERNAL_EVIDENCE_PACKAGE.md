@@ -204,7 +204,7 @@ These are not edited here. The CLI track or a later reviewed lane should make th
 | Artifact | Change |
 |---|---|
 | `docs/traceability/rtm_v1.json` and hard-gate RFP records R1–R7 | Record the news-article wording as secondary evidence. Flag the RFP-number discrepancy, 26,000 vs 26,280 h, and the requirements not found (> 15,000 h, Part III Para 2, RFP 4.1a). |
-| `Governance.md` "What this is" (bid close, RFP number) | Only after the document is obtained. |
+| `governance.md` "What this is" (bid close, RFP number) | Only after the document is obtained. |
 | `docs/architecture_comparison/compressor_downselect/` EV-08 | ~60 % is model-derived; CR ≥ 3500 is unverified and comes via Moon 2025; the rotor is not experimentally demonstrated. C1 status unchanged. |
 | `docs/budgets/xe_ledger/xe_ledger_v1.json` | Add R6 analogue evidence (per-start Xe, tank fractions, density versus temperature) as illustrative inputs. Parameters stay TBD. |
 | `docs/experiments/hardware/hardware_requirements_v1.json` (HW-MC-13, HW-H1-05, HWQ-08, 17, 18, 19, 20) | Candidate materials with sourced properties. |

@@ -25,7 +25,7 @@ Rules implemented here
     'PENDING <lane path>' and never filled; nothing is read from them;
   * no Hall transport closure, screening candidate, superseded 0-D Hall model or withdrawn number is read; nothing here
     predicts thrust, efficiency, discharge current, neutralizer electron current or plasma state;
-  * missing inputs raise (Governance.md rule 3).
+  * missing inputs raise (governance.md rule 3).
 
 Usage
   python docs/procurement/rfq_a9/build_rfq_a9.py          # write all outputs

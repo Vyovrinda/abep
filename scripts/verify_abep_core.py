@@ -762,7 +762,7 @@ def interface_section():
          "demand": "verify with `python scripts/verify_abep_core.py --check` (no build needed) and, with the extension built from the recorded sources, `--check --recompute 3` (bitwise reproduction of stored numbers); the verdict stands only for the recorded source hashes",
          "status": "OPEN"},
         {"id": "RUST-ID-06", "direction": "golden / frozen data -> rust", "counterparty": "abep_sim/data/intake_surface_v1.* and abep_sim/golden.py",
-         "demand": "frozen intake surface and goldens are built with the Python reference only (Governance.md rule 1); the Rust backend is never used to regenerate them",
+         "demand": "frozen intake surface and goldens are built with the Python reference only (governance.md rule 1); the Rust backend is never used to regenerate them",
          "status": "RESPECTED"},
     ]
 

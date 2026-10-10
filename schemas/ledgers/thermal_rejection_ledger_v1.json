@@ -135,7 +135,7 @@
    "identity": "for every subsystem: P_elec_in_W + sum P_received_W = Q_int_W + P_exported_W + sum P_transferred_W (+ P_stored_W in transients only)",
    "system_identity": "P_bus_W = sum_nodes Q_int_W + sum P_exported_W + P_unassigned_W, where P_unassigned_W is listed term by term (currently: 0.5 x P_neut at the cathode, gap G1; ledger['aux'], gap G2)",
    "residual": "resid_th = (P_bus_W - sum_nodes Q_int_W - sum P_exported_W - P_unassigned_W) / P_bus_W",
-   "gate": "|resid_th| <= 0.02, the same tolerance as the archengine energy-ledger gate (Governance.md rule 4); an instance with P_unassigned_W > 0 is reported as CLOSED_WITH_UNASSIGNED, never as fully closed"
+   "gate": "|resid_th| <= 0.02, the same tolerance as the archengine energy-ledger gate (governance.md rule 4); an instance with P_unassigned_W > 0 is reported as CLOSED_WITH_UNASSIGNED, never as fully closed"
   },
   "radiator_balance": {
    "identity": "steady state per case: sum_nodes (Q_int_W + Q_env_absorbed_W - Q_radiated_direct_W) + Q_env_absorbed_radiator_W = Q_rejected_radiator_W",

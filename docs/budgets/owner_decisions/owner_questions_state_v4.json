@@ -733,7 +733,7 @@
    "no": 9,
    "id": "REPO-1",
    "source": "v1 consolidated list row 9 (A. RFP / access / repo)",
-   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on Governance/nifty-ramanujan-w68f9z) into main via a new PR?",
+   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on governance/nifty-ramanujan-w68f9z) into main via a new PR?",
    "status": "ANSWERED",
    "answer_pointer": "docs/decisions/OD_2026_09_29_owner_answers_147.json row 9",
    "answer_sha256": "8cddacc5e4c20fe2cbf941a6d55b0d6a4349e996273e8025963a9d8cd87244cc",
@@ -5106,7 +5106,7 @@
    "lane": "A9-09",
    "status": "ANSWERED_BY_A9_3",
    "answer_pointer": "docs/decisions/OD_2026_09_30_A9_3_post_a9_tier1_owner_decisions.json decisions.OQ-RFQ-07",
-   "answer_excerpt": "TECHNICAL_TEAM_PREPARES / OWNER_OR_PROCUREMENT_DISPATCHES :: RFQ packages split by supplier speciality; the technical team/Governance prepares; commercial dispatch authority stays with P9E/Vyovrinda under Praveen's authorization; no automatic supplier contact",
+   "answer_excerpt": "TECHNICAL_TEAM_PREPARES / OWNER_OR_PROCUREMENT_DISPATCHES :: RFQ packages split by supplier speciality; the technical team/governance prepares; commercial dispatch authority stays with P9E/Vyovrinda under Praveen's authorization; no automatic supplier contact",
    "no": 276,
    "status_detail": "ANSWERED (A9.3)",
    "answer_sha256": "81c69b200b9ce51f8aa745636d7aa4dbbddc39005b064235841722ebfdedad1b"
@@ -7242,7 +7242,7 @@
    "rvm_interface_demand": "docs/requirements/rvm_a9/rvm_a9_v1.json interface_demands[id=RVM-ID-11]",
    "question": "'>15,000 h ignition' wording",
    "alternatives": [
-    "cumulative firing time (Governance.md '> 15,000 h firing')",
+    "cumulative firing time (governance.md '> 15,000 h firing')",
     "something else in the RFP text"
    ],
    "lane24_current_handling": "cumulative firing time: R1 records '> 15,000 h firing' and no alternative reading is recorded; verify the wording against the RFP document.",

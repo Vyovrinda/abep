@@ -191,7 +191,7 @@ input sourced and explicit; none has a default.
 
 ## Sources
 - ESA SRE-PA/2011.097 Issue 1 Rev 3 (2012), URL and hash above. This is a margin *policy*, not physical evidence.
-- RFP mass limit as recorded: `abep_sim/constants.py` (`RFPConstraints.mass_max_kg`), Governance.md, and docs/HISTORY.md
+- RFP mass limit as recorded: `abep_sim/constants.py` (`RFPConstraints.mass_max_kg`), governance.md, and docs/HISTORY.md
   v0.1. **Verify against the RFP document.**
 - Hard-gate matrix G3 (`docs/architecture_comparison/hard_gates/hard_gate_matrix_v1.json`) and the bus-power boundary
   (`abep_sim/arch_boundary.py`) are shared contracts from other lanes. They are referenced by path, never imported at

@@ -18,7 +18,7 @@ This gate is separate from the N4 S1-readiness gate (scripts/experiments/s1_read
 reads. S1A_READY never schedules S1, never satisfies an N4 condition, never authorises a Hall-on H-1 reading and never
 makes S1a data score-bearing.
 
-Rules (Governance.md rule 3, docs/EVIDENCE.md): nothing is inferred or filled by assumption; a DRAFT / PROPOSED / PENDING
+Rules (governance.md rule 3, docs/EVIDENCE.md): nothing is inferred or filled by assumption; a DRAFT / PROPOSED / PENDING
 artifact never satisfies a condition; references are verified by recomputing sha256 on disk; only files inside the
 repository are read. The module is pure and read-only: it writes a file only with ``--out``. It imports nothing from
 abep_sim or hallthruster_bridge and carries no physical, efficiency, safety-limit or threshold value.

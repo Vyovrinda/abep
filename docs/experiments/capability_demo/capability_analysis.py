@@ -3,7 +3,7 @@
 Pure functions only. They take the raw calibration readings of a future demonstration and return the demonstrated
 (Type A / Type B) uncertainty and a verdict against targets that the CALLER supplies (lane-25 targets copied from the
 instrumentation definition, or owner-frozen values). Nothing here holds a physical value, an efficiency or a target:
-every input is explicit and missing / non-finite inputs raise (Governance.md rule 3, no silent fallbacks).
+every input is explicit and missing / non-finite inputs raise (governance.md rule 3, no silent fallbacks).
 
 This module is a PROPOSED analysis for the owner's calibration-plan freeze (S1-C5). It never replaces lane 25's
 readiness_n() (LOCK-1 rule, docs/architecture_comparison/minimum_decisive_experiment/experiment_draft.json), which fixes

@@ -390,7 +390,7 @@ PRE_REGISTERED_PROJECT_RULE / PROPOSED / TBD_FROM_INSTRUMENTATION) and source:
 | 45 eV / 30 eV | `PINNED.toml`, A-NO |
 | a ≤ 1/16 | `transport_ensemble_v0.json` |
 | 9 candidates | ensemble file |
-| 66 %, 1080 runs | Governance.md gate 3, context only |
+| 66 %, 1080 runs | governance.md gate 3, context only |
 | 0.15 (ε_Id option) | `transport_ensemble_v0.json` `admission_rule` (15 % blind criterion); convention only |
 | 5 knee levels | lane 25 T-KNEE-LEVELS, PROPOSED there |
 | sha256 digests | `pin_inputs.py` |

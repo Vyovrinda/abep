@@ -40,13 +40,13 @@ Structural checks: `tests/test_dual_feed_state_machine.py` (run `python -m pytes
   `value: "TBD — requires <model/test>"`, and none has a sourced number yet. A parameter gets a value only together
   with a `source` and an `evidence_class` (measured / digitized / inferred / reconstructed / model-derived / assumed,
   per docs/EVIDENCE.md). The test suite rejects any other numeric value anywhere in the file.
-- **It asserts nothing about discharge physics.** Gate 3 is FAIL and the credible transport set is ∅ (Governance.md), so no
+- **It asserts nothing about discharge physics.** Gate 3 is FAIL and the credible transport set is ∅ (governance.md), so no
   design Hall map exists. The simulator does **not** establish whether a Hall discharge can be ignited on Xe and then
   transferred to, sustained on or throttled on atmospheric or mixed feed, with or without a pre-ionizer.
   HallThruster.jl reaction sets cover Xe and N₂/N only: there is no O/O₂ chemistry and no Xe + atmosphere mixture. The
   states below are the sequence a controller would need *if* those regimes exist. The guards that decide them (e.g.
   `I_d`, `Id_rms_rel`, `T_air_avail`, `preionizer_lit`) are gated or TBD.
-- **RFP basis:** air + Xe propellants, Hall preferred, power < 1.5 kW, 12–25 mN (Governance.md;
+- **RFP basis:** air + Xe propellants, Hall preferred, power < 1.5 kW, 12–25 mN (governance.md;
   `abep_sim.constants:RFPConstraints`, transcribed from RFP Part III Para 2). The RFP text is not in the repository, so
   verify it. The RFP does not enumerate these states (verify). The state list is a Vyovrinda control-design proposal.
 - **Architecture scope rule:** the atmospheric path is intake → filter → compressor → atmospheric gas chamber →

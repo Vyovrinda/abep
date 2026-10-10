@@ -7,7 +7,7 @@
  "status": "EVIDENCE DOSSIER ONLY. No simulator parameter, threshold, frozen dataset, chemistry table or campaign file is changed by this file. It is not a design input until the owner decides so.",
  "companion": "docs/evidence/cathode/CATHODE_DOSSIER.md (human-readable summary; this JSON is authoritative)",
  "policy": {
-  "evidence_rules": "docs/EVIDENCE.md and Governance.md rules 6 and 10. Evidence level (1-7) describes the source; quantity_type describes what happened to the number. They are orthogonal.",
+  "evidence_rules": "docs/EVIDENCE.md and governance.md rules 6 and 10. Evidence level (1-7) describes the source; quantity_type describes what happened to the number. They are orthogonal.",
   "quantity_types": ["measured", "digitized", "inferred", "reconstructed", "model-derived", "assumed"],
   "level_assignment_in_this_dossier": "No Vyovrinda cathode exists, so no entry is level 1 or 2. Level 3 = primary experimental report on hardware of the same cathode concept (transfer to Vyovrinda hardware is an applicability limitation, not a level change). Level 5 = textbook, review, or a value quoted by a paper from another primary that this lane did not retrieve, or a value known only from a document title. Level 7 = repository constant with no located source.",
   "verification_vocabulary": {
@@ -29,14 +29,14 @@
   "does_not_claim": "This dossier does not claim ABEP closure, an architecture winner, a cathode selection, or any Hall transport admission. It does not propose retuning any model."
  },
  "rfp_envelope_as_quoted": {
-  "source_id": "rfp_via_Governance_md",
+  "source_id": "rfp_via_governance_md",
   "altitude": "180-230 km",
   "thrust": "12-25 mN",
   "power": "< 1.5 kW",
   "mass": "< 40 kg",
   "mission": "26,000 h mission, > 15,000 h firing",
   "propulsion": "Hall preferred; air + Xe",
-  "note": "Quoted from the Governance.md transcription of RFP DTDF/06/13516/DSP/ABEP/X/L/M/01. The RFP document itself is not in the repository; verify against the RFP before quoting externally. These are requirements, not evidence, and are kept as text."
+  "note": "Quoted from the governance.md transcription of RFP DTDF/06/13516/DSP/ABEP/X/L/M/01. The RFP document itself is not in the repository; verify against the RFP before quoting externally. These are requirements, not evidence, and are kept as text."
  },
  "electron_current_requirement": {
   "principle": [
@@ -1496,7 +1496,7 @@
   {"id": "marchioni_2020_via_repo_audit", "citation": "F. Marchioni, 'Design and Performance Measurements of a Long Channel Hall Thruster for Air-Breathing Electric Propulsion', MSc thesis, Politecnico di Torino, 2019-20 (source S2 of the repository ECHT audit).", "url": "https://webthesis.biblio.polito.it/14618/", "repo_path": "hallthruster_bridge/identification/echt_n2/echt_n2_evidence_audit_v1.json", "access": "open (thesis repository); values taken from the repository audit record, not re-read in this lane", "retrieved": false},
   {"id": "conversano_2022_title", "citation": "R. W. Conversano, G. Becatti, D. M. Goebel, V. H. Chaplin, 'Demonstration of 13,011-h of Operation of a Proto-Flight Compact Heaterless Lanthanum Hexaboride Hollow Cathode', Acta Astronautica 197 (2022) 53-59 (bibliographic data as shown in search results - verify).", "url": "https://www.sciencedirect.com/science/article/abs/pii/S0094576522002119", "access": "not retrieved (ScienceDirect 403; ADS human-verification page); title only", "retrieved": false},
   {"id": "becatti_2021_title", "citation": "G. Becatti, R. W. Conversano, D. M. Goebel, 'Demonstration of 25,000 ignitions on a proto-flight compact heaterless lanthanum hexaboride hollow cathode', Acta Astronautica 178 (2021).", "doi": "10.1016/j.actaastro.2020.09.013", "url": "https://www.osti.gov/pages/biblio/1660475", "access": "OSTI bibliographic record accessed (abstract 'Not Available'); body not retrieved", "retrieved": false},
-  {"id": "rfp_via_Governance_md", "citation": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 envelope as transcribed in the repository Governance.md", "repo_path": "Governance.md", "access": "repository", "retrieved": false},
+  {"id": "rfp_via_governance_md", "citation": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 envelope as transcribed in the repository governance.md", "repo_path": "governance.md", "access": "repository", "retrieved": false},
   {"id": "repo_code", "citation": "ABEP-VLEO simulator source code at base commit efc4a4e", "repo_path": "abep_sim/", "access": "repository", "retrieved": false}
  ]
 }

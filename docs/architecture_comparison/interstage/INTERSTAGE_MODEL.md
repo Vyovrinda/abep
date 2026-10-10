@@ -33,7 +33,7 @@ interstage electron temperatures, so it refuses (§6). That refusal is the inten
 * **Output** (`$defs/result`): η_transport and its decomposition, flows by species, charge-state fractions, neutral
   pressures and pressure drop, reaction event rates, wall heat and ion impact energy, an energy ledger, the conservation
   residuals, numerics, provenance of every input, assumptions, and the milestone statement.
-* Hall-closure uncertainty (layer 1/2, Governance.md) never enters this block. The model takes no Hall transport input, and
+* Hall-closure uncertainty (layer 1/2, governance.md) never enters this block. The model takes no Hall transport input, and
   its outputs never depend on a Hall closure.
 
 ## 2. State and equations (steady, quasi-1-D plug flow)
@@ -145,7 +145,7 @@ axial profiles.
   consumer. A self-consistent electron energy equation (ambipolar-field work, field-aligned conduction) is TBD, and asking
   for another closure is refused.
 
-## 3. Conservation gates (Governance.md rule 4)
+## 3. Conservation gates (governance.md rule 4)
 
 For every solve the module reports and gates, relative to throughput:
 
@@ -270,7 +270,7 @@ All values were accessed 2026-09-26. Evidence classes follow docs/EVIDENCE.md.
 * The edge-to-centre ratio for a partially magnetized duct.
 
 The recombination rates, cross sections and wall coefficients the model needs overlap the air chemistry that
-Governance.md "Next work" item 4 defers (O₂/O only after gates 1–3). This lane must not pull that chemistry forward. It
+governance.md "Next work" item 4 defers (O₂/O only after gates 1–3). This lane must not pull that chemistry forward. It
 supplies the slots and refuses until the data exist.
 
 ## 7. Sources (all openly accessible)

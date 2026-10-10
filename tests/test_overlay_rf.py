@@ -62,7 +62,7 @@ def test_inputs_are_pinned(overlay):
     for k, v in overlay["inputs"].items():
         assert re.fullmatch(r"[0-9a-f]{64}", v["sha256"]), k
         assert v["path"] and not os.path.isabs(v["path"]), k      # repository-relative, never a worktree path
-        assert ".Governance" not in v["path"], k
+        assert ".governance" not in v["path"], k
 
 
 def test_self_checks_all_pass(overlay):
