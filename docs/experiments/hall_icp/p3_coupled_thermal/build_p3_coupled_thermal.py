@@ -6,7 +6,7 @@ T_A9_6_P3_COUPLED_THERMAL; owner directive A9.6 sec. 10; A9.2 icp_coupled_therma
 Deterministic; numpy only (pinned); runs in a few seconds; no Julia.
 
 What it does
-  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (governance.md rule 3);
+  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (Governance.md rule 3);
   * registers every input the coupled thermal problem needs (items table: value or TBD, units, basis, source,
     evidence class, status, freeze point, who supplies it: P1 / P2 / hardware / Phase-1 Hall data / owner);
   * evaluates the four A9.2 heat terms (Q_RF/match, Q_collector, Q_plume, Q_Hall->ICP) and the coupled network on
@@ -108,7 +108,7 @@ DELIVERABLES = {
     "M16": ("docs/experiments/hall_icp/integration/m16_v3/subsystem_maturity_v3.json",
             "636cbd3318831f6f56e9833813c4d8c259aef7db3de1c6e503cccce14dade7e2", "M16 v3 subsystem maturity"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (governance.md rule 10)"),
+             "evidence rules (Governance.md rule 10)"),
 }
 NEVER_PINNED = ["docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
                 "docs/orchestration/fired_triggers.jsonl", "docs/orchestration/trigger_ledger_v2.jsonl",
@@ -605,7 +605,7 @@ def build_items(h25pm, a92, ans):
     I += [
         item("P3-H-01", "Hall ion beam current I_beam", "TBD_AFTER_EVIDENCE - requires Phase-1 Faraday-probe data "
              "(no Hall-closure or 0-D prediction may be used: credible Hall set EMPTY)", "A", "pending",
-             "governance.md gate 3; A9 evidence_sequence", None, "TBD_AFTER_EVIDENCE", "after-evidence", "phase1_hall",
+             "Governance.md gate 3; A9 evidence_sequence", None, "TBD_AFTER_EVIDENCE", "after-evidence", "phase1_hall",
              ["Q_plume"], "I_beam_A"),
         item("P3-H-02", "mean ion energy per unit charge of the intercepted plume (beam-current-weighted, "
              "sum_i I_i E_i / (Z_i e) / I_beam; p3_thermal_lib.E_ION_MEAN_DEFINITION)", "TBD_AFTER_EVIDENCE - requires "

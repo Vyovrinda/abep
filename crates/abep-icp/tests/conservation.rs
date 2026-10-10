@@ -1,5 +1,5 @@
 //! Conservation checks CC-01..CC-07 (prereg `conservation_checks`; tolerance TOL-CONS = 1e-10 after a solve to 1e-12).
-//! governance.md rule 4: source balances close exactly. No term is a remainder, so the checks test solve and bookkeeping.
+//! Governance.md rule 4: source balances close exactly. No term is a remainder, so the checks test solve and bookkeeping.
 
 mod common;
 

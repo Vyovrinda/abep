@@ -9,7 +9,7 @@ verified repository deliverables listed in INPUTS (sha256 recorded in the output
 dashboard for the 16 A5 baseline subsystems plus the reserved RF pre-ionization module interface:
 subsystem_maturity_v1.json (authoritative) and SUBSYSTEM_MATURITY.md (generated from it).
 
-Evidence discipline (governance.md rules 3, 6, 10; docs/EVIDENCE.md).
+Evidence discipline (Governance.md rules 3, 6, 10; docs/EVIDENCE.md).
 * Subsystem names, allocations, requirement values and risk texts are read from their source files, not re-typed.
 * Every curated statement carries at least one citation {path, locator, verified_tokens}. The builder checks that each
   cited file exists and contains every verified token (ids such as HW-H1-03, S1A-C1, D-09, DI-1.4 or quoted phrases);
@@ -207,7 +207,7 @@ class Ctx:
     def path(self, rel: str) -> Path:
         p = self.root / rel
         if not p.exists():
-            raise FileNotFoundError(f"required input missing: {rel} (no fallback; governance.md rule 3)")
+            raise FileNotFoundError(f"required input missing: {rel} (no fallback; Governance.md rule 3)")
         return p
 
     def json(self, rel: str):

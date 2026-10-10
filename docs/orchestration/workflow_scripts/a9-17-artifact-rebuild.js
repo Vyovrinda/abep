@@ -8,9 +8,9 @@ export const meta = {
 }
 
 // args = { base: '<sha>' }
-const SP = '/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: governance Opus 5.5 <noreply@anthropic.com>
-governance-Session: https://governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
+const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
+Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, files: { type: 'array', items: { type: 'string' } },
   summary: { type: 'string' }, open_items: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } },
   required: ['commit', 'files', 'summary', 'open_items', 'tests'] }
@@ -19,9 +19,9 @@ const FIND = { type: 'object', properties: { findings: { type: 'array', items: {
   description: { type: 'string' }, evidence: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'file', 'description', 'evidence', 'fix_hint'] } } }, required: ['findings'] }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read governance.md first and the owner decision docs/decisions/OD_2026_10_01_A9_17_DATA_ARTIFACT_OWNER_DECISIONS.md IN FULL (verbatim text governs; cite path + json sha256 + decision key).
-Other campaigns run in parallel on other worktrees (step 1 decision application, step 2 production-model changes). Touch ONLY your ALLOWED paths. Never modify docs/decisions/**, governance.md, hallthruster_bridge/**, existing abep_sim modules other than those allowed, or other deliverables. You MAY append ONE dated entry to docs/HISTORY.md for your change.
-EVIDENCE (governance.md rules 1, 6, 10; docs/EVIDENCE.md): never invent values or sources; published/open sources and lawful access only; no contact with people; never change TLS settings (WebSearch/WebFetch are deferred tools - load via ToolSearch). Frozen data: versioned, deterministic builder, provenance manifest, sha256, check mode.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first and the owner decision docs/decisions/OD_2026_10_01_A9_17_DATA_ARTIFACT_OWNER_DECISIONS.md IN FULL (verbatim text governs; cite path + json sha256 + decision key).
+Other campaigns run in parallel on other worktrees (step 1 decision application, step 2 production-model changes). Touch ONLY your ALLOWED paths. Never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, existing abep_sim modules other than those allowed, or other deliverables. You MAY append ONE dated entry to docs/HISTORY.md for your change.
+EVIDENCE (Governance.md rules 1, 6, 10; docs/EVIDENCE.md): never invent values or sources; published/open sources and lawful access only; no contact with people; never change TLS settings (WebSearch/WebFetch are deferred tools - load via ToolSearch). Frozen data: versioned, deterministic builder, provenance manifest, sha256, check mode.
 Hygiene: your tests + builder/check; git add + commit; message ends with exactly:
 ${TRAILER}
 Do NOT push. Never touch ${SP}/followon or ${SP}/wt_followon. Return the structured result.
@@ -45,7 +45,7 @@ const out = await parallel(chains.map(ch => async () => {
   for (const st of ch.steps) {
     const r = await agent(common(base) + st.prompt, { label: `build:${st.key}`, phase: 'Build', schema: RESULT, isolation: 'worktree' })
     if (!r || !r.commit) { res.push({ step: st.key, failed: true }); return { chain: ch.key, res, final: base } }
-    const f = await agent(`ADVERSARIAL REVIEW of ${st.key} at commit ${r.commit} (base ${base}). git worktree add --detach ${SP}/rv17_${st.key} ${r.commit}; work read-only there; scratch under ${SP}/rv17_${st.key}_scratch; remove the worktree at the end. Read governance.md and docs/decisions/OD_2026_10_01_A9_17_*. Check: decision applied faithfully; immutability (v1 content hash unchanged; sources unchanged); determinism (rebuild twice -> identical hashes); no silent fallback; no invented values/sources (fetch at least 2 cited sources); edits only in allowed paths (git diff --stat ${base}..${r.commit}); tests meaningful. Report only real problems with evidence.\n\nBRIEF: ${st.prompt}`,
+    const f = await agent(`ADVERSARIAL REVIEW of ${st.key} at commit ${r.commit} (base ${base}). git worktree add --detach ${SP}/rv17_${st.key} ${r.commit}; work read-only there; scratch under ${SP}/rv17_${st.key}_scratch; remove the worktree at the end. Read Governance.md and docs/decisions/OD_2026_10_01_A9_17_*. Check: decision applied faithfully; immutability (v1 content hash unchanged; sources unchanged); determinism (rebuild twice -> identical hashes); no silent fallback; no invented values/sources (fetch at least 2 cited sources); edits only in allowed paths (git diff --stat ${base}..${r.commit}); tests meaningful. Report only real problems with evidence.\n\nBRIEF: ${st.prompt}`,
       { label: `review:${st.key}`, phase: 'Review', schema: FIND })
     let commit = r.commit
     const serious = ((f && f.findings) || []).filter(x => x.severity !== 'minor')

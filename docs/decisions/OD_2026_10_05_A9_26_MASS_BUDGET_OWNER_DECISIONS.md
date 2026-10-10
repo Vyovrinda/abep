@@ -7,7 +7,7 @@ Recorded verbatim from the owner's session messages of 2026-10-04 / 2026-10-05 (
 ## Message 1 — MASS_CLOSURE_CHECK_REQUEST — 2026-10-04T17:22:28.839Z — text sha256 `3fee21eb93db05e67ffe412cd643006c860176a357bc0f2d3fc623cc37c01859`
 
 ````text
-Yes — **the 40 kg constraint absolutely still applies**, and this changes how we should interpret governance’s mass numbers.
+Yes — **the 40 kg constraint absolutely still applies**, and this changes how we should interpret Governance’s mass numbers.
 
 I rechecked the live repo. The current mass model explicitly uses:
 
@@ -51,9 +51,9 @@ So the correct engineering statement is:
 
 > **The requirement is <40 kg wet. Our current preliminary evidence/planning-floor roll-up does not yet close that requirement. The flight design must be mass-optimized and rebased using actual CBE/quotation/design values before design freeze.**
 
-There is another issue worth auditing before we lock the bid: some subsystem “MEV planning floors” already contain a 20% uplift, and then the roll-up adds another **20% system margin**. We should verify that we are not unintentionally **double-applying margin** to those lines. I would not change anything yet, but governance should explicitly audit the margin convention before we treat 40.572 kg as the authoritative preliminary mass.
+There is another issue worth auditing before we lock the bid: some subsystem “MEV planning floors” already contain a 20% uplift, and then the roll-up adds another **20% system margin**. We should verify that we are not unintentionally **double-applying margin** to those lines. I would not change anything yet, but Governance should explicitly audit the margin convention before we treat 40.572 kg as the authoritative preliminary mass.
 
-So I would slightly interrupt governance’s current sequence. **Do not freeze the bid package yet.** Send this:
+So I would slightly interrupt Governance’s current sequence. **Do not freeze the bid package yet.** Send this:
 
 ```text
 MASS-CLOSURE CHECK BEFORE BID FREEZE
@@ -184,7 +184,7 @@ No removal of qualified hardware solely to force <40 kg.
 Report the audit to me before completing bid_technical_baseline_v2.
 ```
 
-So the answer is: **yes, 40 kg remains the constraint, and governance’s current mass roll-up is telling us that we have a genuine mass-closure problem.** The right response is not to change the 40 kg limit; it is to audit the mass accounting and establish a credible path to a **<40 kg wet flight design** before we call the proposal mass-compliant.
+So the answer is: **yes, 40 kg remains the constraint, and Governance’s current mass roll-up is telling us that we have a genuine mass-closure problem.** The right response is not to change the 40 kg limit; it is to audit the mass accounting and establish a credible path to a **<40 kg wet flight design** before we call the proposal mass-compliant.
 
 And I would do that audit **now**, before freezing the final bid mass table.
 ````

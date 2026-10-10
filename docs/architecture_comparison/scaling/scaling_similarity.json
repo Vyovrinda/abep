@@ -3,19 +3,19 @@
   {
    "id": "AR-1",
    "requirement": "At least one ADMITTED transport member (promotion rule: predicts new evidence not used to select it, without retuning, a <= 1/16). Today the credible set is empty.",
-   "source": "governance.md next-work 1; hallthruster_bridge/ensemble/transport_ensemble_v0.json admission_rule",
+   "source": "Governance.md next-work 1; hallthruster_bridge/ensemble/transport_ensemble_v0.json admission_rule",
    "status": "NOT MET"
   },
   {
    "id": "AR-2",
    "requirement": "O4 staged-sensitivity dispositions complete (hall_ensemble._check_o4).",
-   "source": "governance.md next-work 3",
+   "source": "Governance.md next-work 3",
    "status": "NOT MET"
   },
   {
    "id": "AR-3",
    "requirement": "A released Vyovrinda geometry and B(z) (versioned, sha256, not P5/ECHT files); one map set per member and geometry revision.",
-   "source": "governance.md next-work 1 (flow) and 5; Hall-map spec (docs/hallmap/, other lane)",
+   "source": "Governance.md next-work 1 (flow) and 5; Hall-map spec (docs/hallmap/, other lane)",
    "status": "NOT MET (no design release)"
   },
   {
@@ -39,13 +39,13 @@
   {
    "id": "AR-7",
    "requirement": "chemistry_trustworthy on every map point (T_e <= 30 eV domain unless a v2 domain extension is pre-registered on independent evidence) and an O/O2 reaction set for air.",
-   "source": "governance.md next-work 2, 3, 4, 5",
+   "source": "Governance.md next-work 2, 3, 4, 5",
    "status": "NOT MET (O/O2 absent)"
   },
   {
    "id": "AR-8",
    "requirement": "wall_life_trustworthy maps (ion_wall_losses = true, WallSheath, unshielded) for any erosion/life use, with wall-model evidence at the Vyovrinda wall-heat-flux level.",
-   "source": "governance.md next-work 5",
+   "source": "Governance.md next-work 5",
    "status": "NOT MET"
   },
   {
@@ -63,7 +63,7 @@
   {
    "id": "AR-11",
    "requirement": "No retuning on Vyovrinda geometry; the member's parameters and physical prior are inherited unchanged; Hall-closure uncertainty stays inside the ionization/discharge -> acceleration block.",
-   "source": "governance.md next-work 1 (scope)",
+   "source": "Governance.md next-work 1 (scope)",
    "status": "STANDING RULE"
   }
  ],
@@ -5136,7 +5136,7 @@
    },
    "T_e_search_interval_eV": {
     "class": "assumed (project chemistry domain)",
-    "source": "PINNED.toml [reaction_set].domain T_e 2-30 eV (governance.md); a required T_e above 30 eV is reported as outside the domain, never extrapolated",
+    "source": "PINNED.toml [reaction_set].domain T_e 2-30 eV (Governance.md); a required T_e above 30 eV is reported as outside the domain, never extrapolated",
     "unit": "eV",
     "value": [
      2.0,
@@ -5169,7 +5169,7 @@
    },
    "thrust_mN": {
     "class": "requirement (RFP as recorded in the repository; RFP text not re-read by this lane - verify)",
-    "source": "abep_sim/constants.py RFPConstraints.thrust_min_mN / thrust_max_mN (docstring: 'Hard limits from Part III Para 2 of the RFP'); governance.md RFP envelope 12-25 mN",
+    "source": "abep_sim/constants.py RFPConstraints.thrust_min_mN / thrust_max_mN (docstring: 'Hard limits from Part III Para 2 of the RFP'); Governance.md RFP envelope 12-25 mN",
     "unit": "mN",
     "value": [
      12.0,
@@ -7573,7 +7573,7 @@
    "quantity": "absolute I_d, thrust, efficiency, oscillation regime from any P5-calibrated model",
    "risk": "HIGH",
    "transferability": "NOT_TRANSFERABLE",
-   "why": "all absolute Hall numbers are withdrawn (governance.md); geometry and density groups are design-dependent or diverge"
+   "why": "all absolute Hall numbers are withdrawn (Governance.md); geometry and density groups are design-dependent or diverge"
   },
   {
    "depends_on_groups": [
@@ -7616,7 +7616,7 @@
    "quantity": "P5 calibration nuisance resolutions (registration, coil shape, divergence reading, facility interpretation)",
    "risk": "NONE",
    "transferability": "NOT_APPLICABLE",
-   "why": "layer 1 describes what the P5 experiment WAS; it is never a Vyovrinda design variable, map axis or trade dimension (governance.md); here it only widens P5 ranges"
+   "why": "layer 1 describes what the P5 experiment WAS; it is never a Vyovrinda design variable, map axis or trade dimension (Governance.md); here it only widens P5 ranges"
   },
   {
    "depends_on_groups": [

@@ -61,7 +61,7 @@
    "id": "RFP_40kg",
    "value_kg": 40.0,
    "kind": "requirement",
-   "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
+   "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; Governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
   },
   {
    "id": "A5_alloc_36kg",
@@ -284,7 +284,7 @@
      "kind": "requirement",
      "value_kg": 40.0,
      "share": 0.135,
-     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
+     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; Governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
     },
     {
      "id": "A5_alloc_36kg",
@@ -315,7 +315,7 @@
      "kind": "requirement",
      "value_kg": 40.0,
      "share": 0.2025,
-     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
+     "source": "RFP '< 40 kg' total system mass (abep_sim/constants.py RFPConstraints.mass_max_kg; Governance.md; A5 allocations_and_requirements 'the 40 kg requirement'); verify against the RFP document"
     },
     {
      "id": "A5_alloc_36kg",

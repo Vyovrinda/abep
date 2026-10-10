@@ -81,7 +81,7 @@ H-1 counterparts: R01 → FS-C (GROUND/FACILITY-ONLY); R02 → FS-C (GROUND/FACI
 | AN-MT-SXTA40 | MT Aerospace S-XTA 40 l xenon tank (COPV, Ti-6Al-4V liner, CFRP T800; MEOP 187 bar) | predicted structural mass | 6.3 kg | model-derived | SRC-MT-TANKS: catalogue p. 12 'S-XTA / 40-120l Family' size table: V=40 l, L=446 mm, mStruct_pred=6.3 kg, MXe_max=73 kg; diameter 440 mm |
 | AN-MT-SXTA40-CAP | MT Aerospace S-XTA 40 l | maximum Xe load | 73 kg | model-derived | SRC-MT-TANKS: catalogue p. 12 size table |
 | AN-NIST-XE-RHO | xenon (fluid property) | density at 293.15 K and 75 / 100 / 125 / 150 bar | 1675.7–1867.9–1971.2–2045.5 kg m^-3 | model-derived | SRC-NIST-XE: isotherm table rows 293.15 K at 75.000 / 100.00 / 125.00 / 150.00 bar |
-| AN-ECHT-GEOM | ECHT extended-channel Hall thruster (laboratory device on N2) | BN chamber length / channel width / outer diameter | 86–10–100 mm | measured | SRC-ECHT-REPO: governance.md 'Superseded / withdrawn'; docs/EVIDENCE.md row 'ECHT geometry' |
+| AN-ECHT-GEOM | ECHT extended-channel Hall thruster (laboratory device on N2) | BN chamber length / channel width / outer diameter | 86–10–100 mm | measured | SRC-ECHT-REPO: Governance.md 'Superseded / withdrawn'; docs/EVIDENCE.md row 'ECHT geometry' |
 
 Sources, accessed 2026-09-29. PDFs are hashed as fetched. HTML pages were read through a fetch tool, so verify their wording on the page:
 
@@ -97,7 +97,7 @@ Sources, accessed 2026-09-29. PDFs are hashed as fetched. HTML pages were read t
 - **SRC-ARIANE-XRFS**: ArianeGroup, 'Xenon Regulator and Feed System (XRFS)', page 'Pressure Regulator for Ion Space Propulsion Systems'. https://www.space-propulsion.com/spacecraft-propulsion/valves/pressure-regulator.html 
 - **SRC-MT-TANKS**: MT Aerospace AG, 'Spacecraft Propellant Tanks' catalogue (15 pages; PDF created 2019-04-30). https://www.mt-aerospace.de/files/mta/tankkatalog/MT-Tankkatalog.pdf (sha256 076144193c73875b…)
 - **SRC-NIST-XE**: NIST Chemistry WebBook, SRD 69, Thermophysical Properties of Fluid Systems: xenon, isothermal properties at 293.15 K. https://webbook.nist.gov/cgi/fluid.cgi?Action=Load&ID=C7440633&Type=IsoTherm&Digits=5&PLow=50&PHigh=150&PInc=25&T=293.15&RefState=DEF&TUnit=K&PUnit=bar&DUnit=kg%2Fm3&HUnit=kJ%2Fkg&WUnit=m%2Fs&VisUnit=uPa*s&STUnit=N%2Fm 
-- **SRC-ECHT-REPO**: ECHT geometry as recorded in the repository: governance.md 'Superseded / withdrawn' ('true ECHT: 86 mm long, 10 mm wide, 100 mm OD') and docs/EVIDENCE.md register row 'ECHT geometry (thesis Sec. 4.1.1, p. 63)' (F. Marchioni, MSc thesis, 2020).  
+- **SRC-ECHT-REPO**: ECHT geometry as recorded in the repository: Governance.md 'Superseded / withdrawn' ('true ECHT: 86 mm long, 10 mm wide, 100 mm OD') and docs/EVIDENCE.md register row 'ECHT geometry (thesis Sec. 4.1.1, p. 63)' (F. Marchioni, MSc thesis, 2020).  
 
 ## Xe subsystem (A6 decomposition)
 
@@ -340,7 +340,7 @@ Adopted line items: none.
 
 ## Not used
 
-- withdrawn repository masses (docs/HISTORY.md v0.5 / Phase-4 tables; 110-120 kg) and every v1.2-v1.6 absolute Hall result (governance.md 'Superseded / withdrawn')
+- withdrawn repository masses (docs/HISTORY.md v0.5 / Phase-4 tables; 110-120 kg) and every v1.2-v1.6 absolute Hall result (Governance.md 'Superseded / withdrawn')
 - abep_sim/mass_bom.py legacy sizing defaults and legacy MGA dict (uncited; mass_bom OD-M3)
 - abep_sim/archengine.py Ionizer mass defaults (unsourced)
 - any Hall transport closure, screening candidate or abep_sim/plasma_devices.py output

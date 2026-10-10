@@ -81,7 +81,7 @@ governance only: no physics, frozen data, goldens, chemistry, pre-registration o
 | `msis = ["pymsis"]` | `msis = ["pymsis>=0.13"]` (the version floor moves with it) |
 
 * Live MSIS: `pip install -e ".[msis]"` (or the full lock file, which still pins `pymsis==0.13.0`). The frozen NRLMSIS
-  dataset needs no pymsis (gate 1; governance.md rule 3: live MSIS only when asked).
+  dataset needs no pymsis (gate 1; Governance.md rule 3: live MSIS only when asked).
 * `requirements-lock.txt` is **unchanged** and remains the dependency source of truth (pinned versions of every hard
   dependency plus pymsis). `pip check` in a no-pymsis environment is now clean (it previously reported
   "abep-sim 0.1.0 requires pymsis, which is not installed").

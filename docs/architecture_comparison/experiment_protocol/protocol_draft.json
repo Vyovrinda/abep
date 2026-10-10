@@ -23,12 +23,12 @@
       "atomic oxygen: bottled O2/N2 mixtures cannot reproduce intake-delivered atomic O; this is a declared limitation, not a surrogate claim",
       "life and erosion (a separate test)",
       "any change to Vyovrinda's own Hall geometry between arms",
-      "any new propulsion family (governance.md rule 8)"
+      "any new propulsion family (Governance.md rule 8)"
     ]
   },
   "non_claims": [
     "This protocol makes no claim about which architecture performs better; it defines how the comparison is measured and classified.",
-    "No simulator prediction of arm differences is used or registered here. The Hall transport credible set is empty and gate 3 is FAIL (governance.md gate table); all absolute Hall results of the withdrawn 0-D closure are not quoted.",
+    "No simulator prediction of arm differences is used or registered here. The Hall transport credible set is empty and gate 3 is FAIL (Governance.md gate table); all absolute Hall results of the withdrawn 0-D closure are not quoted.",
     "No demonstrated ABEP closure, architecture selection or transport admission is claimed or implied.",
     "The P5-N2 v1 validation outcome is unaffected; nothing here re-scores, re-labels or re-interprets any v1 run."
   ],
@@ -455,7 +455,7 @@
         "decided_by": null,
         "rule": "residual <= {ledger_residual_max}; otherwise the point is EXCLUDED_INSTRUMENT",
         "parameters": [
-          {"id": "ledger_residual_max", "value": 0.02, "unit": "fraction", "source": "governance.md rule 4 (architecture energy-ledger residual < 2 % for the simulator); adoption for the experimental ledger is a proposal", "evidence_class": "assumed", "status": "PROPOSED"}
+          {"id": "ledger_residual_max", "value": 0.02, "unit": "fraction", "source": "Governance.md rule 4 (architecture energy-ledger residual < 2 % for the simulator); adoption for the experimental ledger is a proposal", "evidence_class": "assumed", "status": "PROPOSED"}
         ]
       }
     },
@@ -815,9 +815,9 @@
   "rfp_screens": {
     "note": "informational screens only; they use the partial laboratory boundary (no intake/compressor), so passing a screen is a necessary, not a sufficient, condition for RFP relevance, and failing it is reported without ranking arms",
     "rfp_values": [
-      {"id": "rfp_thrust_min", "value": 12, "unit": "mN", "source": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 Part III Para 2, as transcribed in abep_sim/constants.py (RFPConstraints.thrust_min_mN) and governance.md; not re-read from the RFP by this lane - verify", "evidence_class": "assumed", "status": "REQUIREMENT_TRANSCRIBED"},
+      {"id": "rfp_thrust_min", "value": 12, "unit": "mN", "source": "RFP DTDF/06/13516/DSP/ABEP/X/L/M/01 Part III Para 2, as transcribed in abep_sim/constants.py (RFPConstraints.thrust_min_mN) and Governance.md; not re-read from the RFP by this lane - verify", "evidence_class": "assumed", "status": "REQUIREMENT_TRANSCRIBED"},
       {"id": "rfp_thrust_max", "value": 25, "unit": "mN", "source": "RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.thrust_max_mN); verify", "evidence_class": "assumed", "status": "REQUIREMENT_TRANSCRIBED"},
-      {"id": "rfp_power_max", "value": 1500, "unit": "W", "source": "RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.power_max_W; governance.md '< 1.5 kW'); verify", "evidence_class": "assumed", "status": "REQUIREMENT_TRANSCRIBED"}
+      {"id": "rfp_power_max", "value": 1500, "unit": "W", "source": "RFP Part III Para 2 as transcribed in abep_sim/constants.py (RFPConstraints.power_max_W; Governance.md '< 1.5 kW'); verify", "evidence_class": "assumed", "status": "REQUIREMENT_TRANSCRIBED"}
     ],
     "derived": [
       {"id": "rfp_thrust_per_power_floor", "value": 8.0, "unit": "mN/kW", "source": "derived by protocol_tools.py: rfp_thrust_min / rfp_power_max. A point with T >= rfp_thrust_min at total system power < rfp_power_max has T / P_system > this value, and P_bus,lab <= P_system, so T / P_bus,lab > this value is necessary", "evidence_class": "model-derived", "status": "DERIVED", "derived_key": "rfp_thrust_per_power_floor"}

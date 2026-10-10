@@ -14,7 +14,7 @@ Flight configuration: `hall_icp_neutralizer` (one Hall + one RF/ICP neutralizer,
 - lane interface statuses quoted from F1..F7 are the lanes' own records after the A9.7 integration pass (counterparts resolved to merged paths and record ids); F9-ID-01..08 record what F9 consumed
 - no Hall performance number: credible Hall set empty, P5-N2 v1 INCONCLUSIVE; withdrawn 0-D results unused
 - no PASS, no winner; no owner question answered
-- no existing module, frozen dataset, decision, governance.md or HISTORY modified; not wired into archengine
+- no existing module, frozen dataset, decision, Governance.md or HISTORY modified; not wired into archengine
 
 ## Current statuses (A9.2 values as a labelled historical quote)
 
@@ -75,7 +75,7 @@ AG-15 (A9.13 S6.22, verbatim: 'The official RFP is now available to the project,
 - rvm_requirements_rebased_against_it: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rfp_rebase/clause_coverage)
 - not_relying_only_on_secondary_transcriptions: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rows)
 - owner_closure_recorded: EVIDENCE_PRESENT (docs/requirements/rvm_a9/rvm_a9_v1.json#/rfp_rebase/ag15_closure)
-- recorded open item AG15-OI-02 (RVM re-base discrepancies recorded against the RFP): [{"id": "DISC-01", "topic": "bid due / closing date", "disposition": "UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; governance.md is not edited here"}, {"id": "DISC-02", "topic": "mass wet / dry", "disposition"...
+- recorded open item AG15-OI-02 (RVM re-base discrepancies recorded against the RFP): [{"id": "DISC-01", "topic": "bid due / closing date", "disposition": "UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; Governance.md is not edited here"}, {"id": "DISC-02", "topic": "mass wet / dry", "disposition"...
 
 ## Owner-approved pre-LOCK-1 gates (own ids; not AG-01 .. AG-15)
 
@@ -514,7 +514,7 @@ Current status: state v5 2 TBD_OWNER (MPV3Q-01, XV3Q-01); every other question b
 | F1 | F1Q-01 | ANSWERED_BY_A9_9 | IntakeSurface recombines species rows by mass fraction although its C_D rows are normalised by the mixture q and CR_passive needs mole weighting (finding F1-01). Authorise a controlled model change (goldens move, HISTORY entry), or keep the production conve... |
 | F1 | F1Q-02 | ANSWERED_BY_A9_13 | Structural basis for the honeycomb (wall material and thickness, AO coating and its density, support fraction): supply a sourced design, or authorise a labelled assumption for budgeting only? |
 | F1 | F1Q-03 | ANSWERED_BY_A9_13 | Pointing (theta) budget of the intake axis vs the relative wind: is the frozen surface's 0-5 deg range adequate, or must larger angles be evaluated (direct TPMC)? |
-| F1 | F1Q-04 | ANSWERED_BY_A9_9 | Authorise a frozen intake surface v2 at the envelope states (governance.md rule 1 rebuild) to replace the bounded direct TPMC used here off the build state? |
+| F1 | F1Q-04 | ANSWERED_BY_A9_9 | Authorise a frozen intake surface v2 at the envelope states (Governance.md rule 1 rebuild) to replace the bounded direct TPMC used here off the build state? |
 | F2 | F2-OQ-01 | ANSWERED_BY_A9_13 | Which protection functions must the RFP filter stage provide (particulates / debris, compressor wear products, atomic O to downstream surfaces, ambient charged particles, backflow limitation), and against which quantitative acceptance? |
 | F2 | F2-OQ-02 | ANSWERED_BY_A9_13 | Is a deliberately catalytic (O -> O2 converting) filter element admissible, given owner row 102 (inert / low-recombination lining baseline to preserve the representative atomic-O fraction)? |
 | F2 | F2-OQ-03 | ANSWERED_BY_A9_13 | May trade studies carry 'no filter' (FC-00) as an admissible architecture option, or only as a reference bound because the RFP chain names a filter stage? |
@@ -527,7 +527,7 @@ Current status: state v5 2 TBD_OWNER (MPV3Q-01, XV3Q-01); every other question b
 | F4 | OQ-F4-02 | ANSWERED_BY_A9_13 | The compressor's evidence domain caps the plenum at 0.1 Pa while the H2-3 analog feed path needs 5.7-1216 Pa at IF-A5. Either the downstream path (valve + line + isolator + distributor + H-1) is designed for a molecular conductance >= the conductance_demand... |
 | F4 | OQ-F4-03 | ANSWERED_BY_A9_13 | Confirm the F4 transient-quality metric definitions (2 % band, 60 s window, the E0..E7 event sequence, orbit-modulation amplitude cases) as the basis on which H-1 tolerances are set at LOCK-2 (F5 IFD-F4-05)? |
 | F4 | OQ-F4-04 | ANSWERED_BY_A9_13 | The all-state deliverable flow of every evaluated chain is below the lower end of the owner ground characterization range (0.38 mg/s, row 73). Which lever is to be studied: larger capture (F1 drag-limited at h180_f230), operation restricted to the higher-de... |
-| F4 | OQ-F4-05 | ANSWERED_BY_A9_13 | Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (governance.md rule 1 rebuild)? |
+| F4 | OQ-F4-05 | ANSWERED_BY_A9_13 | Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (Governance.md rule 1 rebuild)? |
 | F5 | F5-OQ-01 | ANSWERED_BY_A9_14 | Authorize FEMM-class axisymmetric magnetostatics of MC-1 at analysis points inside the H-1 windows (the RP-1 anchor plus the window corners that the solid-core inner-coil floor admits, x_hall_design_space.probe_evaluations) as ANALYSIS points, explicitly no... |
 | F5 | F5-OQ-02 | ANSWERED_BY_A9_14 | With no admitted Hall response map, should the H-1 channel design point be selected now on non-performance criteria only (FEMM magnetic feasibility, coupled thermal margins under row 86, mass against AL-04, packaging, manufacturability), leaving thrust capa... |
 | F5 | F5-OQ-03 | ANSWERED_BY_A9_14 | Iron Curie value for the necessary pole/core ceiling: H2-1 carries 770 degC (secondary source, 'verify'), A9-07 REV-06 carries 754 degC (EXT-NBS-ARMCO1967 resistivity hysteresis). Use the lower value as the necessary ceiling until a grade-specific sourced v... |

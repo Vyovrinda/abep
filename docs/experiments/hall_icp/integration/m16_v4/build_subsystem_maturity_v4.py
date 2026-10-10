@@ -95,7 +95,7 @@ PINS = {
     A96_REL: ("d8d8496f4141a7096496d3a893c95c3db524ca501055a26cc868fb35d0ae9327", "owner directive A9.6"),
     A96_MD_REL: ("c6ee26e57ea5ca559f4fa4e4a8809b1aa8f3a217e50c534b943fc3ad99240634", "owner directive A9.6 (verbatim; sec. 16)"),
     "docs/EVIDENCE.md": ("a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-                         "evidence rules (quantity types; governance.md rule 10)"),
+                         "evidence rules (quantity types; Governance.md rule 10)"),
     **{d["json"]: (d["json_sha256"], f"owner decision {k} ({d['label']})") for k, d in A19.X.LOADED.items()
        if k in ("A9.19", "A9.20", "A9.21")},
     **{d["md"]: (d["md_sha256"], f"owner decision {k} (verbatim)") for k, d in A19.X.LOADED.items()

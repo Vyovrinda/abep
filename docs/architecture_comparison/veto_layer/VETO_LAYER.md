@@ -273,7 +273,7 @@ Open questions:
 | `docs/architecture_comparison/mass_bom/mass_bom_v1.json` | lane_21_mass_bom | `41acbb9e8d` | `8ab97ff93f507899…` |
 | `docs/architecture_comparison/mass_bom/MASS_BOM.md` | lane_21_mass_bom | `41acbb9e8d` | `e050e2fb445ca613…` |
 | `abep_sim/thermal_life.py` | lane_15_thermal_life | `66ff83be55` | `dce2048233746ecc…` |
-| `abep_sim/thermal.py` | repository (not a lane; governance.md next-work 1) | `bad6ea0d6b` | `3ad94b716dd78e86…` |
+| `abep_sim/thermal.py` | repository (not a lane; Governance.md next-work 1) | `bad6ea0d6b` | `3ad94b716dd78e86…` |
 | `schemas/thermal_life/limits_v1.json` | lane_15_thermal_life | `66ff83be55` | `0df363f76dcb6efc…` |
 | `schemas/thermal_life/inputs_v1.json` | lane_15_thermal_life | `66ff83be55` | `937e5c643ef6d1b5…` |
 | `docs/thermal_life/THERMAL_LIFE_FRAMEWORK.md` | lane_15_thermal_life | `66ff83be55` | `c07c9441505669ee…` |
@@ -290,8 +290,8 @@ Open questions:
 | `docs/evidence/hall_sustainment/hall_sustainment_matrix.json` | lane_09_hall_sustainment | `f458811a57` | `76bba594eb1175b2…` |
 | `docs/evidence/rf_source/rf_evidence_matrix.json` | lane_07_rf_evidence | `336d548042` | `5f6d4e0ede8b2e21…` |
 | `docs/evidence/ecr_source/ecr_evidence_matrix.json` | lane_08_ecr_evidence | `a85fd59261` | `4a65dbeec34f16f0…` |
-| `abep_sim/hall_ensemble.py` | repository (not a lane; governance.md next-work 1) | `bad6ea0d6b` | `218f890c8444af1f…` |
-| `hallthruster_bridge/ensemble/transport_ensemble_v0.json` | repository (not a lane; governance.md next-work 1) | `bad6ea0d6b` | `2d5069a3382ab667…` |
+| `abep_sim/hall_ensemble.py` | repository (not a lane; Governance.md next-work 1) | `bad6ea0d6b` | `218f890c8444af1f…` |
+| `hallthruster_bridge/ensemble/transport_ensemble_v0.json` | repository (not a lane; Governance.md next-work 1) | `bad6ea0d6b` | `2d5069a3382ab667…` |
 | `docs/evidence/wall_life/sputter_yield_db_v1.json` | lane_32_wall_life | `f3c924a791` | `315fbd44da2ee162…` |
 | `docs/evidence/cathode/cathode_evidence_v1.json` | lane_10_cathode_dossier | `1b6fc10ab1` | `050060204e443d55…` |
 | `schemas/interfaces/upstream_icd_v1.json` | lane_33_upstream_icd | `ced4aa08c4` | `2437d125060f2f24…` |

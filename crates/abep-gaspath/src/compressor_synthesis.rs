@@ -645,7 +645,7 @@ F2-IF-03) with non-assumed evidence",
                 "rotor density",
                 "MODULE_CANNOT_REPRESENT",
                 "the cited density differs from materials.DB, which DragCompressor reads; a materials change is a \
-model change (governance.md rule 2), outside this lane",
+model change (Governance.md rule 2), outside this lane",
             ));
         }
     }

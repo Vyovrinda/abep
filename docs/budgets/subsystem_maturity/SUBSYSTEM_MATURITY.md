@@ -99,7 +99,7 @@ A blocker at a gate blocks every later gate in the A6 sequence (`blocks_gates` i
 ## Base status snapshot (read at build time)
 
 - `bundle1_outcome`: NO_BASELINE_YET
-- `credible_hall_set`: EMPTY (governance.md gate 3 FAIL; A4 project_conclusion; hard_gate_status admitted_members = [])
+- `credible_hall_set`: EMPTY (Governance.md gate 3 FAIL; A4 project_conclusion; hard_gate_status admitted_members = [])
 - `hard_gates_eliminated`: []
 - `s1a_verdict`: S1A_NOT_READY
 - `s1a_satisfied`: 0/6

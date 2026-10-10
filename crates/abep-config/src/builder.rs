@@ -1547,7 +1547,7 @@ impl Builder {
             "regenerate" => REGENERATE,
             "rule" => concat!(
                 "any change of a listed source or data file makes this model set stale (scripts/config/build_config.py ",
-                "--check); a physics change is a model change under governance.md rules 1-2"
+                "--check); a physics change is a model change under Governance.md rules 1-2"
             ),
             "modules" => Value::List(modules),
             "data" => Value::List(data),

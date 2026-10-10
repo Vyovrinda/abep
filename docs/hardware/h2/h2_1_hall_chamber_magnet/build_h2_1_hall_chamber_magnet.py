@@ -297,7 +297,7 @@ ANALOGS = [
      "L_mm": 86.0, "h_mm": 10.0, "OD_mm": 100.0, "d_over_h": 9.0, "L_over_h": 8.6,
      "B_G": "85.3 (centreline plateau at 2 A coil current only, digitized; the thesis '130 G' is a FEMM value, "
             "model-derived)",
-     "source": "hall_sustainment_matrix.json entries[E03] (REPO_ECHT_AUDIT, MARCHIONI2020); governance.md "
+     "source": "hall_sustainment_matrix.json entries[E03] (REPO_ECHT_AUDIT, MARCHIONI2020); Governance.md "
                "(86 mm long, 10 mm wide, 100 mm OD); d/h 9 per scaling_similarity.json echt_groups (r_in/r_out "
                "40/50 mm reading A, inferred, verify)",
      "evidence_class": "measured (design dimensions); digitized (B)", "use": "published analog only"},

@@ -2,7 +2,7 @@
 
 Registration slots and fail-closed checks for the owner decisions of 2026-10-01 that are not single-record reducer
 rules (those live in p1_reducer.py). Every number the owner deferred to a later registration is a REGISTERED INPUT
-here - never a default, never invented (governance.md rules 3, 6, 10; docs/EVIDENCE.md):
+here - never a default, never invented (Governance.md rules 3, 6, 10; docs/EVIDENCE.md):
 
   A9.8  P1-IT-52  stage operating domains [min, max] under a unique domain_id, frozen before the stage's first record
                   (check_operating_domains / domain_freeze_reasons) - outside -> OUT_OF_DOMAIN, never a FAIL

@@ -2,7 +2,7 @@
 //! part of `check`; A9.14 S9.8 OD3, A9.17 ORBIT broad envelope).
 //!
 //! The Rust derivation reproduces the frozen file `atmosphere_msis21_orbit_v1_design_states_v2.json`, which stays the
-//! production design-state set (never regenerated, governance.md rule 1).
+//! production design-state set (never regenerated, Governance.md rule 1).
 
 use crate::orbit::{OrbitAtmosphere, OrbitState};
 use crate::pyfloat::{py_format_g, py_format_plus_4f, py_round6};
@@ -39,7 +39,7 @@ const A9_17_MD_SHA256: &str = "540212c0c8862528e549555244f0fd39f8f9c9272f84dfb45
 const A9_17_ORBIT_QUOTE: &str =
     "Keep the atmosphere/design-state envelope broad enough until DRDO, the spacecraft ICD, \
 or the PDR mission definition supplies the real inclination and LTAN.";
-const SUPERSEDES_RELATION: &str = "v1 is kept immutable (governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its \
+const SUPERSEDES_RELATION: &str = "v1 is kept immutable (Governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its \
 candidate pool is bounded at |lat| <= reachable_lat_max_deg() (~83.75 deg) of the CODE_DEFAULT SSO family, so it does \
 not cover inclinations between ~83.75 and ~96.25 deg or polar orbits; v2 is the broad-envelope set for new use";
 /// `inspect.cleandoc(design_states_v2.__doc__)`.

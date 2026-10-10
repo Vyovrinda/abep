@@ -1241,7 +1241,7 @@
      "evidence_class": "none",
      "basis": null,
      "uncertainty_status": "unavailable:no admitted Hall transport closure (credible set empty, gate 3 FAIL) and no Vyovrinda/same-hardware measurement",
-     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (governance.md; lane-24 basis table).",
+     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (Governance.md; lane-24 basis table).",
      "blocking": [
       {
        "kind": "trigger",
@@ -2095,7 +2095,7 @@
      "evidence_class": "none",
      "basis": null,
      "uncertainty_status": "unavailable:no admitted Hall transport closure (credible set empty, gate 3 FAIL) and no Vyovrinda/same-hardware measurement",
-     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (governance.md; lane-24 basis table).",
+     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (Governance.md; lane-24 basis table).",
      "blocking": [
       {
        "kind": "trigger",
@@ -2987,7 +2987,7 @@
      "evidence_class": "none",
      "basis": null,
      "uncertainty_status": "unavailable:no admitted Hall transport closure (credible set empty, gate 3 FAIL) and no Vyovrinda/same-hardware measurement",
-     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (governance.md; lane-24 basis table).",
+     "derivation": "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (Governance.md; lane-24 basis table).",
      "blocking": [
       {
        "kind": "trigger",
@@ -4884,7 +4884,7 @@
    "lane": "lane_16_feed_envelope",
    "source": "docs/architecture_comparison/feed_envelope/feed_envelope_v1.json open_questions",
    "id": "FE-Q4",
-   "question": "Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (governance.md rule 1 rebuild) so along-track density/composition extremes can be added; which geomagnetic levels beyond ap 15?"
+   "question": "Extremes: authorize a frozen, orbit-resolved NRLMSIS dataset (Governance.md rule 1 rebuild) so along-track density/composition extremes can be added; which geomagnetic levels beyond ap 15?"
   },
   {
    "lane": "lane_16_feed_envelope",

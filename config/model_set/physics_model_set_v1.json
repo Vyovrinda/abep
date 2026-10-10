@@ -5,7 +5,7 @@
  "scope": "abep_sim/*.py (the physics package; abep_sim/design/ is the design layer and is not listed)",
  "generated_by": "scripts/config/build_config.py",
  "regenerate": "python scripts/config/build_config.py  (check: --check)",
- "rule": "any change of a listed source or data file makes this model set stale (scripts/config/build_config.py --check); a physics change is a model change under governance.md rules 1-2",
+ "rule": "any change of a listed source or data file makes this model set stale (scripts/config/build_config.py --check); a physics change is a model change under Governance.md rules 1-2",
  "modules": [
   {
    "path": "abep_sim/__init__.py",

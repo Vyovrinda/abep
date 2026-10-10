@@ -20,7 +20,7 @@ Usage::
 
 Rules implemented here:
   * every number is either an explicit input (value, unit, evidence class, source) or derived from inputs by the
-    functions below; ``derive()`` raises on a missing input (governance.md rule 3: no silent default);
+    functions below; ``derive()`` raises on a missing input (Governance.md rule 3: no silent default);
   * the output does not depend on the presence or content of any parallel (PENDING) lane; ``pending_status()`` only
     reports whether a pending lane path exists in the checkout and never reads its content into a value;
   * immutable owner decision files are pinned by sha256; mutable deliverables are consumed by value and re-checked
@@ -258,12 +258,12 @@ INPUTS = {
                         "abstract: oscillations in the 1 kHz - 60 MHz range reviewed (abstract-level only; band-by-band "
                         "values not read - verify)"),
     "echt_channel_length_m": _inp(0.086, "m", "inferred", "analog", "REF-MARCHIONI2020",
-                                  "as recorded in governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 "
+                                  "as recorded in Governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 "
                                   "(ECHT-N2 audit); published analog only, never a Vyovrinda design value"),
     "echt_channel_width_m": _inp(0.010, "m", "inferred", "analog", "REF-MARCHIONI2020",
-                                 "as recorded in governance.md / docs/HISTORY.md 2026-09-26 (10 mm channel height); analog"),
+                                 "as recorded in Governance.md / docs/HISTORY.md 2026-09-26 (10 mm channel height); analog"),
     "echt_OD_m": _inp(0.100, "m", "inferred", "analog", "REF-MARCHIONI2020",
-                      "as recorded in governance.md / docs/HISTORY.md 2026-09-26 ('100 mm OD'; channel radii are NOT "
+                      "as recorded in Governance.md / docs/HISTORY.md 2026-09-26 ('100 mm OD'; channel radii are NOT "
                       "published per the ECHT-N2 audit, so OD = channel outer diameter is an inference); analog only"),
     "faraday_far_field_diameters": _inp(4.0, "channel diameters", "assumed", "analog", "REF-BROWN2017",
                                         "far field > 4 channel diameters (Table A1, as recorded by lane 25 M5)"),
@@ -309,7 +309,7 @@ def _sig(x):
 
 def _val(inputs: dict, key: str):
     if key not in inputs:
-        raise KeyError(f"input {key!r} is missing; no default exists (governance.md rule 3)")
+        raise KeyError(f"input {key!r} is missing; no default exists (Governance.md rule 3)")
     v = inputs[key].get("value")
     if v is None:
         raise ValueError(f"input {key!r} has no value; cannot derive")
@@ -1655,7 +1655,7 @@ def references() -> list:
                                                 "Hall thruster",
          "url": "https://webthesis.biblio.polito.it/14618/",
          "access": "not re-accessed by this lane; geometry (86 mm long, 10 mm channel height, '100 mm OD'; channel "
-                   "radii not published) as recorded in governance.md 'Superseded / withdrawn' and docs/HISTORY.md "
+                   "radii not published) as recorded in Governance.md 'Superseded / withdrawn' and docs/HISTORY.md "
                    "2026-09-26 (ECHT-N2 audit, hallthruster_bridge/identification/echt_n2/). Published analog only, "
                    "never a Vyovrinda design value"},
         {"id": "REF-ULVAC-CRYO", "citation": "ULVAC, 'Cryopump safety instructions' (manufacturer published "

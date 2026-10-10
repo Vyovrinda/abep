@@ -1,4 +1,4 @@
-//! Hash-verified reader of the frozen intake surface v1 (`abep_sim/data/intake_surface_v1.{csv,json}`, governance.md
+//! Hash-verified reader of the frozen intake surface v1 (`abep_sim/data/intake_surface_v1.{csv,json}`, Governance.md
 //! rule 1: read, never regenerated) and of the captured reference triangulation of its grid
 //! (`crates/abep-intake/data/intake_surface_v1_delaunay_v1.json`).
 //!

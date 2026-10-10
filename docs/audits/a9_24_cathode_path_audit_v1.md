@@ -4,7 +4,7 @@ Audit only. No code, data, budget, golden, test or configuration was changed. No
 numeric impact below is an estimate made by reading committed values and code.
 Machine-readable record: `docs/audits/a9_24_cathode_path_audit_v1.json`.
 
-- Base: `governance/nifty-ramanujan-w68f9z` at `4b5563b643aa2103d999484ce4ccf5e2eca040e3`, branch `lane-a924-cathode`.
+- Base: `Governance/nifty-ramanujan-w68f9z` at `4b5563b643aa2103d999484ce4ccf5e2eca040e3`, branch `lane-a924-cathode`.
 - Governing records:
   - A9.24 item 13 (`docs/decisions/OD_2026_10_04_A9_24_RUST_MIGRATION_AND_OPEN_ITEMS_OWNER_DECISIONS.md`).
   - A9.19: one Hall accelerator, one RF/ICP neutralizer, no conventional hollow cathode.

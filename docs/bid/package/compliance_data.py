@@ -83,7 +83,7 @@ XE3 = "docs/budgets/xe_accounting_a9_v3/xe_accounting_a9_v3.json"
 RFQ3 = "docs/procurement/rfq_a9_v3/rfq_a9_v3.json"
 RFQG = "docs/procurement/rfq_a9_v3_gas_rev1/rfq3_gas_rev1.json"
 H1 = "docs/hardware/h1_freeze_candidate/h1_freeze_candidate_v1.json"
-governance = "governance.md"
+Governance = "Governance.md"
 
 
 def ev(path, locator, if_at_source=False):
@@ -186,7 +186,7 @@ CLAUSES = {
                  "parametric screening over the frozen {{DS_N}}-state design-state set, robust upstream set EMPTY "
                  "(F9-DF-01); (4) test facility simulating the VLEO air mixture: no facility record exists in the "
                  "repository (OWNER_INPUT_REQUIRED, see 05_PROGRAMMATIC_SECTIONS.md).",
-        evidence=[ev(governance, "section 'Gate status' (gate 3)"), ev(ENS, "#/members"), ev(VAL, "whole file"),
+        evidence=[ev(Governance, "section 'Gate status' (gate 3)"), ev(ENS, "#/members"), ev(VAL, "whole file"),
                   ev(OO2, "#/status"), ev(AO, "#/status"), ev(P4, "#/fixed_statuses"),
                   ev(F78, "#/findings[id=F78-02]"), ev(F9, "#/design_findings_for_owner[id=F9-DF-01]"),
                   ev(RVM, "#/rows[id=RVM-16]/a9_24_current_architecture_reading"), ev(A925, "#/owner_decision_summary/AFI-05-S1")],
@@ -463,7 +463,7 @@ CLAUSES = {
                  "validation (gate 3 FAIL), O-bearing operation (O/O2 chemistry DRAFT; ground O2 tests are "
                  "NO_ATOMIC_O) and a qualification record on N2 and O (RVM-24). This is the programme's principal "
                  "schedule risk (R-01, R-02).",
-        evidence=[ev(RVM, "#/rows[id=RVM-24]"), ev(governance, "section 'Gate status' (gate 3)"), ev(OO2, "#/status")],
+        evidence=[ev(RVM, "#/rows[id=RVM-24]"), ev(Governance, "section 'Gate status' (gate 3)"), ev(OO2, "#/status")],
         rvm=["RVM-24", "RVM-09"]),
     "RFP-P20-04": dict(
         status="COMPLY_PLANNED_WITH_EVIDENCE_PATH",

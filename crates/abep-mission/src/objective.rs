@@ -26,7 +26,7 @@ pub const RANKABLE_CLASSES: [&str; 5] = ["measured", "digitized", "inferred", "r
 pub const SYN_CLASS: &str = "SYNTHETIC_TEST_DATA_NOT_EVIDENCE";
 
 pub const UNLOCK_T: &str = "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by \
-pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), \
+pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), \
 HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on \
 the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)";
 pub const UNLOCK_D_SPACECRAFT: &str = "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft \

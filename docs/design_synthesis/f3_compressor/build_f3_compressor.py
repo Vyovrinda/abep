@@ -342,7 +342,7 @@ def build() -> tuple[dict, dict]:
             {"id": cs.R_TIP_DOMAIN, "rule": "u_tip <= 500 m/s", "basis": "P-U-TIP-PUBLISHED-MAX"},
             {"id": cs.R_INLET_DOMAIN, "rule": "inlet p <= 0.1 Pa", "basis": "P-MOLECULAR-LIMIT"},
             {"id": cs.R_MODEL, "rule": "finite state, no exception, mirror reproduces _run_once p_out to 1e-12",
-             "basis": "no silent fallback (governance.md rule 3)"},
+             "basis": "no silent fallback (Governance.md rule 3)"},
             {"id": cs.R_NONCONV, "rule": "re-evaluated leak-recirculation residual <= 1e-4", "basis": "P-RECIRC-RTOL"},
             {"id": cs.R_CLIP, "rule": "every unclipped per-species Gaede K >= 1", "basis": "compressor.py _run_once clip "
              "max(min(K, K0), 1) hides an overloaded stage"},

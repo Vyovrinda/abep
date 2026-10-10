@@ -126,7 +126,7 @@ CLASSES = [
     ("tests/test_bus_boundary_a9.py", "v1 boundary (A9-02)", "SELF_V1", "tests of the immutable v1 boundary",
      "nothing (keeps testing v1)", []),
     # ---- governance records
-    (H, "project log", "GOVERNANCE_RECORD", "append-only log (governance.md rule 1: record why in docs/HISTORY.md)",
+    (H, "project log", "GOVERNANCE_RECORD", "append-only log (Governance.md rule 1: record why in docs/HISTORY.md)",
      "stage 2 appends the migration entry; existing entries never rewritten", []),
     ("docs/decisions/", "owner decisions", "GOVERNANCE_RECORD", "owner decision records are never edited",
      "nothing", []),
@@ -160,7 +160,7 @@ CLASSES = [
      "M16 v4 superseded by v5 (HISTORY 2026-10-03: M16 v4 byte-identical); pinned by M16 v5, F9, H-1 freeze candidate",
      "nothing; M16 v5 must stop resolving 'BUS' through the v4 builder's INPUTS (see M16 v5)", ["tests/test_m16_v4.py"]),
     ("docs/budgets/owner_decisions/OWNER_QUESTIONS_STATE_v2.md", "owner-question state v2-v4", "IMMUTABLE_HISTORY",
-     "governance.md: v2/v3 immutable history; v4 byte-identical (HISTORY 2026-10-03), superseded by v5", "nothing", []),
+     "Governance.md: v2/v3 immutable history; v4 byte-identical (HISTORY 2026-10-03), superseded by v5", "nothing", []),
     ("docs/budgets/owner_decisions/build_owner_questions_state_v2.py", "owner-question state v2-v4",
      "IMMUTABLE_HISTORY", "state v2 builder (immutable history)", "nothing", ["tests/test_owner_questions_state_v2.py"]),
     ("docs/budgets/owner_decisions/owner_questions_state_v2.", "owner-question state v2-v4", "IMMUTABLE_HISTORY",

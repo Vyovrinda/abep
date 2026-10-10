@@ -25,7 +25,7 @@ Do NOT force-push.
 
 Do NOT touch:
     main
-    governance/nifty-ramanujan-w68f9z
+    Governance/nifty-ramanujan-w68f9z
     technical source 5eee4b8
     package/freeze record 2de86ab
 
@@ -121,7 +121,7 @@ flight physics.
 4. RM-OQ-06 — HISTORICAL GOLDENS
 ==================================================
 
-governance.md Rule 2 applies to the ACTIVE canonical golden set.
+Governance.md Rule 2 applies to the ACTIVE canonical golden set.
 
 Historical / withdrawn goldens:
 
@@ -133,7 +133,7 @@ Historical / withdrawn goldens:
 
 Do not require Rust to reproduce LaB6 / hollow-cathode historical goldens.
 
-After the bid, update governance.md so this distinction is explicit.
+After the bid, update Governance.md so this distinction is explicit.
 
 Create a new active canonical golden for:
 
@@ -276,7 +276,7 @@ main:
 b1e5b761a40f82ca225dc412d17a87585653d4ff
 
 development branch:
-governance/nifty-ramanujan-w68f9z
+Governance/nifty-ramanujan-w68f9z
 dcab60234a3252ff699fe774f05e0fa39d02b4ae
 
 Rust-plan preservation branch:

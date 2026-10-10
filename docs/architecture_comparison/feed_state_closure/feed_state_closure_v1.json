@@ -27781,7 +27781,7 @@
   },
   {
    "id": "DI-1.2",
-   "question": "Intake geometry (L/d, phi) and whether a TPMC surface beyond the frozen grid (e.g. specular designs) is authorised (governance.md rule 1 rebuild)",
+   "question": "Intake geometry (L/d, phi) and whether a TPMC surface beyond the frozen grid (e.g. specular designs) is authorised (Governance.md rule 1 rebuild)",
    "options": [
     "G10",
     "G20",

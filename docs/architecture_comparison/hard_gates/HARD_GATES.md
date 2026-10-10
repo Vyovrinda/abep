@@ -168,7 +168,7 @@ alternative reading is recorded; the wording is to be verified against the RFP d
   or trade dimension.
 - Hall-closure evidence on a closure-independent gate (G3 mass) raises an error. Hall-closure uncertainty must not leak
   into quantities that do not depend on the closure. The same holds per element (matrix `hall_closure_scope`, from the
-  governance.md scope rule). On G4, G5 and P1, closure evidence that names an upstream element (intake, filter, compressor,
+  Governance.md scope rule). On G4, G5 and P1, closure evidence that names an upstream element (intake, filter, compressor,
   atmospheric gas chamber, xenon chamber and load, valves and flow control) raises an error. Those elements are evaluated
   at the declared feed flows, duty cycle and mission profile. In a G2 total, an upstream load may appear next to a
   closure-dependent load; the total then takes the admitted-closure basis (weakest-input rule).
@@ -183,7 +183,7 @@ alternative reading is recorded; the wording is to be verified against the RFP d
 - Architecture ids are exactly `hall_only`, `rf_hall` and `ecr_hall`.
 
 ## RFP sources, and what is deliberately not a gate
-The repository records the RFP only as summaries: governance.md ("What this is"), `abep_sim/constants.py` `RFPConstraints`
+The repository records the RFP only as summaries: Governance.md ("What this is"), `abep_sim/constants.py` `RFPConstraints`
 (docstring "Hard limits from Part III Para 2 of the RFP"), the opening constraint table of docs/HISTORY.md,
 `abep_sim/transient.py`, `abep_sim/ppu.py`, and the RFP architecture blocks in the Hall-uncertainty scope rule. The matrix
 quotes each one (R1–R7) and marks every gate *verify against RFP document*. The tests check that the thresholds equal
@@ -198,7 +198,7 @@ Recorded in the RFP summaries, but not elimination gates in v1 (owner decision O
 Not gates:
 - "Hall preferred" is a preference, and all three architectures share the Hall accelerator.
 - Net drag compensation is "not stated" by the RFP (docs/HISTORY.md), and the spacecraft drag is not specified.
-- The governance.md finding "RF/helicon pre-ionisers add nothing" is comparative. It can never eliminate rf_hall or ecr_hall
+- The Governance.md finding "RF/helicon pre-ionisers add nothing" is comparative. It can never eliminate rf_hall or ecr_hall
   here.
 - Absolute Hall results of the withdrawn 0-D closure are never evidence.
 

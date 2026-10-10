@@ -1306,7 +1306,7 @@ def build() -> dict:
             {"what": "abep_sim/ppu.py converter model and constants (8 W controller, 4 W sensors, switching-loss "
                      "parameters, 28 V bus, cold redundancy)", "why": "provenance check: seed commit, no source cited "
                                                                           "(assumed); context only"},
-            {"what": "abep_sim/plasma_devices.py and any v1.2-v1.6 Hall number", "why": "superseded / withdrawn (governance.md)"},
+            {"what": "abep_sim/plasma_devices.py and any v1.2-v1.6 Hall number", "why": "superseded / withdrawn (Governance.md)"},
             {"what": "Hall transport closures, screening candidates, Hall maps", "why": "credible set empty; A7 h2_scope"},
             {"what": "Fu, Zhang, Li, IEEE Trans. Power Electron. 32(7):5377-5387, 2017, DOI 10.1109/TPEL.2016.2610442 "
                      "(coupled heater/ignitor/keeper supply)", "why": "abstract not accessible (publisher-elided metadata; "

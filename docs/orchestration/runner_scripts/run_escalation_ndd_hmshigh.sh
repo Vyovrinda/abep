@@ -1,6 +1,6 @@
 #!/bin/bash
 # Pre-registered O4 escalation of n2_n_ndd_hmshigh.toml (first-stage trigger FIRED, scored 2026-09-26; T_O4_ESCALATE via the transactional ledger).
-S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 cd $W
 for M in escalation_n2_n_ndd_hmshigh_di_lower escalation_n2_n_ndd_hmshigh_nel_wang escalation_n2_n_ndd_hmshigh_di_lower_nel_wang; do

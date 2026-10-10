@@ -474,7 +474,7 @@ def build(progress=None):
                                          "surface's 0-5 deg range adequate, or must larger angles be evaluated (direct TPMC)?",
              "why_new": "feed_state_closure carried theta 0/2/5 as PROPOSED sensitivities without an owner question",
              "status": "TBD_OWNER"},
-            {"id": "F1Q-04", "question": "Authorise a frozen intake surface v2 at the envelope states (governance.md rule 1 "
+            {"id": "F1Q-04", "question": "Authorise a frozen intake surface v2 at the envelope states (Governance.md rule 1 "
                                          "rebuild) to replace the bounded direct TPMC used here off the build state?",
              "why_new": "feed_state_closure listed FC-07 only as a to-reach-B item; this lane needs it for precision",
              "status": "TBD_OWNER"},

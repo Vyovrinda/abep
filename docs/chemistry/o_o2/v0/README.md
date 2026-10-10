@@ -14,7 +14,7 @@ That file is DRAFT_PENDING_OWNER and binds nothing. The owner's W7 disposition r
 - no process is included, promoted or excluded;
 - no completeness verdict is pre-empted.
 
-governance.md "Next work" item 4 is unchanged.
+Governance.md "Next work" item 4 is unchanged.
 
 ## What was built
 

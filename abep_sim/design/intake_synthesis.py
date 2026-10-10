@@ -16,7 +16,7 @@ pointing angle theta, atmospheric species s in {O, N2, O2} and orbit state (alti
                fraction have no evidence); a labelled parametric structural case is reported beside it
   mdot_s       forward (captured) mass flow per species, mdot_s = eta_c,s * rho_s * V * A
 
-Rules implemented here (A9.7, governance.md rules 1, 3, 6, 10):
+Rules implemented here (A9.7, Governance.md rules 1, 3, 6, 10):
   * The frozen response surface (abep_sim/data/intake_surface_v1.*) is used ONLY at an exact grid node AND at its
     build state (200 km, F10.7 150, orbit-averaged). Everything else goes to the direct TPMC
     (intake_tpmc.intake_response, bounded particle count, deterministic seed, statistical uncertainty reported).
@@ -99,11 +99,11 @@ REFERENCES = {
         "note": "PROPOSED ladder (evidence class assumed); used here only as the parametric p_ref sweep, never as a value",
     },
     "REF-RFP-CONSTANTS": {
-        "citation": "abep_sim/constants.py RFP.thrust_min_mN / thrust_max_mN (RFP envelope as recorded in governance.md; verify "
+        "citation": "abep_sim/constants.py RFP.thrust_min_mN / thrust_max_mN (RFP envelope as recorded in Governance.md; verify "
                     "against the official RFP)",
     },
     "REF-SURFACE": {
-        "citation": "abep_sim/data/intake_surface_v1.{csv,json} (frozen TPMC response surface, governance.md rule 1)",
+        "citation": "abep_sim/data/intake_surface_v1.{csv,json} (frozen TPMC response surface, Governance.md rule 1)",
     },
     "REF-ATMOSPHERE": {
         "citation": "abep_sim/data/atmosphere_msis21_v1.{csv,json} (frozen NRLMSIS 2.1, orbit-averaged, ap 15)",
@@ -156,7 +156,7 @@ class OrbitState:
 
     @property
     def id(self) -> str:
-        """Exact-value identifier (governance.md rule 5, consolidated verification SW-05): h200_f150 for integer states,
+        """Exact-value identifier (Governance.md rule 5, consolidated verification SW-05): h200_f150 for integer states,
         h200.4_f150 otherwise, so caches keyed on it are pure functions of the evaluated point."""
         return f"h{float(self.alt_km):.12g}_f{float(self.f107):.12g}"
 
@@ -167,7 +167,7 @@ class OrbitState:
     def atm(self) -> dict:
         a = atmosphere(float(self.alt_km), float(self.f107))
         if not str(a.get("source", "")).startswith("NRLMSIS 2.1 frozen scenario"):
-            # governance.md rule 3: no silent fallback to live MSIS or the built-in table
+            # Governance.md rule 3: no silent fallback to live MSIS or the built-in table
             raise RuntimeError(f"atmosphere for {self.id} is not the frozen NRLMSIS dataset: {a.get('source')}")
         return a
 
@@ -573,7 +573,7 @@ def design_workers() -> int:
 
 class Evaluator:
     """Species-level TPMC evaluator with an explicit coverage rule (frozen surface at exact node + build state,
-    direct TPMC otherwise) and a cache keyed on the exact evaluation point (governance.md rule 5)."""
+    direct TPMC otherwise) and a cache keyed on the exact evaluation point (Governance.md rule 5)."""
 
     def prefill_direct(self, points, workers: int | None = None) -> int:
         """Run the direct-TPMC cores of ``points`` [(state, L/d, alpha, theta, kernel, species)] in a process pool and

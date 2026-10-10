@@ -214,7 +214,7 @@ Divide by the anode flow of the registered test point (W1) and scale by the H-1 
 - **Required uncertainty:** value: TBD - requires the W5 pre-registered B(z) comparison tolerance (fo_hall_validation_prereg_draft; path TBD by that workstream) and the H-1 design range (W3)
 - **Calibration:**
   - S1a: probe calibration in a reference field; stage position calibration; room-temperature mapping (hot-state effects TBD, lane 25 Sec. 12)
-- **Feasibility:** FEASIBLE_IN_PRINCIPLE: magnetostatic; the P5 non-identifiability (governance.md) is the reason it is mandatory with coil currents
+- **Feasibility:** FEASIBLE_IN_PRINCIPLE: magnetostatic; the P5 non-identifiability (Governance.md) is the reason it is mandatory with coil currents
 
 ### INS-10. stability / extinction / ignition detection
 
@@ -511,7 +511,7 @@ Milestones: supports A (S1a engineering checkout can use the qualitative RGA and
 | INS-06 | TBD | with fixed hardware P_feed follows mdot and conductance (lane 25 Sec. 4); a mismatch with the registered W1 P_feed limits applicability rather than invalidating the reading |
 | INS-07 | TBD | surface-to-gas relation is inferred; tolerance TBD from W1 |
 | INS-08 | TBD | gas-specific gauge response for O2/N2 mixtures needs calibration; for the absolute gate the p_b sensitivity (S5 slope) is reported with T_measured (PROPOSED rule in the MD) |
-| INS-09 | FEASIBLE_IN_PRINCIPLE | magnetostatic; the P5 non-identifiability (governance.md) is the reason it is mandatory with coil currents |
+| INS-09 | FEASIBLE_IN_PRINCIPLE | magnetostatic; the P5 non-identifiability (Governance.md) is the reason it is mandatory with coil currents |
 | INS-10 | FEASIBLE_IN_PRINCIPLE | a logic on INS-04 data; thresholds PROPOSED |
 | INS-11 | OPTIONAL | no reference located by this lane; qualitative O2 background check |
 | INS-12 | OPTIONAL | qualitative (lane 25 M13); no quantitative species fraction without a model this project has not admitted |

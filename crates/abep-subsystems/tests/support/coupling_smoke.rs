@@ -56,7 +56,7 @@ pub fn build() -> Value {
             "producer": "CC-05 / CC-06 / CONS-I3 v2: 1e-10 relative to P_fwd + P_collector_bias (NP-ICP prereg v2)",
             "per_key_exactly_once": "CONS-I2: 1e-12 relative + 1e-12 W (NP-THERMAL E-07 v2)",
             "slot_load_sum": "CONS-I3: eps_if = 1e-6 x P_icp_slot_load_sum_W + 1e-9 W (NUM-09) and the producer's 1e-10",
-            "system": "CONS-L1: |R| / P_bus < 2 % (governance.md rule 4); the ICP account mismatch within the producer's 1e-10"
+            "system": "CONS-L1: |R| / P_bus < 2 % (Governance.md rule 4); the ICP account mismatch within the producer's 1e-10"
         }
     })
 }

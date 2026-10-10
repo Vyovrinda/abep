@@ -8,7 +8,7 @@
 //! complete, P_bus is unknown and only the rigorous lower bound (TBD loads 0 W, TBD efficiencies 1) is reported.
 //!
 //! The record checks run on the Python-shaped JSON values, in the reference order and with its refusal texts, so a
-//! malformed record is refused exactly as the reference refuses it (governance.md rule 3).
+//! malformed record is refused exactly as the reference refuses it (Governance.md rule 3).
 
 use super::pyfmt::{check_keys, fsum, is_real, nonempty, real, repr_str_list};
 use super::slots::{

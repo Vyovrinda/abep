@@ -1617,7 +1617,7 @@ def model_change_candidates() -> list:
         raise SystemExit("REFUSED: F3-01 no longer states the drag-stage clipping count")
     _f3_clip = _m.group(1)
     common = {"required": ["owner decision (authorize as a controlled model change, or keep the design-layer "
-                           "workaround)", "docs/HISTORY.md entry (governance.md rules 1-2)",
+                           "workaround)", "docs/HISTORY.md entry (Governance.md rules 1-2)",
                            "golden check after implementation; if goldens move, justify, regenerate, log"],
               "status": "MODEL_CHANGE_CANDIDATE_PENDING_OWNER", "implemented_here": False}
     out = [
@@ -1633,7 +1633,7 @@ def model_change_candidates() -> list:
         {"id": "MCC-02", "finding": "F3-01 silent Gaede clipping",
          "module": "abep_sim/compressor.py DragCompressor._run_once",
          "issue": "K = max(min(K, K0), 1.0) hides an overloaded stage (throughput above S0 p): the module reports "
-                  "K = 1 instead of a non-convergence / overload status (governance.md rule 3: no silent fallbacks)",
+                  "K = 1 instead of a non-convergence / overload status (Governance.md rule 3: no silent fallbacks)",
          "magnitude": f"{_f3_clip} drag-stage design evaluations in F3 have an unclipped K < 1 (F3-01)",
          "golden_impact": "unknown: a status flag alone does not change values; refusing clipped states would move "
                           "any golden that passes through a clipped stage (to be checked at implementation)",
@@ -1950,7 +1950,7 @@ def build() -> dict:
             "(counterparts resolved to merged paths and record ids); F9-ID-01..08 record what F9 consumed",
             "no Hall performance number: credible Hall set empty, P5-N2 v1 INCONCLUSIVE; withdrawn 0-D results unused",
             "no PASS, no winner; no owner question answered",
-            "no existing module, frozen dataset, decision, governance.md or HISTORY modified; not wired into archengine",
+            "no existing module, frozen dataset, decision, Governance.md or HISTORY modified; not wired into archengine",
         ],
         "pins": pins,
         "consumed": {k: {"path": v, "sha256": sha_of(k)} for k, v in CONSUMED.items()},

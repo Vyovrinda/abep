@@ -20,7 +20,7 @@ What this script is NOT
     PMI-05 of the pre-ionizer module ICD (PENDING); hall_only / rf_hall / ecr_hall are never ranked.
 
 Every input value carries basis, source, evidence class, status and scope in PARAMETERS below; missing inputs raise
-(no silent defaults, governance.md rule 3).
+(no silent defaults, Governance.md rule 3).
 """
 from __future__ import annotations
 
@@ -75,7 +75,7 @@ REFERENCED_AT_BASE = {
     "TRL": "schemas/ledgers/thermal_rejection_ledger_v1.json (DRAFT schema)",
     "CATH": "docs/architecture_comparison/cathode_integration/cathode_integration_data_v1.json",
     "FT": "docs/architecture_comparison/failure_tree/failure_trees_v1.json (N-THM-01, wall/anode node)",
-    "ECHT": "governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, 100 mm OD; Marchioni 2020 thesis via the repository ECHT audit)",
+    "ECHT": "Governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, 100 mm OD; Marchioni 2020 thesis via the repository ECHT audit)",
     "BOUNDARY": "abep_sim/arch_boundary.py (BOUNDARY_VERSION bus_power_boundary_v1)",
 }
 
@@ -328,8 +328,8 @@ def build_parameters() -> list:
           "0 W for PIM-0 (HW-0 passive spacer, W3)", "assumed", "PENDING docs/interfaces/preionizer_module/ (PMI-05)",
           "H1_TEST_ARTICLE_ONLY", "reported as influence coefficients dT/dQ_PIM (K/W), identical for every occupant; no RF/ECR-specific value"),
         # --- geometry (ECHT analog + assumed; all PENDING H2-1 / H2-7)
-        P("H25-12", "L_ch_m", "channel length", 0.086, "m", "analog", "REF ECHT (governance.md: true ECHT 86 mm long)", "inferred",
-          "PENDING docs/hardware/h2/h2_1_hall_chamber_magnet/", "FLIGHT_REPRESENTATIVE", "published analog geometry (Marchioni 2020 thesis via the repository ECHT audit and governance.md), "
+        P("H25-12", "L_ch_m", "channel length", 0.086, "m", "analog", "REF ECHT (Governance.md: true ECHT 86 mm long)", "inferred",
+          "PENDING docs/hardware/h2/h2_1_hall_chamber_magnet/", "FLIGHT_REPRESENTATIVE", "published analog geometry (Marchioni 2020 thesis via the repository ECHT audit and Governance.md), "
           "evidence class 'inferred' (read from a published device description, not measured by this project); not a Vyovrinda value"),
         P("H25-13", "h_ch_m", "channel width", 0.010, "m", "analog", "REF ECHT (10 mm wide)", "inferred",
           "PENDING docs/hardware/h2/h2_1_hall_chamber_magnet/", "FLIGHT_REPRESENTATIVE"),

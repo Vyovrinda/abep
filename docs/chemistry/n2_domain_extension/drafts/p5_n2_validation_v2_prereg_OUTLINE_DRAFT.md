@@ -12,7 +12,7 @@ the owner has taken the decisions in §6 and a real pre-registration has been wr
 
 The v1 files (`validation/p5_n2_campaign_v1_vacuum_*`, `VALIDATION_RELEASE_v1.json`, `prereg/*_v1*`) are never rewritten, and
 no v1 run is ever re-labelled. A v2 would be a separate campaign with separate files. Its outcome could never change a v1
-status. It would not bypass the admission gate either: admission stays gated on the O4 dispositions, as governance.md states.
+status. It would not bypass the admission gate either: admission stays gated on the O4 dispositions, as Governance.md states.
 
 Evidence basis: `docs/chemistry/n2_domain_extension/N2_DOMAIN_EXTENSION_AUDIT.md` and `domain_extension_audit.json`, with
 numbers in `domain_extension_requirements.json`.

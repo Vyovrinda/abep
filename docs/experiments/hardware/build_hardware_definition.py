@@ -12,7 +12,7 @@ Usage::
     python docs/experiments/hardware/build_hardware_definition.py --verify-pins  # inputs == their repository sources
 
 Pure standard library. No default physical or efficiency value is hidden here: every number comes from the register's
-``inputs`` block; a missing input raises (governance.md rule 3). ``--verify-pins`` reads the source files of the inputs
+``inputs`` block; a missing input raises (Governance.md rule 3). ``--verify-pins`` reads the source files of the inputs
 (merged lanes and ``abep_sim/constants.py``) lazily and raises a clear error if one is missing.
 
 Nothing here is a Hall performance prediction. The relations used are identities:
@@ -52,7 +52,7 @@ def _sig(x: float) -> float:
 
 def _val(inputs: dict, key: str):
     if key not in inputs:
-        raise KeyError(f"derived_numbers.inputs is missing {key!r}; no default exists (governance.md rule 3)")
+        raise KeyError(f"derived_numbers.inputs is missing {key!r}; no default exists (Governance.md rule 3)")
     q = inputs[key]
     v = q.get("value")
     if v is None:

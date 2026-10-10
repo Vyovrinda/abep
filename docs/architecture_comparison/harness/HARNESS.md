@@ -17,7 +17,7 @@ show ABEP closure, it does not pick an architecture, and it admits no transport 
 
 It compares the three Hall-accelerated architectures of the RFP chain, `hall_only`, `rf_hall` and `ecr_hall`, on
 **one common electrical boundary**. It does this for **every admitted transport-ensemble member**, which is an unweighted
-scenario set (governance.md next-work 1).
+scenario set (Governance.md next-work 1).
 
 ```
 UpstreamState (computed ONCE; identical for every member and architecture)
@@ -44,14 +44,14 @@ The module is pure orchestration. It computes no physics, it does not import or 
 
 | rule | mechanism | refusal |
 |---|---|---|
-| Admitted members only (governance.md next-work 1) | `admitted_members()` calls `hall_ensemble.require_admitted` for every member. Every `hall_maps` key and every map's `meta.ensemble_member_id` also goes through `require_admitted`. `HallMap` itself loads admitted ids only | `NoAdmittedMembersError`, `MemberRefusedError` |
+| Admitted members only (Governance.md next-work 1) | `admitted_members()` calls `hall_ensemble.require_admitted` for every member. Every `hall_maps` key and every map's `meta.ensemble_member_id` also goes through `require_admitted`. `HallMap` itself loads admitted ids only | `NoAdmittedMembersError`, `MemberRefusedError` |
 | Zero admitted members means no run | refused before anything else is read or computed | `NoAdmittedMembersError` |
 | All members, no subset | the `hall_maps` keys must cover every admitted member | `MemberRefusedError` |
 | Unweighted scenario set | ensemble `weighting` must be `"unweighted"`. Output has min/max only: no mean, no probability, no weighting, and no field that names one architecture | `HarnessError` |
 | Layer-1 calibration nuisance is never an axis | nuisance names are refused as Hall-map axes (`HallMap`), operating-point keys, bindings, feed or upstream quantities | `ScopeViolationError`, `HallMapRefusedError` |
 | No upstream leak of Hall-closure uncertainty | `UpstreamState` is immutable, computed once, and fingerprinted (sha256). The fingerprint is re-checked after every member evaluation and recorded in every result. Hall-map output names are refused as upstream or feed quantities. The Hall query, fixed loads, efficiencies and feed are member-independent by construction | `ScopeViolationError` |
 | Common electrical boundary | every ledger answer must carry `boundary_version == "bus_power_boundary_v1"`. Items must book exactly the supplied loads. The component set must be identical across members. `hall_only`'s components must be a subset of every other architecture's | `LedgerContractError` |
-| Energy-ledger conservation (governance.md rule 4) | `abs(residual_W)/P_bus_W < 0.02` for the ledger-reported residual **and** for an independent recomputation (`P_bus_W − Σ items.P_bus_W`). `P_bus_W` must be ≥ the delivered load. Both residuals are reported per result | `LedgerResidualError` |
+| Energy-ledger conservation (Governance.md rule 4) | `abs(residual_W)/P_bus_W < 0.02` for the ledger-reported residual **and** for an independent recomputation (`P_bus_W − Σ items.P_bus_W`). `P_bus_W` must be ≥ the delivered load. Both residuals are reported per result | `LedgerResidualError` |
 | Source mass closure (rule 4), when declared | `Σ supply = Σ Hall-map mass axes + Σ other sinks` to rounding (relative 1e-9). A spec without a declaration reports `{"declared": false}` | `SpecError` |
 | No silent fallback (rule 3) | missing ledger module, wrong boundary version, a map query outside the axes, an untrustworthy point, or a Hall-block bound violated: each is refused or reported with a status, never replaced | see §4 |
 | Flight maps only | `meta.facility_ingestion` must be `false` (hall_map_schema_v1: "flight (space) maps must be false") | `HallMapRefusedError` |
@@ -157,8 +157,8 @@ does carry are listed here.
 
 | constant | value | class / source |
 |---|---|---|
-| `LEDGER_RESIDUAL_MAX_FRAC` | 0.02 (strict `<`) | project rule, governance.md rule 4 ("architecture energy ledger residual < 2 %"). `archengine.close_architecture` rejects `abs(resid) > 0.02`, so it lets exactly 2 % through. The harness follows the rule text |
-| RFP thrust range / power cap | `abep_sim.constants.RFP` (thrust 12–25 mN, power 1500 W) | RFP DTDF/06/13516 Part III Para 2 as encoded in `constants.py`. Comparisons are inclusive, the same as `archengine.close_architecture`. governance.md summarises the power limit as "< 1.5 kW"; the exact-boundary case is the owner's call |
+| `LEDGER_RESIDUAL_MAX_FRAC` | 0.02 (strict `<`) | project rule, Governance.md rule 4 ("architecture energy ledger residual < 2 %"). `archengine.close_architecture` rejects `abs(resid) > 0.02`, so it lets exactly 2 % through. The harness follows the rule text |
+| RFP thrust range / power cap | `abep_sim.constants.RFP` (thrust 12–25 mN, power 1500 W) | RFP DTDF/06/13516 Part III Para 2 as encoded in `constants.py`. Comparisons are inclusive, the same as `archengine.close_architecture`. Governance.md summarises the power limit as "< 1.5 kW"; the exact-boundary case is the owner's call |
 | `MASS_CLOSURE_REL_TOL` | 1e-9 relative | assumed numerical rounding tolerance of this harness, not physics |
 | axis-domain tolerance | 1e-12 | same absolute tolerance as `HallMap.__call__` |
 
@@ -191,7 +191,7 @@ its evidence quality.
 8. **Run.** `python -m abep_sim.arch_compare run --specs specs.json --upstream upstream.json --maps index.json --out result.json`.
    Check that `production_path` is true, that every envelope is COMPLETE (otherwise read `not_ok_members`), and that the
    residuals are small. Report envelopes and member robustness only, never one architecture as the answer.
-9. **Wiring.** Wiring `archengine`'s Hall branch to `HallMap` (governance.md next-work 5) is a separate model change: goldens
+9. **Wiring.** Wiring `archengine`'s Hall branch to `HallMap` (Governance.md next-work 5) is a separate model change: goldens
    move and HISTORY.md is updated. The harness does not need it and does not do it.
 
 ## 7. What is still missing
@@ -199,7 +199,7 @@ its evidence quality.
 | item | status |
 |---|---|
 | Admitted transport members | **none**. Credible set ∅; P5-N₂ v1 gave all nine INCONCLUSIVE / NOT ELIGIBLE. O4 staged sensitivities and facility runs are pending, and admission also needs O4 dispositions |
-| Design-specific Hall maps (Vyovrinda geometry, B(z)) | none exist. TBD — requires admitted members, and the design geometry and B(z) with sources (governance.md rule 6) |
+| Design-specific Hall maps (Vyovrinda geometry, B(z)) | none exist. TBD — requires admitted members, and the design geometry and B(z) with sources (Governance.md rule 6) |
 | Air (O/O₂/N₂/N) chemistry for intake-delivered mixtures | not available. Only the N₂/N set exists (`abep-n2n-0.11`, `COMPLETE_FOR_P5_N2_VALIDATION`). O₂/O chemistry is next-work 4 ("only if 1–3 succeed"). Until it exists, no air-fed design map can be `chemistry_trustworthy` |
 | Pre-ionized inlet condition for `rf_hall` / `ecr_hall` maps | TBD — requires (a) Hall maps generated with a pre-ionized inflow. Whether HallThruster.jl v0.23.1 supports an ion-inflow anode condition is **not established here — verify**. It also requires (b) a pre-ionizer model supplying the member-independent `feed` quantities. `plasma_chem.py` still uses unverified Arrhenius rates (next-work 6), so its output is not report-grade |
 | Inlet condition / design identity in map meta | hall_map_schema_v1 has no field declaring the inlet condition (neutral vs pre-ionized) or the design geometry, so the harness cannot check them. It relies on the index's per-architecture assignment. **DRAFT for the owner only** (not implemented, and the schema is outside this lane): add `meta.inlet_condition` and `meta.design_id` in a future schema version |

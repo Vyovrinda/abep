@@ -2196,7 +2196,7 @@ This is a sensitivity result, not a v1 verdict change: v1 stays as scored, and d
 Per the pre-registration, Johnson-low is now run on the other three primary combinations. The escalation manifests are
 `escalation_n2_n_exc_johnsonlow_{di_lower,nel_wang,di_lower_nel_wang}`, 3 × 270 runs, executed exactly as pinned. They run concurrently
 with the remaining first-stage branches; the driver has no wall-clock limit, so oversubscribing the CPUs changes speed, not results.
-Also recorded (owner): decision milestones A/B/C, the two-track structure, and the fan-out rule (governance.md next-work 3). The
+Also recorded (owner): decision milestones A/B/C, the two-track structure, and the fan-out rule (Governance.md next-work 3). The
 Architecture Decision Acceleration lanes 16–27 and break-even surfaces were launched as dependency-aware workflows.
 
 ### 2026-09-26 — Orchestration governance tightened (owner review of the operating model)
@@ -2312,7 +2312,7 @@ golden changed. Eight leftover worktrees were archived (`docs/orchestration/arch
 
 ## 2026-09-30 — A9 integration complete on the execution branch (A9.1, A9.2 incorporated)
 
-A9-01..A9-10 verified and merged on governance/nifty-ramanujan-w68f9z: Hall->ICP prereg framework, A9 bus boundary
+A9-01..A9-10 verified and merged on Governance/nifty-ramanujan-w68f9z: Hall->ICP prereg framework, A9 bus boundary
 (bus_power_boundary_a9_v1, 1 ms-window P_bus gate per A9.1), ICP-neutralizer ICD, C1-vs-ICP uncertainty budget,
 Takahashi 2024 extraction + validation inputs, core integration record, A9 mass reconciliation, H2 revisions, A9 Xe
 ledger, RFQ packages (quotations only), A9-10 reconciliation (M16 v3, owner-question state v2). Owner A9.1 and A9.2
@@ -2453,7 +2453,7 @@ steps (experiment/procurement/budget records; A9.9 production-model changes; A9.
 
 ## 2026-10-01 — A9.16 parallel lanes merged (new files only)
 
-- **Orbit-resolved frozen atmosphere `atmosphere_msis21_orbit_v1`** (governance.md rule 1 versioned build, authorised by
+- **Orbit-resolved frozen atmosphere `atmosphere_msis21_orbit_v1`** (Governance.md rule 1 versioned build, authorised by
   A9.13 S6.14; implements A9.14 S9.7/S9.8). NRLMSIS 2.1 via pymsis 0.13.0 over 180/195/215/230 km x latitude x local
   time x longitude x day of year, four ECSS-E-ST-10-04C Rev.1 Table 6-3 solar/geomagnetic scenarios (no interpolation
   between scenarios); 116,736 rows. Log-space interpolation, worst error vs direct MSIS 2.3 % (rho) / 3.2 % (major
@@ -2670,7 +2670,7 @@ architecture_closure ext_hall_2p5kW: T_over_D_sc 1.73079 -> 1.84456 (+6.6 %, low
 mission: mission_4000h D_mean_mN = T_mean_mN 30.765 -> 28.923, P_bus_mean_W 1765.80 -> 1698.88, P_bus_peak_W
 1844.09 -> 1776.57; map_T_N relative changes <= 2e-5. (hall / source_plasma entries differ only at ~1e-16 float noise
 from regeneration.) These are historical 0-D/withdrawn-Hall benchmarks: the moved absolute values remain non-quotable
-per governance.md "Superseded / withdrawn".
+per Governance.md "Superseded / withdrawn".
 Downstream (owned by other steps): design-synthesis F1 (F1-01 now FIXED in production; `species_c_d_recombination_bias`
 "IntakeSurface_convention" describes the legacy method), F3/F4/F7-F9 and the freeze candidate (MCC/F1 status, any
 artifact using `intake.collection` with use_tpmc), `scripts/architecture/build_feed_envelope.py` and the feed-state
@@ -2915,7 +2915,7 @@ A0.7 / A1.3 at the default 3 × p_min setpoint (orifice unbracketed), and accele
 (the same unbracketed A0.7 state). A non-converged canonical golden conflicts with the fail-closed convergence policy.
 What:
 - `abep_sim/golden.py` now reads/writes `abep_sim/data/golden_v2.json` (`GOLDEN_FILE`); `golden_v1.json` is unchanged
-  (sha256 1f7fbb62…) and kept as history. governance.md still names golden_v1.json in rule 1; not edited here (owner's file).
+  (sha256 1f7fbb62…) and kept as history. Governance.md still names golden_v1.json in rule 1; not edited here (owner's file).
 - Regression fixture `cases.nonconverged_reference` (role NONCONVERGED_REFERENCE, expectation EXPECTED_NONCONVERGENCE):
   the golden_v1 gas_path, accelerators, architecture_closure and mission values verbatim (copied from golden_v1.json, not
   recomputed), plus refusal labels. `golden check` recomputes them at the old inputs, compares to 1e-6 and fails if any
@@ -2962,7 +2962,7 @@ fixture.
 accelerators (gas state 0.7/'nominal' -> 0.7/0.05 Pa; all < 1e-4 relative): ecr_grids T_N 0.03003709 -> 0.03003730,
 P_acc_W 1454.333 -> 1454.339, life_h 6278.59 -> 6278.58; ecr_hall T_N 0.02052792 -> 0.02052743, P_acc_W 919.722 ->
 919.703; ecr_nozzle T_N 2.374578e-3 -> 2.374599e-3.
-These remain historical 0-D / withdrawn-Hall benchmarks (governance.md "Superseded / withdrawn"): reproducibility references,
+These remain historical 0-D / withdrawn-Hall benchmarks (Governance.md "Superseded / withdrawn"): reproducibility references,
 not quotable performance. Tests: new `tests/test_golden_a9_18.py`; `tests/test_golden_cli.py` now points at golden_v2.json
 (path only). Docs: `docs/ci/CI.md`, `docs/ci/PACKAGING.md` (golden file note). Not changed (other owners):
 `docs/traceability/RTM.md` / `build_rtm.py` still cite golden_v1.json as evidence. The dedicated performance-baseline rerun
@@ -3310,7 +3310,7 @@ requirements reach physics only as frozen engineering inputs.
 ## 2026-10-03 — A9.22 G1 governed baseline change (lane w2core): mission-duration basis 26,280 h
 Owner decision A9.22 G1 (`docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json`,
 G1_MISSION_LIFE = MISSION_DURATION_26280_H): mission-integrated quantities use 26,280 h; 15,000 h survives only as an
-explicitly labelled subsystem firing-life assumption. Intentional model-basis change (governance.md rules 1-2), applied once.
+explicitly labelled subsystem firing-life assumption. Intentional model-basis change (Governance.md rules 1-2), applied once.
 - **Seam.** `operating_inputs.MISSION_HOURS = MISSION_DURATION_BASIS_H = 26280.0`; `FIRING_HOURS =
   SUBSYSTEM_FIRING_LIFE_ASSUMPTION_H = 15000.0` (label `SUBSYSTEM_FIRING_LIFE_ASSUMPTION`);
   `HISTORICAL_MISSION_HOURS_PRE_A9_22 = 26000.0` exists only to recompute immutable history. `constants.RFP.mission_hours`
@@ -3375,7 +3375,7 @@ downstream RF/ICP electron source / neutralizer; no hollow cathode, no LaB6).
 ## 2026-10-03 — A9.22 G1 governed baseline change (system.py completion)
 Owner decision A9.22 G1 (`docs/decisions/OD_2026_10_03_A9_22_layer_separation_owner_decisions.json`,
 G1_MISSION_LIFE = MISSION_DURATION_26280_H), completing the migration logged in the w2core G1 entry above for the last
-consumer, `abep_sim/system.py` (Phase B raw closure). Intentional model-basis change (governance.md rules 1-2), applied once.
+consumer, `abep_sim/system.py` (Phase B raw closure). Intentional model-basis change (Governance.md rules 1-2), applied once.
 - **system.py: no `constants.RFP` read remains.** Every engineering input comes from the seam `abep_sim.operating_inputs`.
   Per site:
   - AO fluence `fluence(atm, mission_h)` and the three erosion depths (Kapton, graphite, silver): mission-integrated ->
@@ -3875,7 +3875,7 @@ are reused from the pinned v3 builder).
   detached checkout of exactly `5eee4b8c82a9403b6bb82d5f8d324526f5d6399b` (BLAS / OMP threads = 1), into a NEW folder;
   previous baselines untouched. Wall 267.4 s (harness 266.2 s), CPU 262.5 + 3.8 s, peak RSS 290 MB, exit 0; machine
   manifests before / after, 15 s load / memory samples, evidence sha256 in `REGISTRATION.json`.
-- Machine: governance Code cloud container (Xeon 2.10 GHz, Linux, Python 3.11) - DIFFERENT_MACHINE from the 2026-10-01
+- Machine: Governance Code cloud container (Xeon 2.10 GHz, Linux, Python 3.11) - DIFFERENT_MACHINE from the 2026-10-01
   dedicated baseline (owner Windows i7-11700K); timings not directly comparable; the owner may repeat the same command
   at 5eee4b8 on the dedicated machine into another new folder.
 - Ranking (addressable interpreter time): uq_modular_run_uq, intake_response_surface_reduced, archengine
@@ -3990,7 +3990,7 @@ There are 0 unclassified and 0 provisional components.
 **Owner questions decided (OWNER_DECIDED A9.28).**
 
 * **RM-OQ-06.** Historical goldens are immutable and reproducible from the historical Python environment. They are not
-  Rust parity cases. governance.md rule 2 applies to the ACTIVE canonical golden set. That governance.md edit is a separate
+  Rust parity cases. Governance.md rule 2 applies to the ACTIVE canonical golden set. That Governance.md edit is a separate
   later commit (CA-01) and is NOT made here. The new `hall_icp_neutralizer` golden comes only from the admitted active
   chain.
 * **RM-OQ-08.** The cathodeless thermal model is preregistered, written directly in Rust and admitted by independent
@@ -4061,17 +4061,17 @@ reconciled with main #31-#36 (`docs/integration/main_reconciliation_2026_10_05.j
 `parity_contract_template_v3.json`. The template adds `contract_kind`, `new_physics_verification` and
 `value_status_preservation`.
 
-**Unchanged:** all Python and Rust code, CI workflows, configuration, frozen data, goldens, parity records, governance.md,
+**Unchanged:** all Python and Rust code, CI workflows, configuration, frozen data, goldens, parity records, Governance.md,
 main, and the bid record `5eee4b8` / `b5849af` / `2de86ab`. `git diff 2de86ab..HEAD -- '*.py'` is empty.
 
-## 2026-10-05 — governance.md governance update CA-01..CA-04 + language direction (A9.29 sec. 10; no physics change)
+## 2026-10-05 — Governance.md governance update CA-01..CA-04 + language direction (A9.29 sec. 10; no physics change)
 
 - Governing record: `docs/decisions/OD_2026_10_05_A9_29_RUST_PLAN_V3_1_RULINGS_AND_START_AUTHORIZATION.md` secs. 8-11 and 15.
   It is done before substantive Rust implementation, as sec. 10 requires. Historical decision files are not rewritten.
 - **CA-01.** Rule 2 now applies to the ACTIVE canonical golden set. `golden_v1` / `golden_v2` are immutable archive/regression
   history. They stay reproducible in the Python reference environment and are not Rust end-state parity cases (A9.28 RM-OQ-06).
 - **CA-02.** The execution baseline is `integration/simulation-complete`. The 2026-09-26 pin of
-  `governance/nifty-ramanujan-w68f9z` at `debce16` is recorded as history.
+  `Governance/nifty-ramanujan-w68f9z` at `debce16` is recorded as history.
 - **CA-03.** Stale pre-Rust / pre-bid wording updated:
   - "Python owns the whole chain" is replaced by the language direction: target simulator Rust, Hall solver HallThruster.jl,
     Python as migration reference until admitted and then archive-only.
@@ -4180,7 +4180,7 @@ main, and the bid record `5eee4b8` / `b5849af` / `2de86ab`. `git diff 2de86ab..H
   - Formatting is members-only (`cargo fmt -- --check`), never `cargo fmt --all`.
   - A source-hash CI check is required.
   - Any byte change requires a new preregistration and a parity rerun.
-- governance.md gets narrow A9.30 notes on next-work item 4 (O/O2) and the admissibility paragraph (bus boundary).
+- Governance.md gets narrow A9.30 notes on next-work item 4 (O/O2) and the admissibility paragraph (bus boundary).
   Historical text and decision files are not rewritten.
 
 ## 2026-10-05 — ES-1 lane A1: bid source guard, migration ledger, Rust-era test rule, groundtest isolation, run record, Rust CI (A9.29 secs. 1, 3, 9; A9.30 sec. 6; no physics, no number changed)
@@ -5925,3 +5925,36 @@ stays EMPTY and nothing enters layer (b).
 - **Location:** the annexure is outside `docs/bid/`. The historical bid package (`docs/bid/package/`, 5eee4b8 / 2de86ab)
   and the bid-source guard are unchanged (guard PASS). The programmatic skeletons and the Part IV submission checklist
   of that package are reused as they are.
+
+## 2026-10-10 — `main` becomes the single authoritative branch; lane consolidation
+Owner instruction (2026-10-10): `main` is the only authoritative source of the simulation and the version released to the
+scientific community for evaluation. Every other branch is development.
+- **Baseline pointer:** Governance.md, `.github/workflows/rust-workspace.yml` (push trigger) and `docs/ci/BRANCH_PROTECTION.md` now
+  name `main`. `integration/simulation-complete` (CA-02) is fully contained in `main` and is history.
+- **Lanes merged (merge commits):**
+  - `lane-hall-chem-air`: the NP-HALL-CHEM-AIR audit materiality reader.
+  - `lane-hall-air-localpkg`: the Hall air RP-1 HallThruster.jl local-run package and prereg addendum A9-LP. All 55 pinned
+    files match.
+  - `lane-dcr001-final` at `a854a95`: the DCR-DBF1-001 Rust evaluator and evaluation preregistrations v1–v3. This is
+    supporting tooling and history; the A9.41 approval on the preliminary-closure evidence is unchanged.
+- **Deliberately not merged (preserved on `wip/*`):**
+  - The DCR-003 evaluation harness and its v1 evaluation outputs (`wip/lane-dcr003-match`). The harness test reproduces
+    the committed record, so the two land together. Prereg v1 lacks the R-2 RF-generator unit gate, and a v2 is pending.
+  - The DCR-001 lane's divergent DBF-1.2 builder and window-search outputs. The frozen DBF-1.2 stays as built.
+  - The unfinished NP-ICP-CHEM-AIR own-table work (`wip/lane-icp-closure`).
+- **F1 evidence archive:** a local copy verifies against its manifest (`verify-download` → VERIFIED). The release-asset upload
+  is still the owner's manual step (`docs/evidence_archives/f1_intake/UPLOAD_STEPS.md`).
+
+## 2026-10-10 — F1 evidence archive published and download-verified (A9.24 item 11, steps 2–5)
+- **Release:** the owner published `evidence-f1-intake-synthesis-v1-405296e` (target `405296e`) with the asset
+  `F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst`. The owner rebuilt it locally first, and `build --check` reproduced the manifest.
+- **Verification:** a fresh download of the published URL (2,011,661 B, sha256 `c29623c0…`) passed
+  `f1_archive.py verify-download`. The result is VERIFIED with no mismatches: zstd decode, tar sha256, per-member hashes,
+  deterministic metadata, and a byte-for-byte comparison with the local originals.
+- **Authority:** the record `F1_INTAKE_SYNTHESIS_v1_405296e.download_verification.json` is committed, so the release
+  asset is the authoritative copy. The record pins manifest sha256 `27d9783b…`, which is unchanged.
+- **Open:** the manifest's `storage.preferred` status still reads AUTHORIZED_TO_UPLOAD. The builder has no code path for
+  the uploaded state, and regenerating the manifest would change the sha256 the record pins. That update is a follow-up
+  builder change.
+- **Builder fix:** `f1_archive.py` now compares the generating-commit time by value, so newer git's `Z` UTC spelling is
+  accepted (PR #41).

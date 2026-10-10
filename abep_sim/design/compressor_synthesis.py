@@ -27,7 +27,7 @@ Species O, N2, O2 are carried individually: per-species delivered mass flow, per
 partial-pressure composition x_s,out and the delivered-flow composition (which equals the inlet composition in
 steady state: the module delivers the captured flow, ``run()['delivered_kgps']``).
 
-Evidence discipline (governance.md rules 6 and 10, docs/EVIDENCE.md; A9.7 "never convert a TBD input into an assumed
+Evidence discipline (Governance.md rules 6 and 10, docs/EVIDENCE.md; A9.7 "never convert a TBD input into an assumed
 value to obtain an optimum"):
   * Every DragCompressor coefficient that is not searched is an uncited code default (compressor_downselect CD-01,
     evidence class 'assumed'). In MODE_STRICT the search REFUSES (status NOT_EVALUATED, blockers listed) unless every
@@ -569,7 +569,7 @@ def strict_blockers(inlet: InletRecord, coefficient_evidence: Mapping[str, dict]
     elif abs(float(dens["value"]) / DB["Ti6Al4V"].density - 1.0) > 1e-9:
         out.append({"id": "P-TI64-DENSITY", "what": "rotor density", "status": "MODULE_CANNOT_REPRESENT",
                     "needs": "the cited density differs from materials.DB, which DragCompressor reads; a materials "
-                             "change is a model change (governance.md rule 2), outside this lane"})
+                             "change is a model change (Governance.md rule 2), outside this lane"})
     bid = ev.get("rotor_strength_basis_id", {}).get("value") if isinstance(ev.get("rotor_strength_basis_id"),
                                                                           Mapping) else None
     if rs.get_registered(bid) is None:

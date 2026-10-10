@@ -583,7 +583,7 @@
    "evidence_class": "inferred",
    "basis": "analog",
    "source": "REF-MARCHIONI2020",
-   "locator": "as recorded in governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 (ECHT-N2 audit); published analog only, never a Vyovrinda design value"
+   "locator": "as recorded in Governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 (ECHT-N2 audit); published analog only, never a Vyovrinda design value"
   },
   "echt_channel_width_m": {
    "value": 0.01,
@@ -591,7 +591,7 @@
    "evidence_class": "inferred",
    "basis": "analog",
    "source": "REF-MARCHIONI2020",
-   "locator": "as recorded in governance.md / docs/HISTORY.md 2026-09-26 (10 mm channel height); analog"
+   "locator": "as recorded in Governance.md / docs/HISTORY.md 2026-09-26 (10 mm channel height); analog"
   },
   "echt_OD_m": {
    "value": 0.1,
@@ -599,7 +599,7 @@
    "evidence_class": "inferred",
    "basis": "analog",
    "source": "REF-MARCHIONI2020",
-   "locator": "as recorded in governance.md / docs/HISTORY.md 2026-09-26 ('100 mm OD'; channel radii are NOT published per the ECHT-N2 audit, so OD = channel outer diameter is an inference); analog only"
+   "locator": "as recorded in Governance.md / docs/HISTORY.md 2026-09-26 ('100 mm OD'; channel radii are NOT published per the ECHT-N2 audit, so OD = channel outer diameter is an inference); analog only"
   },
   "faraday_far_field_diameters": {
    "value": 4.0,
@@ -4422,7 +4422,7 @@
    "id": "REF-MARCHIONI2020",
    "citation": "F. Marchioni, 'Design and Performance Measurements of a Long Channel Hall Thruster for Air-Breathing Electric Propulsion', MSc thesis, Politecnico di Torino (co-tutelle Stanford), 2020; ECHT extended-channel Hall thruster",
    "url": "https://webthesis.biblio.polito.it/14618/",
-   "access": "not re-accessed by this lane; geometry (86 mm long, 10 mm channel height, '100 mm OD'; channel radii not published) as recorded in governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 (ECHT-N2 audit, hallthruster_bridge/identification/echt_n2/). Published analog only, never a Vyovrinda design value"
+   "access": "not re-accessed by this lane; geometry (86 mm long, 10 mm channel height, '100 mm OD'; channel radii not published) as recorded in Governance.md 'Superseded / withdrawn' and docs/HISTORY.md 2026-09-26 (ECHT-N2 audit, hallthruster_bridge/identification/echt_n2/). Published analog only, never a Vyovrinda design value"
   },
   {
    "id": "REF-ULVAC-CRYO",

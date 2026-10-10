@@ -121,7 +121,7 @@ Statuses never claim more than the evidence shows. At `5eee4b8` no RVM row of th
 
 **Evidence at 5eee4b8:**
 
-- `governance.md` section 'Gate status' (gate 3)
+- `Governance.md` section 'Gate status' (gate 3)
 - `hallthruster_bridge/ensemble/transport_ensemble_v0.json` #/members
 - `hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json` whole file
 - `docs/chemistry/o_o2/v0/channel_status_v0.json` #/status
@@ -471,7 +471,7 @@ Statuses never claim more than the evidence shows. At `5eee4b8` no RVM row of th
 **Evidence at 5eee4b8:**
 
 - `docs/requirements/rvm_a9/rvm_a9_v1.json` #/rows[id=RVM-24]
-- `governance.md` section 'Gate status' (gate 3)
+- `Governance.md` section 'Gate status' (gate 3)
 - `docs/chemistry/o_o2/v0/channel_status_v0.json` #/status
 
 ### RFP-P20-04 (p. 20, Part III 7 Milestone 1) - COMPLY_PLANNED_WITH_EVIDENCE_PATH

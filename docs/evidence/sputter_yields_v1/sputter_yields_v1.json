@@ -8,7 +8,7 @@
  "companion_document": "docs/evidence/sputter_yields_v1/SPUTTER_YIELDS_V1.md",
  "test": "tests/test_sputter_yields_v1.py",
  "status": "EVIDENCE REGISTER ONLY. Not wired into any simulator module. No alloy or coating sputter yield exists in this register; no molecular-ion (N2+, O2+) number exists in this register. Every numeric yield is an elemental-target literature or semi-empirical value usable only as a prior bound / for test-matrix selection / comparison / model initialisation (S5.13), never as a candidate value, and never as a CR-04 recession or life input.",
- "evidence_policy": "docs/EVIDENCE.md (governance.md rules 6, 10): evidence_level = strength / proximity of the source (1-7); evidence_class = quantity type; evaluation of a published formula does not raise the level",
+ "evidence_policy": "docs/EVIDENCE.md (Governance.md rules 6, 10): evidence_level = strength / proximity of the source (1-7); evidence_class = quantity type; evaluation of a published formula does not raise the level",
  "owner_decisions": [
   {
    "id": "A9.12",

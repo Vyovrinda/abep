@@ -1,7 +1,7 @@
 //! Provenance foundation: sha256 of bytes / files, repository-root discovery and verification of the configuration
 //! manifest `config/MANIFEST.json` (schema `abep_config_manifest_v1`).
 //!
-//! governance.md rule 1: frozen data and configuration carry hashes and are verified on every load; a mismatch is a
+//! Governance.md rule 1: frozen data and configuration carry hashes and are verified on every load; a mismatch is a
 //! `MODEL_ERROR`, never a warning (rule 3, no silent fallbacks).
 
 pub mod bid_guard;

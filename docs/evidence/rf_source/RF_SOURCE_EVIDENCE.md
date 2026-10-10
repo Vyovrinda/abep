@@ -22,7 +22,7 @@ audit also lists what the literature does not settle, and states which ABEP-side
 **What it does not do.** It builds no model, draws no architecture conclusion and admits no transport. **It makes no
 statement that RF pre-ionization is or is not worth its power.** That question is decided later, on a common bus-power
 boundary that includes RF generator, matching, antenna, magnet and thermal losses on the same footing as the Hall
-discharge. The audit takes no position on the mechanism-level note in governance.md "Superseded / withdrawn" ("RF/helicon
+discharge. The audit takes no position on the mechanism-level note in Governance.md "Superseded / withdrawn" ("RF/helicon
 pre-ionisers add nothing"). It neither supports nor withdraws that note.
 
 **What it leaves untouched.** It touches none of the following: the P5-N₂ v1 result (permanent), the pre-registration,
@@ -225,7 +225,7 @@ These quantities are not settled for ABEP-relevant flow and density. Each item g
 ## 5. Regime-match table: ABEP ionizer-inlet state (all TBD from the upstream ICD)
 
 The ABEP-side values come from the upstream interface control document for the atmospheric path: intake → filter →
-compressor → atmospheric gas chamber → valve → ionization/discharge (governance.md scope). **None is defined yet, so none is
+compressor → atmospheric gas chamber → valve → ionization/discharge (Governance.md scope). **None is defined yet, so none is
 invented here.** The frozen NRLMSIS dataset (`abep_sim/data/atmosphere_msis21_v1.*`) gives the *ambient* state at
 180–230 km (RFP envelope). The ionizer-inlet state also depends on the intake and compressor, so it is not given here.
 
@@ -245,7 +245,7 @@ Consequently every matrix entry is `partial`, `no` or `TBD`. The test rejects `y
 
 ## 6. Simulator priors this audit bears on (read-only cross-reference)
 
-These priors are **not modified** by this lane. Changing any of them is a model change under governance.md rules 1–2, and
+These priors are **not modified** by this lane. Changing any of them is a model change under Governance.md rules 1–2, and
 that is the owner's call. The table records whether an accessed source supports each prior *as defined in the code*.
 
 | prior (file:line) | value | cited source in code | accessed evidence on a matching definition |

@@ -305,7 +305,7 @@
    "dataset": "atmosphere_msis21_orbit_v1",
    "relation": "resolved for v2 users by this dataset; v1 and its open item are unchanged"
   },
-  "governance.md rule 1": "versioned new dataset; atmosphere_msis21_orbit_v1.* untouched"
+  "Governance.md rule 1": "versioned new dataset; atmosphere_msis21_orbit_v1.* untouched"
  },
  "evidence": {
   "evidence_level": 4,

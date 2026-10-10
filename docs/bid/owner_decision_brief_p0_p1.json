@@ -913,7 +913,7 @@
     }
    ],
    "timing_rule": {
-    "text": "the numbers must be owner-frozen before LOCK-1 (lock1_rule) and before any evidence they judge is seen (pre-registration discipline of governance.md; the owner did not approve criteria not visible in the proposal text). Recorded exception to note: the P1 Ar stable-region criteria are by owner decision derived from P1-S2..S4 evidence; recorder reading RR-01 closes the stable-region criteria of the registered ICP-45N / Xe-mode campaigns before their first record",
+    "text": "the numbers must be owner-frozen before LOCK-1 (lock1_rule) and before any evidence they judge is seen (pre-registration discipline of Governance.md; the owner did not approve criteria not visible in the proposal text). Recorded exception to note: the P1 Ar stable-region criteria are by owner decision derived from P1-S2..S4 evidence; recorder reading RR-01 closes the stable-region criteria of the registered ICP-45N / Xe-mode campaigns before their first record",
     "quote_ids": [
      "Q4-GNG-LOCK1",
      "Q4-GNG-OWNER",
@@ -1374,7 +1374,7 @@
    "kind": "json",
    "locator": "/document/not_in_document",
    "verbatim": [
-    "bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in governance.md is therefore NOT verified by this file"
+    "bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in Governance.md is therefore NOT verified by this file"
    ]
   },
   {
@@ -1740,7 +1740,7 @@
    "sha256": "3b89fe6ca26068f5b91124898db7c0910e65d9543f091a0d496b3bb978358305",
    "kind": "json",
    "locator": "/rows[id=RVM-11]/requirement_text",
-   "verbatim": "Preference (not mandate) for a Hall-effect thruster configuration. Both A9 configurations use the H-1 Hall accelerator; A9 keeps the Hall family (governance.md rule 8)."
+   "verbatim": "Preference (not mandate) for a Hall-effect thruster configuration. Both A9 configurations use the H-1 Hall accelerator; A9 keeps the Hall family (Governance.md rule 8)."
   },
   {
    "id": "Q1-RVM-11-FROZEN",
@@ -2273,9 +2273,9 @@
     "id": "DISC-01",
     "topic": "bid due / closing date",
     "rfp_clauses": [],
-    "rfp": "not stated in the registered RFP document (registration document.not_in_document: bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in governance.md is therefore NOT verified by this file)",
-    "repository": "governance.md 'bid close 05 Oct 2026'",
-    "disposition": "UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; governance.md is not edited here",
+    "rfp": "not stated in the registered RFP document (registration document.not_in_document: bid due / closing date (the RFP refers to the tender document on DefProc for important dates, Part I note 5); the 05 Oct 2026 date in Governance.md is therefore NOT verified by this file)",
+    "repository": "Governance.md 'bid close 05 Oct 2026'",
+    "disposition": "UNVERIFIED_BY_RFP_DOCUMENT - programmatic, not a system requirement (excluded candidate PRG-BID); verify on the DefProc tender document; Governance.md is not edited here",
     "owner_or_drdo_action": "owner: confirm the date from the DefProc tender document"
    }
   },
@@ -2293,7 +2293,7 @@
      "RFP-P18-11"
     ],
     "rfp": "'< 40kg' - wet or dry not stated",
-    "repository": "RVM-06 / owner row 5: < 40 kg WET incl. Xe + tank; governance.md '< 40 kg'; A9 '< 40 kg (wet)'",
+    "repository": "RVM-06 / owner row 5: < 40 kg WET incl. Xe + tank; Governance.md '< 40 kg'; A9 '< 40 kg (wet)'",
     "disposition": "the wet reading is the conservative owner reading and is retained; recorded for DRDO clarification; requirement_frozen stays false",
     "owner_or_drdo_action": "DRDO clarification (wet or dry)"
    }
@@ -2332,7 +2332,7 @@
      "RFP-P19-01"
     ],
     "rfp": "'Mission life: 3 years (Approx 26000 hrs)'",
-    "repository": "governance.md '26,000 h mission'; RVM-13 owner engineering basis >= 26,280 h (row 3)",
+    "repository": "Governance.md '26,000 h mission'; RVM-13 owner engineering basis >= 26,280 h (row 3)",
     "disposition": "consistent within the RFP's 'Approx'; the 26,280 h basis is conservative and retained",
     "owner_or_drdo_action": "none required"
    }
@@ -2351,7 +2351,7 @@
      "RFP-P19-01"
     ],
     "rfp": "'Ignition Time: More than 15000 hrs'",
-    "repository": "governance.md '> 15,000 h firing'; RVM-12 >= 15,000 h cumulative energized operation (A9.14 S8.5)",
+    "repository": "Governance.md '> 15,000 h firing'; RVM-12 >= 15,000 h cumulative energized operation (A9.14 S8.5)",
     "disposition": "literal wording preserved; conservative design basis pending clarification (A9.14 S8.5)",
     "owner_or_drdo_action": "DRDO clarification of 'Ignition Time'"
    }
@@ -3132,7 +3132,7 @@
    "sha256": "2372ee7c7d847eb69181c2b5f0fd7f18b6eaace85605638b73d5cefd1c4c22ff",
    "kind": "json",
    "locator": "/decision_verbatim",
-   "verbatim": "Freeze the repository state for the bid | governance head `bbc480c`, CI green | Record this exact SHA as the technical source used for the bid. Do not continue changing architecture underneath the proposal."
+   "verbatim": "Freeze the repository state for the bid | Governance head `bbc480c`, CI green | Record this exact SHA as the technical source used for the bid. Do not continue changing architecture underneath the proposal."
   },
   {
    "id": "Q5-DEADLINE",

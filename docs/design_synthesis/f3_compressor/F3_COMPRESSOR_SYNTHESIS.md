@@ -79,7 +79,7 @@ Every coefficient that is not searched is an uncited code default (compressor_do
 | R2 | `ROTOR_STRESS_ABOVE_CITED_ALLOWABLE_WITH_SAFETY_FACTOR` | Fty / (SF rho u_max^2) - 1 >= 0, u_max = max(turbo, drag tip speed) | P-TI64-FTY-A-BASIS, P-STRESS-SAFETY, P-TI64-DENSITY; sigma = rho u^2 (compressor.py docstring) |
 | R3 | `TIP_SPEED_ABOVE_PUBLISHED_TMP_PRACTICE` | u_tip <= 500 m/s | P-U-TIP-PUBLISHED-MAX |
 | R4 | `INLET_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN` | inlet p <= 0.1 Pa | P-MOLECULAR-LIMIT |
-| R5 | `MODEL_ERROR_NON_FINITE_OR_EXCEPTION` | finite state, no exception, mirror reproduces _run_once p_out to 1e-12 | no silent fallback (governance.md rule 3) |
+| R5 | `MODEL_ERROR_NON_FINITE_OR_EXCEPTION` | finite state, no exception, mirror reproduces _run_once p_out to 1e-12 | no silent fallback (Governance.md rule 3) |
 | R6 | `SELF_CONSISTENT_RUN_NOT_CONVERGED` | re-evaluated leak-recirculation residual <= 1e-4 | P-RECIRC-RTOL |
 | R7 | `GAEDE_CHARACTERISTIC_CLIPPED_THROUGHPUT_ABOVE_STAGE_CAPACITY` | every unclipped per-species Gaede K >= 1 | compressor.py _run_once clip max(min(K, K0), 1) hides an overloaded stage |
 | R8 | `STAGE_PRESSURE_OUTSIDE_FREE_MOLECULAR_DOMAIN` | every stage outlet p <= 0.1 Pa | P-MOLECULAR-LIMIT |

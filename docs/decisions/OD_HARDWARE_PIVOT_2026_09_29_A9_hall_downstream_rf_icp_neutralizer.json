@@ -66,7 +66,7 @@
   "deleting or rewriting historical A5 / prereg / evidence artifacts"
  ],
  "tension_with_repository_rules": {
-  "governance_md_rule_8": "governance.md rule 8 ('no new propulsion families until the physics baseline is frozen'). A9 keeps the Hall accelerator family and changes the electron source/neutralizer; it is an explicit owner decision recorded here, not a model-side expansion. No archengine/goldens change is implied."
+  "Governance_md_rule_8": "Governance.md rule 8 ('no new propulsion families until the physics baseline is frozen'). A9 keeps the Hall accelerator family and changes the electron source/neutralizer; it is an explicit owner decision recorded here, not a model-side expansion. No archengine/goldens change is implied."
  },
  "recorder_consistency_flags_for_owner": [
   {

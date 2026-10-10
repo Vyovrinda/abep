@@ -97,7 +97,7 @@ PINS = {
     OQ4_REL: ("6ba74803f9577cb63f3e719d176702eb47e05a55a3c054eba926649a5c23bf67",
               "owner-question state v4 (immutable; the v4 blockers' snapshot)"),
     "docs/EVIDENCE.md": ("a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-                         "evidence rules (quantity types; governance.md rule 10)"),
+                         "evidence rules (quantity types; Governance.md rule 10)"),
 }
 
 # mutable deliverables: read at build time, identity and every cited id checked; never sha-pinned (rebuilt by their lanes)

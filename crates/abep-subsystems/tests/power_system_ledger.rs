@@ -1,4 +1,4 @@
-//! CONS-L1 system energy ledger (governance.md rule 4): SYS-01..SYS-08 give their registered statuses. The registered
+//! CONS-L1 system energy ledger (Governance.md rule 4): SYS-01..SYS-08 give their registered statuses. The registered
 //! LS-01 books thermal_control at 0 W while VS-NET deposits 3 W of thermal control, so SYS-01 closes with exactly that
 //! -3 W mismatch on the THERMAL_CONTROL account (r = 0.37 %, below 2 %); every other account matches the thermal
 //! model's booked flows to rounding. SYS-01b (not registered) adds the 3 W and closes to rounding.

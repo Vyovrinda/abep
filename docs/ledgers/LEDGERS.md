@@ -38,7 +38,7 @@ accelerator, feed state, cathode and bus boundary are common. The pre-ionizer su
 - **Value record.** Every number in a ledger instance has `value, unit, status, origin, evidence`. `status` is one of
   `computed | superseded | TBD | not_applicable`. The value is null unless the status is `computed`. `TBD` carries
   `requires`, `not_applicable` carries `reason` and `superseded` carries `superseded_by`. Missing fields are never
-  filled with placeholders (governance.md item 5).
+  filled with placeholders (Governance.md item 5).
 - **Evidence record.** This uses the docs/EVIDENCE.md attributes: source, evidence level 1–7, quantity type
   (measured / digitized / inferred / reconstructed / model-derived / assumed), uncertainty, applicability domain,
   validation status and transformation chain. A code constant with no cited source is `assumed`, level 7. A value
@@ -54,7 +54,7 @@ accelerator, feed state, cathode and bus boundary are common. The pre-ionizer su
   housekeeping loads are outside the boundary.
 - **Rejected heat ≠ electrical input.** Electrical input is split into Q_int (to the thermal network), P_exported
   (jet, plume) and P_transferred (to another subsystem).
-- **Hall transport roles** (governance.md, two-layer Hall uncertainty):
+- **Hall transport roles** (Governance.md, two-layer Hall uncertainty):
   - `carrier` is hall_discharge.
   - `downstream_consumer` covers cathode, ppu, thermal_control and structure.
   - `independent` covers magnets, preionizer and avionics.
@@ -179,7 +179,7 @@ Life items (`close_architecture` `life_items`) map to subsystems as follows:
 ## 4. Closure and residual rules
 
 1. **Bus ledger, decomposition view.** P_bus = Σ load-plane terms + P_PPU_losses + P_harness_losses, and
-   |resid| ≤ 0.02 per mode, with resid = (P_bus − Σ terms)/P_bus. This is the archengine gate (governance.md rule 4);
+   |resid| ≤ 0.02 per mode, with resid = (P_bus − Σ terms)/P_bus. This is the archengine gate (Governance.md rule 4);
    the test reads the tolerance from `archengine.py`. It is **not** a completeness check: the archengine ledger closes
    by construction, so a missing consumer leaves resid at zero (BUS_POWER_BOUNDARY §6, point 1). Near-zero
    residuals are compared with an absolute tolerance (gate 6).

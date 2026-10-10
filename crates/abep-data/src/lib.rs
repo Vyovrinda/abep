@@ -1,4 +1,4 @@
-//! Frozen, hash-pinned dataset readers (governance.md rule 1; A9.29 sec. 6, RM-OQ-02).
+//! Frozen, hash-pinned dataset readers (Governance.md rule 1; A9.29 sec. 6, RM-OQ-02).
 //!
 //! Every reader verifies the bytes it reads against every pin that exists for the file (`pins`): the configuration
 //! manifest chain `config/MANIFEST.json` -> `config/model_set/physics_model_set_v1.json`, the design-state set

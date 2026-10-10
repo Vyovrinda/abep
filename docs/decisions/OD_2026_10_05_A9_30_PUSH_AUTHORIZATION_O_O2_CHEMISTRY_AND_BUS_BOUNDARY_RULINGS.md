@@ -34,7 +34,7 @@ Do NOT push main.
 
 Do NOT modify:
     main
-    governance/nifty-ramanujan-w68f9z
+    Governance/nifty-ramanujan-w68f9z
 
 Do NOT rewrite history.
 

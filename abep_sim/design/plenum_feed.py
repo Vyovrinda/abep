@@ -44,7 +44,7 @@ Physics (free-molecular throughout; every relation below is the one the called m
     compressor lumped temperature <= materials.DB T_max (F3 R_THERMAL). A plenum target above the compressor's
     admissible outlet is NOT_EVALUATED_OUT_OF_DOMAIN (A9.13 S6.8) and is never extrapolated.
 
-Evidence discipline (governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md; A9.7 F7 rule): MODE_STRICT refuses
+Evidence discipline (Governance.md rules 3, 4, 6, 10; docs/EVIDENCE.md; A9.7 F7 rule): MODE_STRICT refuses
 (NOT_EVALUATED, blockers listed) while any input is TBD or an uncited code default. MODE_PARAMETRIC runs on the
 labelled code defaults / parametric cases and labels every output PARAMETRIC_SENSITIVITY. The H-1 required inlet state
 is TBD (F5 IFD-F4-01..05): it is a parametric requirement sweep and the output is a feasibility region, never a
@@ -155,7 +155,7 @@ SETTLE_BAND = 0.02                               # metric definition (not a requ
 RTOL = 1e-5                                      # solve_ivp relative tolerance (convergence vs 1e-8 reported by the study)
 RTOL_REFERENCE = 1e-8                            # tighter tolerance of the numerical-convergence check
 ATOL_SCALED = 1e-11                              # solve_ivp absolute tolerance on the scaled states
-MASS_TOL = 1e-6                                  # |mass residual| / throughput (governance.md rule 4 gate for F4)
+MASS_TOL = 1e-6                                  # |mass residual| / throughput (Governance.md rule 4 gate for F4)
 BISECT_ITERS = 90                                # log-area bisection steps (relative bracket width < 1e-12)
 A_EQ_BRACKET_M2 = (1e-12, 1e2)                   # orifice-equivalent area search bracket (residual reported)
 BISECT_RTOL = 1e-6                               # gate on the bisection residual |p/target - 1| (numerics, SW-06)
@@ -250,7 +250,7 @@ def parameter_registry() -> list[dict]:
            "restarted at every event; a sample is re-run with BDF at the reference tolerance (numerical_convergence)",
            "definition", "definition", "DEFINITION"),
         _p("F4-P-14", MASS_TOL, "-", "mass-conservation gate: |m(t) - m(0) - (integrated in - out)| / integrated "
-           "throughput (governance.md rule 4)", "definition", "definition", "DEFINITION"),
+           "throughput (Governance.md rule 4)", "definition", "definition", "DEFINITION"),
         _p("F4-P-15", "derived", "s", "orbital period T = 2 pi sqrt((R_E + h)^3 / mu) at the state altitude (circular "
            "Kepler orbit)", "SRC-CONSTANTS-PY MU_EARTH, R_EARTH", "model-derived", "DERIVED"),
         _p("F4-P-16", "TBD", "kg", "plenum mass (wall thickness, material, ports): TBD; volume V and wall area A_w are "

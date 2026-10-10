@@ -2,10 +2,10 @@
  "schema": "bid_technical_baseline_v1",
  "decided_by": "owner",
  "decided_utc": "2026-10-03",
- "decision_verbatim": "Freeze the repository state for the bid | governance head `bbc480c`, CI green | Record this exact SHA as the technical source used for the bid. Do not continue changing architecture underneath the proposal.",
+ "decision_verbatim": "Freeze the repository state for the bid | Governance head `bbc480c`, CI green | Record this exact SHA as the technical source used for the bid. Do not continue changing architecture underneath the proposal.",
  "tender": {"id": "2026_DRDO_788433_1", "rfp": "DTDF/06/13516/DSP/ABEP/X/L/M/01", "operational_deadline": "2026-10-05 17:00 (A9.21 BID_CLOSE; DefProc, unless a corrigendum changes it)"},
  "bid_technical_source": {
-  "branch": "governance/nifty-ramanujan-w68f9z",
+  "branch": "Governance/nifty-ramanujan-w68f9z",
   "commit": "bbc480cd6aacaa40c39eb459a056b942fe996b32",
   "tag": "bid-technical-baseline-2026-10-05",
   "verification_at_commit": "full suite 3871 passed / 5 skipped / 1 xfailed; rule-9 outcome check pass; golden OK; ci_checks 11/11 (2026-10-03)"

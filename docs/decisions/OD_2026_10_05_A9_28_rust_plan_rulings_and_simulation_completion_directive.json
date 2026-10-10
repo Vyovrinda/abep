@@ -42,7 +42,7 @@
    "hall_sustainment": "REFERENCE_EVIDENCE_ONLY, NOT_FLIGHT_RUNTIME",
    "hardware_instrumentation_experiments": "GROUND_TEST_PROGRAMME_ONLY (migrate where retained in the active evidence toolchain)",
    "S1_S1a_readiness": "GROUND_TEST_PROGRAMME_ONLY / ACTIVE_GATE_TOOLING (Rust equivalents eventually)",
-   "historical_goldens": "immutable, reproducible from the historical Python environment, not Rust parity cases, not deleted / rewritten; governance.md rule 2 applies to the active canonical golden set (governance.md updated post-bid); new hall_icp_neutralizer golden only from the admitted active chain",
+   "historical_goldens": "immutable, reproducible from the historical Python environment, not Rust parity cases, not deleted / rewritten; Governance.md rule 2 applies to the active canonical golden set (Governance.md updated post-bid); new hall_icp_neutralizer golden only from the admitted active chain",
    "new_physics": "cathodeless thermal model (and other genuinely new physics) implemented directly in Rust after preregistration; admitted by independent verification; no synthetic Python reference",
    "H2-6_source_check": "port the check semantics to a generic Rust provenance verifier; retire the Python check from CI only after admission; historical H2-6 evidence immutable",
    "ordering": "architecture relevance first, evidence / admission eligibility second, measured runtime third; retired code never ported for speed"

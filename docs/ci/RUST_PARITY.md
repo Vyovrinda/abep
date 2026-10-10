@@ -43,7 +43,7 @@ normal CI.
 `rust-parity.yml` is **optional**. It is not a required status check: `docs/ci/BRANCH_PROTECTION.md` lists only the three
 `ci.yml` contexts. It triggers on:
 
-* `push` to `main` or the execution branch `governance/nifty-ramanujan-w68f9z` (the same branches as `ci.yml`), and
+* `push` to `main` or the execution branch `Governance/nifty-ramanujan-w68f9z` (the same branches as `ci.yml`), and
   `pull_request`. Both only when a path below changes. **These events never run the scoring campaign.**
 * `workflow_dispatch`, which runs it by hand. Its boolean input `run_scoring_campaign` (default `false`) is the **only**
   way the workflow spends the v2 scoring seed.
@@ -195,11 +195,11 @@ observable or vector. `campaign()`, `check()` and the scoring code are unchanged
 * that the workflow is not a required context.
 
 It also exercises the CLI entry points and `scoring_history_flags` without a Rust toolchain. With an importable
-extension it runs the real-extension smoke. It never skips (governance.md rule 9).
+extension it runs the real-extension smoke. It never skips (Governance.md rule 9).
 
 ## Open points
 
-* **Edits outside this lane's file list (review finding RUSTCI-2), made to keep governance.md rule 9 green; integrator
+* **Edits outside this lane's file list (review finding RUSTCI-2), made to keep Governance.md rule 9 green; integrator
   decision.** `tests/test_ci_required_contexts.py::test_no_other_workflows_unaccounted_for` pinned the workflow set to
   `["ci.yml", "julia-smoke.yml"]`, and `docs/ci/BRANCH_PROTECTION.md` said "No other workflow exists today". Each got a
   one-line or one-bullet change that accounts for `rust-parity.yml` as optional and not required, citing S10.4. No

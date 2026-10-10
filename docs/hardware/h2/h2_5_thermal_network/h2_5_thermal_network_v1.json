@@ -65,7 +65,7 @@
   "TRL": "schemas/ledgers/thermal_rejection_ledger_v1.json (DRAFT schema)",
   "CATH": "docs/architecture_comparison/cathode_integration/cathode_integration_data_v1.json",
   "FT": "docs/architecture_comparison/failure_tree/failure_trees_v1.json (N-THM-01, wall/anode node)",
-  "ECHT": "governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, 100 mm OD; Marchioni 2020 thesis via the repository ECHT audit)",
+  "ECHT": "Governance.md 'Superseded / withdrawn' (true ECHT: 86 mm long, 10 mm wide, 100 mm OD; Marchioni 2020 thesis via the repository ECHT audit)",
   "BOUNDARY": "abep_sim/arch_boundary.py (BOUNDARY_VERSION bus_power_boundary_v1)"
  },
  "external_sources": {
@@ -487,11 +487,11 @@
    "value": 0.086,
    "units": "m",
    "basis": "analog",
-   "source": "REF ECHT (governance.md: true ECHT 86 mm long)",
+   "source": "REF ECHT (Governance.md: true ECHT 86 mm long)",
    "evidence_class": "inferred",
    "status": "PENDING docs/hardware/h2/h2_1_hall_chamber_magnet/",
    "scope": "FLIGHT_REPRESENTATIVE",
-   "note": "published analog geometry (Marchioni 2020 thesis via the repository ECHT audit and governance.md), evidence class 'inferred' (read from a published device description, not measured by this project); not a Vyovrinda value"
+   "note": "published analog geometry (Marchioni 2020 thesis via the repository ECHT audit and Governance.md), evidence class 'inferred' (read from a published device description, not measured by this project); not a Vyovrinda value"
   },
   {
    "id": "H25-13",

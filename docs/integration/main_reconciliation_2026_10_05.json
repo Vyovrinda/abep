@@ -11,7 +11,7 @@
   "eef8b851fdf99d023eaea57951deddc5fca55778 Checkpoint 4: A9.3 P1 ICP bench, P2 impedance prep, RFQ v2 (A9.3/A9.4 applied) (#34)",
   "20f14d8fb71b8e47f018dbb5b1e404462f9dd469 Checkpoint 3: A9 Hall \u2192 downstream RF-ICP neutralizer investigation (#33)",
   "7caaf1301d004bf4e32d35607ed7f0b8b09606c0 Checkpoint 2: H2 hardware wave + owner decision pack / A9 records (#32)",
-  "15981ae1b31aa00e48fe1745a07e8a3784608320 A7 integration checkpoint: merge governance/nifty-ramanujan-w68f9z into main (#31)"
+  "15981ae1b31aa00e48fe1745a07e8a3784608320 A7 integration checkpoint: merge Governance/nifty-ramanujan-w68f9z into main (#31)"
  ],
  "method": "git merge (no strategy option) of origin/main into the development base; every conflicted path checked: main's blob was searched in the full development-line history of that path; all 53 main blobs are earlier development-line states (main's checkpoints #31-#36 are squash merges of earlier development states), so the development side is the later governed implementation for each; every non-conflicted path of the merge result equals the development base (no older content re-introduced). Main's six commits are preserved as merge parents (history kept, nothing discarded).",
  "conflicts": [

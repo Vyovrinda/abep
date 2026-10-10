@@ -338,7 +338,7 @@
    "key": "EVID",
    "path": "docs/EVIDENCE.md",
    "sha256": "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-   "what": "evidence rules (governance.md rule 10)"
+   "what": "evidence rules (Governance.md rule 10)"
   }
  ],
  "never_pinned": [
@@ -2095,7 +2095,7 @@
     "name": "analysis frozen before data",
     "value": "reducer version, calibration-set ids and the rules above are frozen (sha256) before the first HOT_MAP record; no re-analysis choice after seeing data",
     "units": "-",
-    "basis": "governance.md rule 10 (no tuning to force agreement)",
+    "basis": "Governance.md rule 10 (no tuning to force agreement)",
     "source": [
      "docs/EVIDENCE.md"
     ],
@@ -4025,7 +4025,7 @@
    "name": "analysis frozen before data",
    "value": "reducer version, calibration-set ids and the rules above are frozen (sha256) before the first HOT_MAP record; no re-analysis choice after seeing data",
    "units": "-",
-   "basis": "governance.md rule 10 (no tuning to force agreement)",
+   "basis": "Governance.md rule 10 (no tuning to force agreement)",
    "source": [
     "docs/EVIDENCE.md"
    ],

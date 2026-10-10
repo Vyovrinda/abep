@@ -145,7 +145,7 @@
    ],
    "evidence_at_technical_source": [
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "locator": "section 'Gate status' (gate 3)"
     },
     {
@@ -986,7 +986,7 @@
      "locator": "#/rows[id=RVM-24]"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "locator": "section 'Gate status' (gate 3)"
     },
     {

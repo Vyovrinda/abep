@@ -12,7 +12,7 @@ initial_basis provenance, never copied from or read from the engineering constra
 scenario version). The wet-mass limit and the altitude band are engineering / assessment / domain constraints and are not
 operating inputs (the frozen design-state set is the physics environment). Read through
 abep_sim.configuration.load_operating_inputs (sha256-checked against config/MANIFEST.json and OPERATING_SCENARIO_PIN;
-fails closed, no fallback, governance.md rule 3). This module never opens the requirements snapshot (config/requirements/)
+fails closed, no fallback, Governance.md rule 3). This module never opens the requirements snapshot (config/requirements/)
 or anything under docs/requirements/; nothing here is an RFP parser: these are plain numbers with a provenance string.
 The values are identical to the pre-re-point values (tests/test_a9_22_operating_inputs.py pins them).
 """

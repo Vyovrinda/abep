@@ -45,7 +45,7 @@ A9.19 / A9.20 layer (owner decisions 2026-10-01; verbatim .md governs; A9.19 ame
   * the owner-defined 2 / 5 / 10 kg LOADED cases are kept as recorded; a recorder OBSERVATION (not a selection) notes
     that with a contingency-only role the 2 kg loaded case is the natural sizing case.
 
-Every total with a TBD input stays REFUSED (governance.md rule 3); no number is invented; no PASS of anything.
+Every total with a TBD input stays REFUSED (Governance.md rule 3); no number is invented; no PASS of anything.
 
     python docs/budgets/xe_accounting_a9_v3/build_xe_accounting_a9_v3.py          # (re)write JSON and Markdown
     python docs/budgets/xe_accounting_a9_v3/build_xe_accounting_a9_v3.py --check  # exit 1 unless reproduced byte for byte

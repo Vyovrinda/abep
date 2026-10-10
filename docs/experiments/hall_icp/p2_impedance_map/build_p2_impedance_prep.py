@@ -9,7 +9,7 @@ Deterministic, standard library only, no Julia, well under a second.
 What it does
   * verifies the sha256 of every pinned immutable input (owner decisions A4..A7, A9, the 147 answers + verbatim pack,
     A9.1, A9.2, A9.3 + their verbatim records, and the verified A9 deliverables it reads) and refuses to run on any
-    mismatch (no fallback, governance.md rule 3);
+    mismatch (no fallback, Governance.md rule 3);
   * cross-checks every id it cites (UB-RF-xx, ICP-xx, A9H-xx, RFQ-04-Rxx, VI-RF-xx, TK-xx, RF-matrix entries, M16 v3
     rows, owner-question ids, owner rows) against the pinned inputs and copies analog values from them (never typed);
   * writes p2_impedance_prep_v1.json (the package), P2_IMPEDANCE_PREP.md (generated from the JSON) and
@@ -168,7 +168,7 @@ DELIVERABLES = {
             "de346f86f77ae08c2e0cc4a5b945c21c9626bc5ad0f32f904acd4a929a08f980",
             "A9-02 bus power boundary, v2 (A9.22 G8 stage 2: hall_icp_neutralizer only)"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (governance.md rule 10)"),
+             "evidence rules (Governance.md rule 10)"),
 }
 NEVER_PINNED = ["docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
                 "docs/orchestration/fired_triggers.jsonl", "docs/orchestration/trigger_ledger_v2.jsonl",
@@ -1143,7 +1143,7 @@ def build():
              "NOW"),
         item("HM-R12", "analysis frozen before data", "reducer version, calibration-set ids and the rules above are "
              "frozen (sha256) before the first HOT_MAP record; no re-analysis choice after seeing data", "-",
-             "governance.md rule 10 (no tuning to force agreement)", ["docs/EVIDENCE.md"], "assumed", "PROPOSED", "LOCK-1"),
+             "Governance.md rule 10 (no tuning to force agreement)", ["docs/EVIDENCE.md"], "assumed", "PROPOSED", "LOCK-1"),
         item("HM-R13", "RF-on prerequisites for every powered step (S-05, S-07, S-08, S-09, S-11)",
              "(i) before any RF power into a non-50-ohm load (antenna simulator, cold antenna, ICP) the local match is "
              "pre-tuned at low level with the VNA into that load and the tuning state logged (CAL-P2-03), so the "

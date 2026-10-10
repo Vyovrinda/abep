@@ -58,7 +58,7 @@ pub fn components(c: &Command) -> &'static [Component] {
     }
 }
 
-/// The two flight supply modes (governance.md: AIR_PRIMARY and XE_CONTINGENCY).
+/// The two flight supply modes (Governance.md: AIR_PRIMARY and XE_CONTINGENCY).
 pub const ICP_SUPPLY_MODES: [&str; 2] = ["AIR_PRIMARY", "XE_CONTINGENCY"];
 
 /// Pipeline S-6: inputs outside their registered vocabularies. `Ok(Err(msg))` is UNREGISTERED_INPUT; `Err` is a

@@ -163,7 +163,7 @@
   "EVID": {
    "path": "docs/EVIDENCE.md",
    "sha256": "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-   "role": "evidence rules (governance.md rule 10)"
+   "role": "evidence rules (Governance.md rule 10)"
   },
   "H2A9": {
    "path": "docs/hardware/h2_a9_revisions/h2_a9_revisions_v1.json",
@@ -8381,7 +8381,7 @@
   {
    "path": "docs/EVIDENCE.md",
    "sha256": "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-   "use": "evidence rules (governance.md rule 10)"
+   "use": "evidence rules (Governance.md rule 10)"
   },
   {
    "path": "docs/hardware/h2_a9_revisions/h2_a9_revisions_v1.json",

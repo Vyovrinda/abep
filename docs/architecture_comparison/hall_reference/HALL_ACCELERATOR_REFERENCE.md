@@ -6,7 +6,7 @@ pre-ionization method upstream of the Hall inlet plane `HALL_INLET_Z0`. This des
 
 **What this is not.** It contains no Hall performance prediction, no P5 or ECHT geometry or B(z) adopted as a design value,
 no transport admission, and no architecture ranking, preference or elimination. The credible transport set is empty
-(governance.md gate 3 FAIL), so every quantity that would need an admitted closure or hardware is **TBD**. Items that are not in
+(Governance.md gate 3 FAIL), so every quantity that would need an admitted closure or hardware is **TBD**. Items that are not in
 the RFP and not decided are marked **PROPOSED** for the owner.
 
 | file | role |
@@ -20,7 +20,7 @@ The reference is pure data. Nothing imports it, it is not wired into `abep_sim/a
 Other lanes' contracts (bus-power boundary, comparison harness, thermal/life, evidence matrices, experiment protocol,
 upstream ICD, Hall-map spec) are referenced by repository path only. Neither the reference nor its test needs them to exist.
 
-Code baseline: `c53b75a`. It differs from `daa0e75` only in governance.md and docs/HISTORY.md text, so the code read for
+Code baseline: `c53b75a`. It differs from `daa0e75` only in Governance.md and docs/HISTORY.md text, so the code read for
 this document is the same at both commits.
 
 ## 1. Milestones
@@ -236,7 +236,7 @@ Notes on the span-defining points and the exclusions:
   which overlaps the proposed range and extends above its 305 V end. With light propellants its I_d(V_d) plateau sits 50–100 V above xenon's (EV-V1), so
   the sub-200 V part of the sweep includes pre-plateau operation. That supports the lower end but does not define it.
 - **MCFT-2139.** A cusped-field thruster is a different device family from the annular Hall channel defined here (lane
-  brief; governance.md rule 8). It was considered because 13.3 mN at 997 W discharge power (1000 V, N₂) is inside the RFP
+  brief; Governance.md rule 8). It was considered because 13.3 mN at 997 W discharge power (1000 V, N₂) is inside the RFP
   12–25 mN band and under the 1.5 kW ceiling (discharge power only). It is not the only such light-propellant point in the
   review: PPS1350-TSD on N₂ at 305 V gave 19–21 mN at about 1 kW (p. 23). Whether Vyovrinda's channel should also be
   evaluated above the proposed 305 V end is part of Q1.
@@ -444,7 +444,7 @@ condition of the 1-D solver would need. An optional tabulated axial velocity dis
 **Conservation rules:**
 
 - **CR-1:** Element mass through the plane = the delivered anode flow minus reported losses. It must close exactly
-  (governance.md rule 4).
+  (Governance.md rule 4).
 - **CR-2:** Injected charge appears in the circuit accounting.
 - **CR-3:** The energy invested in ionization, dissociation, excitation and heating is paid by `rf_source`/`ecr_source`
   power, and the ledger residual stays < 2 %.
@@ -541,7 +541,7 @@ The test checks that every geometry, B(z), voltage and cathode field is covered 
   closures are never performance sources.
 - **Chemistry:** TBD. It needs an owner decision: `abep-n2n-0.11` is `COMPLETE_FOR_P5_N2_VALIDATION` over T_e 2–30 eV only,
   and O/O₂ chemistry does not exist. A rate-table validity limit is never extended merely because a design run reaches a
-  higher T_e; an extension needs independent published evidence and a new pre-registration (governance.md, owner decision
+  higher T_e; an extension needs independent published evidence and a new pre-registration (Governance.md, owner decision
   2026-09-26). A design run outside the declared domain is not `chemistry_trustworthy` in any arm.
 - **Solver:** HallThruster.jl v0.23.1, commit `bfb3019fc74ceaa2c70c9d3b19236a83a44ee3b5` (`PINNED.toml`). Design runs use
   `facility_ingestion = false`.
@@ -615,7 +615,7 @@ Its identity with the pinned commit: verify.
 - `hallthruster_bridge/PINNED.toml`
 - `hallthruster_bridge/ensemble/transport_ensemble_v0.json`
 - `abep_sim/constants.py`
-- `governance.md`
+- `Governance.md`
 - `hallthruster_bridge/cases/p5_n2.json`
 - `hallthruster_bridge/identification/echt_n2/README.md`
 - `hallthruster_bridge/identification/echt_n2/echt_table_checks_v1.json` (ECHT per-run V_d, I_d and thrust for the

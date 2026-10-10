@@ -19,7 +19,7 @@ What it does
                       ZERO (not present) in every primary scenario;
   * books the row-43 reserve and the row-45 residual EXACTLY ONCE per flight evaluation (the booking function refuses an
     input that already contains a reserve or residual line), carrying both readings of the OPEN XA9Q-03 reserve base;
-  * refuses every total with a TBD input (no hidden defaults, governance.md rule 3) and reports floors on closed terms only;
+  * refuses every total with a TBD input (no hidden defaults, Governance.md rule 3) and reports floors on closed terms only;
   * evaluates the row-48 2 / 5 / 10 kg design cases under BOTH OPEN case-content readings (LOADED, XA9Q-01; USABLE with the
     residual on top, MQ-09; OQ-A910-01), with the 323.15 K tank volume from the A9-08 NIST snapshot, and shows that the
     LOADED reading reproduces the verified A9-08 tables exactly;

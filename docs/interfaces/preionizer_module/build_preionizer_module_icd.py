@@ -8,7 +8,7 @@ Writes
 Every numeric value in the ICD is COPIED from a merged, verified repository deliverable, addressed by an RFC 6901 JSON
 pointer into that file, with the file's sha256 at build time. This script computes no physics and invents no number:
 a value that no deliverable supplies is written as ``null`` with "TBD - requires <what>" and the S1a/S1/procurement
-step that closes it. Missing inputs raise (governance.md rule 3: no silent fallback).
+step that closes it. Missing inputs raise (Governance.md rule 3: no silent fallback).
 
 Usage
   python docs/interfaces/preionizer_module/build_preionizer_module_icd.py          # write both files

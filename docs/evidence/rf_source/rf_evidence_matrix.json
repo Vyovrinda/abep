@@ -90,7 +90,7 @@
       },
       "applicability_to_abep": {
         "regime_match": "partial",
-        "notes": "Upper end exceeds the RFP whole-system power envelope (< 1.5 kW, governance.md); ABEP-relevant RF-stage power is TBD on the common bus-power boundary."
+        "notes": "Upper end exceeds the RFP whole-system power envelope (< 1.5 kW, Governance.md); ABEP-relevant RF-stage power is TBD on the common bus-power boundary."
       }
     },
     {

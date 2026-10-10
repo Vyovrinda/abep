@@ -38,7 +38,7 @@ POINTS = ["N1", "N2", "N3", "N4", "N5"]
 THRUST_POINTS = ["N1", "N2", "N3"]
 READINGS = ("A", "B")
 
-# Factor labels of the four primary combinations (governance.md, abep-n2n-0.4 / 0.8): DI upper = n2_n.toml nominal table,
+# Factor labels of the four primary combinations (Governance.md, abep-n2n-0.4 / 0.8): DI upper = n2_n.toml nominal table,
 # DI lower = n2_n_di_lower variant; N elastic OPM = Ragimkhanov 2026 nominal, Wang = Wang et al. 2014 BSR variant.
 FACTORS = {"n2_n.toml": ("DI-upper", "Nel-OPM"), "n2_n_di_lower.toml": ("DI-lower", "Nel-OPM"),
            "n2_n_nel_wang.toml": ("DI-upper", "Nel-Wang"), "n2_n_di_lower_nel_wang.toml": ("DI-lower", "Nel-Wang")}
@@ -707,7 +707,7 @@ def render_md(res):
           + ("Its effect survives the DI and N-elastic choices as a run-level (tail) and domain-boundary effect on every "
              "combination, with a small, sign-consistent median I_d increase; its effect on individual verdicts depends on the "
              "baseline. " if tail_mode else "")
-          + "This is of the same standing as the recorded Su/Johnson overlap disagreement (governance.md abep-n2n-0.9); it is not "
+          + "This is of the same standing as the recorded Su/Johnson overlap disagreement (Governance.md abep-n2n-0.9); it is not "
           "evidence that either source is correct.",
           "- **OOD interplay.** Johnson-low leaves the 45 eV domain and every validity limit unchanged; it moves individual runs "
           "across the OUT_OF_DOMAIN boundary in both directions (section 3). Such moves change which runs are scoreable, which is "

@@ -124,7 +124,7 @@ def text_facts(F: dict) -> dict:
     return T
 
 
-BRANCH = "governance/nifty-ramanujan-w68f9z"
+BRANCH = "Governance/nifty-ramanujan-w68f9z"
 
 
 def source_findings(F: dict) -> list[str]:

@@ -543,7 +543,7 @@ def stage_orbit_verification(inp: dict, basis: dict) -> list:
 
 
 def stage_convergence(inp: dict, tr: dict) -> list:
-    """Numerical convergence (governance.md gate 5 style): the first CONVERGENCE_CAP simulated rows re-run at
+    """Numerical convergence (Governance.md gate 5 style): the first CONVERGENCE_CAP simulated rows re-run at
     RTOL_REFERENCE; status and objective differences reported."""
     by = {(r.candidate, r.scenario, r.state): r for r in inp["recs"]}
     plants = {p.design_id: p for p in inp["plants"]}
@@ -914,7 +914,7 @@ def open_owner_questions() -> list:
          "requirement?", "proposed_answer": "none proposed", "needed_by": "F7 / F9",
          "owner_answer_applied": u13.flow_gap_record()},
         {"id": "OQ-F4-05", "question": "Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an "
-         "amplitude basis or authorize an orbit-resolved frozen dataset (governance.md rule 1 rebuild)?",
+         "amplitude basis or authorize an orbit-resolved frozen dataset (Governance.md rule 1 rebuild)?",
          "proposed_answer": "none proposed", "needed_by": "next F4 revision",
          "owner_answer_applied": {"authority": "A9.13 S6.14 / OQ-F4-05 (ORBIT_RESOLVED_DATASET_AUTHORISED); A9.14 S9.8 "
                                                "OD3",

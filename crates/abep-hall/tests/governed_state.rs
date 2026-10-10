@@ -1,4 +1,4 @@
-//! Governed Hall state on the real repository (A9.29 sec. 9, governance.md rule 9: asserted explicitly, never skipped):
+//! Governed Hall state on the real repository (A9.29 sec. 9, Governance.md rule 9: asserted explicitly, never skipped):
 //! the credible transport set is EMPTY, the nine screening candidates are never admitted, and every output needing
 //! Hall performance is NOT_EVALUATED with the reason "credible Hall transport set EMPTY". Plus the schema / record-key
 //! consistency checks of the contract's schema_parity section.

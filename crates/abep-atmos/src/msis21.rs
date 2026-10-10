@@ -1,7 +1,7 @@
 //! Frozen orbit-averaged NRLMSIS 2.1 atmosphere (`abep_sim/atmosphere.py`, contract PARITY-C-ABEP_SIM_ATMOSPHERE_PY-V1).
 //!
 //! Only the frozen-scenario path exists (orbit average over lat -60..60 x 4 LST sectors, ap 15, epoch
-//! 2028-03-21T12:00): no live NRLMSIS, no built-in table, no environment switch (A9.29 sec. 6, RM-OQ-02; governance.md
+//! 2028-03-21T12:00): no live NRLMSIS, no built-in table, no environment switch (A9.29 sec. 6, RM-OQ-02; Governance.md
 //! rule 3). Density is interpolated log-linearly in altitude and F10.7, fractions and temperature linearly.
 
 use crate::pyfloat::{np_interp, searchsorted_left};

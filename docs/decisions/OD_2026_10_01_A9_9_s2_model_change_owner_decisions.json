@@ -46,7 +46,7 @@
   }
  },
  "model_change_authorization": {
-  "governance_md_rules": "rule 1 (frozen data rebuild: intake_surface v2, v1 retained) and rule 2 (goldens move -> justify, regenerate, log) are satisfied by this owner authorization plus the required HISTORY entries",
+  "Governance_md_rules": "rule 1 (frozen data rebuild: intake_surface v2, v1 retained) and rule 2 (goldens move -> justify, regenerate, log) are satisfied by this owner authorization plus the required HISTORY entries",
   "sequence": [
    "S2.4 G-03..G-05 flags (no intended numerical change)",
    "S2.5 MCC-05/06/07 input validation",

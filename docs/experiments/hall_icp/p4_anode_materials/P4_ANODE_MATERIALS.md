@@ -485,7 +485,7 @@ Refused: Hastelloy (generic, no exact grade) (NOT_ADMITTED_EXACT_GRADE_REQUIRED)
 | docs/decisions/OD_2026_09_30_A9_6_IMPLEMENTATION_FIRST_DIRECTIVE.md | c6ee26e57ea5ca559f4fa4e4a8809b1aa8f3a217e50c534b943fc3ad99240634 | owner directive A9.6 (verbatim) |
 | docs/decisions/OD_2026_09_29_owner_answers_147.json | 50e39a4deac7d4ada4710b2f641d717f1c4febd59366cbc04d8c66de6b4532b1 | 147 owner answers (machine-readable) |
 | docs/experiments/lifetime_ao/ao_lifetime_register_v5.json | fea8aa05bd561d5ea559b934803d472f1fb1ed1013bfa925a5afb6c68a33e637 | AO / lifetime register v5 |
-| docs/EVIDENCE.md | a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61 | evidence rules (governance.md rule 10) |
+| docs/EVIDENCE.md | a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61 | evidence rules (Governance.md rule 10) |
 | docs/hardware/h2_a9_revisions/h2_a9_revisions_v1.json | b428565299c1c41487d9ffa50c174986d2d52c544539f89ca21b7bdbc2ae44fa | H2 A9 revisions (A9H-ANODE-01/02) |
 | docs/interfaces/icp_neutralizer/ICP_NEUTRALIZER_ICD.md | d346bcc5a5edc4a4dfa289010c8e48371477a0f3548a5e9dcf8886b6f55dbe77 | ICP neutralizer ICD (ICP-21) |
 | docs/evidence/icp_neutralizer/icp_neutralizer_evidence_v1.json | 092e4ca8e1827dd2e9558058a204f46510f2633316ce188e7126b697ec6d0b53 | ICP neutralizer analog evidence |

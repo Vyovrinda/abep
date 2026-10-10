@@ -674,7 +674,7 @@
   {
    "id": "MODEL_ERROR_NON_FINITE_OR_EXCEPTION",
    "rule": "finite state, no exception, mirror reproduces _run_once p_out to 1e-12",
-   "basis": "no silent fallback (governance.md rule 3)"
+   "basis": "no silent fallback (Governance.md rule 3)"
   },
   {
    "id": "SELF_CONSISTENT_RUN_NOT_CONVERGED",

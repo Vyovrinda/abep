@@ -168,7 +168,7 @@
    ],
    "locator": "abep_sim/constants.py RFPConstraints.alt_min_km / alt_max_km"
   },
-  "propellants": "air + Xe, Hall preferred (governance.md 'What this is'; abep_sim/constants.py RFPConstraints.hall_preferred)"
+  "propellants": "air + Xe, Hall preferred (Governance.md 'What this is'; abep_sim/constants.py RFPConstraints.hall_preferred)"
  },
  "absolute_thrust_gate": {
   "statement": "Owner decision od_hardware_pivot: absolute thrust feasibility on the actual delivered feed within P_bus < 1.5 kW: T_measured, sustained >= 12 mN, and the registered 25 mN capability condition. P_bus is the bus_power_boundary_v1 sum (abep_sim/arch_boundary.py bus_power_ledger), never Hall discharge-only power.",
@@ -1001,7 +1001,7 @@
    "identical_across_arms": true,
    "traces_to": [
     "lane 25 M2, M11",
-    "governance.md next work 1",
+    "Governance.md next work 1",
     "MCQ-W4-02"
    ]
   },
@@ -2720,7 +2720,7 @@
     "rule": "AOL-WC-05 (attribution of arm-specific deposits); HWQ-16"
    }
   ],
-  "never_a_hardware_variable": "P5 calibration nuisance (registration, coil shape, beam-efficiency reading, facility-ingestion interpretation) is never a design variable, setting or grid axis (lane 17 INV-U1; governance.md next work 1)."
+  "never_a_hardware_variable": "P5 calibration nuisance (registration, coil shape, beam-efficiency reading, facility-ingestion interpretation) is never a design variable, setting or grid axis (lane 17 INV-U1; Governance.md next work 1)."
  },
  "verification_per_configuration_change": [
   "serial numbers and part log of H-1, C-1, MC-1, FS-C (HW-H1-02, HW-C1-01)",

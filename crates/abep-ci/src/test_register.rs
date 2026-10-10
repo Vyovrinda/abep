@@ -1,4 +1,4 @@
-//! Rust-era test rule (A9.29 sec. 9, RM-OQ-05; CI_PLAN.md § 7; governance.md rule 9): no `#[ignore]` (plain or through
+//! Rust-era test rule (A9.29 sec. 9, RM-OQ-05; CI_PLAN.md § 7; Governance.md rule 9): no `#[ignore]` (plain or through
 //! `cfg_attr`) in workspace crates, except tests of the registered platform / hardware class, marked
 //! `#[ignore = "REGISTERED_PLATFORM_TEST:<id>"]` and listed in the register. Every register entry must match a test
 //! that still exists, so a registered test never leaves the inventory silently.

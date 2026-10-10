@@ -1542,7 +1542,7 @@
   {
    "id": "DR-22",
    "rule": "no performance prediction from any Hall-transport closure (none admitted), the superseded 0-D Hall model or the withdrawn v1.2-v1.6 numbers; published analogs only with page / figure / table provenance and evidence class",
-   "source": "governance.md gate 3 and superseded list; A9 evidence_anchor"
+   "source": "Governance.md gate 3 and superseded list; A9 evidence_anchor"
   },
   {
    "id": "DR-23",

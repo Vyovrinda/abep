@@ -1,4 +1,4 @@
-//! Run-record sidecar: the provenance every Rust-produced result carries (programme_v3_1 RM-R03 / RM-R10; governance.md
+//! Run-record sidecar: the provenance every Rust-produced result carries (programme_v3_1 RM-R03 / RM-R10; Governance.md
 //! "future campaigns record thread/BLAS environment, Julia version and HallThruster commit per run").
 //!
 //! Every hash is verified while it is captured: the model set and the architecture against `config/MANIFEST.json`, the

@@ -134,7 +134,7 @@ pub fn compute_ao_environment(root: &Path, csv_sha256: &str, altitudes: &[Altitu
     if sha != csv_sha256 {
         return Err(runtime(format!(
             "{ATMOSPHERE_CSV_REL} sha256 {sha} != pinned {csv_sha256}; the frozen atmosphere changed. Re-pin only \
-             after an intentional, logged rebuild (governance.md rule 1)."
+             after an intentional, logged rebuild (Governance.md rule 1)."
         )));
     }
     let pins = abep_data::pins::FrozenPins::load(root).map_err(|e| runtime(e.to_string()))?;

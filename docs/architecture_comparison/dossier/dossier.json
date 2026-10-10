@@ -10,7 +10,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -995,7 +995,7 @@
     "B": {
      "failure_tree_to_reach_B": [
       "Every node with resolve_by_milestone = 'B' in the selected architecture's tree moved to resolved_pass (none may be resolved_fail on a hard gate).",
-      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
+      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; Governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
       "Common-boundary performance from the bus-power boundary (abep_sim/arch_boundary.py) and the comparison harness (abep_sim/arch_compare.py) for the same feed state and bus power.",
       "Evidence for architecture-specific physics (E-H transition, ECR cutoff and field interaction, interstage transmission) at the Vyovrinda design point, not only at literature devices."
      ],
@@ -2061,7 +2061,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -2976,7 +2976,7 @@
     "B": {
      "failure_tree_to_reach_B": [
       "Every node with resolve_by_milestone = 'B' in the selected architecture's tree moved to resolved_pass (none may be resolved_fail on a hard gate).",
-      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
+      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; Governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
       "Common-boundary performance from the bus-power boundary (abep_sim/arch_boundary.py) and the comparison harness (abep_sim/arch_compare.py) for the same feed state and bus power.",
       "Evidence for architecture-specific physics (E-H transition, ECR cutoff and field interaction, interstage transmission) at the Vyovrinda design point, not only at literature devices."
      ],
@@ -3870,7 +3870,7 @@
      {
       "action": "A-HALLMAP",
       "blocked_by": [
-       "credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
+       "credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE)",
        "O4 dispositions incomplete (admission gated, hall_ensemble._check_o4)"
       ],
       "nodes_touched": [
@@ -4857,7 +4857,7 @@
     "B": {
      "failure_tree_to_reach_B": [
       "Every node with resolve_by_milestone = 'B' in the selected architecture's tree moved to resolved_pass (none may be resolved_fail on a hard gate).",
-      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
+      "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; Governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
       "Common-boundary performance from the bus-power boundary (abep_sim/arch_boundary.py) and the comparison harness (abep_sim/arch_compare.py) for the same feed state and bus power.",
       "Evidence for architecture-specific physics (E-H transition, ECR cutoff and field interaction, interstage transmission) at the Vyovrinda design point, not only at literature devices."
      ],
@@ -5861,7 +5861,7 @@
   "status": "DRAFT for owner review (2026-09-26). Evidence map and decision structure only: nothing here is a performance prediction, a validation claim or a selection.",
   "to_reach_B": [
    "Every node with resolve_by_milestone = 'B' in the selected architecture's tree moved to resolved_pass (none may be resolved_fail on a hard gate).",
-   "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
+   "Nodes flagged analysis_requires_admitted_hall_closure resolved either by measurement or by analysis on design Hall maps from ADMITTED closures (credible set non-empty, O4 dispositions complete; Governance.md Next work 1 and 3). Today the credible set is empty, so these nodes can only be resolved by measurement.",
    "Common-boundary performance from the bus-power boundary (abep_sim/arch_boundary.py) and the comparison harness (abep_sim/arch_compare.py) for the same feed state and bus power.",
    "Evidence for architecture-specific physics (E-H transition, ECR cutoff and field interaction, interstage transmission) at the Vyovrinda design point, not only at literature devices."
   ],
@@ -6403,9 +6403,9 @@
   },
   {
    "files": [
-    "governance.md"
+    "Governance.md"
    ],
-   "key": "governance_md",
+   "key": "Governance_md",
    "lane": "project instructions",
    "merge_commits": {},
    "missing_files": [],
@@ -6462,7 +6462,7 @@
  "physics_track": {
   "admitted_members": [],
   "admitted_members_source": "abep_sim.hall_ensemble.member_ids() (hallthruster_bridge/ensemble/transport_ensemble_v0.json)",
-  "governance_md_gate_status": [
+  "Governance_md_gate_status": [
    {
     "gate": 1,
     "name": "clean-install reproducibility",
@@ -6573,7 +6573,7 @@
   },
   "git_commit": "ce639f1fc9edcf2366c1f1bf04397709e1da1a13",
   "input_files_sha256": {
-   "governance.md": "c70b83d43608e2b953b790ee61e44380484eb2a02f69bda3a203ea6996920436",
+   "Governance.md": "c70b83d43608e2b953b790ee61e44380484eb2a02f69bda3a203ea6996920436",
    "abep_sim/arch_boundary.py": "8dfc309a5d2c717913fd4961bc660f8bab92ed2c59356f5a78bff3ef4392eeae",
    "abep_sim/arch_compare.py": "f3946249fe7840781211d906a5c8dccedcffab7f4f14df214b35517049db655e",
    "abep_sim/hall_ensemble.py": "218f890c8444af1f593396da5051e38d2d093bbb3cb0bc976cc44b01b67df704",

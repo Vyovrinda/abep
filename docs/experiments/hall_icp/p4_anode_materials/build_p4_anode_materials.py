@@ -5,7 +5,7 @@ owner directive A9.6 sec. 10; owner A9.2 sec. 3-4; owner rows 86, 87, 106, 132, 
 Deterministic, standard library only, no Julia, no network, well under a second.
 
 What it does
-  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (no fallback, governance.md
+  * verifies the sha256 of every pinned immutable input and refuses to run on any mismatch (no fallback, Governance.md
     rule 3);
   * copies owner-answer texts, A9.2 / A9.6 fixed statuses, R8 evidence rows and source entries, Takahashi analog rows
     (TK-xx), AO-register ids, M16 v3 rows and the H2 A9 anode sensitivity number FROM the pinned inputs (never typed)
@@ -119,7 +119,7 @@ PINS = {
     "M16V3": ("docs/experiments/hall_icp/integration/m16_v3/subsystem_maturity_v3.json",
               "636cbd3318831f6f56e9833813c4d8c259aef7db3de1c6e503cccce14dade7e2", "M16 subsystem maturity v3"),
     "EVID": ("docs/EVIDENCE.md", "a2950352141890c12ad33e66766cd003215c807cb29203d21df090349ab90b61",
-             "evidence rules (governance.md rule 10)"),
+             "evidence rules (Governance.md rule 10)"),
 }
 PINS.update(APP.decision_pins())  # A9.16 step 1: A9.12, A9.13, A9.15 (json + verbatim md)
 NEVER_PINNED = ("docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",

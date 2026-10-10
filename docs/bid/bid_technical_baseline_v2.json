@@ -10,7 +10,7 @@
   "operational_deadline": "2026-10-05 17:00 (A9.21 BID_CLOSE; DefProc, unless a corrigendum changes it)"
  },
  "bid_technical_source": {
-  "branch": "governance/nifty-ramanujan-w68f9z",
+  "branch": "Governance/nifty-ramanujan-w68f9z",
   "commit": "5eee4b8c82a9403b6bb82d5f8d324526f5d6399b",
   "verification_record": "VERIFIED: technical source 5eee4b8c82a9403b6bb82d5f8d324526f5d6399b (A9.26 mass-policy successor). Local: pytest 4216 passed / 5 skipped / 1 xfailed, Rule-9 (ci_checks --pytest-junit) satisfied, ci_checks 11/11 green, golden OK, config --check OK, affected builders --check OK (mass v2-v5, RVM, F7/F8 full, F9, M16 v5, owner-question state v5, A9.16 matrix, H-1, RFQ3-GAS rev1). GitHub CI run 37263814635 on 5eee4b8: success on all jobs (repository integrity; tests + golden, pymsis present and absent, Rule-9). build_tables_nist107_o.py NOT_RERUN_NETWORK_UNAVAILABLE / UNAFFECTED_BY_FREEZE_CHANGES. No raw-physics change since the verified pre-freeze candidate 4c2b3b3 (owner-accepted); only governed owner-status / mass-accounting changes.",
   "switch_procedure": "edit ONLY the commit line above (and fill verification_record), then run: python docs/bid/package/build_package.py ; python -m pytest -q tests/test_bid_package.py"

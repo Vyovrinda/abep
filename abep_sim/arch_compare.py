@@ -19,7 +19,7 @@ Refusals (a HarnessError is raised; there is never a fallback):
   * zero admitted members — the state on 2026-09-26 (credible set = empty set, gate 3 FAIL);
   * any screening-candidate or unknown member id, a map filed under another member's id, a facility (non-flight) map;
   * a missing ledger module / wrong boundary version / ledger output that breaks the contract;
-  * an energy-ledger residual >= 2 % of the bus power (governance.md rule 4), reported or independently recomputed;
+  * an energy-ledger residual >= 2 % of the bus power (Governance.md rule 4), reported or independently recomputed;
   * any layer-1 calibration-nuisance name used as a Hall-map axis, operating-point key, feed or upstream quantity;
   * a Hall output name used as an upstream/feed quantity (Hall-closure uncertainty must never leak upstream).
 
@@ -56,8 +56,8 @@ LEDGER_MODULE = "abep_sim.arch_boundary"
 LEDGER_FUNCTION = "bus_power_ledger"
 LEDGER_PARAMETERS = ("arch", "loads", "efficiencies")
 LEDGER_KEYS = ("boundary_version", "architecture", "P_bus_W", "items", "residual_W")
-LEDGER_RESIDUAL_MAX_FRAC = 0.02          # governance.md rule 4: architecture energy-ledger residual < 2 %
-MASS_CLOSURE_REL_TOL = 1e-9              # governance.md rule 4: source mass balance closes exactly (float rounding only)
+LEDGER_RESIDUAL_MAX_FRAC = 0.02          # Governance.md rule 4: architecture energy-ledger residual < 2 %
+MASS_CLOSURE_REL_TOL = 1e-9              # Governance.md rule 4: source mass balance closes exactly (float rounding only)
 HALL_MAP_INDEX_SCHEMA = "arch_compare_hall_map_index_v1"
 SPECS_SCHEMA = "arch_compare_specs_v1"
 UPSTREAM_SCHEMA = "arch_compare_upstream_v1"
@@ -98,7 +98,7 @@ class LedgerContractError(HarnessError):
 
 
 class LedgerResidualError(LedgerContractError):
-    """Energy-ledger residual >= 2 % of the bus power (governance.md rule 4)."""
+    """Energy-ledger residual >= 2 % of the bus power (Governance.md rule 4)."""
 
 
 class ScopeViolationError(HarnessError):
@@ -356,7 +356,7 @@ def resolve_ensemble(ensemble: Mapping | None = None) -> tuple[Mapping, dict]:
         e = ensemble
         info = {"origin": "injected", "path": None, "sha256": None}
     if e.get("weighting") != "unweighted":
-        raise HarnessError("the transport ensemble must be an unweighted scenario set (governance.md next-work 1)")
+        raise HarnessError("the transport ensemble must be an unweighted scenario set (Governance.md next-work 1)")
     return e, info
 
 
@@ -485,7 +485,7 @@ def _mass_closure(spec: ArchitectureSpec, upstream: UpstreamState, query: dict) 
     scale = max(abs(supply), abs(consumed))
     if scale <= 0.0 or abs(resid) > MASS_CLOSURE_REL_TOL * scale:
         raise SpecError(f"{spec.arch}: mass closure fails: supply {supply!r} vs Hall axes + other sinks {consumed!r} "
-                        f"(residual {resid!r}; governance.md rule 4)")
+                        f"(residual {resid!r}; Governance.md rule 4)")
     return {"declared": True, "supply": supply, "consumed": consumed, "residual": resid,
             "names": _plain(spec.mass_closure)}
 
@@ -604,7 +604,7 @@ def _run_ledger(fn, arch: str, loads: dict, efficiencies: dict, expected_version
     if not (abs(frac) < LEDGER_RESIDUAL_MAX_FRAC and abs(frac_re) < LEDGER_RESIDUAL_MAX_FRAC):
         raise LedgerResidualError(
             f"{arch} (member {mid!r}): energy-ledger residual {frac:+.3%} reported, {frac_re:+.3%} recomputed from the "
-            f"items; the gate is < {LEDGER_RESIDUAL_MAX_FRAC:.0%} of P_bus (governance.md rule 4)")
+            f"items; the gate is < {LEDGER_RESIDUAL_MAX_FRAC:.0%} of P_bus (Governance.md rule 4)")
     return {"ledger": _plain(out), "P_bus_W": P_bus, "residual_W": resid, "residual_frac": frac,
             "residual_recomputed_W": resid_re, "residual_recomputed_frac": frac_re, "components": sorted(items),
             "residual_gate_frac": LEDGER_RESIDUAL_MAX_FRAC}

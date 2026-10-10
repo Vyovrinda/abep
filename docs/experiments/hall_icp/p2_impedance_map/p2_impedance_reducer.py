@@ -9,7 +9,7 @@ P_delivered = P_forward - P_reflected - P_line/match,loss.  P_forward is never u
 It does not predict anything: no thrust, efficiency, discharge current, electron current, impedance or plasma state is
 computed from a model. Every output is a transformation of a supplied measurement through a supplied calibration.
 Missing calibration, a record without a reference plane, uncalibrated phase and any attempt to label P_forward (or any
-input) as plasma power raise (governance.md rule 3: no silent fallbacks, no hidden defaults).
+input) as plasma power raise (Governance.md rule 3: no silent fallbacks, no hidden defaults).
 A lit plasma state in a non-HOT_MAP phase, a powered-unlit record without gas off and an optical unlit verification
 (ignition -> abort and flag), and a cold reference not taken from a verified-unlit source also raise, so the A9.3
 'P1 stable plasma -> P2 map' gate cannot be bypassed by relabelling the phase.

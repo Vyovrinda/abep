@@ -9,7 +9,7 @@ need later. It records which published sources exist, how they can be accessed, 
 about its own uncertainty.
 
 **What this is not.** It builds no rate table and changes no chemistry, threshold, solver setting or frozen dataset.
-It includes, promotes, excludes and validates nothing. governance.md "Next work" item 4 still gates O/O₂ work: it starts
+It includes, promotes, excludes and validates nothing. Governance.md "Next work" item 4 still gates O/O₂ work: it starts
 only if items 1–3 succeed.
 
 **Rules followed:**
@@ -35,7 +35,7 @@ only if items 1–3 succeed.
      `_K_MUTUAL_NEUTRALIZATION = 1.0e-12 m³/s` and `_K_NEUTRAL_DETACHMENT = 1.0e-12 m³/s` in
      `src/simulation/heavy_species_update.jl`.
    - These apply to any fluid with Z < 0 and carry no citation.
-   - If O⁻ (from dissociative attachment) were ever modelled, they would enter silently. That would breach governance.md
+   - If O⁻ (from dissociative attachment) were ever modelled, they would enter silently. That would breach Governance.md
      rules 3 (no silent fallbacks) and 6 (cite data).
    - Whether this tree is identical to the pinned commit was not checked (verify). No Julia was run.
 3. **O₂ dissociation double-counts dissociative electronic excitation (CC-4).**

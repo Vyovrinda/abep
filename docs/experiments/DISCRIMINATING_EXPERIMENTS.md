@@ -62,7 +62,7 @@ pre-registered run. lane_06_experiment_protocol §17 defers alignment with `docs
 
 | id | hypothesis |
 |---|---|
-| H0 | At matched feed state, V_d and coils, powering an RF or ECR pre-ionizer does **not** raise T/P_bus. This is governance.md's "probably robust" finding that RF/helicon pre-ionisers add nothing, here extended to ECR as a test. |
+| H0 | At matched feed state, V_d and coils, powering an RF or ECR pre-ionizer does **not** raise T/P_bus. This is Governance.md's "probably robust" finding that RF/helicon pre-ionisers add nothing, here extended to ECR as a test. |
 | H1 | Pre-ionization raises η_u enough that T/P_bus rises despite the added bus power. |
 | H2 | Pre-ionization lowers the ignition/sustainment threshold in flow or feed pressure (startup, low density). |
 | H3 | Most upstream ions are lost in the interstage before they reach the Hall channel. |
@@ -194,7 +194,7 @@ All rows are **PROPOSED**.
 ## 7. Measurements that most reduce Hall-transport non-identifiability
 
 These gaps are recorded in `hallthruster_bridge/identification/p5_n2_measurement_audit_findings_v1.json`,
-`identification/echt_n2/`, docs/EVIDENCE.md and governance.md item 1. On our own hardware they can be measured instead of
+`identification/echt_n2/`, docs/EVIDENCE.md and Governance.md item 1. On our own hardware they can be measured instead of
 carried as layer-1 nuisance.
 
 1. **Measured B(z) and coil currents per point**, with the axis tied to the anode and the exit. This removes the
@@ -229,7 +229,7 @@ retuning, and vacuum and facility modes are never crossed.
 - **ECHT-N₂** is not an independent scoreable dataset without forced assumptions.
 - **Not measurements:** P5-N₂ Φ_m,n, η_SP,n and ξ_N are model-derived.
 
-**Probably robust (mechanism level, governance.md):**
+**Probably robust (mechanism level, Governance.md):**
 - grids are life-limited by CEX and the perveance window;
 - magnetic nozzles are excluded by energy per particle;
 - "RF/helicon pre-ionisers add nothing". That last finding is **H0**, and E1 is the experiment that tests it.
@@ -269,7 +269,7 @@ E1 populates these mandatory fields:
 - η_u;
 - stability.
 
-Explicitly not populated by E1 (governance.md admissibility: populated or explicitly unavailable):
+Explicitly not populated by E1 (Governance.md admissibility: populated or explicitly unavailable):
 - **compressor share of P_bus**: ABSENT_IN_LAB, reconstructed from the ICD or UNAVAILABLE;
 - **m**: lab-hardware mass by weighing, flagged as not flight mass;
 - **flight life**: unavailable from E1; at most hours-class erosion witnesses.
@@ -300,7 +300,7 @@ re-checked at `d07249b`):
 
 ## Sources
 
-- Repository only: governance.md; docs/EVIDENCE.md; docs/HISTORY.md (superseded results, cited only as non-claims);
+- Repository only: Governance.md; docs/EVIDENCE.md; docs/HISTORY.md (superseded results, cited only as non-claims);
   `abep_sim/archengine.py`; `abep_sim/plasma_devices.py`;
   `hallthruster_bridge/identification/p5_n2_measurement_audit_findings_v1.json`;
   `hallthruster_bridge/identification/echt_n2/` (README and audit JSON);

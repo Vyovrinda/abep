@@ -125,7 +125,7 @@
    "status": "PROPOSED",
    "rationale": [
     "Same order as I_d: both are time-averaged integral quantities of the same solution.",
-    "At the top of the RFP thrust band (25 mN, requirement as summarised in governance.md; verify against the RFP text) 2 % is 0.5 mN, below the 5.2-5.6 mN absolute thrust tolerances pre-registered for P5-N2 N1-N3 (D3). That comparison is context only: the P5-N2 tolerances belong to a different thruster and thrust scale and do not justify this value, which remains PROPOSED.",
+    "At the top of the RFP thrust band (25 mN, requirement as summarised in Governance.md; verify against the RFP text) 2 % is 0.5 mN, below the 5.2-5.6 mN absolute thrust tolerances pre-registered for P5-N2 N1-N3 (D3). That comparison is context only: the P5-N2 tolerances belong to a different thruster and thrust scale and do not justify this value, which remains PROPOSED.",
     "No in-repo convergence evidence for thrust alone exists yet (the 2026-09-25 entry reports I_d only), so the owner may prefer to tie it to I_d or loosen it."
    ]
   },
@@ -148,7 +148,7 @@
    "rationale": [
     "A channel-averaged Bohm flux (loss_scale * h * sum n sqrt(Z e T_e / m)) evaluated per saved frame (hall_map_schema_v1, bridge_lib.jl wall_ion_metrics). It depends on near-wall density and T_e profiles, which are more grid-sensitive than integral quantities, hence looser than I_d/thrust.",
     "No in-repo convergence evidence for the wall fields exists yet: 5 % is a proposal, not an inherited number.",
-    "Erosion life scales with flux times an energy-dependent sputter yield. The owner should judge 5 % against the life requirement (> 15,000 h firing within a 26,000 h mission, RFP as summarised in governance.md; verify)."
+    "Erosion life scales with flux times an energy-dependent sputter yield. The owner should judge 5 % against the life requirement (> 15,000 h firing within a 26,000 h mission, RFP as summarised in Governance.md; verify)."
    ]
   },
   "wall_ion_energy_eV": {
@@ -165,8 +165,8 @@
  "categorical_invariants": {
   "status": "PROPOSED",
   "rule": "At every checked node, converged, sustained, chemistry_trustworthy, wall_life_trustworthy and the quiet class (Id_rms_rel < 0.5, the bridge's internal diagnostic, not a validation criterion) must be identical in the baseline and every refinement. Any flip fails that node, whatever the continuous deltas are.",
-  "chemistry_detail": "chemistry_trustworthy is compared together with the per-reaction record: every reaction's extrapolated activity share stays <= 1e-12 and no unresolved table is used, in both runs (f_out = 0 is not relaxed; hall_map_schema_v1 / governance.md item 5).",
-  "rationale": "A trust flag or regime that depends on resolution is a numerical artefact, not physics (compare the withdrawn v1.3 Hall hysteresis, governance.md 'Superseded'). Continuous tolerances are meaningless if the node changes regime."
+  "chemistry_detail": "chemistry_trustworthy is compared together with the per-reaction record: every reaction's extrapolated activity share stays <= 1e-12 and no unresolved table is used, in both runs (f_out = 0 is not relaxed; hall_map_schema_v1 / Governance.md item 5).",
+  "rationale": "A trust flag or regime that depends on resolution is a numerical artefact, not physics (compare the withdrawn v1.3 Hall hysteresis, Governance.md 'Superseded'). Continuous tolerances are meaningless if the node changes regime."
  },
  "report_only": {
   "status": "PROPOSED",
@@ -202,6 +202,6 @@
   "hallthruster_bridge/hall_map_schema_v1.json (field definitions; Id_f_dominant_Hz resolution)",
   "HallThruster.jl v0.23.1 installed source: src/simulation/types.jl, simulation.jl, solution.jl, heavy_species_update.jl (identity with the pinned commit: verify)",
   "docs/HISTORY.md 2026-09-25 entries (earlier 400-cell / 4 ms checks; model-derived)",
-  "governance.md (RFP envelope summary; requirement values to verify against the RFP text)"
+  "Governance.md (RFP envelope summary; requirement values to verify against the RFP text)"
  ]
 }

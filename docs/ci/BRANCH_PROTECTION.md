@@ -1,11 +1,11 @@
 # Branch protection for `main`: required CI checks (specification)
 
 **Owner decision 2026-09-27 (YES):** the CI checks of `.github/workflows/ci.yml` are required before anything merges to
-`main`. The settings can only be applied by the repository owner in GitHub *Settings*: the integration used by governance
+`main`. The settings can only be applied by the repository owner in GitHub *Settings*: the integration used by Governance
 cannot read or write the branch-protection or rulesets endpoints. This file is the exact, checkable specification of what
 to apply; `tests/test_ci_required_contexts.py` keeps it in step with the workflow (see *Keeping this file honest*).
 **Mechanism (owner decision 2026-09-27): one GitHub repository ruleset, never classic branch protection, never both**
-(§2, §4, §5). Status: DRAFT specification for the owner to apply; nothing here is applied by governance.
+(§2, §4, §5). Status: DRAFT specification for the owner to apply; nothing here is applied by Governance.
 
 This is repository governance only. It changes no physics, frozen data, goldens, chemistry, pre-registration, campaign
 record or scientific outcome.
@@ -82,7 +82,7 @@ Everything else (signed commits, linear history, merge queue, code owners, conve
 
 * **Scientific outcomes are never branch-protection checks.** O4 staged-sensitivity scores and dispositions, the facility
   campaign, P5-N₂ validation verdicts, admission records, architecture comparison / Bundle results and milestone
-  decisions are evidence governed by pre-registration and the operating model (governance.md rules 2, 10;
+  decisions are evidence governed by pre-registration and the operating model (Governance.md rules 2, 10;
   `docs/orchestration/OPERATING_MODEL.md`). They must never be turned into a pass/fail merge gate, a status, or a check run:
   that would pressure a scientific result to "go green", which is exactly the post-hoc tuning the project forbids.
   What CI gates is the *integrity of the evidence chain* (locks, pins, generated artefacts, admission gate, rule 9,
@@ -97,7 +97,7 @@ Everything else (signed commits, linear history, merge queue, code owners, conve
   `docs/ci/RUST_PARITY.md`.
 * **The Rust workspace workflow is not a required check yet.** `.github/workflows/rust-workspace.yml` (job
   `Rust workspace (fmt, clippy, cargo test, bid guard, test register, groundtest isolation)`, ES-1) runs on every pull
-  request and on pushes to `main` / `integration/simulation-complete`. Under `docs/rust_migration/CI_PLAN.md` v3.1 § 1
+  request and on pushes to `main`, the single authoritative branch since 2026-10-10. Under `docs/rust_migration/CI_PLAN.md` v3.1 § 1
   principle 4 (plan structure approved by the owner, A9.29) the Rust jobs become required status checks only when the
   first non-Kernel-1 component is admitted; that PR updates this file.
 * **The manual H-1 parametric envelope workflow is not a required check.** `.github/workflows/h1-parametric-envelope.yml`
@@ -110,7 +110,7 @@ Everything else (signed commits, linear history, merge queue, code owners, conve
 ## 3. Preconditions (in this order)
 
 1. **The CI workflow must exist on `main`.** Today `ci.yml` lives only on the execution branch
-   `governance/nifty-ramanujan-w68f9z` (`main` is `daa0e75`; governance.md, *Execution baseline*). Merging that branch to `main`
+   `Governance/nifty-ramanujan-w68f9z` (`main` is `daa0e75`; Governance.md, *Execution baseline*). Merging that branch to `main`
    needs **explicit owner approval**; this specification does not grant or imply it.
 2. **CI must have run at least once** so GitHub knows the contexts. The ruleset check picker lists checks that have
    reported in this repository recently, and a context typed by hand that never reports leaves every PR blocked. The

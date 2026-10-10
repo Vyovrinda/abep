@@ -30,7 +30,7 @@
  "supersedes": {
   "file": "atmosphere_msis21_orbit_v1_design_states.json",
   "sha256": "d8bd369bf4aa4ae321ecced094f2c02356be67e2c3f4acbe70264f700b419a40",
-  "relation": "v1 is kept immutable (governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its candidate pool is bounded at |lat| <= reachable_lat_max_deg() (~83.75 deg) of the CODE_DEFAULT SSO family, so it does not cover inclinations between ~83.75 and ~96.25 deg or polar orbits; v2 is the broad-envelope set for new use"
+  "relation": "v1 is kept immutable (Governance.md rule 1; A9.17 WINDS keeps v1 immutable). Its candidate pool is bounded at |lat| <= reachable_lat_max_deg() (~83.75 deg) of the CODE_DEFAULT SSO family, so it does not cover inclinations between ~83.75 and ~96.25 deg or polar orbits; v2 is the broad-envelope set for new use"
  },
  "authority": {
   "A9.14 S9.8 OD3": {

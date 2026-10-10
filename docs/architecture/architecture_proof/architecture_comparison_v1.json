@@ -96,7 +96,7 @@
   "consequence": "No cross-boundary numeric comparison is made. Rows compare mechanisms, architecture definitions and evidence status against the common RFP thresholds; the only numbers carried are quoted from their records with their evidence class."
  },
  "withdrawn_results_rule": {
-  "rule": "No withdrawn absolute result is used as evidence (governance.md 'Superseded / withdrawn'; A9.31 sec. 19).",
+  "rule": "No withdrawn absolute result is used as evidence (Governance.md 'Superseded / withdrawn'; A9.31 sec. 19).",
   "not_used": [
    "0-D Hall closure v1.2-v1.6: ABEP thrust, 2.5 kW closure, 110-120 kg, ECR+Hall P(success) 0.77 vs 0.63",
    "every T, Isp, P_bus, T/D, MEV and life number of the v1.0 / v1.5 cross-family tables",
@@ -1237,7 +1237,7 @@
      "locator": "## v1.6-candidate gate-4 'Interpretation'"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     }
@@ -1557,7 +1557,7 @@
      "locator": "sec. 0"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     }
@@ -1882,7 +1882,7 @@
      "locator": "sec. 0"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     }
@@ -2182,7 +2182,7 @@
      "locator": "## v1.5 - Equal-footing physics for gridded ion and magnetic nozzle (cross-family table, closing paragraph)"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     }
@@ -2317,7 +2317,7 @@
      "locator": "## v1.6-candidate gate-4 'Interpretation'"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     },
@@ -2738,7 +2738,7 @@
      "locator": "## v1.5 - Equal-footing physics for gridded ion and magnetic nozzle (cross-family table, closing paragraph)"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     },
@@ -2813,7 +2813,7 @@
      "locator": "## v1.6-candidate gate-4 'Interpretation'"
     },
     {
-     "path": "governance.md",
+     "path": "Governance.md",
      "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3",
      "locator": "## Superseded / withdrawn: 'Probably robust (mechanism-level ...)'"
     },
@@ -3125,7 +3125,7 @@
  },
  "sources": [
   {
-   "path": "governance.md",
+   "path": "Governance.md",
    "sha256": "38b244197b68830cf4c605bae49eb8c4f6a1f92fd6d7d33c4485a4c988c691d3"
   },
   {
@@ -3281,5 +3281,5 @@
    "sha256": "0a57a397883141be20196853b7d722404dc3cb20c72fba666121fd43507dc97c"
   }
  ],
- "sha256_basis": "sha256 of each cited file at the base commit; docs/HISTORY.md and governance.md are mutable and pinned here at that commit"
+ "sha256_basis": "sha256 of each cited file at the base commit; docs/HISTORY.md and Governance.md are mutable and pinned here at that commit"
 }

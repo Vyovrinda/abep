@@ -329,7 +329,7 @@ def ev(eid: str) -> dict:
 
 
 def need(d: dict, key: str, where: str):
-    """Explicit-input rule (governance.md rule 3): a missing input raises, never a default."""
+    """Explicit-input rule (Governance.md rule 3): a missing input raises, never a default."""
     if key not in d or d[key] is None:
         raise DownselectError(f"missing required input {key!r} in {where}")
     return d[key]
@@ -886,7 +886,7 @@ GATES = (
     {"id": "HG-6", "name": "common feed boundary",
      "rule": "the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept "
              "whose compression depends on the pre-ionizer is out of DI-1.4 scope",
-     "origin": "owner operating model (RF/ECR change only the pre-ionization method; governance.md scope rule)",
+     "origin": "owner operating model (RF/ECR change only the pre-ionization method; Governance.md scope rule)",
      "status": "binding scope rule"},
 )
 

@@ -10,7 +10,7 @@
 //!   `C-ABEP_SIM_DESIGN_A9_19_ARCHITECTURE_PY` v1): flight hollow cathode NONE, C1 ground test / reference only.
 //!
 //! Every refusal is fail closed (`MODEL_ERROR`) and carries the Python exception class it mirrors, so that the
-//! parity harness can compare refusals exactly (governance.md rule 3: no silent fallback).
+//! parity harness can compare refusals exactly (Governance.md rule 3: no silent fallback).
 
 pub mod architecture;
 pub mod assessment;

@@ -33,7 +33,7 @@ first in this checkout, then (only if absent here) under every --input-root (and
 sibling git worktrees of this checkout; only a file whose sha256 matches the pin is accepted, so the result does not
 depend on where an input was found. An input present in this checkout with a different sha256 (or present elsewhere but
 never with the pinned sha256) raises OverlayInputMismatchError; a genuinely absent input raises OverlayInputError listing
-the places searched (no silent fallback, governance.md rule 3).
+the places searched (no silent fallback, Governance.md rule 3).
 Nothing is read at import time. To move to a newer input, change its pin here deliberately and regenerate.
 """
 from __future__ import annotations
@@ -91,15 +91,15 @@ INPUTS = {
     "p5_case_geometry": {
         "path": "hallthruster_bridge/cases/p5_xenon.json",
         "sha256": "1071684dca85a60cdd097c7efaccdf3f6ac29014b796b1aa4ce54e49b0e89f85",
-        "lane": "base checkout (read only)", "branch": "governance/nifty-ramanujan-w68f9z", "commit": "fe1d79390f",
+        "lane": "base checkout (read only)", "branch": "Governance/nifty-ramanujan-w68f9z", "commit": "fe1d79390f",
         "role": "P5 channel radii r_in / r_out and the published source cited for them (P5 channel cross-section only)"},
     "constants_module": {
         "path": "abep_sim/constants.py",
         "sha256": "dd1c564324c139471bb361d27ef0f75b0f84de1878d100d4313aed12677f33d7",
-        "lane": "base checkout (read only)", "branch": "governance/nifty-ramanujan-w68f9z", "commit": "fe1d79390f",
+        "lane": "base checkout (read only)", "branch": "Governance/nifty-ramanujan-w68f9z", "commit": "fe1d79390f",
         "role": "M_SPECIES (mass-fraction arithmetic on the feed envelope's own basis) and RFPConstraints"},
 }
-governance_MD_PROPELLANT_TOKEN = "air + Xe"          # RFP propellant set as recorded in governance.md (checked, not pinned)
+Governance_MD_PROPELLANT_TOKEN = "air + Xe"          # RFP propellant set as recorded in Governance.md (checked, not pinned)
 P5_GEOMETRY_SOURCE_TOKEN = "Channel radii: OD 173 mm, width 25 mm (Hofer 2004 Sec. 5.3.1"
 
 # ---------------------------------------------------------------------------------------------------- vocabulary
@@ -115,7 +115,7 @@ B_DEFINITIONS = {
                           "exit plane'; Z-70: 'radial B at channel centreline, exit plane')",
 }
 CATHODE_GASES = ("Xe", "N2", "air", "Ar")
-# Relation of a cathode gas to the RFP propellant set 'air + Xe' (governance.md). N2 is a constituent of air, not itself a
+# Relation of a cathode gas to the RFP propellant set 'air + Xe' (Governance.md). N2 is a constituent of air, not itself a
 # listed RFP propellant: a pure-N2 cathode feed is conditional on a separate N2 supply or on separating N2 from the air
 # path (neither is assessed here).
 RFP_GAS_RELATION = {"Xe": "LISTED", "air": "LISTED", "N2": "AIR_CONSTITUENT_CONDITIONAL", "Ar": "NOT_LISTED"}
@@ -233,13 +233,13 @@ def load_constants(path):
     return mod
 
 
-def check_governance_md():
-    p = os.path.join(ROOT, "governance.md")
+def check_Governance_md():
+    p = os.path.join(ROOT, "Governance.md")
     if not os.path.isfile(p):
         raise OverlayInputError(f"{p} not found (RFP propellant set 'air + Xe' is read from it)")
     with open(p, encoding="utf-8") as f:
-        if governance_MD_PROPELLANT_TOKEN not in f.read():
-            raise OverlayInputError(f"governance.md no longer contains the RFP propellant token {governance_MD_PROPELLANT_TOKEN!r}")
+        if Governance_MD_PROPELLANT_TOKEN not in f.read():
+            raise OverlayInputError(f"Governance.md no longer contains the RFP propellant token {Governance_MD_PROPELLANT_TOKEN!r}")
 
 
 # ---------------------------------------------------------------------------------------------------- formatting
@@ -1132,7 +1132,7 @@ def build(found, design_point=None, feed_override=None, feed_override_meta=None)
     feed = feed_override if feed_override is not None else load_json(found["feed_envelope"])
     p5 = load_json(found["p5_case_geometry"])
     K = load_constants(found["constants_module"])
-    check_governance_md()
+    check_Governance_md()
     M = K.M_SPECIES
     RFP = K.RFP
     T_max_N = RFP.thrust_max_mN * 1e-3
@@ -1153,14 +1153,14 @@ def build(found, design_point=None, feed_override=None, feed_override_meta=None)
     rfp = {
         "thrust_max": qrec(RFP.thrust_max_mN, "mN", "assumed",
                            "abep_sim/constants.py RFPConstraints.thrust_max_mN ('Hard limits from Part III Para 2 of the "
-                           "RFP'); governance.md RFP envelope", quantity_kind="requirement (RFP), not a physical measurement"),
+                           "RFP'); Governance.md RFP envelope", quantity_kind="requirement (RFP), not a physical measurement"),
         "thrust_min": qrec(RFP.thrust_min_mN, "mN", "assumed", "abep_sim/constants.py RFPConstraints.thrust_min_mN",
                            quantity_kind="requirement (RFP), not a physical measurement"),
         "power_max": qrec(P_max_kW, "kW", "assumed", "abep_sim/constants.py RFPConstraints.power_max_W (RFP total-power "
                           "ceiling)", quantity_kind="requirement (RFP), total power; discharge share TBD"),
         "firing_time_min": qrec(RFP.ignition_hours, "h", "assumed", "abep_sim/constants.py "
                                 "RFPConstraints.ignition_hours (RFP firing time)", quantity_kind="requirement (RFP)"),
-        "propellants": {"value": governance_MD_PROPELLANT_TOKEN, "source": "governance.md RFP envelope",
+        "propellants": {"value": Governance_MD_PROPELLANT_TOKEN, "source": "Governance.md RFP envelope",
                         "quantity_kind": "requirement (RFP)"},
     }
 

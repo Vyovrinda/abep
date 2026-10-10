@@ -30,7 +30,7 @@
    "applicability": "written for ESA science-mission assessment studies at spacecraft level; applying it to a propulsion subsystem is this BOM's choice (PROPOSED to the owner)"
   },
   "RFP_MASS_AS_RECORDED": {
-   "citation": "abep_sim/constants.py RFPConstraints.mass_max_kg (docstring 'Hard limits from Part III Para 2 of the RFP'); governance.md '< 40 kg'; docs/HISTORY.md v0.1 table '< 40 kg total incl. intake, compressor, PSE, Xe + tank, structure, 10 % margin'",
+   "citation": "abep_sim/constants.py RFPConstraints.mass_max_kg (docstring 'Hard limits from Part III Para 2 of the RFP'); Governance.md '< 40 kg'; docs/HISTORY.md v0.1 table '< 40 kg total incl. intake, compressor, PSE, Xe + tank, structure, 10 % margin'",
    "kind": "requirement as recorded in this repository",
    "verify": "verify against the RFP document (DTDF/06/13516/DSP/ABEP/X/L/M/01)"
   },
@@ -115,7 +115,7 @@
    }
   ]
  },
- "hall_closure_policy": "Mass is closure-independent (hard-gate G3). No Hall mass comes from any transport closure; closure-derived inputs are rejected by check_item(). The credible set is empty (governance.md), so no Hall map feeds this BOM.",
+ "hall_closure_policy": "Mass is closure-independent (hard-gate G3). No Hall mass comes from any transport closure; closure-derived inputs are rejected by check_item(). The credible set is empty (Governance.md), so no Hall map feeds this BOM.",
  "items": [
   {
    "id": "intake",
@@ -371,7 +371,7 @@
     "basis": "none",
     "requires": "no closure-independent lower bound with architecture scope is available"
    },
-   "notes": "Hall-related: the mass of a given head design is closure-independent. No unadmitted closure (the nine sgb-screen candidates or any other) may size or scale it; the credible set is empty (governance.md). The legacy hall_channel_mass()/hall_magnetic_circuit() defaults above are unsourced and not used."
+   "notes": "Hall-related: the mass of a given head design is closure-independent. No unadmitted closure (the nine sgb-screen candidates or any other) may size or scale it; the credible set is empty (Governance.md). The legacy hall_channel_mass()/hall_magnetic_circuit() defaults above are unsourced and not used."
   },
   {
    "id": "hall_magnets",
@@ -397,7 +397,7 @@
     "basis": "none",
     "requires": "no closure-independent lower bound with architecture scope is available"
    },
-   "notes": "Hall-related: the mass of a given head design is closure-independent. No unadmitted closure (the nine sgb-screen candidates or any other) may size or scale it; the credible set is empty (governance.md). The legacy hall_channel_mass()/hall_magnetic_circuit() defaults above are unsourced and not used."
+   "notes": "Hall-related: the mass of a given head design is closure-independent. No unadmitted closure (the nine sgb-screen candidates or any other) may size or scale it; the credible set is empty (Governance.md). The legacy hall_channel_mass()/hall_magnetic_circuit() defaults above are unsourced and not used."
   },
   {
    "id": "cathode",

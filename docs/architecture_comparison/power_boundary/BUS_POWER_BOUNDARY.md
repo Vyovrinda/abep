@@ -10,7 +10,7 @@
 
 **Scope.** This boundary accounts for electrical power. It does not rank architectures and it doesn't admit or reject
 any Hall transport closure. Gate 3 stays FAIL and the credible transport set stays ∅. Every absolute Hall number remains
-withdrawn (governance.md), so a harness that feeds Hall discharge loads from the superseded 0-D closure inherits that
+withdrawn (Governance.md), so a harness that feeds Hall discharge loads from the superseded 0-D closure inherits that
 withdrawal. The boundary only makes sure that, whatever loads are supplied, `hall_only`, `rf_hall` and `ecr_hall` are
 charged on the same electrical boundary. No architecture can then be selected on discharge-only power.
 
@@ -102,7 +102,7 @@ atmospheric path has a compressor and the gas chambers need thermal management.
 
 **Not covered by v1 (a new boundary version is needed, never an ad-hoc extra key).** A helicon pre-ionizer with its own
 axial-field magnet (`archengine` `helicon`, `archengine.py:117`), a DC-discharge pre-ionizer, grids, magnetic nozzles
-and every other family (governance.md rule 8: no new propulsion families). A powered filter, or any other electrical
+and every other family (Governance.md rule 8: no new propulsion families). A powered filter, or any other electrical
 consumer on the atmospheric path that none of the definitions above covers.
 
 ## 4. Interface contract
@@ -124,7 +124,7 @@ ledger = bus_power_ledger(arch, loads, efficiencies)
   efficiencies. A permanent-magnet `ecr_magnet` is passed as `0.0` W with efficiency `1.0`.
 - Per item: `P_bus_W = P_load_W / efficiency` and `P_loss_W = P_bus_W − P_load_W` (≥ 0).
 - `P_bus_W` (ledger) is the destination-side total, Σ P_load + Σ P_loss. `residual_W` is `P_bus_W − Σ items[].P_bus_W`,
-  the source-side total. Conservation is a gate (governance.md rule 4): if |residual| > 1e-12 × max(Σ items P_bus, 1 W),
+  the source-side total. Conservation is a gate (Governance.md rule 4): if |residual| > 1e-12 × max(Σ items P_bus, 1 W),
   the module raises `RuntimeError` instead of returning a ledger.
 - `REQUIRED_COMPONENTS` is a plain `dict` (the contract type), but v1 is frozen. If a caller mutates it at run time,
   the ledger raises `RuntimeError`. A different component set needs a new `BOUNDARY_VERSION`.
@@ -192,7 +192,7 @@ bus is assumed (`ppu.py:47`). The contents differ:
    `P_acc + P_ion + P_neut + P_mag + comp_power + 5 + P_loss`. `ppu.loads` returns `Σ P_out + P_loss` over the same
    demands (`ppu.py:61-78`). For the Hall family every demand's `P_out` equals its ledger term, so the residual checked
    against 2 % (`archengine.py:659-660`) is zero up to rounding. That is consistent with the near-zero `ledger_resid`
-   of the golden benchmarks (governance.md gate 6). A consumer absent from both lists (flow control, thermal control,
+   of the golden benchmarks (Governance.md gate 6). A consumer absent from both lists (flow control, thermal control,
    a separate heater, an ECR magnet) leaves the residual at zero. `bus_power_boundary_v1` supplies the missing
    completeness check through `REQUIRED_COMPONENTS`.
 2. **Pre-ionizer power is on the bus at the design point.** `P_ion` has a converter and a demand (`archengine.py:614`,
@@ -235,7 +235,7 @@ is a model change for the owner.
 
 It does not wire the boundary into `archengine`, `hall_ensemble` or `hall_map`. It does not set any efficiency or load.
 It does not rerun the architecture trade or gate-4 UQ, and it does not change any golden. Any of these is a model change
-under governance.md rules 1–2 and is the owner's decision.
+under Governance.md rules 1–2 and is the owner's decision.
 
 ## 8. Evidence table — conversion efficiencies (data for callers, **not defaults**)
 

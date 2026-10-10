@@ -303,7 +303,7 @@
    "id": "F4-P-14",
    "value": 1e-06,
    "units": "-",
-   "basis": "mass-conservation gate: |m(t) - m(0) - (integrated in - out)| / integrated throughput (governance.md rule 4)",
+   "basis": "mass-conservation gate: |m(t) - m(0) - (integrated in - out)| / integrated throughput (Governance.md rule 4)",
    "source": "definition",
    "evidence_class": "definition",
    "status": "DEFINITION"
@@ -50574,7 +50574,7 @@
   },
   {
    "id": "OQ-F4-05",
-   "question": "Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (governance.md rule 1 rebuild)?",
+   "question": "Orbit-scale density modulation: the frozen atmosphere is orbit-averaged. Supply an amplitude basis or authorize an orbit-resolved frozen dataset (Governance.md rule 1 rebuild)?",
    "proposed_answer": "none proposed",
    "needed_by": "next F4 revision",
    "owner_answer_applied": {

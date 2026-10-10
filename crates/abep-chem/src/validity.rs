@@ -1,4 +1,4 @@
-//! `hallthruster_bridge/propellants/rate_validity.toml`: the validity domain of each rate table (governance.md next-work
+//! `hallthruster_bridge/propellants/rate_validity.toml`: the validity domain of each rate table (Governance.md next-work
 //! 5). Each `["file.dat"]` table has `status = "verified"` with `max_mean_energy_eV`, or `status = "unresolved"`; a
 //! file without an entry is [`Validity::MissingEntry`] (a model error when used, never a default). The file is read
 //! only through a sha256 pin.

@@ -85,7 +85,7 @@ PINS = {
 NEVER_PINNED = [
     "docs/orchestration/lane_registry_v1.json", "docs/orchestration/trigger_registry_v1.json",
     "docs/orchestration/fired_triggers.jsonl", "docs/orchestration/trigger_ledger_v2.jsonl",
-    "docs/orchestration/runtime_state.json", "governance.md (referenced by path for the ECHT geometry only)",
+    "docs/orchestration/runtime_state.json", "Governance.md (referenced by path for the ECHT geometry only)",
     "docs/EVIDENCE.md (referenced by path only)", "docs/interfaces/UPSTREAM_ICD.md (referenced by path only)",
 ]
 
@@ -184,7 +184,7 @@ SOURCES = {
         "sha256_as_fetched": None,
         "access": "open HTML table read through the fetch tool (verify)", "kind": "evaluated reference data"},
     "SRC-ECHT-REPO": {
-        "citation": "ECHT geometry as recorded in the repository: governance.md 'Superseded / withdrawn' ('true ECHT: 86 mm "
+        "citation": "ECHT geometry as recorded in the repository: Governance.md 'Superseded / withdrawn' ('true ECHT: 86 mm "
                     "long, 10 mm wide, 100 mm OD') and docs/EVIDENCE.md register row 'ECHT geometry (thesis Sec. 4.1.1, "
                     "p. 63)' (F. Marchioni, MSc thesis, 2020)",
         "url": None, "sha256_as_fetched": None,
@@ -304,7 +304,7 @@ ANALOGS = {
     "AN-ECHT-GEOM": dict(device="ECHT extended-channel Hall thruster (laboratory device on N2)",
                          quantity="BN chamber length / channel width / outer diameter", value=[86.0, 10.0, 100.0],
                          unit="mm", evidence_class="measured", stated_as="design dimensions as recorded in the repo",
-                         source="SRC-ECHT-REPO", locator="governance.md 'Superseded / withdrawn'; docs/EVIDENCE.md row "
+                         source="SRC-ECHT-REPO", locator="Governance.md 'Superseded / withdrawn'; docs/EVIDENCE.md row "
                                                          "'ECHT geometry'",
                          includes="published analog of an extended channel; no ECHT mass is published; never a "
                                   "Vyovrinda design value"),
@@ -1328,7 +1328,7 @@ def build_document(repo: Path = REPO, lane_root: Path | None = None) -> dict:
         "milestones": milestones,
         "owner_questions": owner_q,
         "not_used": ["withdrawn repository masses (docs/HISTORY.md v0.5 / Phase-4 tables; 110-120 kg) and every "
-                     "v1.2-v1.6 absolute Hall result (governance.md 'Superseded / withdrawn')",
+                     "v1.2-v1.6 absolute Hall result (Governance.md 'Superseded / withdrawn')",
                      "abep_sim/mass_bom.py legacy sizing defaults and legacy MGA dict (uncited; mass_bom OD-M3)",
                      "abep_sim/archengine.py Ionizer mass defaults (unsourced)",
                      "any Hall transport closure, screening candidate or abep_sim/plasma_devices.py output",

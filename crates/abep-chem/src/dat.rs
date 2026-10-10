@@ -1,7 +1,7 @@
 //! HallThruster.jl v0.23.1 rate tables (`hallthruster_bridge/propellants/PROVENANCE.md`): line 1
 //! `<label> (eV): <threshold>` (HallThruster.jl reads the number after the colon only), line 2 a column header, then
 //! `<mean energy 3/2 T_e [eV]> <rate coefficient [m^3/s]>` rows. Frozen tables are read only through a sha256 pin and
-//! never written (governance.md rule 1).
+//! never written (Governance.md rule 1).
 
 use abep_provenance::read_verified;
 use abep_types::{AbepError, AbepResult};

@@ -473,7 +473,7 @@
     "boundary label bus_power_boundary_a9_v1",
     "docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json"
    ],
-   "evidence": "append-only log (governance.md rule 1: record why in docs/HISTORY.md)",
+   "evidence": "append-only log (Governance.md rule 1: record why in docs/HISTORY.md)",
    "change_on_repoint": "stage 2 appends the migration entry; existing entries never rewritten",
    "tests": [],
    "sha_pinned_by": [
@@ -2529,7 +2529,7 @@
    "targets": [
     "docs/architecture_comparison/power_boundary_a9/bus_power_boundary_a9_v1.json"
    ],
-   "evidence": "governance.md: v2/v3 immutable history; v4 byte-identical (HISTORY 2026-10-03), superseded by v5",
+   "evidence": "Governance.md: v2/v3 immutable history; v4 byte-identical (HISTORY 2026-10-03), superseded by v5",
    "change_on_repoint": "nothing",
    "tests": [],
    "sha_pinned_by": [],
@@ -7484,7 +7484,7 @@
      "line": 73,
      "kind": "text_citation",
      "target": "abep_sim/bus_boundary_a9.py",
-     "text": "CONTEXT (read governance.md first, including its 'A9' section): RFP envelope 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg wet, >= 26,280 h mission basis, > 15,000 h firing (provisional), Hall preferred, air..."
+     "text": "CONTEXT (read Governance.md first, including its 'A9' section): RFP envelope 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg wet, >= 26,280 h mission basis, > 15,000 h firing (provisional), Hall preferred, air..."
     }
    ]
   },

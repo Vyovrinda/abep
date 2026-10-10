@@ -204,7 +204,7 @@ def _check_evidence(level, qtype, where: str) -> None:
 
 NUMBER_RECORD_FIELDS = ("value", "unit", "source", "evidence_level", "quantity_type", "uncertainty",
                         "applicability_domain", "validation_status")
-NUMBER_RECORD_TEXT_FIELDS = ("uncertainty", "applicability_domain", "validation_status")   # governance.md rule 10
+NUMBER_RECORD_TEXT_FIELDS = ("uncertainty", "applicability_domain", "validation_status")   # Governance.md rule 10
 
 
 def _number(rec, unit: str, where: str) -> float:
@@ -216,7 +216,7 @@ def _number(rec, unit: str, where: str) -> float:
     for k in NUMBER_RECORD_TEXT_FIELDS:
         if not isinstance(rec[k], str) or not rec[k].strip():
             raise ValueError(f"{where}: input record field {k!r} must be a non-empty statement "
-                             "(write 'unquantified' / 'TBD - requires ...' explicitly; docs/EVIDENCE.md, governance.md rule 10)")
+                             "(write 'unquantified' / 'TBD - requires ...' explicitly; docs/EVIDENCE.md, Governance.md rule 10)")
     if rec["unit"] != unit:
         raise ValueError(f"{where}: unit {rec['unit']!r} is not the contract unit {unit!r} (no unit conversion is done)")
     if not isinstance(rec["source"], str) or not rec["source"].strip():
@@ -642,7 +642,7 @@ def hallmap_wall_inputs(point: dict, ensemble_member_id: str, evidence_level: in
     map_meta is the queried map's meta (HallMap.meta). The query output does not carry the member id, so the id is
     bound to the map here: map_meta['ensemble_member_id'] must equal ensemble_member_id, map_meta['hallthruster_commit']
     must equal the query commit, and the canonical sha256 of map_meta is recorded in the provenance. uncertainty,
-    applicability_domain and validation_status are the caller's explicit statements (no defaults; governance.md rule 10).
+    applicability_domain and validation_status are the caller's explicit statements (no defaults; Governance.md rule 10).
 
     Refuses unless ensemble_member_id is an ADMITTED transport-ensemble member (hall_ensemble.require_admitted:
     screening candidates and unknown ids raise), the query is performance-trustworthy AND wall_life_trustworthy

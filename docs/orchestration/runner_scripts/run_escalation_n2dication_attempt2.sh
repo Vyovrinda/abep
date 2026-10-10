@@ -3,7 +3,7 @@
 # Fresh output directories <manifest>_attempt2; attempt-1 partial outputs are preserved under
 # hallthruster_bridge/validation/interrupted/<manifest>_attempt1/ and never read. Same launch configuration as attempt 1
 # (4 shards per dataset, pinned manifests, pinned driver in wt_followon). Execution provenance is written before any run.
-S=/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
+S=/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad
 W=$S/wt_followon
 LOG=$S/followon/progress_escalation_n2dication_attempt2.log
 cd $W

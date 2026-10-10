@@ -1,5 +1,5 @@
 //! Fail-closed rate evaluation for production consumers (IF-CHEM-REG-v1: abep-chem integrator, abep-icp consumer;
-//! NP-ICP-NEUTRALIZER EQ-06 / DOM-01 / DOM-03, NP-ICP-CHEM-AIR IX-04..IX-06, governance.md next-work 5).
+//! NP-ICP-NEUTRALIZER EQ-06 / DOM-01 / DOM-03, NP-ICP-CHEM-AIR IX-04..IX-06, Governance.md next-work 5).
 //!
 //! The value is the admitted reference integral ([`crate::reference::maxwellian_rate`], bit for bit). What the reference
 //! does silently is refused here (contract DIV-03):
@@ -77,7 +77,7 @@ impl CrossSection {
     }
 }
 
-/// A table's `rate_validity.toml` entry (governance.md next-work 5).
+/// A table's `rate_validity.toml` entry (Governance.md next-work 5).
 #[derive(Debug, Clone, PartialEq)]
 pub enum Validity {
     /// `status = "verified"`: valid up to this mean electron energy 3/2 T_e [eV].

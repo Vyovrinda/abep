@@ -1,6 +1,6 @@
 //! SC-WP-08 fail-closed statuses on the repository's real inputs. Missing evidence is asserted as its status, never
 //! skipped (A9.29 sec. 9): the empty credible Hall transport set makes every Hall-erosion-derived life NOT_EVALUATED
-//! (governance.md next-work 5), the anode / collector material stays OPEN with 316L REJECTED_AS_CURRENT_BASELINE (P4), no
+//! (Governance.md next-work 5), the anode / collector material stays OPEN with 316L REJECTED_AS_CURRENT_BASELINE (P4), no
 //! life indicator is EVALUATED, and no C1 / hollow-cathode item is part of flight life.
 
 use abep_subsystems::life::{ao_register, hall_wall, indicators, p4};

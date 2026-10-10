@@ -1,6 +1,6 @@
 //! Shared status and error vocabulary of the ABEP Rust simulator.
 //!
-//! Fail-closed evidence semantics (governance.md rules 3 and 9, A9.29 RM-OQ-05): a result that cannot be evaluated is
+//! Fail-closed evidence semantics (Governance.md rules 3 and 9, A9.29 RM-OQ-05): a result that cannot be evaluated is
 //! reported with an explicit status, never as a silently skipped or half-converged value.
 
 use serde::{Deserialize, Serialize};

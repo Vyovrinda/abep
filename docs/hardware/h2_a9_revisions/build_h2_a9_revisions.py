@@ -32,7 +32,7 @@ What it is NOT
 
 Rules: every value is an owner-given value (cited by row / A9.1 id), a value copied from a verified deliverable
 (pointer + sha256), a deterministic recomputation by this script, or 'TBD - requires <what>' / 'PENDING <lane path>'.
-Missing inputs raise (governance.md rule 3). Thresholds not given by the RFP or the owner are PROPOSED.
+Missing inputs raise (Governance.md rule 3). Thresholds not given by the RFP or the owner are PROPOSED.
 """
 from __future__ import annotations
 

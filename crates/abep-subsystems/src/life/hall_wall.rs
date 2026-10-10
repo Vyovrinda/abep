@@ -3,7 +3,7 @@
 //!
 //! Hall wall erosion and lifetime use Hall-map wall ion flux / energy only from an ADMITTED transport-ensemble
 //! member's map point that is performance-trustworthy AND `wall_life_trustworthy` (ion_wall_losses = true,
-//! WallSheath, unshielded) and carries the pinned HallThruster.jl commit (governance.md next-work 5). The credible
+//! WallSheath, unshielded) and carries the pinned HallThruster.jl commit (Governance.md next-work 5). The credible
 //! transport set is EMPTY (2026-09-26), so this gate refuses every member id today and every Hall-erosion-derived life
 //! is NOT_EVALUATED ([`hall_wall_life_input_status`]). The admission gate and the pin are the admitted `abep-hall`
 //! ones.
@@ -32,7 +32,7 @@ pub enum Ensemble {
     Given(Value),
 }
 
-/// The caller's explicit statements (no defaults; governance.md rule 10).
+/// The caller's explicit statements (no defaults; Governance.md rule 10).
 #[derive(Debug, Clone)]
 pub struct Statements {
     pub uncertainty: Value,

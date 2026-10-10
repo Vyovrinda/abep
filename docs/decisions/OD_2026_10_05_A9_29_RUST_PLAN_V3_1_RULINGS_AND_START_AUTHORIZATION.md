@@ -385,10 +385,10 @@ Historical Python:
 
 remains archive-era reproduction metadata only.
 
-Close RM-OQ-05 and update governance.md accordingly.
+Close RM-OQ-05 and update Governance.md accordingly.
 
 ==================================================
-10. governance.MD GOVERNANCE UPDATE
+10. Governance.MD GOVERNANCE UPDATE
 ==================================================
 
 Before substantive Rust implementation, perform the narrow current-governance

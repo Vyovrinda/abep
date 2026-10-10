@@ -5,7 +5,7 @@ DTDF/06/13516/DSP/ABEP/X/L/M/01 (Part III). Technical source: commit `{{SRC}}` (
 `docs/bid/bid_technical_baseline_v2.json`). Every path cited below is a file at that commit (`git show {{SRC}}:<path>`).
 Nothing in this document is submitted by the repository.
 
-**Quantity labels (governance.md rule 10, `docs/EVIDENCE.md`).** Every number carries one label: *measured*, *model-derived*,
+**Quantity labels (Governance.md rule 10, `docs/EVIDENCE.md`).** Every number carries one label: *measured*, *model-derived*,
 *assumed*, *owner-allocation* (an owner design allocation, not evidence), *design target* (an owner target, not evidence)
 or *pending* (no value exists yet). There is no *measured* Vyovrinda hardware value at the technical source: no H-1, ICP,
 PPU or upstream hardware has been built or tested.
@@ -15,9 +15,9 @@ PPU or upstream hardware has been built or tested.
 | item | status at {{SRC}} | source |
 |---|---|---|
 | Architecture | {{ARCH_STATUS}} (topology decided and frozen for development; physical design not frozen); frozen reference flight architecture: false | `docs/architecture/freeze_candidate/architecture_freeze_candidate_v1.json` `#/architecture_status` |
-| Hall-transport validation (gate 3) | FAIL. P5-Xe: transport not identifiable; P5-N2 v1: all 9 screening candidates INCONCLUSIVE / NOT ELIGIBLE (permanent) | `governance.md` section "Gate status"; `hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json` |
+| Hall-transport validation (gate 3) | FAIL. P5-Xe: transport not identifiable; P5-N2 v1: all 9 screening candidates INCONCLUSIVE / NOT ELIGIBLE (permanent) | `Governance.md` section "Gate status"; `hallthruster_bridge/validation/VALIDATION_RELEASE_v1.json` |
 | Credible Hall transport set | EMPTY (members = []) | `hallthruster_bridge/ensemble/transport_ensemble_v0.json` `#/members` |
-| Absolute Hall performance (thrust, Isp, efficiency, discharge current, life) | none offered. Every absolute result of the superseded 0-D Hall closure is WITHDRAWN and is not quoted anywhere in this package | `governance.md` section "Superseded / withdrawn (do not quote)" |
+| Absolute Hall performance (thrust, Isp, efficiency, discharge current, life) | none offered. Every absolute result of the superseded 0-D Hall closure is WITHDRAWN and is not quoted anywhere in this package | `Governance.md` section "Superseded / withdrawn (do not quote)" |
 | RVM, flight configuration `hall_icp_neutralizer` | {{RVM_NE}} NOT_EVALUATED, {{RVM_IE}} INCOMPLETE_EVIDENCE, {{RVM_PASS}} PASS | `docs/requirements/rvm_a9/rvm_a9_v1.json` `#/status_counts` |
 | Architecture-level gates AG-01..AG-15, GNG-ICP-01 | evidence sufficient for freeze: {{GATES_SUFFICIENT}} only (requirement basis; not a compliance result); not sufficient: {{GATES_NOT_SUFFICIENT}}; none is PASS / GO (table in `01_COMPLIANCE_MATRIX.md`) | `docs/architecture/freeze_candidate/architecture_freeze_candidate_v1.json` `#/architecture_gates`, `#/pre_lock1_gates` |
 | Upstream design (intake / compressor / feed) | robust upstream set EMPTY under the frozen {{DS_N}}-state design-state set (F9-DF-01 {{F9DF01}}) | `docs/architecture/freeze_candidate/architecture_freeze_candidate_v1.json` `#/design_findings_for_owner[id=F9-DF-01]` |

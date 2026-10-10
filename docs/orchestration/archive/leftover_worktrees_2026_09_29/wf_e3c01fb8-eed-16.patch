@@ -13,7 +13,7 @@ and the dossier re-checks that claim against the per-gate verdicts. A selection 
 eliminates all but one architecture AND the owner has recorded a decision for that one
 (docs/architecture_comparison/dossier/owner_decision_record.json). Neither holds today.
 
-Rules the generator enforces (governance.md rules 3, 6, 10; docs/EVIDENCE.md):
+Rules the generator enforces (Governance.md rules 3, 6, 10; docs/EVIDENCE.md):
 - Every expected input is looked up at its repository-relative path. A missing input is listed as UNRESOLVED with what it
   would provide; nothing is filled in for it. There are no default physical or efficiency values in this file.
 - A malformed input of a known contract (wrong schema id, inconsistent elimination claim, malformed owner record) raises;
@@ -164,7 +164,7 @@ INPUTS: tuple[dict, ...] = (
     {"id": "contracts.hallmap", "kind": "dir", "path": "docs/hallmap", "group": "contracts",
      "needed_for": ["B"], "provides": "Hall-map production specification"},
     # --- physics-validation track (read for status only; never a performance source)
-    {"id": "governance_md", "kind": "file", "path": "governance.md", "group": "physics",
+    {"id": "Governance_md", "kind": "file", "path": "Governance.md", "group": "physics",
      "needed_for": ["A", "B", "C"], "provides": "RFP envelope and physics-baseline gate status table"},
     {"id": "p5n2.decision", "kind": "file",
      "path": "hallthruster_bridge/validation/p5_n2_campaign_v1_vacuum_scores_decision.json", "group": "physics",
@@ -505,10 +505,10 @@ def failure_tree_section(inputs: dict) -> dict:
 # ---------------------------------------------------------------------------------------------------------------------
 # physics-validation track (status only)
 # ---------------------------------------------------------------------------------------------------------------------
-def parse_governance_gate_table(text: str) -> list[dict]:
+def parse_Governance_gate_table(text: str) -> list[dict]:
     m = re.search(r"^## Gate status.*?$(.*?)^## ", text, flags=re.M | re.S)
     if not m:
-        raise ValueError("governance.md: '## Gate status' section not found")
+        raise ValueError("Governance.md: '## Gate status' section not found")
     rows = []
     for line in m.group(1).splitlines():
         line = line.strip()
@@ -519,18 +519,18 @@ def parse_governance_gate_table(text: str) -> list[dict]:
             continue
         rows.append({"gate": cells[0], "status": " | ".join(cells[1:])})
     if not rows:
-        raise ValueError("governance.md: gate status table is empty")
+        raise ValueError("Governance.md: gate status table is empty")
     return rows
 
 
 def physics_section(inputs: dict) -> dict:
     sec: dict[str, Any] = {"note": "Physics-validation track, read for status only. Nothing here is a performance "
                                    "source for any architecture; screening candidates never are."}
-    cm = inputs["governance_md"]
+    cm = inputs["Governance_md"]
     if cm["state"] == "RESOLVED":
         with open(cm["files"][0]["_abs"], encoding="utf-8") as f:
             text = f.read()
-        sec["baseline_gates"] = parse_governance_gate_table(text)
+        sec["baseline_gates"] = parse_Governance_gate_table(text)
         env = re.search(r"RFP envelope:\s*(.+?)\.\s*Python owns", text, flags=re.S)
         sec["rfp_envelope_as_recorded"] = " ".join(env.group(1).split()) if env else None
     else:
@@ -560,7 +560,7 @@ def physics_section(inputs: dict) -> dict:
             "credible_set_empty": not members,
             "n_screening_candidates": len(ens.get("screening_candidates", [])),
             "screening_candidates_note": "screening candidates never produce design Hall maps and never enter the "
-                                         "architecture comparison (governance.md)",
+                                         "architecture comparison (Governance.md)",
             "admission_rule_status": ens.get("admission_rule_status")}
     fr = inputs["forensics.p5_n2_v1"]
     if fr["state"] == "RESOLVED":
@@ -573,7 +573,7 @@ def physics_section(inputs: dict) -> dict:
                                   "official_outcome_unchanged": d.get("official_outcome_unchanged"),
                                   "non_gating": d.get("non_gating", d.get("descriptive_non_gating"))})
         sec["forensics"] = {"state": "RESOLVED", "files": items,
-                            "note": "non-gating; the v1 outcome stays INCONCLUSIVE and is never rewritten (governance.md)"}
+                            "note": "non-gating; the v1 outcome stays INCONCLUSIVE and is never rewritten (Governance.md)"}
     else:
         sec["forensics"] = {"state": "UNRESOLVED", "reason": fr["unresolved_reason"]}
     te = sec.get("transport_ensemble")
@@ -722,7 +722,7 @@ def _unresolved_for(inputs: dict, ms: str) -> list[str]:
 
 def milestone_block(arch: str, gsec: dict, gblock: dict, ftsec: dict, phys: dict, inputs: dict) -> dict:
     ft = ftsec.get("per_architecture", {}).get(arch) if ftsec["state"] == "RESOLVED" else None
-    closure_note = ("credible Hall-transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT "
+    closure_note = ("credible Hall-transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT "
                     "ELIGIBLE): Hall-dependent conditions can be discharged only by Vyovrinda or same-hardware "
                     "measurement") if not phys.get("hall_closure_available") else None
     if gsec["state"] != "RESOLVED":
@@ -995,10 +995,10 @@ def render_markdown(d: dict) -> str:
     w(p["note"])
     w("")
     if p.get("rfp_envelope_as_recorded"):
-        w(f"RFP envelope as recorded in governance.md: {p['rfp_envelope_as_recorded']}.")
+        w(f"RFP envelope as recorded in Governance.md: {p['rfp_envelope_as_recorded']}.")
         w("")
     if p.get("baseline_gates"):
-        w("| physics-baseline gate (governance.md) | status |")
+        w("| physics-baseline gate (Governance.md) | status |")
         w("|---|---|")
         for r in p["baseline_gates"]:
             w(f"| {_md_cell(r['gate'], 80)} | {_md_cell(r['status'], 400)} |")

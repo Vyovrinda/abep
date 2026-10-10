@@ -1,4 +1,4 @@
-//! SC-WP-02 gas-path invariants of abep-gaspath (governance.md rule 4 and the registered Rust-only invariants):
+//! SC-WP-02 gas-path invariants of abep-gaspath (Governance.md rule 4 and the registered Rust-only invariants):
 //!
 //! * CONS-P-01: the source mass balance intake -> compressor -> plenum closes exactly (to rounding) at every steady
 //!   operating point with a computed record; the intake outputs enter as explicit plain data (no intake crate).

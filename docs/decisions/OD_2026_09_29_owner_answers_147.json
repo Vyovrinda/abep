@@ -104,7 +104,7 @@
     "REPO-1"
    ],
    "area": "A. RFP / access / repo",
-   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on governance/nifty-ramanujan-w68f9z) into main via a new PR?",
+   "question": "Merge the H2 hardware wave (H2-1..H2-7, all verified; on Governance/nifty-ramanujan-w68f9z) into main via a new PR?",
    "owner_answer_verbatim": "NOT YET — do not direct-merge. First create a checkpoint PR from the execution branch, freeze new merges briefly, run full pytest + golden + integrity + GitHub CI, review the diff, then merge if green.",
    "classification_by_recorder": "NO_OR_NOT_YET"
   },

@@ -696,7 +696,7 @@ def design_rules() -> list:
         {"id": "DR-19", "rule": "installed MFC zero check per block and a declared MFC body-temperature band", "source": "row 97"},
         {"id": "DR-20", "rule": "facility radiative sink temperature measured per run", "source": "row 131"},
         {"id": "DR-21", "rule": "no score-bearing data before LOCK-2; score-bearing data taken before LOCK-2 are excluded", "source": "historical locks.rule (phase1_prereg_framework_v1.json#locks)"},
-        {"id": "DR-22", "rule": "no performance prediction from any Hall-transport closure (none admitted), the superseded 0-D Hall model or the withdrawn v1.2-v1.6 numbers; published analogs only with page / figure / table provenance and evidence class", "source": "governance.md gate 3 and superseded list; A9 evidence_anchor"},
+        {"id": "DR-22", "rule": "no performance prediction from any Hall-transport closure (none admitted), the superseded 0-D Hall model or the withdrawn v1.2-v1.6 numbers; published analogs only with page / figure / table provenance and evidence class", "source": "Governance.md gate 3 and superseded list; A9 evidence_anchor"},
         {"id": "DR-23", "rule": "no hypothesis surfaces from manufactured ASSUMED_SCREENING_VALUE inputs", "source": "row 146"},
     ]
 

@@ -45,7 +45,7 @@ Numbers in this document are one of three kinds: **PROPOSED thresholds** (eviden
 | milestone | what this experiment delivers | what is still needed to reach it / the next one |
 |---|---|---|
 | **A** conditional selection | Measured, paired, common-boundary classes per arm and condition, each with qualifiers and conditions. Classes: SOURCE_BETTER / EQUIVALENT / SOURCE_WORSE / UNRESOLVED / ENABLES / DISABLES / …. Qualifiers: FACILITY_*, LEDGER_*. Conditions include the break-even source-chain efficiency η_src,be. Enough for "architecture X is baseline provided A/B/C". Doesn't need Physics Baseline 1.0. | S0 (LOCK-1); S1 with D0 passed (LOCK-2); S2–S4 for `hall_only` and every non-stopped source arm; S5 for the facility qualifier; S6 re-installation check. Feed-envelope values from the upstream ICD (IF-A5), the bus allocation and the ledger inputs. |
-| **B** physics-backed selection | Source boundary data that don't depend on Hall transport: P_src,load, P_src,bus, I_src, I_del, η_ts, delivered-ion energy and species. Hall data on the tested hardware: B(z) maps with coil currents, geometry, I_d traces, species fractions and divergence per point. | An admitted Hall transport closure; the credible set is empty today (governance.md gate 3). O/O₂ chemistry for air (governance.md next work 4); the air surrogate here has no atomic O. If the physics track wants these data as promotion evidence, it must pre-register that separately, before the measurement. |
+| **B** physics-backed selection | Source boundary data that don't depend on Hall transport: P_src,load, P_src,bus, I_src, I_del, η_ts, delivered-ion energy and species. Hall data on the tested hardware: B(z) maps with coil currents, geometry, I_d traces, species fractions and divergence per point. | An admitted Hall transport closure; the credible set is empty today (Governance.md gate 3). O/O₂ chemistry for air (Governance.md next work 4); the air surrogate here has no atomic O. If the physics track wants these data as promotion evidence, it must pre-register that separately, before the measurement. |
 | **C** proposal/PDR freeze | Measured load-plane power per consumer at the tested points; source waste heat; measured lab source-chain efficiency as evidence for the ledger. | Mass, thermal, life (`docs/evidence/wall_life/`, `abep_sim/thermal_life.py`), startup, cathode (`docs/evidence/cathode/`) and mission closure integrated; flight-representative PPU and generator efficiencies. This experiment alone doesn't support C. |
 
 This is the fastest physical route to milestone A. It also feeds milestone B directly once a closure is admitted.
@@ -156,7 +156,7 @@ second comparison family (m = 8) with its own variance model (§6.5).
 
 ### 3.6 Priors this experiment tests
 
-- governance.md lists "RF/helicon pre-ionisers add nothing" as probably robust at mechanism level (independent of the Hall
+- Governance.md lists "RF/helicon pre-ionisers add nothing" as probably robust at mechanism level (independent of the Hall
   closure). It comes from the project's own models, so it is model-derived; within the tested domain, hardware
   measurement supersedes it (docs/EVIDENCE.md).
 - The helicon Hall thruster precedent (REF-SHABSHELOWITZ2014, abstract only) measured single-stage and two-stage
@@ -165,7 +165,7 @@ second comparison family (m = 8) with its own variance model (§6.5).
 - The decision tree lets an arm stop early if such a prior holds on this hardware; that is where the savings come from.
   No arm is stopped on a prior.
 - The v1.3 record (docs/HISTORY.md) had already named "air-Hall thrust/current vs flow" and "transported ECR ion current
-  per watt" as decisive measurements. Its absolute numbers are withdrawn (governance.md) and are not used.
+  per watt" as decisive measurements. Its absolute numbers are withdrawn (Governance.md) and are not used.
 
 ### 3.7 Common loads dilute R
 
@@ -709,7 +709,7 @@ owns facility-specific packaging.
 - **REF-IIST-WEB.** IIST, "Space Research", https://iist.ac.in/space-research. Page text via the fetch tool.
 - **REF-BRABSTON2025.** Brabston, Marino, Lev, Walker, *J. Propulsion and Power* 2025, doi:10.2514/1.B39623. Not
   re-accessed; used through this repository's docs/EVIDENCE.md register and `hallthruster_bridge/identification/`.
-- **Repository.** governance.md; docs/EVIDENCE.md; docs/HISTORY.md; `hallthruster_bridge/ensemble/transport_ensemble_v0.json`;
+- **Repository.** Governance.md; docs/EVIDENCE.md; docs/HISTORY.md; `hallthruster_bridge/ensemble/transport_ensemble_v0.json`;
   `hallthruster_bridge/prereg/p5_n2_run_status_rule_v1.json`, `p5_n2_prereg_lock_v1.json` (at `c53b75a`);
   `requirements-lock.txt` (scipy pin). Other lanes, read-only: `abep_sim/arch_boundary.py` (commit `a2a1396`) and
   `docs/architecture_comparison/experiment_protocol/` (commit `1428265`).

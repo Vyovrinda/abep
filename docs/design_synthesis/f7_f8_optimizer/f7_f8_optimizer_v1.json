@@ -9876,7 +9876,7 @@
     "source": null,
     "reason": "T: no admitted Hall response map (credible set EMPTY); D_spacecraft: spacecraft body / array drag TBD (F1-ID-08)",
     "unlock": [
-     "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
+     "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
      "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft geometry in the repository) at the same orbit states"
     ],
     "partial": {
@@ -10440,7 +10440,7 @@
   "constraints_violated": []
  },
  "unlock_evidence": {
-  "T": "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
+  "T": "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
   "D_spacecraft": "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft geometry in the repository) at the same orbit states",
   "P_bus": "every installed A9-02 slot load and supply efficiency at a registered condition (Hall discharge from the registered H-1 envelope, coils from the frozen MC-1, RF generator DC input measured, compressor ICD row 22, valve drivers, thermal, housekeeping, front end) on the p_bus_1ms_max basis with a conformant gate measurement (A9.1 OQ-A902-01)",
   "m_wet": "a CBE or measured mass for every mass/power v3 BOM line (no CBE exists) plus the Xe load case (XA9Q-01 / MQ-09) and the MQ-01 margin reading decided by the owner",
@@ -11122,7 +11122,7 @@
    "answer_state": "CANNOT_ANSWER",
    "basis": "AG-12 is statewise feed-state sufficiency against a VALIDATED H-1 map (A9.13 S6.21): no such map",
    "unlock": [
-    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)"
+    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)"
    ]
   },
   {
@@ -11138,7 +11138,7 @@
    "answer_state": "CANNOT_ANSWER",
    "basis": "no admitted Hall response map; host-spacecraft drag ICD absent (reference drag is REFERENCE_PARAMETRIC only, S6.18)",
    "unlock": [
-    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
+    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
     "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft geometry in the repository) at the same orbit states"
    ]
   },
@@ -11193,7 +11193,7 @@
    "answer_state": "CANNOT_ANSWER",
    "basis": "every Hall performance quantity NOT_EVALUATED; only geometric admissibility is evaluable",
    "unlock": [
-    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)"
+    "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)"
    ]
   },
   {

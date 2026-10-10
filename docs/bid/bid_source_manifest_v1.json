@@ -54,7 +54,7 @@
   "pinned_by": "docs/bid/bid_technical_baseline_v2.json bid_technical_source.commit",
   "file_set_rule": "every file at the technical source that the package cites (compliance_matrix_v1.json evidence_at_technical_source paths, gates_at_technical_source sources, the mass roll-up record, and backticked repository paths in the package Markdown, excluding docs/bid/ and tests/test_bid_package.py: the tests/test_bid_package.py::_cited_paths rule) or that the package builder reads (source_facts.Source.text during build_package.build_all); docs/decisions/OD_2026_10_05_A9_27_final_bid_owner_rulings.json is read by the builder but is not present at the technical source (post-source decision, pinned in the package record)",
   "files": {
-   "governance.md": {
+   "Governance.md": {
     "sha256": "c70b83d43608e2b953b790ee61e44380484eb2a02f69bda3a203ea6996920436",
     "bytes": 33046,
     "cited": true,

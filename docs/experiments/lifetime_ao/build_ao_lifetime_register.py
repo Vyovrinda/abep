@@ -54,7 +54,7 @@ OUT_MD = os.path.join(HERE, "AO_LIFETIME_REGISTER.md")
 SCHEMA_REL = "docs/experiments/lifetime_ao/ao_lifetime_register_v1.schema.json"
 
 # ---------------------------------------------------------------------------------------------------------------------
-# Pinned computational input (frozen data; governance.md rule 1). The build refuses a different file.
+# Pinned computational input (frozen data; Governance.md rule 1). The build refuses a different file.
 # ---------------------------------------------------------------------------------------------------------------------
 ATMOSPHERE_CSV_REL = "abep_sim/data/atmosphere_msis21_v1.csv"
 ATMOSPHERE_CSV_SHA256 = "5e108c6e5cb7c03ed9b741233fafbc71c7813987e1ff3d0596b04c99c4a9bff7"
@@ -205,7 +205,7 @@ def compute_ao_environment():
     sha = _sha256_file(ATMOSPHERE_CSV_REL)
     if sha != ATMOSPHERE_CSV_SHA256:
         raise RuntimeError(f"{ATMOSPHERE_CSV_REL} sha256 {sha} != pinned {ATMOSPHERE_CSV_SHA256}; the frozen "
-                           "atmosphere changed. Re-pin only after an intentional, logged rebuild (governance.md rule 1).")
+                           "atmosphere changed. Re-pin only after an intentional, logged rebuild (Governance.md rule 1).")
     rows = {}
     with open(os.path.join(ROOT, ATMOSPHERE_CSV_REL), newline="") as f:
         for r in csv.DictReader(f):

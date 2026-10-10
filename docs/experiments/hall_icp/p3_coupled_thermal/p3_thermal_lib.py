@@ -19,7 +19,7 @@ What is here
     radiative view (equivalent heat into H-1 nodes), each from explicit quantity records;
   * an adapter that couples the pinned H2-5 v1 H-1 network (read-only import of its builder) to ICP bodies.
 
-Fail-closed rules (A9.6 sec. 14; governance.md rules 3, 6, 10)
+Fail-closed rules (A9.6 sec. 14; Governance.md rules 3, 6, 10)
   * every input is a quantity record {value, units, evidence_class, source}; a missing key, a None value, a
     'TBD...'/'PENDING...' string, a units mismatch or an unknown evidence class raises MissingInputError / InputError;
   * SYNTHETIC_TEST_DATA_NOT_EVIDENCE records never mix with evidence records (SyntheticMixError);

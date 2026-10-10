@@ -1122,7 +1122,7 @@ def build_cells(feed, vd, grid, gates, ovl, elec, comps) -> dict:
             "EXPLICITLY_UNAVAILABLE", None, "mN", op_steady,
             [ev(HGS, "lane_24_hard_gates", f"architectures.{a}.gates.G1_thrust"), ev(HR, "lane_17_hall_reference", "transport_numerics_binding")],
             "none", "unavailable:no admitted Hall transport closure (credible set empty, gate 3 FAIL) and no Vyovrinda/same-hardware measurement",
-            "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (governance.md; lane-24 basis table).",
+            "not derived. Absolute Hall numbers of the withdrawn 0-D closure and screening-candidate results are never used (Governance.md; lane-24 basis table).",
             closure_block + preion_block + [blk("measurement", "DI-1", "delivered feed (thrust needs the delivered flow)")],
             l24("T"), True)
         comp_list = comps[a]

@@ -1,5 +1,5 @@
 //! Workspace rules on the real tree: the Rust-era test rule (A9.29 sec. 9), ground-test isolation (sec. 1) and the
-//! governed empty Hall credible transport set (governance.md rule 9: asserted explicitly, never an xfail).
+//! governed empty Hall credible transport set (Governance.md rule 9: asserted explicitly, never an xfail).
 
 use abep_ci::groundtest::{self, FLIGHT_RUNTIME_CRATES, GROUNDTEST_CRATE};
 use abep_ci::test_register;

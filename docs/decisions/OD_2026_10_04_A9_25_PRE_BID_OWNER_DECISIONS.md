@@ -13,7 +13,7 @@ Before doing any work, read this as the governing direction for the current deve
 
 First verify the current HEAD of:
 
-governance/nifty-ramanujan-w68f9z
+Governance/nifty-ramanujan-w68f9z
 
 The last independently audited head was:
 
@@ -537,7 +537,7 @@ Then begin substantive Rust migration after that freeze.
 Do not use bbc480c as the final freeze if a later verified pre-Rust commit supersedes it.
 
 ==================================================
-16. README / governance.MD STALENESS
+16. README / Governance.MD STALENESS
 ==================================================
 
 The repository still contains top-level text that says:
@@ -576,11 +576,11 @@ Do NOT alter main.
 
 Do NOT delete branches.
 
-The governance branch is substantially diverged from main and the existing PR is dirty.
+The Governance branch is substantially diverged from main and the existing PR is dirty.
 
 Continue only on:
 
-governance/nifty-ramanujan-w68f9z
+Governance/nifty-ramanujan-w68f9z
 
 unless I explicitly authorize another branch.
 
@@ -727,7 +727,7 @@ Proceed according to the decisions below.
 Do not make unrelated changes.
 
 Current expected branch:
-governance/nifty-ramanujan-w68f9z
+Governance/nifty-ramanujan-w68f9z
 
 Current reported HEAD:
 103d3715b312c41e97a40a8d3c64c472deaa3bee

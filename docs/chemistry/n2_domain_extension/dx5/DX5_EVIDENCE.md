@@ -1093,7 +1093,7 @@ Queries, databases and citation chains:
 - Europe PMC REST search: '"rotational excitation" AND (N2 OR nitrogen) AND electron AND "cross section"' (25 hits, none relevant above 10 eV)
 - arXiv export API (406) ; arxiv.org via WebSearch domain filter
 - Truhlar group publication lists 1968-1979 and 1980-1989 (truhlar.chem.umn.edu) for self-archived N2 papers
-- Consequence calculation (scratch, not repository): /tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/dx5/calc/p1_rot_numbers.py -> p1_rot_numbers.json; reproduces lane-01's share_above_10eV (96.31 % at 45 eV, 97.81 % at 60 eV) exactly
+- Consequence calculation (scratch, not repository): /tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/dx5/calc/p1_rot_numbers.py -> p1_rot_numbers.json; reproduces lane-01's share_above_10eV (96.31 % at 45 eV, 97.81 % at 60 eV) exactly
 
 Dead ends:
 
@@ -1247,7 +1247,7 @@ Dead ends:
 
 ### P3 - record `P3_review` (sha256 `9954c58a630532a223048d71b78dbc3e9454df90b9edb08ce44b8cb39dac098c`)
 
-Strategy: A - compilations and reviews first (Song 2023 -> Itikawa 2006/1986 -> Tabata 2006 QST files -> Majeed & Strickland 1997 -> primary beam measurements and calculations they cite), with forward-citation chains (Semantic Scholar citations API) from Tanaka 1981, Truhlar et al. 1977, Truhlar 1972 and Rumble et al. 1983. Repository branch governance/nifty-ramanujan-w68f9z; HEAD at time of search 68be96f74e60fc60c69bec3341b2c76beab5988c (task text named 9f26df2; the lane-01 audit files were read at HEAD). Repository not modified; no Julia run; LXCat not used.
+Strategy: A - compilations and reviews first (Song 2023 -> Itikawa 2006/1986 -> Tabata 2006 QST files -> Majeed & Strickland 1997 -> primary beam measurements and calculations they cite), with forward-citation chains (Semantic Scholar citations API) from Tanaka 1981, Truhlar et al. 1977, Truhlar 1972 and Rumble et al. 1983. Repository branch Governance/nifty-ramanujan-w68f9z; HEAD at time of search 68be96f74e60fc60c69bec3341b2c76beab5988c (task text named 9f26df2; the lane-01 audit files were read at HEAD). Repository not modified; no Julia run; LXCat not used.
 
 Queries, databases and citation chains:
 

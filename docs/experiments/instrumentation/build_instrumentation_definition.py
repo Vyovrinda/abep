@@ -720,7 +720,7 @@ def instruments(basis: dict, der: dict) -> list:
               ["S1a: probe calibration in a reference field; stage position calibration; room-temperature mapping "
                "(hot-state effects TBD, lane 25 Sec. 12)"],
               {"DQ-RARCH": "C", "DQ-TABS": "S", "DQ-PBUS": "-", "DQ-SUST": "S", "DQ-KNEE": "S"}, ["VO-BZ"],
-              {"status": "FEASIBLE_IN_PRINCIPLE", "why": "magnetostatic; the P5 non-identifiability (governance.md) is the "
+              {"status": "FEASIBLE_IN_PRINCIPLE", "why": "magnetostatic; the P5 non-identifiability (Governance.md) is the "
                "reason it is mandatory with coil currents"}),
         _inst("INS-10", "stability / extinction / ignition detection", ["M4"], "per-dwell extinction flag, restarts, "
               "ignition success within timeout", "applies THR-EXTINCTION (lane 06, same functional form as P5-N2 rule "

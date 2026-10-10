@@ -884,7 +884,7 @@ def _items_base(ar):
            "differing sign conventions and the statistical / fractional closure failures; a missing u(I_k) gives "
            "NOT_EVALUATED_UNCERTAINTY (A9.6 sec. 14). Still "
            "REFUSED (raised; input errors, not findings): a record that is incomplete (a required terminal or "
-           "capacity_monitoring field absent from the record, governance.md rule 3) or not a capacity record at all "
+           "capacity_monitoring field absent from the record, Governance.md rule 3) or not a capacity record at all "
            "(Hall ON, wrong stage, not the dedicated collector, not the single-point metered body ground, V_anode not on "
            "a high-impedance isolated channel), a missing match rule, and synthetic / measured capacity candidates "
            "mixed in one evaluation (PR #34); in the campaign driver a whole bundle mixing synthetic and measured "

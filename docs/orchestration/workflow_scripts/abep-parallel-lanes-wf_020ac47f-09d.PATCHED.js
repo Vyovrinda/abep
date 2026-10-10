@@ -12,16 +12,16 @@ export const meta = {
 const BASE = args.base
 const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
 
-CONTEXT: a pre-registered P5-N2 Hall-thruster validation campaign is RUNNING right now in the background and uses every CPU core. Its raw records live under /tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/campaign_vac* — NEVER read, list or touch those, and never state or guess any campaign result.
+CONTEXT: a pre-registered P5-N2 Hall-thruster validation campaign is RUNNING right now in the background and uses every CPU core. Its raw records live under /tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/campaign_vac* — NEVER read, list or touch those, and never state or guess any campaign result.
 
 HARD RULES (breaking any = lane rejected):
-1. Modify/create files ONLY under your lane's ALLOWED paths (listed below). In particular NEVER modify: hallthruster_bridge/prereg/**, hallthruster_bridge/campaign/**, hallthruster_bridge/propellants/**, hallthruster_bridge/audit/**, hallthruster_bridge/ensemble/**, hallthruster_bridge/cases/p5_n2.json, hallthruster_bridge/bridge_lib.jl, hallthruster_bridge/PINNED.toml, scripts/score_p5_n2_campaign.py, scripts/audit_p5_n2_campaign_records.py, scripts/freeze_p5_n2_dataset.py, scripts/score_p5_n2_frozen.py, scripts/report_p5_n2_campaign.py, scripts/make_validation_release.py, abep_sim/data/**, golden data, docs/HISTORY.md, governance.md, README.md, tests/test_sim.py. (The owner integrates HISTORY/governance entries later.)
-2. Evidence discipline (governance.md rules 6 and 10, docs/EVIDENCE.md): never invent numbers, sources, page numbers or DOIs. Every numeric value carries a source and an evidence class (measured / digitized / inferred / reconstructed / model-derived / assumed) or is explicitly "TBD — requires <what>". Anything recalled from memory without a verified source is marked "verify". Published / openly accessible sources only; do not contact any person or lab; no email; do not use LXCat; do not bypass paywalls or bot challenges; never change TLS/trust settings. Cite URLs/DOIs you actually accessed.
+1. Modify/create files ONLY under your lane's ALLOWED paths (listed below). In particular NEVER modify: hallthruster_bridge/prereg/**, hallthruster_bridge/campaign/**, hallthruster_bridge/propellants/**, hallthruster_bridge/audit/**, hallthruster_bridge/ensemble/**, hallthruster_bridge/cases/p5_n2.json, hallthruster_bridge/bridge_lib.jl, hallthruster_bridge/PINNED.toml, scripts/score_p5_n2_campaign.py, scripts/audit_p5_n2_campaign_records.py, scripts/freeze_p5_n2_dataset.py, scripts/score_p5_n2_frozen.py, scripts/report_p5_n2_campaign.py, scripts/make_validation_release.py, abep_sim/data/**, golden data, docs/HISTORY.md, Governance.md, README.md, tests/test_sim.py. (The owner integrates HISTORY/Governance entries later.)
+2. Evidence discipline (Governance.md rules 6 and 10, docs/EVIDENCE.md): never invent numbers, sources, page numbers or DOIs. Every numeric value carries a source and an evidence class (measured / digitized / inferred / reconstructed / model-derived / assumed) or is explicitly "TBD — requires <what>". Anything recalled from memory without a verified source is marked "verify". Published / openly accessible sources only; do not contact any person or lab; no email; do not use LXCat; do not bypass paywalls or bot challenges; never change TLS/trust settings. Cite URLs/DOIs you actually accessed.
 3. CPU: do NOT run Julia, do NOT run the full test suite, do NOT run long computations. You may run only your own new test file (python -m pytest -q <your test file>) and quick scripts (< 1 min).
 4. Do not change physics, thresholds, frozen data, chemistry or the running campaign. Do not claim demonstrated ABEP closure, an architecture winner, or any transport admission. No retuning suggestions.
 5. When done: git add your files and commit in the worktree with a clear message whose last two lines are exactly:
-Co-Authored-By: governance Opus 5.5 <noreply@anthropic.com>
-governance-Session: https://governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
+Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
 Do NOT push. Report the worktree absolute path (pwd), branch name (git rev-parse --abbrev-ref HEAD) and commit sha.
 
 YOUR LANE:
@@ -51,12 +51,12 @@ const VERDICT = {
 }
 
 const verifyPrompt = (lane, res) => `You are an ADVERSARIAL reviewer. Default to finding problems; pass only if there are no blocker or major issues.
-Repository: ABEP-VLEO simulator. Lane "${lane.key} — ${lane.title}" was built in worktree ${res.worktree_path} (branch ${res.branch}, commit ${res.commit}), base ${BASE}. Work read-only in that directory (cd there). Never read or touch /tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/campaign_vac*. Do NOT run Julia or the full test suite (CPU is reserved for a running campaign).
+Repository: ABEP-VLEO simulator. Lane "${lane.key} — ${lane.title}" was built in worktree ${res.worktree_path} (branch ${res.branch}, commit ${res.commit}), base ${BASE}. Work read-only in that directory (cd there). Never read or touch /tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/campaign_vac*. Do NOT run Julia or the full test suite (CPU is reserved for a running campaign).
 Lane brief: ${lane.prompt}
 ALLOWED paths for this lane: ${lane.allowed.join(', ')}
 
 Check, and report each as an issue if violated:
-1. SCOPE: git -C <worktree> diff --name-only ${BASE}...HEAD — every changed path must be within the ALLOWED paths; no frozen/forbidden file touched (prereg, campaign, propellants, audit, ensemble, cases/p5_n2.json, bridge_lib.jl, PINNED.toml, frozen scorer/gate/freeze/report/release scripts, abep_sim/data, HISTORY.md, governance.md, README.md, tests/test_sim.py). Uncommitted leftovers count as issues.
+1. SCOPE: git -C <worktree> diff --name-only ${BASE}...HEAD — every changed path must be within the ALLOWED paths; no frozen/forbidden file touched (prereg, campaign, propellants, audit, ensemble, cases/p5_n2.json, bridge_lib.jl, PINNED.toml, frozen scorer/gate/freeze/report/release scripts, abep_sim/data, HISTORY.md, Governance.md, README.md, tests/test_sim.py). Uncommitted leftovers count as issues.
 2. PROVENANCE: open the deliverables. Every numeric value must have a source + evidence class, or be marked TBD/verify. Flag invented-looking numbers, unsourced claims, wrong or fabricated citations. Spot-check at least 3 cited sources with WebFetch/WebSearch (DOI/URL resolves, title/authors match, the cited value plausibly appears there if accessible). Flag any claim of a P5-N2 campaign result, architecture winner, transport admission or demonstrated closure (blocker).
 3. CORRECTNESS: schemas/JSON/TOML parse; code is consistent with the repository modules it references (names/fields actually exist — grep them); the lane's own test file passes (run only that file).
 4. USEFULNESS vs the brief: required deliverables present; open questions are genuine owner decisions.

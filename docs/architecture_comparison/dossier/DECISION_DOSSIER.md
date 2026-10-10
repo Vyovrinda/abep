@@ -116,7 +116,7 @@ Next decisive evidence (failure-tree ranking rule, per architecture):
 4. M-EROSION (measurement) — Short erosion/oxidation test on air; decides no node alone; contributes to 2 node(s).
 5. M-SUSWIN (measurement) — Sustainment-window map; decides no node alone; contributes to 2 node(s).
 6. M-THERMAL (measurement) — Thermal balance test; decides no node alone; contributes to 2 node(s).
-- Blocked: A-HALLMAP — credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
+- Blocked: A-HALLMAP — credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
 
 ### Measured / model-derived / assumed quantities (as classified by their source files)
 
@@ -266,7 +266,7 @@ Next decisive evidence (failure-tree ranking rule, per architecture):
 4. A-THERMAL (analysis) — Thermal/life analysis; decides no node alone; contributes to 6 node(s).
 5. A-ELEC (analysis) — Electrical closure on the common bus boundary; decides no node alone; contributes to 3 node(s).
 6. M-EROSION (measurement) — Short erosion/oxidation test on air; decides no node alone; contributes to 3 node(s).
-- Blocked: A-HALLMAP — credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
+- Blocked: A-HALLMAP — credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
 
 ### Measured / model-derived / assumed quantities (as classified by their source files)
 
@@ -416,7 +416,7 @@ Next decisive evidence (failure-tree ranking rule, per architecture):
 4. A-THERMAL (analysis) — Thermal/life analysis; decides no node alone; contributes to 6 node(s).
 5. M-PREION (measurement) — Common-condition pre-ionizer A/B/C test; decides no node alone; contributes to 6 node(s).
 6. A-ELEC (analysis) — Electrical closure on the common bus boundary; decides no node alone; contributes to 3 node(s).
-- Blocked: A-HALLMAP — credible transport set is empty (governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
+- Blocked: A-HALLMAP — credible transport set is empty (Governance.md gate 3 FAIL; P5-N2 v1 all INCONCLUSIVE / NOT ELIGIBLE); O4 dispositions incomplete (admission gated, hall_ensemble._check_o4).
 
 ### Measured / model-derived / assumed quantities (as classified by their source files)
 
@@ -475,7 +475,7 @@ Bus-power components (bus_power_boundary_v1, `docs/architecture_comparison/elect
 
 ## Physics track (meets the architecture track only through an admitted Hall closure)
 
-| gate (governance.md) | status |
+| gate (Governance.md) | status |
 |---|---|
 | 1 clean-install reproducibility | pass (frozen atmosphere; pinned deps; runs with pymsis absent) |
 | 2 grid-life consistency | pass (optimiser degeneracy flagged; perveance-window tests) |
@@ -500,7 +500,7 @@ Bus-power components (bus_power_boundary_v1, `docs/architecture_comparison/elect
 
 | input file | sha256 |
 |---|---|
-| `governance.md` | `c70b83d43608e2b953b790ee61e44380484eb2a02f69bda3a203ea6996920436` |
+| `Governance.md` | `c70b83d43608e2b953b790ee61e44380484eb2a02f69bda3a203ea6996920436` |
 | `abep_sim/arch_boundary.py` | `8dfc309a5d2c717913fd4961bc660f8bab92ed2c59356f5a78bff3ef4392eeae` |
 | `abep_sim/arch_compare.py` | `f3946249fe7840781211d906a5c8dccedcffab7f4f14df214b35517049db655e` |
 | `abep_sim/hall_ensemble.py` | `218f890c8444af1f593396da5051e38d2d093bbb3cb0bc976cc44b01b67df704` |

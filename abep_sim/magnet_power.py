@@ -11,7 +11,7 @@ Pure module: standard library only, no I/O, not wired into ``archengine`` (wirin
 numbers in the module are cited reference constants/objects that a caller must pass explicitly (``ANNEALED_COPPER_IACS``)
 or fundamental constants (``MU0_N_PER_A2``). Missing, non-finite or out-of-domain inputs raise ``ValueError``; physically
 impossible designs (saturated core, magnet beyond its knee, zero turns) raise ``ValueError`` instead of returning a
-number (governance.md rule 3: no silent fallbacks).
+number (Governance.md rule 3: no silent fallbacks).
 
 Equations and sources (all accessed 2026-09-26, openly available):
   [E1] Ampere's law around the magnetic circuit, sum of element MMFs = N I, and element reluctance

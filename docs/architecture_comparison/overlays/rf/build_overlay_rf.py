@@ -17,7 +17,7 @@ Usage:
 Inputs are read READ-ONLY and are pinned by sha256 (INPUTS below). Each is looked up by its repository-relative path,
 first in this checkout, then under every --input-root, then in the sibling git worktrees of this checkout; only a file
 whose sha256 matches the pin is accepted, so the result does not depend on where an input was found. A missing input
-raises OverlayInputError with the list of places searched (no silent fallback, governance.md rule 3). After the input
+raises OverlayInputError with the list of places searched (no silent fallback, Governance.md rule 3). After the input
 lanes merge, the inputs are found in this checkout and nothing else is needed. To move to a newer input, change its
 pin here deliberately and regenerate.
 
@@ -112,7 +112,7 @@ def candidate_roots(extra_roots):
     parent = os.path.dirname(ROOT)
     if os.path.basename(parent) == "worktrees":            # ROOT is a git worktree: search its siblings
         roots += sorted(p for p in glob.glob(os.path.join(parent, "*")) if os.path.isdir(p))
-        main = os.path.dirname(os.path.dirname(parent))      # <main>/.governance/worktrees/<wt> -> <main>
+        main = os.path.dirname(os.path.dirname(parent))      # <main>/.Governance/worktrees/<wt> -> <main>
         roots.append(main)
     out, seen = [], set()
     for r in roots:

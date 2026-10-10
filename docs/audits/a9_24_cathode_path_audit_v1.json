@@ -30,7 +30,7 @@
   "LABEL": "requirement / record text in an active document still names a flight cathode element; no number"
  },
  "method": [
-  "fetched origin/governance/nifty-ramanujan-w68f9z at 4b5563b and branched lane-a924-cathode",
+  "fetched origin/Governance/nifty-ramanujan-w68f9z at 4b5563b and branched lane-a924-cathode",
   "searched abep_sim/**, scripts/**, docs/**/build_*.py and helper modules, hallthruster_bridge python, config/**, schemas/**, tests/** for LaB6Cathode, Cathode, XE_CATHODE, MW_AIR_CATHODE, lab6_xe, hollow_cathode, cathode_*, keeper, heater, C1 / c1_, xe_cathode, cathode_starts, cathode_life",
   "traced every hit to its callers (import graph and call sites) and to the committed JSON products and bid documents that carry its numbers",
   "decided reachability from the active chain: hall_icp_neutralizer is not a thruster.CARDS card and not an archengine architecture; the active chain is the F1-F8 design-synthesis modules (abep_sim/design/*, abep_sim/programme/design_synthesis.py), bus_boundary_a9_v2, the golden case hall_icp_neutralizer_reference, the mass/power v3, Xe accounting v3, RFQ v3, RVM, M16 v5, F9 and the bid package"
@@ -349,13 +349,13 @@
    "locations": [{"file": "abep_sim/cathode_integration.py (lane_19; whole module)"}, {"file": "docs/architecture_comparison/cathode_integration/derive_cathode_integration_v1.py"}, {"file": "abep_sim/arch_boundary.py", "lines": "34-61 (cathode_keeper, cathode_heater)"}, {"file": "abep_sim/breakeven.py", "lines": "40"}, {"file": "abep_sim/hard_gates.py + docs/architecture_comparison/hard_gates/*"}, {"file": "abep_sim/thermal_life.py", "lines": "14, 34-35, 67-69, 832-928 (cathode node, LaB6 life)"}, {"file": "abep_sim/mass_bom.py", "lines": "131 (ARCHITECTURES hall_only/rf_hall/ecr_hall), 294, 308-314 (common 'cathode' item and PPU boundary incl. cathode_keeper/heater)"}, {"file": "abep_sim/xe_ledger.py (m_cathode term) + docs/budgets/xe_ledger/build_xe_ledger.py"}, {"file": "docs builders: architecture_comparison/{veto_layer, aux_bus, electrical_closure, overlays/hall_sustainment, experiment_package, compressor_downselect, lock1, feed_state_closure}, evidence/{hall_sustainment, ecr_source}, experiments/{phase1_prereg_framework, lifetime_ao (AOL-M04/M05), instrumentation, capability_demo, hardware}, interfaces/preionizer_module, milestones/bundle1, controls (dual_feed_state_machine), scripts/architecture/{build_comparison_grid, build_feed_envelope, build_decision_dossier, build_breakeven_surfaces, scaling_similarity}"}],
    "caller_chain": "standalone A5-era builders and lane modules; not imported by abep_sim/design/*, programme/design_synthesis or any A9 budget",
    "feeds_numbers": {"active_flight": "none"},
-   "evidence": "governance.md A9: the upstream RF/ECR pre-ionizer campaign (A5 Phase-1 topology, phase1_prereg_framework_v1, LOCK-1 D-01..D-04) and the RF||Hall v2 branch / A8 are historical; their architectures are not hall_icp_neutralizer"
+   "evidence": "Governance.md A9: the upstream RF/ECR pre-ionizer campaign (A5 Phase-1 topology, phase1_prereg_framework_v1, LOCK-1 D-01..D-04) and the RF||Hall v2 branch / A8 are historical; their architectures are not hall_icp_neutralizer"
   },
   {
    "id": "HR-12",
    "classification": "HISTORICAL_REGRESSION",
    "title": "Superseded A9 budget / procurement / maturity versions with C1 flight columns",
-   "locations": [{"file": "docs/budgets/mass_a9/build_mass_a9.py"}, {"file": "docs/budgets/mass_power_a9_v2/build_mass_power_a9_v2.py"}, {"file": "docs/budgets/xe_ledger_a9/build_xe_ledger_a9.py"}, {"file": "docs/budgets/xe_accounting_a9_v2/build_xe_accounting_a9_v2.py"}, {"file": "docs/procurement/rfq_a9/build_rfq_a9.py; docs/procurement/rfq_a9_v2/build_rfq_a9_v2.py"}, {"file": "docs/budgets/subsystem_maturity/build_subsystem_maturity.py; docs/experiments/hall_icp/integration/m16_v3, m16_v4"}, {"file": "docs/budgets/owner_decisions/build_owner_questions_state_v4.py, build_owner_questions_consolidated.py (never run, governance.md)"}],
+   "locations": [{"file": "docs/budgets/mass_a9/build_mass_a9.py"}, {"file": "docs/budgets/mass_power_a9_v2/build_mass_power_a9_v2.py"}, {"file": "docs/budgets/xe_ledger_a9/build_xe_ledger_a9.py"}, {"file": "docs/budgets/xe_accounting_a9_v2/build_xe_accounting_a9_v2.py"}, {"file": "docs/procurement/rfq_a9/build_rfq_a9.py; docs/procurement/rfq_a9_v2/build_rfq_a9_v2.py"}, {"file": "docs/budgets/subsystem_maturity/build_subsystem_maturity.py; docs/experiments/hall_icp/integration/m16_v3, m16_v4"}, {"file": "docs/budgets/owner_decisions/build_owner_questions_state_v4.py, build_owner_questions_consolidated.py (never run, Governance.md)"}],
    "caller_chain": "immutable history; superseded by mass_power v3, Xe accounting v3, RFQ v3, M16 v5, owner questions v5",
    "feeds_numbers": {"active_flight": "none"},
    "evidence": "revision_of / supersedes_for_use pins in the v3 / v5 products"

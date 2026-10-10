@@ -88,7 +88,7 @@ Cases where 12 mN at the self-consistent flow already exceeds 1.5 kW (efficiency
 | HG-3 | atomic-oxygen compatibility | wetted rotor/stator/channel materials must not recede beyond the PROPOSED 0.1 mm allowance over 26,000 h at the per-case AO number flow; ram-energy yields (EV-16) bound the thermal-gas case from above (EV-17) | RFP mission duration; allowance PROPOSED |
 | HG-4 | compression ratio 2.4-142 incl. atomic O | the concept's compression ratio for the least-compressed species (atomic O, EV-02) covers the W1 self-consistent requirement at each of the 36 candidate-cases | W1 feed-state closure (FC-01: required active CR 2.37-142; PROPOSED setpoint ladder) |
 | HG-5 | backflow | (a) inlet pumping speed S >= S_required(b) so that the plenum backflow fraction b stays at the target (W1 FC-01 model; b targets PROPOSED); (b) no uncontrolled back-streaming on rotor stop (isolation valve) | W1 FC-01; EV-01, EV-04 |
-| HG-6 | common feed boundary | the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept whose compression depends on the pre-ionizer is out of DI-1.4 scope | owner operating model (RF/ECR change only the pre-ionization method; governance.md scope rule) |
+| HG-6 | common feed boundary | the compressor sits upstream of the valve and is identical for hall_only / rf_hall / ecr_hall; a concept whose compression depends on the pre-ionizer is out of DI-1.4 scope | owner operating model (RF/ECR change only the pre-ionization method; Governance.md scope rule) |
 
 ## 3. Down-selection matrix
 

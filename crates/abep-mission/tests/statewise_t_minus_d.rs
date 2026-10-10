@@ -1,4 +1,4 @@
-//! Statewise T - D over the 196 required design states (SC-WP-04, A9.29 sec. 9 / governance.md rule 9): missing physical
+//! Statewise T - D over the 196 required design states (SC-WP-04, A9.29 sec. 9 / Governance.md rule 9): missing physical
 //! evidence is asserted as the fail-closed status, never skipped. The empty credible Hall transport set is an expected
 //! governed state and is asserted explicitly.
 

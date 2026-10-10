@@ -49,7 +49,7 @@
    "path": "hallthruster_bridge/cases/p5_xenon.json",
    "sha256": "1071684dca85a60cdd097c7efaccdf3f6ac29014b796b1aa4ce54e49b0e89f85",
    "lane": "base checkout (read only)",
-   "branch": "governance/nifty-ramanujan-w68f9z",
+   "branch": "Governance/nifty-ramanujan-w68f9z",
    "commit": "fe1d79390f",
    "role": "P5 channel radii r_in / r_out and the published source cited for them (P5 channel cross-section only)"
   },
@@ -57,7 +57,7 @@
    "path": "abep_sim/constants.py",
    "sha256": "dd1c564324c139471bb361d27ef0f75b0f84de1878d100d4313aed12677f33d7",
    "lane": "base checkout (read only)",
-   "branch": "governance/nifty-ramanujan-w68f9z",
+   "branch": "Governance/nifty-ramanujan-w68f9z",
    "commit": "fe1d79390f",
    "role": "M_SPECIES (mass-fraction arithmetic on the feed envelope's own basis) and RFPConstraints"
   }
@@ -83,7 +83,7 @@
    "value": 25.0,
    "unit": "mN",
    "evidence_class": "assumed",
-   "source": "abep_sim/constants.py RFPConstraints.thrust_max_mN ('Hard limits from Part III Para 2 of the RFP'); governance.md RFP envelope",
+   "source": "abep_sim/constants.py RFPConstraints.thrust_max_mN ('Hard limits from Part III Para 2 of the RFP'); Governance.md RFP envelope",
    "quantity_kind": "requirement (RFP), not a physical measurement"
   },
   "thrust_min": {
@@ -109,7 +109,7 @@
   },
   "propellants": {
    "value": "air + Xe",
-   "source": "governance.md RFP envelope",
+   "source": "Governance.md RFP envelope",
    "quantity_kind": "requirement (RFP)"
   }
  },
@@ -16481,7 +16481,7 @@
     "mixed_air_xe_feed": {
      "value": null,
      "status": "TBD",
-     "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind governance.md Next work 1-3 (Next work 4)",
+     "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind Governance.md Next work 1-3 (Next work 4)",
      "source": "feed_envelope_v1 xe_path.mixed_air_xe_feed"
     }
    },
@@ -16689,7 +16689,7 @@
      "id": "B-MIXED-FEED",
      "kind": "feed_tbd",
      "detail": "mixed air + Xe feed is TBD in the feed envelope",
-     "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind governance.md Next work 1-3 (Next work 4)",
+     "requires": "TBD - requires the Xe flow-setpoint policy; intake-delivered mixtures are gated behind Governance.md Next work 1-3 (Next work 4)",
      "resolved_by": [
       "DI-1"
      ]

@@ -440,11 +440,11 @@ These will tell us what efficiency a future flight RF generator must achieve.
 
 **RFQ packages may and should be split by supplier speciality.**
 
-The technical team/governance prepares the packages.
+The technical team/Governance prepares the packages.
 
 **Commercial dispatch authority remains with P9E/Vyovrinda under Praveen's authorization.**
 
-governance/team shall **not contact suppliers automatically**.
+Governance/team shall **not contact suppliers automatically**.
 
 Recommended package separation:
 

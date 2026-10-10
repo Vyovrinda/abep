@@ -169,7 +169,7 @@ ADMISSIBILITY_CRITERIA = (
 HALL_CALIBRATION_DOMAIN = {
     "criterion": "0-D Hall calibration envelope (archengine.CALIBRATION['hall'], calibration_status)",
     "status": "RECORDED_NOT_GATING_OWNER_CONFIRMATION_REQUESTED",
-    "statement": ("The 0-D Hall closure and its calibration envelope are withdrawn (governance.md 'Superseded / withdrawn': "
+    "statement": ("The 0-D Hall closure and its calibration envelope are withdrawn (Governance.md 'Superseded / withdrawn': "
                   "all absolute Hall results of the 0-D closure, incl. the Marchioni calibration on an invented "
                   "geometry). This golden is a reproducibility reference of a converged numerical state, not physics "
                   "evidence, so the withdrawn envelope is not treated as part of the 'registered model domain' of A9.18 "
@@ -178,7 +178,7 @@ HALL_CALIBRATION_DOMAIN = {
                   "default grid is an extrapolation (provenance.full_grid_scan). If the owner rules the envelope part "
                   "of the registered domain, SELECTION_RULE finds no admissible point and the golden must be re-decided; "
                   "it is never re-picked silently."),
-    "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; governance.md withdrawn list",
+    "basis": "docs/decisions/OD_2026_10_01_A9_18_GOLDEN_AND_BASELINE_OWNER_DECISIONS.md item 1; Governance.md withdrawn list",
 }
 ROTOR_LABEL = ("comp_rotor_qualification = NOT_EVALUATED_MATERIAL_BASIS, comp_sizing_mode = PARAMETRIC_SENSITIVITY, "
                "architecture status / evidence_class = PARAMETRIC_SENSITIVITY, feasible False. A9.9 S2.3 allows a rotor "
@@ -385,7 +385,7 @@ HALL_ICP_COMPOSITION = {
 # Why each block is not evaluated (rule 6: no invented operating point; rule 8: no new propulsion family).
 HALL_ICP_NOT_EVALUATED = {
     "hall_discharge_thrust_power": (
-        "the 0-D Hall closure (plasma_devices.hall_run_coupled) is withdrawn (governance.md 'Superseded / withdrawn'); the "
+        "the 0-D Hall closure (plasma_devices.hall_run_coupled) is withdrawn (Governance.md 'Superseded / withdrawn'); the "
         "HallThruster.jl transport credible set is empty (gate 3 FAIL; HallMap loads admitted members only), so no "
         "admitted model gives thrust, discharge power/current or anode efficiency"),
     "icp_neutralizer": (
@@ -525,7 +525,7 @@ CASE_ROLES = {**{k: "CANONICAL" for k in CASES}, "design_point_selection": "SELE
               "nonconverged_reference": f"{NONCONVERGED_ROLE} / {NONCONVERGED_EXPECTATION}",
               **{k: HISTORICAL_NON_FLIGHT_ROLE for k in HISTORICAL_NON_FLIGHT_CASES},
               "hall_icp_neutralizer_reference": ACTIVE_REFERENCE_ROLE}
-# frozen inputs whose hashes the golden carries (governance.md rule 1)
+# frozen inputs whose hashes the golden carries (Governance.md rule 1)
 FROZEN_INPUTS = ("atmosphere_msis21_v1.csv", "atmosphere_msis21_v1.json", "intake_surface_v1.csv", "intake_surface_v1.json")
 
 
@@ -582,7 +582,7 @@ def _provenance(full_scan: list) -> dict:
                          f"{HISTORICAL_NON_FLIGHT_ROLE}; active reference case hall_icp_neutralizer_reference "
                          f"({ACTIVE_REFERENCE_ROLE}); guards golden.require_flight_eligible_case and "
                          "archengine.require_flight_eligible")},
-        "quotability": "historical 0-D / withdrawn-Hall benchmarks (governance.md 'Superseded / withdrawn'): reproducibility "
+        "quotability": "historical 0-D / withdrawn-Hall benchmarks (Governance.md 'Superseded / withdrawn'): reproducibility "
                        "references only; absolute values are not quotable",
     }
 
@@ -644,7 +644,7 @@ def check(cases=None, rtol: float = 1e-6) -> list[str]:
 
 if __name__ == "__main__":
     # Exit status (owner decision 2026-09-27, CI signalling only): `check` prints "OK" and exits 0 when nothing moved;
-    # otherwise it prints one line per deviation and exits 1, so CI can gate on the exit code (governance.md rule 2).
+    # otherwise it prints one line per deviation and exits 1, so CI can gate on the exit code (Governance.md rule 2).
     # `generate` is unchanged (exit 0 after writing).
     import sys
     if len(sys.argv) > 1 and sys.argv[1] == "generate":

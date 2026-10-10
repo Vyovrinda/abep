@@ -884,7 +884,7 @@ def owner_decisions() -> list[dict]:
             "a Vyovrinda intake area from the mass/drag budget (supplied with provenance)"],
          "recommendation": "PROPOSED: carry S12 and S25 as the bracketing pair until a spacecraft drag budget exists"},
         {"id": "DI-1.2", "question": "Intake geometry (L/d, phi) and whether a TPMC surface beyond the frozen grid "
-                                     "(e.g. specular designs) is authorised (governance.md rule 1 rebuild)",
+                                     "(e.g. specular designs) is authorised (Governance.md rule 1 rebuild)",
          "options": ["G10", "G20", "G03 (not closed on the ladder)", "new geometry + surface rebuild"],
          "recommendation": "PROPOSED: G10 and G20 as the closed pair; G03 only with a compressor concept that swallows "
                            "its flow (FC-03)"},

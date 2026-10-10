@@ -1,4 +1,4 @@
-//! CONS-L1, the system energy ledger (governance.md rule 4; NP-THERMAL-CATHODELESS prereg CONS-L1 / EB-05; contract
+//! CONS-L1, the system energy ledger (Governance.md rule 4; NP-THERMAL-CATHODELESS prereg CONS-L1 / EB-05; contract
 //! PARITY-C-ABEP_SIM_BUS_BOUNDARY_A9_V2_PY-V1 conservation_checks).
 //!
 //! Every watt crossing the spacecraft-side DC boundary in one evaluated step must be accounted for exactly once: as
@@ -16,7 +16,7 @@ use crate::thermal::output::{RunStatus, ThermalOutput};
 use abep_types::EvalStatus;
 use std::collections::BTreeMap;
 
-/// Relative residual bound of the architecture energy ledger (governance.md rule 4: < 2 %).
+/// Relative residual bound of the architecture energy ledger (Governance.md rule 4: < 2 %).
 pub const CONS_L1_REL_TOL: f64 = 0.02;
 
 /// Where an account's slot power is read from the ledger.

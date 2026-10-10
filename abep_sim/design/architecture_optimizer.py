@@ -27,7 +27,7 @@ compressor space. Every Pareto member carries the list of NOT_EVALUATED system o
 synthetic fixtures labelled SYNTHETIC_TEST_DATA_NOT_EVIDENCE, and a synthetic-only ranking is labelled as such
 (mixing synthetic and evidence refuses).
 
-Design decisions recorded here (evidence discipline, governance.md rules 3, 6, 10; docs/EVIDENCE.md; A9.7 F7):
+Design decisions recorded here (evidence discipline, Governance.md rules 3, 6, 10; docs/EVIDENCE.md; A9.7 F7):
   * The filter case is a CONTEXT axis, not a searched variable: the only benefit of a filter (contamination / AO
     protection, F2) is NOT_EVALUATED, so comparing a filter against 'none' on flow alone would silently score that TBD
     benefit as zero. Each filter case gets its own Pareto set.
@@ -771,7 +771,7 @@ def hall_gated_thrust(name: str, rec: Mapping | None, repo: Path = REPO) -> dict
 
 UNLOCK = {
     "T": "an ADMITTED Hall transport member (credible set non-empty: a screening candidate promoted by pre-registered "
-         "predictive evidence, governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), "
+         "predictive evidence, Governance.md next-work 1/3) AND a design-specific Hall map (own H-1 geometry and B(z), "
          "HallMap trustworthy, chemistry_trustworthy) whose domain contains the offered feed state; or a measured H-1 "
          "thrust on the delivered feed (hardware pivot Phase 1-3, thrust stand RFQ-01)",
     "D_spacecraft": "spacecraft frontal area / body + array drag model (F1-ID-08: no spacecraft geometry in the "

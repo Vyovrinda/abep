@@ -42,7 +42,7 @@ UNRESOLVED_THERMAL = "UNRESOLVED"
 # temperature gate be applied; UNRESOLVED, PENDING, TBD, OPEN, any spelling variant -> INCOMPLETE_EVIDENCE
 RESOLVED_THERMAL_STATUSES = ("CLOSED_BY_EVIDENCE",)
 # T_operating must be a quantity record in K with provenance (never a bare number: a degC value passed as K would be
-# accepted silently); evidence classes admissible for a gate input (governance.md rule 10 / docs/EVIDENCE.md)
+# accepted silently); evidence classes admissible for a gate input (Governance.md rule 10 / docs/EVIDENCE.md)
 T_OPERATING_FIELDS = ("value_si", "unit_si", "evidence_class", "source")
 T_OPERATING_EVIDENCE_CLASSES = ("measured", "model-derived")
 FINAL_MATERIAL_STATUS = "OPEN"

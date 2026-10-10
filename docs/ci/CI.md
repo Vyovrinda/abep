@@ -1,6 +1,6 @@
 # Continuous integration: what it enforces and why
 
-CI turns the repository's evidence discipline (governance.md rules, [docs/EVIDENCE.md](../EVIDENCE.md)) into checks that a
+CI turns the repository's evidence discipline (Governance.md rules, [docs/EVIDENCE.md](../EVIDENCE.md)) into checks that a
 reviewer does not have to repeat by hand. It **verifies**. It never regenerates frozen data, never changes physics,
 thresholds or chemistry, never runs the Hall solver on a push or pull request, and never reads campaign records.
 
@@ -11,7 +11,7 @@ contexts required checks on `main` (exact names and procedure: `docs/ci/BRANCH_P
 
 | workflow | trigger | what it runs |
 |---|---|---|
-| `.github/workflows/ci.yml` | `pull_request`, `push` to `main` or to the pinned execution branch `governance/nifty-ramanujan-w68f9z` | job **integrity**: `python scripts/ci_checks.py`; job **tests** (pymsis present / absent): `python -m pytest -q tests`, the rule-9 outcome check, `python -m abep_sim.golden check` |
+| `.github/workflows/ci.yml` | `pull_request`, `push` to `main` or to the pinned execution branch `Governance/nifty-ramanujan-w68f9z` | job **integrity**: `python scripts/ci_checks.py`; job **tests** (pymsis present / absent): `python -m pytest -q tests`, the rule-9 outcome check, `python -m abep_sim.golden check` |
 | `.github/workflows/julia-smoke.yml` | `workflow_dispatch` only (manual, with a confirmation box) | pinned HallThruster.jl install and **one** `P5N2_SMOKE=1` construction job; never score-bearing |
 | `.github/workflows/rust-workspace.yml` | `pull_request`, `push` to `main` or `integration/simulation-complete`; full history; not required yet (CI_PLAN.md § 1 principle 4) | pinned rustc 1.94.1; abep_core sources == `parity_report_v2` sha256 (A9.30 sec. 6); `cargo fmt -- --check` (members only); clippy `-D warnings`; `cargo test --workspace --locked`; `abep-ci` bid-source-guard, test-register, groundtest-isolation |
 
@@ -44,7 +44,7 @@ never silent about its scope. The exit code is 1 if any check fails, and a check
 
 | check | what it verifies | rule it enforces |
 |---|---|---|
-| `parse_json_toml` | Every `*.json` and `*.toml` parses. A duplicate JSON key is an error, because Python would otherwise silently keep the last value. Every non-empty line of every `*.jsonl` evidence ledger (`docs/orchestration/fired_triggers.jsonl`, `trigger_ledger_v2.jsonl`, the audit record files) must be one JSON object. `*.jsonl` under `hallthruster_bridge/validation/` are campaign run records and are not read; the validation release pipeline binds them. Pruned: `.git`, `hallthruster_bridge/out` (raw run output), gitignored `results/`, and local environments and caches (`.venv`, `__pycache__`, `.governance`, …). | integrity of every data file |
+| `parse_json_toml` | Every `*.json` and `*.toml` parses. A duplicate JSON key is an error, because Python would otherwise silently keep the last value. Every non-empty line of every `*.jsonl` evidence ledger (`docs/orchestration/fired_triggers.jsonl`, `trigger_ledger_v2.jsonl`, the audit record files) must be one JSON object. `*.jsonl` under `hallthruster_bridge/validation/` are campaign run records and are not read; the validation release pipeline binds them. Pruned: `.git`, `hallthruster_bridge/out` (raw run output), gitignored `results/`, and local environments and caches (`.venv`, `__pycache__`, `.Governance`, …). | integrity of every data file |
 | `prereg_lock` | Every file listed in `prereg/p5_n2_prereg_lock_v1.json` matches its sha256. The inputs pinned by `p5_n2_validation_criteria_v1.json` (measurement audit, case set, transport candidates, all 22 chemistry configs) match theirs. These are the same refusal conditions the campaign driver applies at start-up, so CI fails wherever the driver would refuse. | pre-registration: "any change after this lock is a new, dated addendum, never an edit" |
 | `audit_manifest` | Each immutable audit snapshot in `audit/configs/` matches its sha256. The set of rate files it names equals the MANIFEST list, and every one of those rate tables matches its pinned sha256. The case-file snapshot also matches. | historical audits read immutable snapshots (PR #25 review) |
 | `hallthruster_pin` | The `PINNED.toml` commit, version and repository equal the `HallThruster` entry of `Manifest.toml` (repo-rev, version, repo-url). The `Project.toml` compat is `=<version>`. | rule 7 (pin; upgrade policy: never moved automatically) |
@@ -68,7 +68,7 @@ modification times are unchanged, and that append and remove are refused.
 the launch manifests. A reformatted file with identical content would still break the lock. The failure message tells the
 two cases apart: "parsed content equal: formatting only" or "content differs".
 
-Separate mode: `python scripts/ci_checks.py --pytest-junit <report.xml>` checks **governance.md rule 9** against a pytest JUnit
+Separate mode: `python scripts/ci_checks.py --pytest-junit <report.xml>` checks **Governance.md rule 9** against a pytest JUnit
 report. It requires no failure or error, exactly 5 skips whose reason starts with `SUPERSEDED` (the retired 0-D Hall
 calibration), and exactly one xfail, `test_v16_blind_validation_p5_nitrogen` (strict, so an unexpected pass is already a
 pytest failure). A new skip, for example a test silently disabled when a dependency is missing, fails CI. The expected
@@ -110,7 +110,7 @@ Other options: `--list` names the checks, and `--only a,b` runs a subset (exit c
 * **Clean tree.** After each job, `git status --porcelain` must be empty, so tests, goldens and checks must not rewrite
   committed files. Gitignored caches are allowed.
 * **Full history** (`fetch-depth: 0`) in both jobs, for the rule-9 reason above.
-* **Triggers.** `push` runs on `main` and on the pinned execution branch `governance/nifty-ramanujan-w68f9z`, because governance.md
+* **Triggers.** `push` runs on `main` and on the pinned execution branch `Governance/nifty-ramanujan-w68f9z`, because Governance.md
   says nobody executes from `main` until that branch merges. Other branches are checked through their pull requests.
 * `permissions: contents: read`. Superseded pull-request runs are cancelled.
 
