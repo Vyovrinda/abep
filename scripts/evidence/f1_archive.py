@@ -87,7 +87,7 @@ A924_QUOTES = ("AUTHORIZED TO KEEP AND UPLOAD.",
                "Do NOT store the 36.7 MB generated archive as an ordinary Git blob.",
                "Verify the uploaded/downloaded archive hash against the original before treating the upload as "
                "authoritative.")
-REPOSITORY = "ppusapati/abep"
+REPOSITORY = "vyovrinda/abep"
 DOWNLOAD_URL = f"https://github.com/{REPOSITORY}/releases/download/{RELEASE_TAG}/{ARCHIVE_NAME}"
 DOWNLOAD_RECORD_REL = f"{isy.F1_ARCHIVE_DIR_REL}/F1_{RUN_ID}.download_verification.json"
 UPLOAD_STEPS_REL = f"{isy.F1_ARCHIVE_DIR_REL}/UPLOAD_STEPS.md"

@@ -10,7 +10,7 @@ export const meta = {
 }
 
 const BASE = args.base
-const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
+const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
 
 CONTEXT: a pre-registered P5-N2 Hall-thruster validation campaign is RUNNING right now in the background and uses every CPU core. Its raw records live under /tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad/campaign_vac* — NEVER read, list or touch those, and never state or guess any campaign result.
 
@@ -20,8 +20,8 @@ HARD RULES (breaking any = lane rejected):
 3. CPU: do NOT run Julia, do NOT run the full test suite, do NOT run long computations. You may run only your own new test file (python -m pytest -q <your test file>) and quick scripts (< 1 min).
 4. Do not change physics, thresholds, frozen data, chemistry or the running campaign. Do not claim demonstrated ABEP closure, an architecture winner, or any transport admission. No retuning suggestions.
 5. When done: git add your files and commit in the worktree with a clear message whose last two lines are exactly:
-Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U
 Do NOT push. Report the worktree absolute path (pwd), branch name (git rev-parse --abbrev-ref HEAD) and commit sha.
 
 YOUR LANE:

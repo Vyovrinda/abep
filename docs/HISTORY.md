@@ -1418,7 +1418,7 @@ Regression tests: `test_rescore_loo_holdout_failure_is_a_blind_failure` and
 `test_rescore_same_combo_requires_actual_selections`. Both fail on the previous script and pass on the fix.
 
 ## P5-Xe identification campaign closed (2026-09-25, project decision)
-After the corrective rescoring (ppusapati/abep#11), the campaign is closed. It reopens only on genuinely new published
+After the corrective rescoring (vyovrinda/abep#11), the campaign is closed. It reopens only on genuinely new published
 information: the 2025 channel depth, coil currents or measured B(z), per-point divergence, or discharge-current traces.
 Final state:
 - TwoZoneBohm rejected (no quiet regime anywhere).

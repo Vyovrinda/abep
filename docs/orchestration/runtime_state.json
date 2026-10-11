@@ -105,7 +105,7 @@
    "not_a_standing_approval": "later merges to main need a new owner approval",
    "executed": {
     "status": "CONSUMED",
-    "pr": "https://github.com/ppusapati/abep/pull/31",
+    "pr": "https://github.com/vyovrinda/abep/pull/31",
     "pr_head": "4c1352d90031f012c9db3a071d65e83ada9d78fe",
     "merge_commit_on_main": "15981ae1b31aa00e48fe1745a07e8a3784608320",
     "utc": "2026-09-29",
@@ -180,7 +180,7 @@
   "merge_to_main_policy_row_9": "owner: create a checkpoint PR from the execution branch, freeze new merges briefly, run full pytest + golden + integrity + GitHub CI, review the diff, then merge if green (no direct merge)",
   "v2_branch": "feature/rf-hall-parallel-v2 frozen as historical alternative (row 11, 145-147)",
   "checkpoint_2_executed": {
-   "pr": "https://github.com/ppusapati/abep/pull/32",
+   "pr": "https://github.com/vyovrinda/abep/pull/32",
    "pr_head": "0a430bb5588a438f7c8485c6d16f40ed0d402c4c",
    "merge_commit_on_main": "7caaf1301d004bf4e32d35607ed7f0b8b09606c0",
    "utc": "2026-09-29",
@@ -188,7 +188,7 @@
    "diff_review": "48 files, additive, no protected paths"
   },
   "checkpoint_3_executed": {
-   "pr": "https://github.com/ppusapati/abep/pull/33",
+   "pr": "https://github.com/vyovrinda/abep/pull/33",
    "pr_head": "4555c784e37c53638a8f20c343b59c6273693104",
    "merge_commit_on_main": "20f14d8fb71b8e47f018dbb5b1e404462f9dd469",
    "utc": "2026-09-30",
@@ -198,7 +198,7 @@
    "after": "clean post-A9 baseline. Next (owner sequence 2026-09-30): triage the 54 open owner questions -> P1 ICP bench (ICP-45) -> P2 impedance map -> P3 coupled thermal redesign -> P4 anode design; P1/P2 data precede any P3/P4 closure. Launch only on owner instruction. Any further merge to main needs a new owner approval."
   },
   "checkpoint_4_executed": {
-   "pr": "https://github.com/ppusapati/abep/pull/34",
+   "pr": "https://github.com/vyovrinda/abep/pull/34",
    "pr_head": "ca36c9ecb1608c9382218cb8409eaaa34473599d",
    "merge_commit_on_main": "eef8b851fdf99d023eaea57951deddc5fca55778",
    "utc": "2026-09-30",
@@ -209,7 +209,7 @@
    "after": "any further merge to main needs a new owner approval"
   },
   "checkpoint_5_executed": {
-   "pr": "https://github.com/ppusapati/abep/pull/35",
+   "pr": "https://github.com/vyovrinda/abep/pull/35",
    "pr_head": "45ea2acae235739ffc7e06ff6cf9f856b4236598",
    "merge_commit_on_main": "98fbbb9b1cf12d238ec845b5a6cbb6c3be92fd3b",
    "utc": "2026-10-01",
@@ -306,7 +306,7 @@
   "icp_feed_gas_confirmation": "owner 2026-10-01: keep the A9.1 ICP feed-gas baseline unchanged (G-REUSE primary; G-XE declared ICP-feed variant); A9.15 concerns system propellant capability only"
  },
  "checkpoint_6": {
-  "pr": "ppusapati/abep#36",
+  "pr": "vyovrinda/abep#36",
   "main": "b1e5b761a40f82ca225dc412d17a87585653d4ff",
   "approval": "owner 2026-10-01 (one merge, consumed)"
  }

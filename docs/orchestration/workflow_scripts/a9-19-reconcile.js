@@ -5,11 +5,11 @@ export const meta = {
 }
 // args = { base }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, applied: { type: 'array', items: { type: 'string' } },
   blocked: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } }, required: ['commit', 'applied', 'blocked', 'tests'] }
-const common = (base) => `ABEP-VLEO repository (GitHub ppusapati/abep), ISOLATED git worktree (cwd). FIRST: git reset --hard ${base}; confirm git rev-parse HEAD. Read Governance.md.
+const common = (base) => `ABEP-VLEO repository (GitHub vyovrinda/abep), ISOLATED git worktree (cwd). FIRST: git reset --hard ${base}; confirm git rev-parse HEAD. Read Governance.md.
 SITUATION: HEAD merges two independent lines of work that both edited the same files: (A) the A9.19/A9.20 application (owner decisions docs/decisions/OD_2026_10_01_A9_19_* and A9_20_*: flight = one Hall + one RF/ICP neutralizer for air and Xe, two supply modes, Xe contingency/emergency, NO hollow cathode, C1 ground-only lab reference) - lane commits 8f0cd87 (budgets), b5b2ddc (RVM + RFQ v3), baf4791 (design + P1/P2), all on base f55abf6; and (B) the A9.16 finalize regeneration + review repairs (commits 760433a, 71a1e9e, 05a0e92, 46ff2d1, 0562805). Conflicts were resolved by TAKING (B)'s version wholesale for these files, so (A)'s edits in them are LOST: docs/architecture/freeze_candidate/{build_freeze_candidate.py, outputs}; docs/budgets/mass_power_a9_v3/{build_mass_power_a9_v3.py, json}; docs/budgets/xe_accounting_a9_v3/{build_xe_accounting_a9_v3.py, json}; docs/requirements/rvm_a9/{build_rvm_a9.py, RVM_A9.md}; tests/test_mass_power_a9_v3.py, tests/test_rvm_a9.py, tests/test_xe_accounting_a9_v3.py; abep_sim/design/architecture_optimizer.py; abep_sim/design/compressor_synthesis.py; plus generated outputs in docs/architecture_comparison/**, docs/design_synthesis/f3,f4,f7_f8.
 TASK: for your area, re-apply (A)'s semantic changes on top of (B)'s current content (use git diff f55abf6 <laneCommit> -- <file> to see (A)'s change, and git diff f55abf6 HEAD -- <file> for the combined state). KEEP every (B) repair (e.g. RFP-01: RVM refs to *_v3 artifacts; RVF-01/PHY-01 domain_gated_run in feed-state closure; S6.8 statuses). Then regenerate your area's generated outputs with their builders (never hand-edit generated JSON/MD) and run your area's tests + builders --check.
 RULES: Governance.md rules 1-10; never invent values; never weaken/skip tests; never modify docs/decisions/**, Governance.md, frozen data, immutable history. Touch only your ALLOWED paths. Commit; message ends with exactly:

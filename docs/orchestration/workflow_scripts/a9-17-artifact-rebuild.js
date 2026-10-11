@@ -9,8 +9,8 @@ export const meta = {
 
 // args = { base: '<sha>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, files: { type: 'array', items: { type: 'string' } },
   summary: { type: 'string' }, open_items: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } },
   required: ['commit', 'files', 'summary', 'open_items', 'tests'] }
@@ -19,7 +19,7 @@ const FIND = { type: 'object', properties: { findings: { type: 'array', items: {
   description: { type: 'string' }, evidence: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'file', 'description', 'evidence', 'fix_hint'] } } }, required: ['findings'] }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first and the owner decision docs/decisions/OD_2026_10_01_A9_17_DATA_ARTIFACT_OWNER_DECISIONS.md IN FULL (verbatim text governs; cite path + json sha256 + decision key).
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first and the owner decision docs/decisions/OD_2026_10_01_A9_17_DATA_ARTIFACT_OWNER_DECISIONS.md IN FULL (verbatim text governs; cite path + json sha256 + decision key).
 Other campaigns run in parallel on other worktrees (step 1 decision application, step 2 production-model changes). Touch ONLY your ALLOWED paths. Never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, existing abep_sim modules other than those allowed, or other deliverables. You MAY append ONE dated entry to docs/HISTORY.md for your change.
 EVIDENCE (Governance.md rules 1, 6, 10; docs/EVIDENCE.md): never invent values or sources; published/open sources and lawful access only; no contact with people; never change TLS settings (WebSearch/WebFetch are deferred tools - load via ToolSearch). Frozen data: versioned, deterministic builder, provenance manifest, sha256, check mode.
 Hygiene: your tests + builder/check; git add + commit; message ends with exactly:

@@ -593,7 +593,7 @@ LATER_RESIDUAL = {
         ("PENDING_OWNER_UPLOAD", "the hash-verified F1 archive F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst is uploaded by "
          "the owner as the GitHub Release asset (tag evidence-f1-intake-synthesis-v1-405296e); the original full F1 "
          "file is removed from the working tree only after the re-downloaded asset is hash-verified byte for byte",
-         "owner (GitHub Release on ppusapati/abep)")],
+         "owner (GitHub Release on vyovrinda/abep)")],
     ("A9.22", "G3_REQUIREMENTS_SNAPSHOT"): [
         ("PENDING_EVIDENCE", "compliance of the frozen rows: freezing the requirement basis changes no RVM status; "
          "every row stays as evaluated until determining evidence exists", "hardware programme / RVM")],

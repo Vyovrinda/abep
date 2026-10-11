@@ -9,8 +9,8 @@ export const meta = {
 
 // args = { base: '<sha>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = {
   type: 'object',
   properties: {
@@ -30,7 +30,7 @@ const FIND = {
   required: ['findings'],
 }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep), in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep), in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first.
 
 Two other campaigns run in parallel on other worktrees: step 1 (P1/P2/P3/P4/RFQ/mass/Xe/records) and step 2 (production-model changes in abep_sim/compressor.py, reservoir.py, intake_tpmc.py, golden). YOU CREATE NEW FILES ONLY (plus the explicitly allowed edits of your lane). Never modify existing abep_sim/*.py modules, abep_sim/data/* existing files, abep_sim/design/**, docs/decisions/**, docs/HISTORY.md, Governance.md, hallthruster_bridge/**, or any existing deliverable. Owner decisions you implement are immutable records in docs/decisions/OD_2026_10_01_A9_{13,14,15}_* - read the verbatim .md of each decision you cite; cite path + json sha256 + question id.
 EVIDENCE (Governance.md rules 6 and 10, docs/EVIDENCE.md): never invent values, sources, page/table ids or DOIs; every value has a source and an evidence class or is TBD; published/open sources only; lawful access only - no paywall/captcha bypass, no contact with people/labs/suppliers, no email, not LXCat, never change TLS settings (WebSearch/WebFetch are deferred tools: load them via ToolSearch). Deliverable shape: JSON (+ generated MD where it is a document) + deterministic builder with --check + tests; no hidden defaults; missing inputs raise.

@@ -5,15 +5,15 @@ export const meta = {
 }
 // args = { base }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, applied: { type: 'array', items: { type: 'string' } },
   blocked: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } }, required: ['commit', 'applied', 'blocked', 'tests'] }
 const FIND = { type: 'object', properties: { findings: { type: 'array', items: { type: 'object', properties: {
   id: { type: 'string' }, severity: { type: 'string', enum: ['blocker', 'major', 'minor'] }, lane: { type: 'string', enum: ['budgets', 'reqproc', 'design'] },
   file: { type: 'string' }, description: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'lane', 'file', 'description', 'fix_hint'] } } }, required: ['findings'] }
-const common = (base) => `ABEP-VLEO repository (GitHub ppusapati/abep), ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md and the owner decisions docs/decisions/OD_2026_10_01_A9_19_* and OD_2026_10_01_A9_20_* IN FULL (verbatim governs; cite path + json sha256), plus A9.15 (OD_2026_10_01_A9_15_*), which A9.19 amends on the ROLE of xenon, and the registered RFP clauses RFP-P17-05 / RFP-P18-08 in docs/requirements/rfp_official/rfp_registration_v1.json.
+const common = (base) => `ABEP-VLEO repository (GitHub vyovrinda/abep), ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md and the owner decisions docs/decisions/OD_2026_10_01_A9_19_* and OD_2026_10_01_A9_20_* IN FULL (verbatim governs; cite path + json sha256), plus A9.15 (OD_2026_10_01_A9_15_*), which A9.19 amends on the ROLE of xenon, and the registered RFP clauses RFP-P17-05 / RFP-P18-08 in docs/requirements/rfp_official/rfp_registration_v1.json.
 DECISION CONTENT: flight thruster architecture = ONE Hall accelerator + ONE RF/ICP electron-source/neutralizer (cathodeless/electrodeless) serving BOTH atmospheric gases and xenon; TWO propellant supply modes with separate tanks/paths: ambient atmospheric propellant (primary) and xenon (CONTINGENCY / EMERGENCY mode, not a parallel co-equal propellant; capability still required by the RFP); NO conventional hollow cathode in the flight architecture; C1 (heated Xe-fed LaB6) is a GROUND-ONLY laboratory reference (H-1 I_d,max,H1,Ar characterization per A9.10 S3.5 and bench control in the C1-vs-ICP comparison), never flight hardware, never in flight mass/power/Xe budgets; hall_c1_reference is no longer a candidate FLIGHT configuration (keep it only as a labelled ground/laboratory reference where an artifact needs the comparison). The A9.1 ICP feed-gas baseline (G-REUSE primary, G-XE declared variant) is UNCHANGED.
 RULES: Governance.md rules 1-10; never invent values; never weaken/skip tests (rule 9: exactly 5 SUPERSEDED skips + 1 strict xfail); never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, abep_sim/data/** frozen files, or immutable history (rfq_a9, rfq_a9_v2, owner_questions_state_v2..v4, mass_power_a9_v2, xe_accounting_a9_v2). A concurrent workflow regenerates generated artifacts across docs/** on another worktree; touch only your ALLOWED paths. Record every applied item as an owner_answers_applied entry citing A9.19/A9.20. Never present anything as PASS.
 Hygiene: your builders --check + your tests; git add + commit; message ends with exactly:

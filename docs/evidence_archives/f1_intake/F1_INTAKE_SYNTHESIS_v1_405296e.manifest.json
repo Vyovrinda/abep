@@ -586,11 +586,11 @@
  "storage": {
   "preferred": {
    "kind": "GitHub Release asset on a tagged engineering-evidence release",
-   "repository": "ppusapati/abep",
+   "repository": "vyovrinda/abep",
    "tag": "evidence-f1-intake-synthesis-v1-405296e",
    "asset_name": "F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
    "status": "AUTHORIZED_TO_UPLOAD (A9.24 item 11); upload is a manual owner step (docs/evidence_archives/f1_intake/UPLOAD_STEPS.md)",
-   "download_url": "https://github.com/ppusapati/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
+   "download_url": "https://github.com/vyovrinda/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
    "download_url_rule": "standard GitHub release-asset URL for this repository, tag and asset name; valid only once the owner has published the release",
    "authoritative": false,
    "authoritative_rule": "the uploaded asset becomes the authoritative copy only after a downloaded copy is verified with `python scripts/evidence/f1_archive.py verify-download <path>` (sha256, size, zstd decode, tar sha256, per-member hashes) and that record is committed at docs/evidence_archives/f1_intake/F1_INTAKE_SYNTHESIS_v1_405296e.download_verification.json",

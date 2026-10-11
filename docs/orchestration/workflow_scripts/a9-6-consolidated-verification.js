@@ -71,8 +71,8 @@ while ((open.length || (rounds === 0 && minors.length)) && rounds < 3) {
       : `You run in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${HEAD}; confirm git rev-parse HEAD.`}
 ${SCOPE}
 Fix EVERY blocker and major finding below (and the minors where cheap - round 1 only). Rules: never modify owner-decision files, immutable historical artifacts (list in the structural dimension), hallthruster_bridge, abep_sim/data, existing abep_sim modules, Governance.md, docs/HISTORY.md, tests/test_sim.py; never invent numbers or citations (unsourceable -> TBD / 'verify'); never produce a PASS/closure the rules forbid; never answer a genuine owner question (register it in state v4 as TBD_OWNER instead, via its builder). After fixing, rebuild in the order P4, XE, P1, P2, P3, MP, RFQ, state v4, RVM, M16 v4 and run every scope builder's --check and every scope test file (tests/test_p1_icp_bench.py tests/test_p2_impedance_prep.py tests/test_p2_impedance_framework.py tests/test_p3_coupled_thermal.py tests/test_p4_anode_materials.py tests/test_mass_power_a9_v2.py tests/test_xe_accounting_a9_v2.py tests/test_rfq_a9_v2.py tests/test_rvm_a9.py tests/test_owner_questions_state_v4.py tests/test_m16_v4.py tests/test_owner_questions_state_v3.py) and python scripts/ci_checks.py; do not run the full suite. If a finding is wrong, say so with evidence in not_fixed (do not 'fix' correct behaviour). Commit (message ends with the two trailer lines:
-Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U
 ). Do not push.
 FINDINGS: ${JSON.stringify(rounds === 1 ? [...open, ...minors] : open)}`,
     worktree ? { label: `repair${rounds}`, phase: 'Repair', schema: REPAIR } : { label: `repair${rounds}`, phase: 'Repair', schema: REPAIR, isolation: 'worktree' })

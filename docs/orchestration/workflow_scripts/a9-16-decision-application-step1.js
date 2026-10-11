@@ -10,8 +10,8 @@ export const meta = {
 
 // args = { base: '<sha of execution branch head containing A9.13>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 
 const RESULT = {
   type: 'object',
@@ -25,7 +25,7 @@ const RESULT = {
   required: ['commit', 'applied', 'not_applicable', 'blocked', 'tests'],
 }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep). You run in an ISOLATED git worktree (your current working directory); do all edits there. FIRST run: git reset --hard ${base} and confirm with git rev-parse HEAD.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep). You run in an ISOLATED git worktree (your current working directory); do all edits there. FIRST run: git reset --hard ${base} and confirm with git rev-parse HEAD.
 
 PHASE: owner instruction 2026-10-01 'continue implementing them sequentially' = apply the recorded owner decisions to the artifacts, one lane at a time. The decisions are IMMUTABLE records in docs/decisions/: A9.8 OD_2026_10_01_A9_8_* (S1, P1 start), A9.9 OD_2026_10_01_A9_9_* (S2, production-model changes - NOT this step), A9.10 OD_2026_10_01_A9_10_* (S3, later P1 stages), A9.11 OD_2026_10_01_A9_11_* (S4, P2), A9.12 OD_2026_10_01_A9_12_* (S5, P3/P4), A9.13 OD_2026_10_01_A9_13_* (S6, upstream architecture), A9.14 OD_2026_10_01_A9_14_* (S7-S10: H-1/ICP design, LOCK-1 blockers incl. mass/Xe accounting, lower-urgency items, tooling; each answer carries a decision code), A9.15 OD_2026_10_01_A9_15_* (RFP-COMPLIANT PROPELLANT POLICY, amends A9.13/A9.14 Xe wording: the official RFP governs propellant capability; the system supports BOTH ambient atmospheric propellant (180-230 km) AND Xenon propulsion capability with separate tanks/paths; Xe is an RFP-required system capability, NOT a contingency; C1 is an internal element - a selected C1 that needs Xe has its Xe booked inside the system Xe architecture, no C1 Xe invented or excluded in advance; C1 presence/absence never removes system Xe capability). WHEREVER any older text (incl. A9.13 owner_statements.xenon and A9.14 S8.17/S8.21/S8.33/S8.35/S9.3/S9.10) says 'Xe contingency-only for C1', A9.15 governs. A9.15 does NOT change the A9.1 ICP gas-mode baseline (G-REUSE primary; G-XE a declared ICP-feed variant) - leave that unchanged. READ THE VERBATIM .md OF EVERY DECISION YOU APPLY IN FULL; the .json 'summary' is a recorder digest, the verbatim text governs. Cite each applied decision by decision file path + its json sha256 + question id (e.g. 'A9.8 P1Q-09').
 

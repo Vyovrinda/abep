@@ -2,7 +2,7 @@
 
 Recorded verbatim from the owner's message of 2026-10-01 (session chat), answering group S6 (S6.1–S6.22) of
 `docs/budgets/owner_decisions/OWNER_QUESTIONS_SEQUENCED_v1.md`. The same message approved the checkpoint-6 merge
-(PR ppusapati/abep#36). "RFP(1)" markers are the owner's citations of the official RFP document; that document is not yet
+(PR vyovrinda/abep#36). "RFP(1)" markers are the owner's citations of the official RFP document; that document is not yet
 registered in the repository (see S6.22 / AG-15). Machine-readable companion:
 `OD_2026_10_01_A9_13_s6_upstream_architecture_owner_decisions.json`. Immutable after commit; later amendments are new addenda.
 

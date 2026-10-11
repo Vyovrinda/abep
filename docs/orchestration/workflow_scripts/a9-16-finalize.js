@@ -11,8 +11,8 @@ export const meta = {
 
 // args = { base: '<integrated sha: steps 1 + 2 + A9.17 merged>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, applied: { type: 'array', items: { type: 'string' } },
   blocked: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } }, required: ['commit', 'applied', 'blocked', 'tests'] }
 const FIND = { type: 'object', properties: { findings: { type: 'array', items: { type: 'object', properties: {
@@ -20,7 +20,7 @@ const FIND = { type: 'object', properties: { findings: { type: 'array', items: {
   description: { type: 'string' }, evidence: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'file', 'description', 'evidence', 'fix_hint'] } } }, required: ['findings'] }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first. Owner decisions (immutable; the verbatim .md governs; cite path + json sha256 + id): docs/decisions/OD_2026_10_01_A9_{9,13,14,15,17}_*. The official RFP is registered in docs/requirements/rfp_official/rfp_registration_v1.json (verbatim clauses with page ids RFP-Pnn-mm) - the authoritative requirement source (A9.15, A9.17). Steps 1 (decision application) and 2 (production-model changes: G-03..05 flags, intake input validation, rotor strength basis, Gaede domain flag, IntakeSurface recombination fix) are ALREADY MERGED in your base; build on them.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first. Owner decisions (immutable; the verbatim .md governs; cite path + json sha256 + id): docs/decisions/OD_2026_10_01_A9_{9,13,14,15,17}_*. The official RFP is registered in docs/requirements/rfp_official/rfp_registration_v1.json (verbatim clauses with page ids RFP-Pnn-mm) - the authoritative requirement source (A9.15, A9.17). Steps 1 (decision application) and 2 (production-model changes: G-03..05 flags, intake input validation, rotor strength basis, Gaede domain flag, IntakeSurface recombination fix) are ALREADY MERGED in your base; build on them.
 RULES: Governance.md rules 1-10 (frozen data, goldens, no silent fallbacks, cite data, tests 5 skipped + 1 strict xfail); never retune; never invent values; never declare a winner or a PASS without determining evidence (A9.13 S6.22); never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, abep_sim/data/** frozen files.
 Hygiene: run the changed tests and the affected builders --check; git add + commit; message ends with exactly:
 ${TRAILER}

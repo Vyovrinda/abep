@@ -11,8 +11,8 @@ export const meta = {
 
 // args = { base: '<sha>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 const RESULT = { type: 'object', properties: { commit: { type: 'string' }, applied: { type: 'array', items: { type: 'string' } },
   blocked: { type: 'array', items: { type: 'string' } }, tests: { type: 'string' } }, required: ['commit', 'applied', 'blocked', 'tests'] }
 const FIND = { type: 'object', properties: { findings: { type: 'array', items: { type: 'object', properties: {
@@ -21,7 +21,7 @@ const FIND = { type: 'object', properties: { findings: { type: 'array', items: {
   description: { type: 'string' }, evidence: { type: 'string' }, fix_hint: { type: 'string' } },
   required: ['id', 'severity', 'file', 'area', 'description', 'evidence', 'fix_hint'] } } }, required: ['findings'] }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first. The base already contains: A9.16 steps 1+2, the three step-3 code lanes (design-layer architecture changes, RVM re-based on the registered RFP, Rust parity v2 prereg/report), A9.17 rebuilds (orbit atmosphere v1 csv.gz, HWM14 v2, sputter regen), the A9.18 golden replacement (abep_sim/data/golden_v2.json canonical; golden_v1.json history) and the CI rule-9 fix. Owner decisions: docs/decisions/OD_2026_10_01_A9_{8..18}_* (verbatim governs).
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep) in an ISOLATED git worktree (your cwd). FIRST: git reset --hard ${base}; confirm with git rev-parse HEAD. Read Governance.md first. The base already contains: A9.16 steps 1+2, the three step-3 code lanes (design-layer architecture changes, RVM re-based on the registered RFP, Rust parity v2 prereg/report), A9.17 rebuilds (orbit atmosphere v1 csv.gz, HWM14 v2, sputter regen), the A9.18 golden replacement (abep_sim/data/golden_v2.json canonical; golden_v1.json history) and the CI rule-9 fix. Owner decisions: docs/decisions/OD_2026_10_01_A9_{8..18}_* (verbatim governs).
 RULES: Governance.md rules 1-10; never retune; never invent values; never weaken/skip tests (rule 9: exactly 5 SUPERSEDED skips + 1 strict xfail); never modify docs/decisions/**, Governance.md, hallthruster_bridge/**, abep_sim/data/** frozen files (golden_v2.json only via python -m abep_sim.golden generate and only if a lane is explicitly allowed), immutable history (rfq_a9, rfq_a9_v2, owner_questions_state_v2..v4, mass_power_a9_v2, xe_accounting_a9_v2, parity v1 records, perf A9.7 baseline timings, dedicated baseline 2026-10-01 timings). Never run the v1 consolidated-questions builder (it rewrites an xlsx). No Julia.
 Hygiene: affected builders --check and tests; git add + commit; message ends with exactly:
 ${TRAILER}

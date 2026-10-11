@@ -18,8 +18,8 @@ Record: `F1_INTAKE_SYNTHESIS_v1_405296e.manifest.json` (this directory). Expecte
 | sha256 | `c29623c08099c688584439b881c07c7a59b14fba3645642e652e3a2c7ce04dd2` |
 | size | 2011661 bytes |
 | tar sha256 / size | `a03f5e101d86d64500cbdb11c8808d1bc7ee89367a5c2ffb10ec9d0b90f9bebf` / 36730880 bytes |
-| release tag | `evidence-f1-intake-synthesis-v1-405296e` (repository `ppusapati/abep`) |
-| download URL (after publication) | `https://github.com/ppusapati/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst` |
+| release tag | `evidence-f1-intake-synthesis-v1-405296e` (repository `vyovrinda/abep`) |
+| download URL (after publication) | `https://github.com/vyovrinda/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst` |
 
 ## Steps
 
@@ -41,7 +41,7 @@ Record: `F1_INTAKE_SYNTHESIS_v1_405296e.manifest.json` (this directory). Expecte
    ```
    gh release create evidence-f1-intake-synthesis-v1-405296e \
      /path/outside/repo/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst \
-     --repo ppusapati/abep --target 405296ee4aeb42d8421c98aa3b7f164733fb7960 \
+     --repo vyovrinda/abep --target 405296ee4aeb42d8421c98aa3b7f164733fb7960 \
      --title "Evidence: F1 intake synthesis v1 (405296e)" \
      --notes "Deterministic evidence archive (A9.22 item 9; upload authorized by A9.24 item 11). Manifest: docs/evidence_archives/f1_intake/F1_INTAKE_SYNTHESIS_v1_405296e.manifest.json. sha256 c29623c08099c688584439b881c07c7a59b14fba3645642e652e3a2c7ce04dd2, 2011661 bytes. Model-derived screening evidence, INVESTIGATION_HYPOTHESIS."
    ```
@@ -53,9 +53,9 @@ Record: `F1_INTAKE_SYNTHESIS_v1_405296e.manifest.json` (this directory). Expecte
 
    ```
    mkdir -p /tmp/f1_dl && cd /tmp/f1_dl
-   gh release download evidence-f1-intake-synthesis-v1-405296e --repo ppusapati/abep \
+   gh release download evidence-f1-intake-synthesis-v1-405296e --repo vyovrinda/abep \
      --pattern F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst
-   # or: curl -fLO https://github.com/ppusapati/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst
+   # or: curl -fLO https://github.com/vyovrinda/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst
    ```
 
 4. Verify the downloaded copy and write the record:

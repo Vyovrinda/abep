@@ -13,7 +13,7 @@
   "path": "docs/decisions/OD_2026_10_01_A9_13_S6_UPSTREAM_ARCHITECTURE_OWNER_DECISIONS.md",
   "sha256": "adf11923c07f773276ee893d6ad01cd51c4988ba4bfb8865ec1d781a4978c8bf"
  },
- "checkpoint_6_merge": "APPROVED in this message (one merge): A9.7 verified design synthesis + A9.8-A9.12 decision records, as PR ppusapati/abep#36; S1-S5 decisions stay text-only at that checkpoint",
+ "checkpoint_6_merge": "APPROVED in this message (one merge): A9.7 verified design synthesis + A9.8-A9.12 decision records, as PR vyovrinda/abep#36; S1-S5 decisions stay text-only at that checkpoint",
  "decisions": {
   "F1Q-02": {
    "sequenced_no": "S6.1",

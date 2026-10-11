@@ -10,8 +10,8 @@ export const meta = {
 
 // args = { base: '<sha>' }
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const TRAILER = `Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U`
+const TRAILER = `
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U`
 
 const RESULT = {
   type: 'object',
@@ -26,7 +26,7 @@ const RESULT = {
   required: ['commit', 'changed', 'golden', 'downstream_pending', 'blocked', 'tests'],
 }
 
-const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep). You run in an ISOLATED git worktree (your current working directory). FIRST run: git reset --hard ${base} and confirm with git rev-parse HEAD.
+const common = (base) => `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep). You run in an ISOLATED git worktree (your current working directory). FIRST run: git reset --hard ${base} and confirm with git rev-parse HEAD.
 
 PHASE: owner decision A9.9 (docs/decisions/OD_2026_10_01_A9_9_S2_MODEL_CHANGE_OWNER_DECISIONS.md - READ IT IN FULL; the verbatim text governs) authorises CONTROLLED PRODUCTION-MODEL CHANGES, implemented one at a time in this order: (1) S2.4 G-03..G-05 convergence flags, (2) S2.5 MCC-05/06/07 intake_tpmc input validation, (3) S2.3 + MCC-03 registered rotor strength basis, (4) MCC-02 Gaede domain flag, (5) S2.1 IntakeSurface species recombination fix, (6) S2.2 frozen intake surface v2. Also read docs/decisions/OD_2026_10_01_A9_13_* (S6.2: intake surface v2 must cover the REGISTERED AOCS pointing envelope - not registered yet; S6.8: no valid > 0.1 Pa compressor result; S6.9: Al/CFRP rotors only via the S2.3 strength-basis gate) and the F9 model-change candidates in docs/architecture/freeze_candidate/architecture_freeze_candidate_v1.json (MCC-01..07) and findings F1-01 / F3-01 / F3-02 in docs/design_synthesis/{f1_intake,f3_compressor}/.
 

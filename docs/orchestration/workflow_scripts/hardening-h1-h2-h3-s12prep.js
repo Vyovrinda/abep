@@ -12,12 +12,12 @@ const ARGS_EMBEDDED = {"base": "fe1b8d122a120470ef8bb22c2809e5733bc50081", "lane
 
 const BASE = ARGS_EMBEDDED.base
 const SP = '/tmp/Governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
+const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
 FIRST STEP: your worktree may have been created from main (daa0e75). If \`git rev-parse HEAD\` != ${BASE} and \`git status --porcelain\` is empty, run \`git reset --hard ${BASE}\`.
 CONTEXT: this is a REPOSITORY-HARDENING / PREPARATION wave (owner decision 2026-09-27) running in parallel with physics work; it must never change physics, frozen data, goldens (never regenerate abep_sim/data/golden_v1.json), chemistry, pre-registration, campaign records or scientific outcomes. Read Governance.md (rules 1-10). Expected full-suite outcome (rule 9): all pass, exactly 5 skipped, 1 strict xfail.
 HARD RULES: modify/create files ONLY under your lane's ALLOWED paths (the brief may narrow a path to specific hunks: obey). Never touch hallthruster_bridge/** or ${SP}/followon / ${SP}/wt_followon (running campaigns). Do not run Julia. CPU is shared with 12 running Julia processes: run your own tests and, where the brief requires, the full suite at most once. No network use beyond what pip needs for installing the locked requirements (requirements-lock.txt), through the configured proxy; never change TLS/trust settings. When done: git add your files and commit in the worktree with a clear message whose last two lines are exactly:
-Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U
 Do NOT push. Report the worktree absolute path, branch and commit sha.
 
 YOUR LANE:

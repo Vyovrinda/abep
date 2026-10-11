@@ -125,7 +125,7 @@ Everything else (signed commits, linear history, merge queue, code owners, conve
 
 ## 4. Procedure: repository ruleset (the decided mechanism)
 
-1. **No classic rule.** GitHub → repository `ppusapati/abep` → **Settings** → **Branches**. If a classic branch
+1. **No classic rule.** GitHub → repository `vyovrinda/abep` → **Settings** → **Branches**. If a classic branch
    protection rule matching `main` is listed, delete it (the ruleset below replaces it; never keep both).
 2. GitHub → **Settings** → **Rules** → **Rulesets** → **New ruleset** → **New branch ruleset**.
 3. **Ruleset name:** `main: required CI`. **Enforcement status:** **Active**.
@@ -151,12 +151,12 @@ specification only. Re-introducing classic protection, alone or next to the rule
 ## 6. Verifying it afterwards
 
 1. **Read back via the API** (owner's own token; the integration cannot do this):
-   * `gh api repos/ppusapati/abep/rulesets` → exactly one ruleset targeting `main` (`main: required CI`) with
-     `enforcement: active`; `gh api repos/ppusapati/abep/rulesets/<id>` → `bypass_actors` empty.
-   * `gh api repos/ppusapati/abep/rules/branches/main` → rules of type `deletion`, `non_fast_forward`, `pull_request`
+   * `gh api repos/vyovrinda/abep/rulesets` → exactly one ruleset targeting `main` (`main: required CI`) with
+     `enforcement: active`; `gh api repos/vyovrinda/abep/rulesets/<id>` → `bypass_actors` empty.
+   * `gh api repos/vyovrinda/abep/rules/branches/main` → rules of type `deletion`, `non_fast_forward`, `pull_request`
      with `required_approving_review_count: 0`, and `required_status_checks` with
      `strict_required_status_checks_policy: true` and the three contexts of §1.
-   * **No classic protection:** `gh api repos/ppusapati/abep/branches/main/protection` returns HTTP 404
+   * **No classic protection:** `gh api repos/vyovrinda/abep/branches/main/protection` returns HTTP 404
      ("Branch not protected"). A 200 means a classic rule exists next to the ruleset: delete it (§4 step 1).
 2. **Compare with this file:** the context list read back must equal the `required-status-checks` block of §1, as a set,
    with no extra and no missing entry; the other values must equal the `ruleset-decision` block of §2.

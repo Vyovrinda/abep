@@ -5,10 +5,10 @@
  "archive_file_name": "F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
  "verified_file": "F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
  "release": {
-  "repository": "ppusapati/abep",
+  "repository": "vyovrinda/abep",
   "tag": "evidence-f1-intake-synthesis-v1-405296e",
   "asset_name": "F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst",
-  "download_url": "https://github.com/ppusapati/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst"
+  "download_url": "https://github.com/vyovrinda/abep/releases/download/evidence-f1-intake-synthesis-v1-405296e/F1_INTAKE_SYNTHESIS_v1_405296e.tar.zst"
  },
  "checks": [
   {

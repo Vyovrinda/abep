@@ -65,7 +65,7 @@ Regenerate all outputs with the builders (--check must pass), update owner_answe
 const lane = LANES[args]
 if (!lane) throw new Error(`unknown lane ${args}`)
 
-const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. FIRST run: git reset --hard ${BASE} (the worktree may be created from main, which lacks the newest decision files) and confirm with: git rev-parse HEAD. Base commit: ${BASE}.
+const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. FIRST run: git reset --hard ${BASE} (the worktree may be created from main, which lacks the newest decision files) and confirm with: git rev-parse HEAD. Base commit: ${BASE}.
 
 CONTEXT (read Governance.md in your worktree first, including its final section 'A9'):
 - RFP envelope (DRDO TDF): 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg, >= 26,280 h mission basis, > 15,000 h firing (provisional), Hall preferred, air + Xe.
@@ -86,8 +86,8 @@ HARD RULES (breaking any = lane rejected):
 5. Never declare a winner; no retuning; Hall-closure uncertainty never leaks upstream; never mark ICP thermal, RF ratings or anode items PASS.
 6. REQUIRED STRUCTURE: machine-readable JSON + companion .md generated from it + deterministic builder script with --check in the lane dir + tests; sections: (a) items/parameters table (id, value or TBD, units, basis, source, evidence class, status, freeze point NOW / LOCK-1 / LOCK-2 / after-evidence); (b) interface_demands to/from other A9 lanes and H2/H-1 items (both directions, units, status); (c) owner_answers_applied: row/decision id -> how applied; (d) open_owner_questions (new questions only, each with a proposed answer or 'owner call'); (e) historical_reuse (path + sha256, what was and was not reused); (f) m16_impact (which M16 v3 rows this touches and how); (g) h3/h4 inputs where relevant.
 7. When done: git add your files and commit in the worktree; the commit message's last two lines are exactly:
-Co-Authored-By: Governance Opus 5.5 <noreply@anthropic.com>
-Governance-Session: https://Governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+
+Governance-Session: _01FzUuRP7UUVEypuFNeEaN4U
 Do NOT push. Report the worktree absolute path (pwd), branch name and commit sha.
 
 YOUR LANE:

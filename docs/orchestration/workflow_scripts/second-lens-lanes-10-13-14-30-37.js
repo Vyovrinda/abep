@@ -12,7 +12,7 @@ const ARGS_EMBEDDED = {"base": "e15f66f969901cf20f6b7ea67fb9ab766c135047", "lane
 
 const BASE = ARGS_EMBEDDED.base
 const SP = '/tmp/governance-0/-home-user-abep/275befef-ee58-5bbd-84f0-21c33eb50eb4/scratchpad'
-const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub ppusapati/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
+const COMMON = `You are working on the ABEP-VLEO simulator repository (GitHub vyovrinda/abep; primary checkout /home/user/abep). You run in an ISOLATED git worktree created for you (your current working directory); do all edits there. Base commit: ${BASE}.
 
 CONTEXT (read governance.md in your worktree first):
 - RFP envelope (DRDO TDF, governance.md): 180-230 km, 12-25 mN, < 1.5 kW, < 40 kg, 26,000 h mission, > 15,000 h firing, Hall preferred, air + Xe.
@@ -29,8 +29,8 @@ HARD RULES (breaking any = lane rejected):
 4. CPU: do NOT run Julia, do NOT run the full test suite, no computation > 1 min. Run only your own new test file(s).
 5. Never use screening candidates or unadmitted Hall closures as performance sources; no retuning; never declare an architecture winner; eliminations only via explicit hard-gate logic with the evidence class that supports them. P5 calibration nuisance (registration, coil shape, divergence reading, facility interpretation) is never a design variable or grid axis. Hall-closure uncertainty never leaks upstream into intake/compressor/gas chambers/valves.
 6. When done: git add your files and commit in the worktree with a clear message whose last two lines are exactly:
-Co-Authored-By: governance Opus 5.5 <noreply@anthropic.com>
-governance-Session: https://governance.ai/code/session_01FzUuRP7UUVEypuFNeEaN4U
+
+governance-Session: _01FzUuRP7UUVEypuFNeEaN4U
 Do NOT push. Report the worktree absolute path (pwd), branch name (git rev-parse --abbrev-ref HEAD) and commit sha.
 
 YOUR LANE:
